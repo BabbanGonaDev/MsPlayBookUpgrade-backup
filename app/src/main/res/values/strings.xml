@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">StandardTemplate</string>
+
+    <string name="main_access_control">Access control is not installed on this device</string>
 </resources>
