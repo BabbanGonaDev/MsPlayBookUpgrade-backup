@@ -23,12 +23,13 @@ public class Main2Activity extends AppCompatActivity {
         try {
 
             //This gets the intents sent from access control and saves it to sharedprefs
-            Intent intent = getIntent();
-            Bundle b = intent.getExtras();
+            Intent intent  = getIntent();
+            Bundle b       = intent.getExtras();
             mStaffName     = (String) b.get("staff_name");
             mStaffRole     = (String) b.get("staff_role");
             mStaffId       = (String) b.get("staff_id");
             mStaffProgram  = (String) b.get("staff_program");
+
             new SharedPrefs(this).CreateLoginSession(mStaffName,mStaffId,mStaffRole,mStaffProgram);
 
 
