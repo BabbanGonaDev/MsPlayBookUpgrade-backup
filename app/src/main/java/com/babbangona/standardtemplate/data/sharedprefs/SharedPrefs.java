@@ -67,9 +67,6 @@ public class SharedPrefs {
     }
 
 
-
-
-
     //This method returns all the data partaining to the staff
 
     public HashMap<String, String> getAllStaffData(){
@@ -82,8 +79,6 @@ public class SharedPrefs {
 
         return user;
     }
-
-
 
     public String getStaffID(){      return pref.getString(KEY_STAFF_ID,"cannot_find"); }
     public String getStaffName(){    return pref.getString(KEY_STAFF_NAME,"cannot_find"); }
