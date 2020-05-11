@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StandardTemplate</string>
+    <string name="app_name">MsPlayBook</string>
 
     <string name="main_access_control">Access control is not installed on this device</string>
     <string name="main_ac_btn">Open Access Control</string>

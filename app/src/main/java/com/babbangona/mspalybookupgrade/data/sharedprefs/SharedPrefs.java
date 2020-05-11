@@ -38,12 +38,6 @@ public class SharedPrefs {
         editor = pref.edit();
     }
 
-
-    public SharedPrefs() {
-
-    }
-
-
     /***
      *      Do not edit anything below
      * ____________________________________________________________________________________________

@@ -7,41 +7,37 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.babbangona.mspalybookupgrade.data.db.entities.SampleEntity;
+import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 
 import java.util.List;
 
-
-//TODO: Modify the queries hear to suit your applications needs
 @Dao
-public interface SampleDao {
+public interface ActivityListDao {
 
 
-    @Query(" select * from table1 ")
-    List<SampleEntity> sel();
+    @Query(" select * from activity_list ")
+    List<ActivityList> sel();
 
-
-
-    /*
+    /**
      * Insert the object in database
-     * @param data, object to be inserted
+     * @param activityList, object to be inserted
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(SampleEntity insert);
+    void insert(ActivityList activityList);
 
-    /*
+    /**
      * update the object in database
-     * @param data, object to be updated
+     * @param activityList, object to be updated
      */
     @Update
-    void update(SampleEntity update);
+    void update(ActivityList activityList);
 
-    /*
+    /**
      * delete the object from database
-     * @param data, object to be deleted
+     * @param activityList, object to be deleted
      */
     @Delete
-    void delete(SampleEntity delete);
+    void delete(ActivityList activityList);
 
 
 
