@@ -1,8 +1,7 @@
-package com.babbangona.standardtemplate.data.sharedprefs;
+package com.babbangona.mspalybookupgrade.data.sharedprefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import java.util.HashMap;
 

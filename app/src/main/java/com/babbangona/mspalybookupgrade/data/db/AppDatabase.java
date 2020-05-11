@@ -1,4 +1,4 @@
-package com.babbangona.standardtemplate.data.db;
+package com.babbangona.mspalybookupgrade.data.db;
 
 import android.content.Context;
 
@@ -6,8 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.babbangona.standardtemplate.data.db.daos.SampleDao;
-import com.babbangona.standardtemplate.data.db.entities.SampleEntity;
+import com.babbangona.mspalybookupgrade.data.db.daos.SampleDao;
+import com.babbangona.mspalybookupgrade.data.db.entities.SampleEntity;
 
 
 //TODO: Change this to your entity class name and db version number

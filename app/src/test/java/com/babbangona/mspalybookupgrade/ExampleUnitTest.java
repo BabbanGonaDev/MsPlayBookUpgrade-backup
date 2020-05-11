@@ -1,4 +1,4 @@
-package com.babbangona.standardtemplate;
+package com.babbangona.mspalybookupgrade;
 
 import org.junit.Test;
 

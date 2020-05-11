@@ -1,4 +1,4 @@
-package com.babbangona.standardtemplate.network;
+package com.babbangona.mspalybookupgrade.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -1,4 +1,4 @@
-package com.babbangona.standardtemplate.data.db.daos;
+package com.babbangona.mspalybookupgrade.data.db.daos;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,8 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.babbangona.standardtemplate.data.db.AppDatabase;
-import com.babbangona.standardtemplate.data.db.entities.SampleEntity;
+import com.babbangona.mspalybookupgrade.data.db.entities.SampleEntity;
 
 import java.util.List;
 

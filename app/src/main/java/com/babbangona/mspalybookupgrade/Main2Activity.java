@@ -1,11 +1,11 @@
-package com.babbangona.standardtemplate;
+package com.babbangona.mspalybookupgrade;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.babbangona.standardtemplate.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 
 public class Main2Activity extends AppCompatActivity {
 

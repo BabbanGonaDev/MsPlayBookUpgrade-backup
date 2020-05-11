@@ -1,4 +1,4 @@
-package com.babbangona.standardtemplate;
+package com.babbangona.mspalybookupgrade;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.babbangona.standardtemplate.data.db.AppDatabase;
+import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 
 public class MainActivity extends AppCompatActivity {
 

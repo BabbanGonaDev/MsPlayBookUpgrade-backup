@@ -1,4 +1,4 @@
-package com.babbangona.standardtemplate.data.db.entities;
+package com.babbangona.mspalybookupgrade.data.db.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
