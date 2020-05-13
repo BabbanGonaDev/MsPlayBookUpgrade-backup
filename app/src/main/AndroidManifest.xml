@@ -21,19 +21,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning"
-
         android:theme="@style/AppTheme">
-        <activity android:name="com.babbangona.mspalybookupgrade.Main2Activity"
-                  android:label=""
-                  android:exported="true"></activity>
 
-        <activity android:name="com.babbangona.mspalybookupgrade.MainActivity">
+
+        <service
+            android:name=".network.MsPlayBookDownloadService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".ComingSoon"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="com.babbangona.mspalybookupgrade.Main2Activity"
+            android:label=""
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.babbangona.mspalybookupgrade.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

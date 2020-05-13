@@ -3,4 +3,19 @@
 
     <string name="main_access_control">Access control is not installed on this device</string>
     <string name="main_ac_btn">Open Access Control</string>
+    <string name="menu_sync">Sync</string>
+    <string name="menu_sync_summary">Sync Summary</string>
+    <string name="version">Version</string>
+    <string name="coming_soon">Coming Soon…</string>
+    <string name="go_back">Go Back</string>
+    <string name="fertilizer_1_pt_1">% of Fertilizer 1 Completed</string>
+    <string name="fertilizer_2_pt_1">% of Fertilizer 2 Completed</string>
+    <string name="out_of">out of</string>
+    <string name="sentence_close">fields.)</string>
+    <string name="set_portfolio">This activity allow supervisors select staff under their portfolio</string>
+    <string name="strange_activity">Please contact your supervisors before using this activity</string>
+    <string name="downloading_data">Downloading Data</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="update">Update</string>
+    <string name="update_portfolio">Update Portfolio</string>
 </resources>

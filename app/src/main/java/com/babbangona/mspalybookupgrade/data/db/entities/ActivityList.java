@@ -22,9 +22,6 @@ public class ActivityList {
     @ColumnInfo(name = DatabaseStringConstants.COL_ACTIVITY_NAME)
     private String activity_name;
 
-    @ColumnInfo(name = DatabaseStringConstants.COL_ACTIVITY_DESC)
-    private String activity_desc;
-
     @ColumnInfo(name = DatabaseStringConstants.COL_ACTIVITY_DESTINATION)
     private String activity_destination;
 
@@ -38,12 +35,11 @@ public class ActivityList {
     private String deactivated;
 
     public ActivityList(@NonNull String activity_id, @NonNull String language_id,
-                        String activity_name, String activity_desc, String activity_destination,
+                        String activity_name, String activity_destination,
                         String activity_priority, String user_category, String deactivated) {
         this.activity_id = activity_id;
         this.language_id = language_id;
         this.activity_name = activity_name;
-        this.activity_desc = activity_desc;
         this.activity_destination = activity_destination;
         this.activity_priority = activity_priority;
         this.user_category = user_category;
@@ -74,14 +70,6 @@ public class ActivityList {
 
     public void setActivity_name(String activity_name) {
         this.activity_name = activity_name;
-    }
-
-    public String getActivity_desc() {
-        return activity_desc;
-    }
-
-    public void setActivity_desc(String activity_desc) {
-        this.activity_desc = activity_desc;
     }
 
     public String getActivity_destination() {

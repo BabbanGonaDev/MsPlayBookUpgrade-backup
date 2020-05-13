@@ -15,8 +15,9 @@ import java.util.List;
 public interface ActivityListDao {
 
 
-    @Query(" select * from activity_list ")
-    List<ActivityList> sel();
+    @Query(" SELECT * FROM activity_list WHERE deactivated = '0' AND user_category LIKE :app_role " +
+            "AND language_id = :language_id ORDER BY activity_id ASC ")
+    List<ActivityList> getAllActivityList(String language_id, String app_role);
 
     /**
      * Insert the object in database
@@ -24,6 +25,9 @@ public interface ActivityListDao {
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(ActivityList activityList);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(List<ActivityList> activityList);
 
     /**
      * update the object in database

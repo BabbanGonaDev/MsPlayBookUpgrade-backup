@@ -9,6 +9,11 @@
 
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="AppTextField" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <item name="boxBackgroundColor">@android:color/white</item>

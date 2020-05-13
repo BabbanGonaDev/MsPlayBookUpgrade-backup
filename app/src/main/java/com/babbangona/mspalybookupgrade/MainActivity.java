@@ -4,36 +4,52 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
+import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
+import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.google.android.material.button.MaterialButton;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    @BindView(R.id.btn_open_access_control)
+    MaterialButton btn_open_access_control;
+
+    SharedPrefs sharedPrefs;
+
+    AppDatabase appDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        sharedPrefs = new SharedPrefs(MainActivity.this);
+        appDatabase  = AppDatabase.getInstance(MainActivity.this);
+        addDataToDatabase();
+    }
 
-        AppDatabase appDatabase  = AppDatabase.getInstance(getApplicationContext());
+    @OnClick(R.id.btn_open_access_control)
+    public void navigateToAccessControl(){
+        Launch();
     }
 
 
     void OpenAccessControl(){
-
-
         try{
-
             Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setComponent(
-                    new ComponentName("com.babbangona.accesscontrol",
-                            "com.babbangona.accesscontrol.MainActivity"));
+            intent.setComponent(new ComponentName("com.babbangona.accesscontrol",
+                    "com.babbangona.accesscontrol.MainActivity"));
             startActivity(intent);
-
-
-
         }
         catch(Exception e){
             //This is the message that shows up when the user clicks the open access control button and the application is not on the phone
@@ -41,20 +57,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void OpenMain2(){
+    public void Launch() {
+        OpenMain2();
+    }
 
+    void OpenMain2(){
         Intent intent = new Intent(getApplicationContext(),Main2Activity.class);
         intent.putExtra("staff_name","test_user");
         intent.putExtra("staff_id","T-1ZZZZZZZZ");
-        intent.putExtra("staff_role","ES");
+        intent.putExtra("staff_role","MSS");
         intent.putExtra("staff_program","BGD");
         startActivity(intent);
-
     }
 
-    public void Launch(View view) {
+    void addDataToDatabase(){
+        AsyncTask.execute(()->{
+            if (sharedPrefs.getKeyFirstTimeDataFlag().equalsIgnoreCase("0")){
+                appDatabase.activityListDao().insert(new ActivityList("4","en",
+                        "Set Portfolio", "com.babbangona.mspalybookupgrade.SetPortfolio",
+                        "1","MSS,LMIk","0"));
+                sharedPrefs.setKeyFirstTimeDataFlag("1");
+            }
 
-        //TODO: change the call below to OpenAccessControl before deploying the application
-        OpenMain2();
+        });
     }
 }

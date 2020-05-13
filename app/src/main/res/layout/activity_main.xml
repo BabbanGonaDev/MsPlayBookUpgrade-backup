@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:onClick="Launch"
+        android:id="@+id/btn_open_access_control"
         android:text="@string/main_ac_btn"/>
 
 </LinearLayout>

@@ -37,63 +37,66 @@
                     android:layout_height="0dp"
                     android:layout_weight="3"
                     android:scaleType="centerInside"
-                    app:srcCompat="@drawable/profile_setting" />
+                    app:srcCompat="@drawable/ic_book" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/layoutx"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
+                    android:gravity="center"
                     android:background="@color/colorPrimary"
                     android:orientation="horizontal"
-                    android:padding="10dp"
-                    android:weightSum="2">
+                    android:padding="10dp">
 
                     <LinearLayout
                         android:id="@+id/layouty"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
                         android:orientation="vertical">
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/mtv_staff_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:textSize="16sp"
                             android:text="TextView" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/mtv_staff_id"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:textSize="16sp"
                             android:text="TextView" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/layoutyy"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:orientation="vertical">
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/mtv_user_role"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="TextView" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/mtv_app_version"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
                             android:text="TextView" />
 
                     </LinearLayout>
-                </LinearLayout>
+
+                </RelativeLayout>
             </LinearLayout>
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -117,11 +120,11 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/home_page_rcv"
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <Button
+            <!--<Button
                 android:id="@+id/btn_load_more"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
@@ -129,7 +132,7 @@
                 android:layout_gravity="center_horizontal"
                 android:text="Load More Apps"
                 app:icon="@drawable/ic_arrow_drop_down_blue_24dp"
-                app:iconGravity="textEnd" />
+                app:iconGravity="textEnd" />-->
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -3,41 +3,40 @@ package com.babbangona.mspalybookupgrade.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitClient {
+class RetrofitClient {
+
+//    private static final String BASE_URL = "https://apps.babbangona.com/mkt_rice/mkt_slim/public/api/v1/";
+    private static final String BASE_URL = "http://192.168.8.100/project/src/public/api/v1/";
+    private static Retrofit retrofit = null;
 
 
+    static Retrofit getApiClient(){
+        if (retrofit == null){
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.level(HttpLoggingInterceptor.Level.NONE);
 
-    private static Retrofit retrofit;
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(interceptor)
+                    .connectTimeout(100, TimeUnit.SECONDS)
+                    .readTimeout(100, TimeUnit.SECONDS)
+                    .build();
 
-    /**
-     *  Creation of retrofit client for network calls
-     * */
-    public static RetrofitInterface getRetrofit(){
-        if(retrofit==null){
-
-
-            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.addInterceptor(httpLoggingInterceptor);
-            OkHttpClient okHttpClient = builder.build();
-
-            Gson gson = new GsonBuilder()
-                    .setLenient()
-                    .create();
-
-            retrofit= new Retrofit.Builder()
-                    //TODO: Change the base URL below to the one specific to your application
-                    .baseUrl("https://apps.yoururl.com/")
+            Gson gson = new GsonBuilder().setLenient().create();
+            retrofit = new Retrofit
+                    .Builder()
+                    .baseUrl(BASE_URL)
+                    .client(client)
                     .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(okHttpClient)
                     .build();
         }
-        return retrofit.create(RetrofitInterface.class);
+        return retrofit;
     }
+
 }

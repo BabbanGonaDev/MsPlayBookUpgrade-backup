@@ -26,6 +26,8 @@ public class SharedPrefs {
     public static final String KEY_STAFF_PROGRAM = "staff_program";
 
     //add additional string below this comment
+    public static final String KEY_APP_LANGUAGE = "app_language";
+    public static final String KEY_FIRST_TIME_DATA_FLAG = "first_time_data_flag";
 
 
 
@@ -38,7 +40,17 @@ public class SharedPrefs {
         editor = pref.edit();
     }
 
-    /***
+    public void setKeyFirstTimeDataFlag(String first_time_data_flag){
+        editor.putString(KEY_FIRST_TIME_DATA_FLAG, first_time_data_flag);
+        editor.commit();
+    }
+
+    public void setKeyAppLanguage(String app_language){
+        editor.putString(KEY_APP_LANGUAGE, app_language);
+        editor.commit();
+    }
+
+    /**
      *      Do not edit anything below
      * ____________________________________________________________________________________________
      */
@@ -78,13 +90,15 @@ public class SharedPrefs {
     public String getStaffRole(){    return pref.getString(KEY_STAFF_ROLE ,"cannot_find"); }
     public String getStaffProgram(){ return pref.getString(KEY_STAFF_PROGRAM ,"cannot_find");}
 
-/***
- *      Do not edit anything above
- * __________________________________________________________________________________
- *  *
- */
+    /**
+     *      Do not edit anything above
+     * __________________________________________________________________________________
+     *  *
+     */
 
     //TODO: Add additional parameters below this line
+    public String getKeyAppLanguage(){ return pref.getString(KEY_APP_LANGUAGE ,"en");}
+    public String getKeyFirstTimeDataFlag(){ return pref.getString(KEY_FIRST_TIME_DATA_FLAG ,"0");}
 
 
 
