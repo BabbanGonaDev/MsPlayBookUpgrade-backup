@@ -1,4 +1,4 @@
-package com.babbangona.mspalybookupgrade.RecyclerAdapters;
+package com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler;
 
 import android.content.Context;
 import android.content.Intent;

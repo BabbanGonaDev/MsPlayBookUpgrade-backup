@@ -14,6 +14,7 @@ public class DatabaseStringConstants {
     public static final String ACTIVITY_LIST_TABLE                      = "activity_list";
     public static final String NORMAL_ACTIVITY_FLAGS_TABLE              = "normal_activities_flag";
     public static final String FIELDS_TABLE                             = "fields";
+    public static final String STAFF_TABLE                              = "staff";
 
     /**
      * activity_list column names
@@ -50,5 +51,12 @@ public class DatabaseStringConstants {
     public static final String COL_MIN_LNG                              = "min_lng";
     public static final String COL_MAX_LNG                              = "max_lng";
     public static final String COL_DEACTIVATE                           = "deactivate";
+
+    /**
+     * staff column names
+     */
+    public static final String COL_STAFF_ID_STAFF                       = "staff_id";
+    public static final String COL_STAFF_NAME                           = "staff_name";
+    public static final String COL_STAFF_HUB                            = "staff_hub";
 
 }

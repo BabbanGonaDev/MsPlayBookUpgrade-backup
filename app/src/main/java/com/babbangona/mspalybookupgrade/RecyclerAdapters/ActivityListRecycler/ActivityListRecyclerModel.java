@@ -1,4 +1,4 @@
-package com.babbangona.mspalybookupgrade.RecyclerAdapters;
+package com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler;
 
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.google.gson.annotations.SerializedName;

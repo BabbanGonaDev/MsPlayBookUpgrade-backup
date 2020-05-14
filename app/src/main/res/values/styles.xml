@@ -52,6 +52,28 @@
         <item name="android:actionMenuTextColor">@color/colorWhite</item>
     </style>
 
+    <style name="Theme.MsPlaybook" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/textColorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorWhite</item>
+        <item name="colorAccent">@color/textColorPrimary</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:actionMenuTextColor">@color/colorRed</item>
+        <item name="android:actionMenuTextAppearance">@style/TextAppearance.MsPlaybook.Toolbar</item>
+    </style>
+
+    <style name="Widget.MsPlaybook.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">?attr/colorAccent</item>
+        <item name="android:theme">@style/Theme.MsPlaybook</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="titleTextAppearance">@style/TextAppearance.MsPlaybook.Toolbar</item>
+    </style>
+
+    <style name="TextAppearance.MsPlaybook.Toolbar" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="android:textSize">20sp</item>
+    </style>
+
 
 
 </resources>

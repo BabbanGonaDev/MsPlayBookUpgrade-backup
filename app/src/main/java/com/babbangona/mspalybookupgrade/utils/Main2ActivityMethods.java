@@ -1,10 +1,9 @@
 package com.babbangona.mspalybookupgrade.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.babbangona.mspalybookupgrade.R;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecyclerModel;
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
@@ -31,8 +30,8 @@ public class Main2ActivityMethods {
         sharedPrefs = new SharedPrefs(this.context);
     }
 
-    public List<ActivityListRecyclerModel> composingRecyclerList(){
-        return recyclerController(appListManipulator());
+    public List<ActivityListRecyclerModel> composingRecyclerList(List<ActivityList> initialActivityResultList){
+        return recyclerController(appListManipulator(initialActivityResultList));
     }
 
     private List<ActivityListRecyclerModel> recyclerController(ArrayList<Map<String,String>> wordList){
@@ -62,9 +61,7 @@ public class Main2ActivityMethods {
         return activityListRecyclerModels;
     }
 
-    private ArrayList<Map<String, String>> appListManipulator(){
-        List<ActivityList> initialActivityResultList = appDatabase.activityListDao().getAllActivityList(sharedPrefs.getKeyAppLanguage(),"%"+sharedPrefs.getStaffRole()+"%");
-//        Log.d("DAMILOLA","Query_result: "+initialActivityResultList);
+    private ArrayList<Map<String, String>> appListManipulator(List<ActivityList> initialActivityResultList){
         int total_fields = appDatabase.fieldsDao().getTotalFieldsCount(sharedPrefs.getStaffID());
         Map<String,String > map;
         ArrayList<Map<String, String>> medianAppList = new ArrayList<>();

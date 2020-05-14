@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SharedPrefs {
     private SharedPreferences pref;
@@ -28,6 +30,8 @@ public class SharedPrefs {
     //add additional string below this comment
     public static final String KEY_APP_LANGUAGE = "app_language";
     public static final String KEY_FIRST_TIME_DATA_FLAG = "first_time_data_flag";
+    public static final String KEY_PORTFOLIO_LIST = "portfolio_list";
+    public static final String KEY_ADDED_PORTFOLIO_LIST = "added_portfolio_list";
 
 
 
@@ -38,6 +42,30 @@ public class SharedPrefs {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+
+
+    public void setKeyAddedPortfolioList(Set<String> added_portfolio_list){
+        // Storing username in pref
+
+        // Storing role in pref
+        editor.putStringSet(KEY_ADDED_PORTFOLIO_LIST, added_portfolio_list);
+
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeyPortfolioList(Set<String> portfolio_list){
+        // Storing username in pref
+
+        // Storing role in pref
+        editor.putStringSet(KEY_PORTFOLIO_LIST, portfolio_list);
+
+
+        // commit changes
+        editor.commit();
     }
 
     public void setKeyFirstTimeDataFlag(String first_time_data_flag){
@@ -97,8 +125,21 @@ public class SharedPrefs {
      */
 
     //TODO: Add additional parameters below this line
-    public String getKeyAppLanguage(){ return pref.getString(KEY_APP_LANGUAGE ,"en");}
-    public String getKeyFirstTimeDataFlag(){ return pref.getString(KEY_FIRST_TIME_DATA_FLAG ,"0");}
+    public String getKeyAppLanguage(){
+        return pref.getString(KEY_APP_LANGUAGE ,"en");
+    }
+
+    public String getKeyFirstTimeDataFlag(){
+        return pref.getString(KEY_FIRST_TIME_DATA_FLAG ,"0");
+    }
+
+    public Set<String > getKeyPortfolioList(){
+        return pref.getStringSet(KEY_PORTFOLIO_LIST, new HashSet<>());
+    }
+
+    public Set<String > getKeyAddedPortfolioList(){
+        return pref.getStringSet(KEY_ADDED_PORTFOLIO_LIST, new HashSet<>());
+    }
 
 
 

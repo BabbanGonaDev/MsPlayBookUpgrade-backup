@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void OpenMain2(){
-        Intent intent = new Intent(getApplicationContext(),Main2Activity.class);
+        Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
         intent.putExtra("staff_name","test_user");
         intent.putExtra("staff_id","T-1ZZZZZZZZ");
         intent.putExtra("staff_role","MSS");

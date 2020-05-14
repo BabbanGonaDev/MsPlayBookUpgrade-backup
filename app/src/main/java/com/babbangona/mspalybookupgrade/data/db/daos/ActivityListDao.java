@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.data.db.daos;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -17,7 +18,7 @@ public interface ActivityListDao {
 
     @Query(" SELECT * FROM activity_list WHERE deactivated = '0' AND user_category LIKE :app_role " +
             "AND language_id = :language_id ORDER BY activity_id ASC ")
-    List<ActivityList> getAllActivityList(String language_id, String app_role);
+    LiveData<List<ActivityList>> getAllActivityList(String language_id, String app_role);
 
     /**
      * Insert the object in database

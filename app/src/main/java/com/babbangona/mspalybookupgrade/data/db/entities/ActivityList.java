@@ -6,7 +6,6 @@ import androidx.room.Entity;
 
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 
-//TODO: Revamp this page following this structure to your desired entity class
 @Entity(primaryKeys = {DatabaseStringConstants.COL_ACTIVITY_ID,DatabaseStringConstants.COL_LANGUAGE_ID},
         tableName = DatabaseStringConstants.ACTIVITY_LIST_TABLE)
 public class ActivityList {
