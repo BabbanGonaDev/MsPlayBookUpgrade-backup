@@ -62,7 +62,7 @@ public class SetPortfolioAdapter extends PagedListAdapter<SetPortfolioRecyclerMo
         MaterialTextView staff_name;
 
         @BindView(R.id.staff_hub)
-        MaterialButton staff_hub;
+        MaterialTextView staff_hub;
 
         @BindView(R.id.checkBox)
         MaterialCheckBox checkBox;

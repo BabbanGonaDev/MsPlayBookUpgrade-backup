@@ -32,10 +32,24 @@ public class SharedPrefs {
     public static final String KEY_FIRST_TIME_DATA_FLAG = "first_time_data_flag";
     public static final String KEY_PORTFOLIO_LIST = "portfolio_list";
     public static final String KEY_ADDED_PORTFOLIO_LIST = "added_portfolio_list";
+    public static final String KEY_ADAPTER_OFFSET = "adapter_offset";
+    public static final String KEY_ADAPTER_OFFSET_1 = "adapter_offset_1";
+    public static final String KEY_ACTIVITY_TYPE = "activity_type";
+
+    public static final String KEY_ROUTE_TYPE = "route_type";
+
+    public static final String KEY_GRID_MIN_LAT = "min_lat";
+    public static final String KEY_GRID_MAX_LAT = "max_lat";
+    public static final String KEY_GRID_MIN_LNG = "min_lng";
+    public static final String KEY_GRID_MAX_LNG = "max_lng";
 
 
-
-
+    public static final String KEY_SEARCH_UNIQUE_FIELD_ID = "unique_field_id";
+    public static final String KEY_SEARCH_IK_NUMBER = "ik_number";
+    public static final String KEY_SEARCH_MEMBER_ID = "member_id";
+    public static final String KEY_SEARCH_MEMBER_NAME = "member_name";
+    public static final String KEY_SEARCH_VILLAGE = "village";
+    public static final String KEY_ADAPTER_OFFSET_FIELD_LIST = "adapter_offset_field_list";
 
     // Constructor
     public SharedPrefs(Context context){
@@ -44,7 +58,61 @@ public class SharedPrefs {
         editor = pref.edit();
     }
 
+    public void setKeyAdapterOffsetFieldList(int offset){
+        // Storing role in pref
+        editor.putInt(KEY_ADAPTER_OFFSET_FIELD_LIST, offset);
 
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeySearchParameters(String unique_field_id, String ik_number, String member_id,
+                                       String member_name, String village){
+        editor.putString(KEY_SEARCH_UNIQUE_FIELD_ID, unique_field_id);
+        editor.putString(KEY_SEARCH_IK_NUMBER, ik_number);
+        editor.putString(KEY_SEARCH_MEMBER_ID, member_id);
+        editor.putString(KEY_SEARCH_MEMBER_NAME, member_name);
+        editor.putString(KEY_SEARCH_VILLAGE, village);
+        editor.commit();
+    }
+
+    public void setKeyGridParameters(String min_lat, String max_lat, String min_lng, String max_lng){
+        editor.putString(KEY_GRID_MIN_LAT, min_lat);
+        editor.putString(KEY_GRID_MAX_LAT, max_lat);
+        editor.putString(KEY_GRID_MIN_LNG, min_lng);
+        editor.putString(KEY_GRID_MAX_LNG, max_lng);
+        editor.commit();
+    }
+
+    public void setKeyRouteType(String route_type){
+        editor.putString(KEY_ROUTE_TYPE, route_type);
+        editor.commit();
+    }
+
+    public void setKeyActivityType(String activity_type){
+        editor.putString(KEY_ACTIVITY_TYPE, activity_type);
+        editor.commit();
+
+    }
+
+    public void setKeyAdapterOffset1(int offset){
+        // Storing role in pref
+        editor.putInt(KEY_ADAPTER_OFFSET_1, offset);
+
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeyAdapterOffset(int offset){
+        // Storing role in pref
+        editor.putInt(KEY_ADAPTER_OFFSET, offset);
+
+
+        // commit changes
+        editor.commit();
+    }
 
     public void setKeyAddedPortfolioList(Set<String> added_portfolio_list){
         // Storing username in pref
@@ -139,6 +207,62 @@ public class SharedPrefs {
 
     public Set<String > getKeyAddedPortfolioList(){
         return pref.getStringSet(KEY_ADDED_PORTFOLIO_LIST, new HashSet<>());
+    }
+
+    public int getKeyAdapterOffset(){
+        return pref.getInt(KEY_ADAPTER_OFFSET ,0);
+    }
+
+    public int getKeyAdapterOffset1(){
+        return pref.getInt(KEY_ADAPTER_OFFSET_1 ,0);
+    }
+
+    public String getKeyActivityType(){
+        return pref.getString(KEY_ACTIVITY_TYPE,"8");
+    }
+
+    public String getKeyRouteType(){
+        return pref.getString(KEY_ROUTE_TYPE,"0");
+    }
+
+    public String getKeyGridMinLat(){
+        return pref.getString(KEY_GRID_MIN_LAT,"");
+    }
+
+    public String getKeyGridMaxLat(){
+        return pref.getString(KEY_GRID_MAX_LAT,"");
+    }
+
+    public String getKeyGridMinLng(){
+        return pref.getString(KEY_GRID_MIN_LNG,"");
+    }
+
+    public String getKeyGridMaxLng(){
+        return pref.getString(KEY_GRID_MAX_LNG,"");
+    }
+
+    public String getKeySearchUniqueFieldId(){
+        return pref.getString(KEY_SEARCH_UNIQUE_FIELD_ID,"");
+    }
+
+    public String getKeySearchIkNumber(){
+        return pref.getString(KEY_SEARCH_IK_NUMBER,"");
+    }
+
+    public String getKeySearchMemberId(){
+        return pref.getString(KEY_SEARCH_MEMBER_ID,"");
+    }
+
+    public String getKeySearchMemberName(){
+        return pref.getString(KEY_SEARCH_MEMBER_NAME,"");
+    }
+
+    public String getKeySearchVillage(){
+        return pref.getString(KEY_SEARCH_VILLAGE,"");
+    }
+
+    public int getKeyAdapterOffsetFieldList(){
+        return pref.getInt(KEY_ADAPTER_OFFSET_FIELD_LIST ,0);
     }
 
 

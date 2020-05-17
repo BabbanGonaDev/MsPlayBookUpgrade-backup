@@ -62,7 +62,7 @@ public class SetAddedPortfolioAdapter extends PagedListAdapter<SetPortfolioRecyc
         MaterialTextView staff_name;
 
         @BindView(R.id.staff_hub)
-        MaterialButton staff_hub;
+        MaterialTextView staff_hub;
 
         @BindView(R.id.checkBox)
         MaterialCheckBox checkBox;
@@ -74,7 +74,7 @@ public class SetAddedPortfolioAdapter extends PagedListAdapter<SetPortfolioRecyc
         }
 
         void nowBind(SetPortfolioRecyclerModel setPortfolioRecyclerModel){
-            Set<String> portfolioList = sharedPrefs.getKeyPortfolioList();
+            Set<String> portfolioList = sharedPrefs.getKeyAddedPortfolioList();
             staff_id.setText(setPortfolioRecyclerModel.getStaff_id());
             staff_name.setText(setPortfolioRecyclerModel.getStaff_name());
             staff_hub.setText(setPortfolioRecyclerModel.getStaff_hub());

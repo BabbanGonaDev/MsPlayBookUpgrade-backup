@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GridDetails"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:theme="@style/Theme.MsPlaybook">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/toolbar_linear_layout"
+            android:padding="@dimen/dimen_5dp">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_grid_details"
+                style="@style/Widget.MsPlaybook.Toolbar"
+                android:layout_width="match_parent"
+                android:background="@color/colorWhite"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="@drawable/ic_back_button"
+                app:title="@string/home_place_holder" />
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include layout="@layout/content_grid_details" />
+
+</LinearLayout>

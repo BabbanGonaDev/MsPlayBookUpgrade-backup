@@ -23,4 +23,15 @@
     <string name="added_staff">Added Staff</string>
     <string name="set_portfolio_title">Set Portfolio</string>
     <string name="download_staff_list">Download Staff List</string>
+    <string name="home_place_holder">Home</string>
+    <string name="search_button">Search</string>
+    <string name="log_visitation">Log Visitation</string>
+    <string name="log_activity">Log Activity</string>
+    <string name="field_r_id">Field R ID</string>
+    <string name="member_name">Member Name</string>
+    <string name="member_phone_number">Member Phone Number</string>
+    <string name="field_size">Field Size</string>
+    <string name="member_village">Village</string>
+    <string name="field_longitude">Longitude</string>
+    <string name="field_latitude">Latitude</string>
 </resources>

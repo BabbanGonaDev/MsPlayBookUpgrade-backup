@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
+import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -25,10 +26,12 @@ public class ActivityListAdapter extends RecyclerView.Adapter<ActivityListAdapte
 
     private List<ActivityListRecyclerModel> activityListRecyclerModelList;
     private Context context;
+    private SharedPrefs sharedPrefs;
 
     public ActivityListAdapter(List<ActivityListRecyclerModel> activityListRecyclerModelList, Context context) {
         this.activityListRecyclerModelList = activityListRecyclerModelList;
         this.context = context;
+        sharedPrefs = new SharedPrefs(this.context);
     }
 
     @NonNull
@@ -100,6 +103,7 @@ public class ActivityListAdapter extends RecyclerView.Adapter<ActivityListAdapte
                     //Show dialog is App priority is '0'
                     context.startActivity(new Intent(context, ComingSoon.class));
                 }else{
+                    sharedPrefs.setKeyActivityType(activityListRecyclerModel.getActivity_id());
                     context.startActivity(new Intent(context, Class.forName(activityListRecyclerModel.getActivity_destination())));
                 }
             } catch (ClassNotFoundException e) {

@@ -1,6 +1,8 @@
 package com.babbangona.mspalybookupgrade.network;
 
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
+import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
+import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 
 import java.util.List;
 
@@ -19,6 +21,14 @@ public interface RetrofitInterface {
 
     @GET("downloadActivityList")
     Call<ActivityListDownload> getActivityListDownload(@Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadStaffList")
+    Call<StaffListDownload> getStaffListDownload(@Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadMsPlaybookInputData")
+    Call<MsPlaybookInputDownload> getMsPlaybookInputDataDownload(@Query("staff_id") String staff_id,
+                                                                 @Query("portfolio_list") String portfolio_list,
+                                                                 @Query("last_synced_time") String last_synced_time);
 
     @FormUrlEncoded
     @POST("insert")

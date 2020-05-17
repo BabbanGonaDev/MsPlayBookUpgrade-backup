@@ -1,6 +1,7 @@
 package com.babbangona.mspalybookupgrade;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -15,9 +16,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.SetPortfolioRecycler.PortfolioPageListModelClass;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.SetPortfolioRecycler.SetAddedPortfolioAdapter;
@@ -33,6 +38,9 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.SetPortfolioRecycler.Se
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
+import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.network.MsPlaybookInputDataDownloadService;
+import com.babbangona.mspalybookupgrade.network.StaffListDownloadService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -40,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,6 +97,8 @@ public class SetPortfolio extends AppCompatActivity {
 
     AppDatabase appDatabase;
 
+    SharedPrefs sharedPrefs;
+
     private static final int PERMISSIONS_REQUEST_CODE = 4043;
 
     String[] appPermissions = {
@@ -107,6 +118,7 @@ public class SetPortfolio extends AppCompatActivity {
         setSupportActionBar(toolbar_portfolio);
         Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.set_portfolio_title));
         appDatabase = AppDatabase.getInstance(SetPortfolio.this);
+        sharedPrefs = new SharedPrefs(SetPortfolio.this);
         showView(toolbar_linear_layout);
         hideView(search_linear_layout);
         hideView(fab_delete_flags);
@@ -116,22 +128,56 @@ public class SetPortfolio extends AppCompatActivity {
 
         portfolioPageListModelClass = new ViewModelProvider(this, new MyViewModelFactory(appDatabase.staffListDao(), this)).get(PortfolioPageListModelClass.class);
         portfolioPageListModelClass.filterTextAll.setValue("");
-        setAdapter();
+
+        tv_all_staff.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        tv_all_staff.setTextColor(getResources().getColor(R.color.text_color_white));
+        int offset;
+        if (sharedPrefs.getKeyAdapterOffset1() == 0){
+            offset = 1;
+            sharedPrefs.setKeyAdapterOffset1(1);
+        }else{
+            offset = 0;
+        }
+        setAdapter(offset);
+    }
+
+    @OnClick(R.id.fab_download_flags)
+    public void setFab_download_flags(){
+        Set<String> portfolioSet = sharedPrefs.getKeyPortfolioList();
+        if (portfolioSet.isEmpty()){
+            Toast.makeText(this, "Please select portfolio before downloading", Toast.LENGTH_SHORT).show();
+        }else{
+            dialogInputRecordWithSync();
+        }
     }
 
     void setAllStaffAdapter(){
         portfolioPageListModelClass = new ViewModelProvider(this, new MyViewModelFactory(appDatabase.staffListDao(), this)).get(PortfolioPageListModelClass.class);
         portfolioPageListModelClass.filterTextAll.setValue("");
-        setAdapter();
+        int offset;
+        if (sharedPrefs.getKeyAdapterOffset1() == 0){
+            offset = 1;
+            sharedPrefs.setKeyAdapterOffset1(1);
+        }else{
+            offset = 0;
+        }
+        setAdapter(offset);
     }
 
     void setAddedAdapter(){
         portfolioPageListModelClass = new ViewModelProvider(this, new MyViewModelFactory(appDatabase.staffListDao(), this)).get(PortfolioPageListModelClass.class);
         portfolioPageListModelClass.filterTextAllAnother.setValue("");
-        setAddedPortfolioAdapterRecycler();
+        int offset;
+        if (sharedPrefs.getKeyAdapterOffset() == 0){
+            offset = 1;
+            sharedPrefs.setKeyAdapterOffset(1);
+        }else{
+            offset = 0;
+        }
+        setAddedPortfolioAdapterRecycler(offset);
     }
 
-    public boolean checkAndRequestPermissions(Context context){
+    public boolean checkAndRequestPermissions(){
         //Check which permissions are granted
         List<String> listPermissionsNeeded = new ArrayList<>();
         for(String perm : appPermissions){
@@ -203,8 +249,25 @@ public class SetPortfolio extends AppCompatActivity {
         pd.dismiss();
     }
 
-    void syncRecords() {
+    void dialogInputRecordWithSync(){
+        ProgressDialog pd;
+        pd = new ProgressDialog(SetPortfolio.this);
+        pd.setTitle(getResources().getString(R.string.downloading_data));
+        pd.setMessage(getResources().getString(R.string.please_wait));
+        pd.setCancelable(false);
+        pd.show();
+        syncInputRecords();
+        pd.dismiss();
+    }
 
+    void syncRecords() {
+        Intent i = new Intent(this, StaffListDownloadService.class);
+        this.startService(i);
+    }
+
+    void syncInputRecords(){
+        Intent i = new Intent(this, MsPlaybookInputDataDownloadService.class);
+        this.startService(i);
     }
 
     @Override
@@ -223,17 +286,53 @@ public class SetPortfolio extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            /*Intent i = new Intent(this, MikDataService.class);
-            this.startService(i);*/
+            if(checkAndRequestPermissions()){
+                if(isNetworkConnectionAvailable()){
+                    dialogWithSync();
+                }else{
+                    checkNetworkConnection();
+                }
+            }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void checkNetworkConnection(){
+        AlertDialog.Builder builder =new AlertDialog.Builder(this);
+        builder.setTitle("No internet Connection");
+        builder.setIcon(R.drawable.ic_no_data_connection);
+        builder.setMessage("Please turn on internet connection to continue");
+        builder.setNegativeButton("close", (dialog, which) -> dialog.dismiss());
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public boolean isNetworkConnectionAvailable(){
+        ConnectivityManager cm =
+                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = null;
+        if (cm != null) {
+            activeNetwork = cm.getActiveNetworkInfo();
+        }
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
+        if(isConnected) {
+            Log.d("Network", "Connected");
+            return true;
+        }
+        else{
+//            checkNetworkConnection();
+            Log.d("Network","Not Connected");
+            return false;
+        }
+    }
+
     @OnClick(R.id.tv_added_staff)
     public void added_staff(View view){
-        tv_added_staff.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        tv_added_staff.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         tv_added_staff.setTextColor(getResources().getColor(R.color.text_color_white));
 
         tv_all_staff.setBackgroundColor(getResources().getColor(R.color.text_color_white));
@@ -250,7 +349,7 @@ public class SetPortfolio extends AppCompatActivity {
     @OnClick(R.id.tv_all_staff)
     public void all_staff(View view){
 
-        tv_all_staff.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        tv_all_staff.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         tv_all_staff.setTextColor(getResources().getColor(R.color.text_color_white));
 
         tv_added_staff.setBackgroundColor(getResources().getColor(R.color.text_color_white));
@@ -295,6 +394,7 @@ public class SetPortfolio extends AppCompatActivity {
     }
 
     public void loadPreviousActivity() {
+        finish();
         startActivity(new Intent(SetPortfolio.this, Homepage.class));
     }
 
@@ -344,13 +444,15 @@ public class SetPortfolio extends AppCompatActivity {
         });
     }
 
-    private void setAdapter() {
+    private void setAdapter(int offset) {
         setPortfolioAdapter = new SetPortfolioAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        int smallPadding = getResources().getDimensionPixelSize(R.dimen.dimen_5dp);
-        VerticalSpaceItemDecoration verticalSpaceItemDecoration = new VerticalSpaceItemDecoration(smallPadding);
+        if (offset == 1){
+            int smallPadding = getResources().getDimensionPixelSize(R.dimen.dimen_5dp);
+            VerticalSpaceItemDecoration verticalSpaceItemDecoration = new VerticalSpaceItemDecoration(smallPadding);
+            recycler_view.addItemDecoration(verticalSpaceItemDecoration);
+        }
         recycler_view.setLayoutManager(layoutManager);
-        recycler_view.addItemDecoration(verticalSpaceItemDecoration);
         portfolioPageListModelClass.setPortfolioRecyclerModelList.observe(this,setPortfolioAdapter::submitList);
         recycler_view.setAdapter(setPortfolioAdapter);
 
@@ -358,13 +460,15 @@ public class SetPortfolio extends AppCompatActivity {
 
     }
 
-    private void setAddedPortfolioAdapterRecycler() {
+    private void setAddedPortfolioAdapterRecycler(int offset) {
         setAddedPortfolioAdapter = new SetAddedPortfolioAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        int smallPadding = getResources().getDimensionPixelSize(R.dimen.dimen_5dp);
-        VerticalSpaceItemDecoration verticalSpaceItemDecoration = new VerticalSpaceItemDecoration(smallPadding);
+        if (offset == 1){
+            int smallPadding = getResources().getDimensionPixelSize(R.dimen.dimen_5dp);
+            VerticalSpaceItemDecoration verticalSpaceItemDecoration = new VerticalSpaceItemDecoration(smallPadding);
+            recycler_view.addItemDecoration(verticalSpaceItemDecoration);
+        }
         recycler_view.setLayoutManager(layoutManager);
-        recycler_view.addItemDecoration(verticalSpaceItemDecoration);
         portfolioPageListModelClass.setPortfolioRecyclerModelList1.observe(this,setAddedPortfolioAdapter::submitList);
         recycler_view.setAdapter(setAddedPortfolioAdapter);
 
@@ -385,6 +489,15 @@ public class SetPortfolio extends AppCompatActivity {
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             return (T) new PortfolioPageListModelClass(application, context);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (search_linear_layout.getVisibility() == View.VISIBLE){
+            removeSearchTray();
+        }else{
+            loadPreviousActivity();
         }
     }
 }

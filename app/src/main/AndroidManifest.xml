@@ -22,24 +22,51 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Main2Activity"></activity>
-        <activity
-            android:name=".SetPortfolio"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <service
-            android:name=".network.MsPlayBookDownloadService"
+            android:name=".network.ActivityListDownloadService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".network.StaffListDownloadService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".network.MsPlaybookInputDataDownloadService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
+            android:name=".FieldListPage"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".GridDetails"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".Main2Activity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".SetPortfolio"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
             android:name=".ComingSoon"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".Homepage"
             android:exported="true"
             android:label=""
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -49,6 +76,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

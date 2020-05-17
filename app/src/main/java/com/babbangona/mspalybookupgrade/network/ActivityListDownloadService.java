@@ -23,12 +23,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @SuppressWarnings("ALL")
-public class MsPlayBookDownloadService extends IntentService {
+public class ActivityListDownloadService extends IntentService {
 
     RetrofitInterface retrofitInterface;
     AppDatabase appDatabase;
 
-    public MsPlayBookDownloadService() {
+    public ActivityListDownloadService() {
         // Used to name the worker thread, important only for debugging.
         super("test-service");
     }
@@ -74,15 +74,15 @@ public class MsPlayBookDownloadService extends IntentService {
                     switch (sc) {
                         case 400:
                             Log.e("Error 400", "Bad Request");
-                            Toast.makeText(MsPlayBookDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         case 404:
                             Log.e("Error 404", "Not Found");
-                            Toast.makeText(MsPlayBookDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         default:
                             Log.e("Error", "Generic Error");
-                            Toast.makeText(MsPlayBookDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -124,7 +124,7 @@ public class MsPlayBookDownloadService extends IntentService {
             List<ActivityList> activityLists = params[0];
 
             try {
-                appDatabase = AppDatabase.getInstance(MsPlayBookDownloadService.this);
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
                 appDatabase.activityListDao().insert(activityLists);
             } catch (Exception e) {
                 Log.d(TAG, Objects.requireNonNull(e.getMessage()));

@@ -62,7 +62,7 @@ public class Main2ActivityMethods {
     }
 
     private ArrayList<Map<String, String>> appListManipulator(List<ActivityList> initialActivityResultList){
-        int total_fields = appDatabase.fieldsDao().getTotalFieldsCount(sharedPrefs.getStaffID());
+        int total_fields = appDatabase.fieldsDao().getTotalFieldsCount("%"+sharedPrefs.getStaffID()+"%");
         Map<String,String > map;
         ArrayList<Map<String, String>> medianAppList = new ArrayList<>();
         try {

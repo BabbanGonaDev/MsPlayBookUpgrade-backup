@@ -6,6 +6,8 @@ import androidx.room.Entity;
 
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 
+import org.jetbrains.annotations.NotNull;
+
 //TODO: Revamp this page following this structure to your desired entity class
 @Entity(primaryKeys = {DatabaseStringConstants.COL_UNIQUE_FIELD_ID_FIELDS},
         tableName = DatabaseStringConstants.FIELDS_TABLE)
@@ -42,9 +44,12 @@ public class Fields {
     @ColumnInfo(name = DatabaseStringConstants.COL_DEACTIVATE)
     private String deactivate;
 
-    public Fields(@NonNull String unique_field_id, String unique_member_id, String field_size,
-                  String staff_id, String middle, String min_lat, String max_lat,
-                  String min_lng, String max_lng, String deactivate) {
+    @ColumnInfo(name = DatabaseStringConstants.COL_MSS)
+    private String mss;
+
+    public Fields(@NotNull String unique_field_id, String unique_member_id, String field_size,
+                  String staff_id, String middle, String min_lat, String max_lat, String min_lng,
+                  String max_lng, String deactivate, String mss) {
         this.unique_field_id = unique_field_id;
         this.unique_member_id = unique_member_id;
         this.field_size = field_size;
@@ -55,14 +60,15 @@ public class Fields {
         this.min_lng = min_lng;
         this.max_lng = max_lng;
         this.deactivate = deactivate;
+        this.mss = mss;
     }
 
-    @NonNull
+    @NotNull
     public String getUnique_field_id() {
         return unique_field_id;
     }
 
-    public void setUnique_field_id(@NonNull String unique_field_id) {
+    public void setUnique_field_id(@NotNull String unique_field_id) {
         this.unique_field_id = unique_field_id;
     }
 
@@ -136,5 +142,13 @@ public class Fields {
 
     public void setDeactivate(String deactivate) {
         this.deactivate = deactivate;
+    }
+
+    public String getMss() {
+        return mss;
+    }
+
+    public void setMss(String mss) {
+        this.mss = mss;
     }
 }

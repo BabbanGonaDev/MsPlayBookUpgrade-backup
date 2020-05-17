@@ -15,13 +15,12 @@ public class StaffList {
     private String staff_id;
 
     @ColumnInfo(name = DatabaseStringConstants.COL_STAFF_NAME)
-    @NonNull
     private String staff_name;
 
     @ColumnInfo(name = DatabaseStringConstants.COL_STAFF_HUB)
     private String staff_hub;
 
-    public StaffList(@NonNull String staff_id, @NonNull String staff_name, String staff_hub) {
+    public StaffList(@NonNull String staff_id, String staff_name, String staff_hub) {
         this.staff_id = staff_id;
         this.staff_name = staff_name;
         this.staff_hub = staff_hub;
@@ -36,12 +35,11 @@ public class StaffList {
         this.staff_id = staff_id;
     }
 
-    @NonNull
     public String getStaff_name() {
         return staff_name;
     }
 
-    public void setStaff_name(@NonNull String staff_name) {
+    public void setStaff_name(String staff_name) {
         this.staff_name = staff_name;
     }
 

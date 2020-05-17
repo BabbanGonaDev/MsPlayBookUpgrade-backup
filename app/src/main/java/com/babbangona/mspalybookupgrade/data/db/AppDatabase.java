@@ -9,15 +9,18 @@ import androidx.room.RoomDatabase;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.daos.ActivityListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.MembersDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.NormalActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
+import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 
 
-@Database(entities = {ActivityList.class, NormalActivitiesFlag.class, Fields.class, StaffList.class},
+@Database(entities = {ActivityList.class, NormalActivitiesFlag.class, Fields.class, StaffList.class,
+        Members.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -28,6 +31,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract NormalActivitiesFlagDao normalActivitiesFlagDao();
     public abstract FieldsDao fieldsDao();
     public abstract StaffListDao staffListDao();
+    public abstract MembersDao membersDao();
 
     /**
      * Return instance of database creation

@@ -24,7 +24,7 @@ import android.view.MenuItem;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListAdapter;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
-import com.babbangona.mspalybookupgrade.network.MsPlayBookDownloadService;
+import com.babbangona.mspalybookupgrade.network.ActivityListDownloadService;
 import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -254,13 +254,13 @@ public class Homepage extends AppCompatActivity {
     public void displayUserDetails(){
         mtv_staff_name.setText(sharedPrefs.getStaffName());
         mtv_staff_id.setText(sharedPrefs.getStaffID());
-        mtv_user_role.setText(sharedPrefs.getStaffRole());
+        mtv_user_role.setText(sharedPrefs.getStaffRole().toUpperCase());
         String app_version_text = "\u00a9" + " " + getResources().getString(R.string.version) + " " + BuildConfig.VERSION_NAME;
         mtv_app_version.setText(app_version_text);
     }
 
     void syncRecords() {
-        Intent i = new Intent(this, MsPlayBookDownloadService.class);
+        Intent i = new Intent(this, ActivityListDownloadService.class);
         this.startService(i);
     }
 

@@ -16,20 +16,20 @@ import java.util.List;
 @Dao
 public abstract class StaffListDao {
 
-    @Query(" SELECT a.staff_id, a.staff_name, a.staff_hub FROM staff a " +
+    @Query(" SELECT a.staff_id, a.staff_name, a.staff_hub, null as selected FROM staff a " +
             "LEFT JOIN fields b ON b.staff_id = a.staff_id " +
             "WHERE b.staff_id IS NULL ORDER BY a.staff_id ASC")
     public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffNotAdded();
 
-    @Query(" SELECT a.staff_id, a.staff_name, a.staff_hub FROM staff a " +
+    @Query(" SELECT a.staff_id, a.staff_name, a.staff_hub, null as selected FROM staff a " +
             "LEFT JOIN fields b ON b.staff_id = a.staff_id " +
             "WHERE b.staff_id IS NULL AND LOWER(a.staff_id || ' ' || a.staff_name || ' ' || a.staff_hub) LIKE LOWER(:search) ORDER BY a.staff_id ASC")
     public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffNotAdded(String search);
 
-    @Query(" SELECT DISTINCT a.staff_id, a.staff_name, a.staff_hub FROM staff a JOIN fields b ON a.staff_id = b.staff_id")
+    @Query(" SELECT DISTINCT a.staff_id, a.staff_name, a.staff_hub, null as selected FROM staff a JOIN fields b ON a.staff_id = b.staff_id")
     public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffAdded();
 
-    @Query(" SELECT DISTINCT a.staff_id, a.staff_name, a.staff_hub FROM staff a JOIN fields b ON a.staff_id = b.staff_id " +
+    @Query(" SELECT DISTINCT a.staff_id, a.staff_name, a.staff_hub, null as selected FROM staff a JOIN fields b ON a.staff_id = b.staff_id " +
             "WHERE LOWER(a.staff_id || ' ' || a.staff_name || ' ' || a.staff_hub) LIKE LOWER(:search) ORDER BY a.staff_id ASC")
     public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffAdded(String search);
 
