@@ -1,7 +1,11 @@
 package com.babbangona.mspalybookupgrade.network;
 
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
+import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
+import com.babbangona.mspalybookupgrade.network.object.LogsUpload;
 import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
+import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 
 import java.util.List;
@@ -22,6 +26,9 @@ public interface RetrofitInterface {
     @GET("downloadActivityList")
     Call<ActivityListDownload> getActivityListDownload(@Query("last_synced_time") String last_synced_time);
 
+    @GET("downloadHGList")
+    Call<HGListDownload> getHGListDownload(@Query("last_synced_time") String last_synced_time);
+
     @GET("downloadStaffList")
     Call<StaffListDownload> getStaffListDownload(@Query("last_synced_time") String last_synced_time);
 
@@ -31,8 +38,16 @@ public interface RetrofitInterface {
                                                                  @Query("last_synced_time") String last_synced_time);
 
     @FormUrlEncoded
-    @POST("insert")
-    Call<List<String>> sync1(@Field("field1") String tgl_data);
+    @POST("uploadLogsRecord")
+    Call<List<LogsUpload>> uploadLogsRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
+
+    @FormUrlEncoded
+    @POST("uploadHGActivitiesRecord")
+    Call<List<HGActivitiesUpload>> uploadHGActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
+
+    @FormUrlEncoded
+    @POST("uploadNormalActivitiesRecord")
+    Call<List<NormalActivitiesUpload>> uploadNormalActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
 
     @FormUrlEncoded
     @POST("yourPHPName.php")

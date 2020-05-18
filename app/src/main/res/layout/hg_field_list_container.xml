@@ -134,6 +134,14 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_hg_list"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceBody2" />
+
             </LinearLayout>
 
             <!-- Buttons -->

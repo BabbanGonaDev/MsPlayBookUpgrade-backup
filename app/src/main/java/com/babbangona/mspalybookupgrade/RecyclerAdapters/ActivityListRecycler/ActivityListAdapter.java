@@ -87,10 +87,17 @@ public class ActivityListAdapter extends RecyclerView.Adapter<ActivityListAdapte
             if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase("4")){
                 progress_bar.setVisibility(View.GONE);
                 btn_act_action.setText(context.getResources().getString(R.string.update_portfolio));
+            }else if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase("3")){
+                progress_bar.setVisibility(View.VISIBLE);
+                progress_bar.setMax(Integer.parseInt(activityListRecyclerModel.getTotal_field_count()));
+                progress_bar.setProgress(Integer.parseInt(activityListRecyclerModel.getLogged_field_count()));
+                progress_bar.setProgressDrawable(context.getResources().getDrawable(R.drawable.progress_drawable_horizontal_hg));
+                btn_act_action.setText(button_name);
             }else{
                 progress_bar.setVisibility(View.VISIBLE);
                 progress_bar.setMax(Integer.parseInt(activityListRecyclerModel.getTotal_field_count()));
                 progress_bar.setProgress(Integer.parseInt(activityListRecyclerModel.getLogged_field_count()));
+                progress_bar.setProgressDrawable(context.getResources().getDrawable(R.drawable.progress_drawable_horizontal));
                 btn_act_action.setText(button_name);
             }
             btn_act_action.setOnClickListener((view)->navigateToActivityPage(activityListRecyclerModel));

@@ -1,12 +1,5 @@
 package com.babbangona.mspalybookupgrade;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +13,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerAdapter;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListPageListModelClass;
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerAdapter;
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.HGFieldListRecycler.HGFieldListPageListModelClass;
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.HGFieldListRecycler.HGFieldListRecyclerAdapter;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
@@ -33,16 +35,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FieldListPage extends AppCompatActivity {
+public class HGFieldListPage extends AppCompatActivity {
+
+    @BindView(R.id.toolbar_field_list)
+    Toolbar toolbar_field_list;
 
     @BindView(R.id.et_search)
     TextView et_search;
 
     @BindView(R.id.search_edit_text)
     EditText search_edit_text;
-
-    @BindView(R.id.toolbar_field_list)
-    Toolbar toolbar_field_list;
 
     @BindView(R.id.back_to_toolbar)
     ImageView back_to_toolbar;
@@ -56,13 +58,13 @@ public class FieldListPage extends AppCompatActivity {
     @BindView(R.id.recycler_view)
     RecyclerView recycler_view;
 
-    FieldListPageListModelClass fieldListPageListModelClass;
+    HGFieldListPageListModelClass hgFieldListPageListModelClass;
 
     AppDatabase appDatabase;
 
     SharedPrefs sharedPrefs;
 
-    FieldListRecyclerAdapter fieldListRecyclerAdapter;
+    HGFieldListRecyclerAdapter hgFieldListRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,15 +72,15 @@ public class FieldListPage extends AppCompatActivity {
         setContentView(R.layout.activity_field_list_page);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar_field_list);
-        appDatabase = AppDatabase.getInstance(FieldListPage.this);
-        sharedPrefs = new SharedPrefs(FieldListPage.this);
+        appDatabase = AppDatabase.getInstance(HGFieldListPage.this);
+        sharedPrefs = new SharedPrefs(HGFieldListPage.this);
         showView(toolbar_linear_layout);
         hideView(search_linear_layout);
         loadAdapter(sharedPrefs.getKeyRouteType());
         int offset;
-        if (sharedPrefs.getKeyAdapterOffsetFieldList() == 0){
+        if (sharedPrefs.getKeyAdapterOffsetHgFieldList() == 0){
             offset = 1;
-            sharedPrefs.setKeyAdapterOffsetFieldList(1);
+            sharedPrefs.setKeyAdapterOffsetHgFieldList(1);
         }else{
             offset = 0;
         }
@@ -113,25 +115,25 @@ public class FieldListPage extends AppCompatActivity {
         String village = "%"+sharedPrefs.getKeySearchVillage()+"%";
         switch (route){
             case "1":
-                fieldListPageListModelClass = new ViewModelProvider(this,
+                hgFieldListPageListModelClass = new ViewModelProvider(this,
                         new MyViewModelFactory2(appDatabase.fieldsDao(), this,
                                 Double.parseDouble(min_lat),Double.parseDouble(max_lat),
                                 Double.parseDouble(min_lng),Double.parseDouble(max_lng)))
-                        .get(FieldListPageListModelClass.class);
-                fieldListPageListModelClass.filterTextAll.setValue("");//from grid
+                        .get(HGFieldListPageListModelClass.class);
+                hgFieldListPageListModelClass.filterTextAll.setValue("");//from grid
                 break;
             case "2":
-                fieldListPageListModelClass = new ViewModelProvider(this,
+                hgFieldListPageListModelClass = new ViewModelProvider(this,
                         new MyViewModelFactory1(appDatabase.fieldsDao(), this,unique_field_id,
                                 ik_number,member_id,member_name,village))
-                        .get(FieldListPageListModelClass.class);
-                fieldListPageListModelClass.filterTextAll.setValue("");//from search
+                        .get(HGFieldListPageListModelClass.class);
+                hgFieldListPageListModelClass.filterTextAll.setValue("");//from search
                 break;
             case "3":
-                fieldListPageListModelClass = new ViewModelProvider(this,
+                hgFieldListPageListModelClass = new ViewModelProvider(this,
                         new MyViewModelFactory(appDatabase.fieldsDao(), this))
-                        .get(FieldListPageListModelClass.class);
-                fieldListPageListModelClass.filterTextAll.setValue("");//from all
+                        .get(HGFieldListPageListModelClass.class);
+                hgFieldListPageListModelClass.filterTextAll.setValue("");//from all
                 break;
         }
     }
@@ -147,7 +149,7 @@ public class FieldListPage extends AppCompatActivity {
 
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
-            return (T) new FieldListPageListModelClass(application, context);
+            return (T) new HGFieldListPageListModelClass(application, context);
         }
     }
 
@@ -174,7 +176,7 @@ public class FieldListPage extends AppCompatActivity {
 
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
-            return (T) new FieldListPageListModelClass(application, context,unique_field_id,ik_number,member_id,member_name,village);
+            return (T) new HGFieldListPageListModelClass(application, context,unique_field_id,ik_number,member_id,member_name,village);
         }
     }
 
@@ -198,25 +200,25 @@ public class FieldListPage extends AppCompatActivity {
 
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
-            return (T) new FieldListPageListModelClass(application, context,min_lat,max_lat,min_lng,max_lng);
+            return (T) new HGFieldListPageListModelClass(application, context,min_lat,max_lat,min_lng,max_lng);
         }
     }
 
     private void setAdapter(int offset) {
-        fieldListRecyclerAdapter = new FieldListRecyclerAdapter(this);
+        hgFieldListRecyclerAdapter = new HGFieldListRecyclerAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         int smallPadding = getResources().getDimensionPixelSize(R.dimen.dimen_5dp);
         VerticalSpaceItemDecoration verticalSpaceItemDecoration = new VerticalSpaceItemDecoration(smallPadding);
         recycler_view.addItemDecoration(verticalSpaceItemDecoration);
         recycler_view.setLayoutManager(layoutManager);
-        fieldListPageListModelClass.fieldListRecyclerModel.observe(this,fieldListRecyclerAdapter::submitList);
-        recycler_view.setAdapter(fieldListRecyclerAdapter);
+        hgFieldListPageListModelClass.hgFieldListRecyclerModel.observe(this,hgFieldListRecyclerAdapter::submitList);
+        recycler_view.setAdapter(hgFieldListRecyclerAdapter);
 
-        textWatcher(search_edit_text,fieldListPageListModelClass);
+        textWatcher(search_edit_text,hgFieldListPageListModelClass);
 
     }
 
-    public void textWatcher(EditText editText, FieldListPageListModelClass fieldListPageListModelClass) {
+    public void textWatcher(EditText editText, HGFieldListPageListModelClass hgFieldListPageListModelClass) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -226,9 +228,9 @@ public class FieldListPage extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (String.valueOf(s).isEmpty()){
-                    fieldListPageListModelClass.filterTextAll.setValue("%%");
+                    hgFieldListPageListModelClass.filterTextAll.setValue("%%");
                 }else{
-                    fieldListPageListModelClass.filterTextAll.setValue("%" + s + "%");
+                    hgFieldListPageListModelClass.filterTextAll.setValue("%" + s + "%");
                 }
             }
 
@@ -250,7 +252,7 @@ public class FieldListPage extends AppCompatActivity {
 
     void startPreviousActivity(){
         finish();
-        startActivity(new Intent(FieldListPage.this,GridDetails.class));
+        startActivity(new Intent(HGFieldListPage.this,GridDetails.class));
     }
 
     void removeSearchTray(){

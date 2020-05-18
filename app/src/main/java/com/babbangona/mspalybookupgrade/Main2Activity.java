@@ -49,7 +49,8 @@ public class Main2Activity extends AppCompatActivity {
     String LeadMIKAdjustment(String staff_role){
         if (staff_role.equalsIgnoreCase("LMIK")){
             return "LMIk";
+        }else{
+            return staff_role;
         }
-        return staff_role;
     }
 }

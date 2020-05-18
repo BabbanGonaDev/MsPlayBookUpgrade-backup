@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.babbangona.mspalybookupgrade.FieldListPage;
-import com.babbangona.mspalybookupgrade.GridDetails;
+import com.babbangona.mspalybookupgrade.HGFieldListPage;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
@@ -162,7 +162,10 @@ public class GridDetailsRecyclerAdapter extends RecyclerView.Adapter<GridDetails
                     break;
                 case("3"):
                     //hg_log
-                    fieldPortionCountByActivity = -1;
+                    fieldPortionCountByActivity = appDatabase.hgActivitiesFlagDao().fieldPortionCountForHG(
+                            "%"+sharedPrefs.getStaffID()+"%", gridDetailsRecyclerModelList.getMin_lat(),
+                            gridDetailsRecyclerModelList.getMax_lat(), gridDetailsRecyclerModelList.getMin_lng(),
+                            gridDetailsRecyclerModelList.getMax_lng());
                     break;
                 default:
                     fieldPortionCountByActivity = 0;
@@ -177,7 +180,13 @@ public class GridDetailsRecyclerAdapter extends RecyclerView.Adapter<GridDetails
                 );*/
                 string_text = string_text + (i+1) + "\n#" + fieldPortionCount;
                 tv.setText(string_text);
-                int percent_field_count_by_activity = fieldPortionCountByActivity * 100 / fieldPortionCount;
+                int percent_field_count_by_activity;
+                if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("3")) {
+                    percent_field_count_by_activity = fieldPortionCountByActivity * 100 / fieldPortionCount;
+                    percent_field_count_by_activity = 100 - percent_field_count_by_activity;
+                } else {
+                    percent_field_count_by_activity = fieldPortionCountByActivity * 100 / fieldPortionCount;
+                }
                 if (percent_field_count_by_activity <= 25) {
                     tv.setBackground(context.getResources().getDrawable(R.drawable.grid_red));
                     tv.setTextColor(Color.parseColor("#ffffff"));
@@ -203,7 +212,12 @@ public class GridDetailsRecyclerAdapter extends RecyclerView.Adapter<GridDetails
 
         void tvClick(GridDetailsRecyclerModel gridDetailsRecyclerModelList, int fieldPortionCount){
             if (fieldPortionCount > 0){
-                Intent intent = new Intent (context, FieldListPage.class);
+                Intent intent;
+                if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("3")) {
+                    intent = new Intent(context, HGFieldListPage.class);
+                } else {
+                    intent = new Intent(context, FieldListPage.class);
+                }
                 sharedPrefs.setKeyRouteType("1");
                 Log.d("Locations_click",
                         gridDetailsRecyclerModelList.getMin_lat()+"|"+

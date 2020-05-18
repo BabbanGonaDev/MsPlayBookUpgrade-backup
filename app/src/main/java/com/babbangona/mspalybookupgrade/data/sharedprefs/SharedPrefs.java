@@ -50,12 +50,22 @@ public class SharedPrefs {
     public static final String KEY_SEARCH_MEMBER_NAME = "member_name";
     public static final String KEY_SEARCH_VILLAGE = "village";
     public static final String KEY_ADAPTER_OFFSET_FIELD_LIST = "adapter_offset_field_list";
+    public static final String KEY_ADAPTER_OFFSET_HG_FIELD_LIST = "adapter_offset_hg_field_list";
 
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyAdapterOffsetHgFieldList(int offset){
+        // Storing role in pref
+        editor.putInt(KEY_ADAPTER_OFFSET_HG_FIELD_LIST, offset);
+
+
+        // commit changes
+        editor.commit();
     }
 
     public void setKeyAdapterOffsetFieldList(int offset){
@@ -263,6 +273,10 @@ public class SharedPrefs {
 
     public int getKeyAdapterOffsetFieldList(){
         return pref.getInt(KEY_ADAPTER_OFFSET_FIELD_LIST ,0);
+    }
+
+    public int getKeyAdapterOffsetHgFieldList(){
+        return pref.getInt(KEY_ADAPTER_OFFSET_HG_FIELD_LIST ,0);
     }
 
 

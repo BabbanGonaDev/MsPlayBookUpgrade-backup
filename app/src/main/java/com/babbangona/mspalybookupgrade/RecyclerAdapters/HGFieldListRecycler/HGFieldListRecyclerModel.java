@@ -1,12 +1,8 @@
-package com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler;
+package com.babbangona.mspalybookupgrade.RecyclerAdapters.HGFieldListRecycler;
 
-public class FieldListRecyclerModel {
+public class HGFieldListRecyclerModel {
 
     private String unique_field_id;
-
-    private String fertilizer_1_status;
-
-    private String fertilizer_2_status;
 
     private String field_r_id;
 
@@ -26,13 +22,10 @@ public class FieldListRecyclerModel {
 
     private String field_size;
 
-    public FieldListRecyclerModel(String unique_field_id, String fertilizer_1_status, String fertilizer_2_status,
-                                  String field_r_id, String member_name, String phone_number,
-                                  String village_name, String min_lat, String max_lat, String min_lng,
-                                  String max_lng, String field_size) {
+    public HGFieldListRecyclerModel(String unique_field_id, String field_r_id, String member_name,
+                                    String phone_number, String village_name, String min_lat,
+                                    String max_lat, String min_lng, String max_lng, String field_size) {
         this.unique_field_id = unique_field_id;
-        this.fertilizer_1_status = fertilizer_1_status;
-        this.fertilizer_2_status = fertilizer_2_status;
         this.field_r_id = field_r_id;
         this.member_name = member_name;
         this.phone_number = phone_number;
@@ -50,22 +43,6 @@ public class FieldListRecyclerModel {
 
     public void setUnique_field_id(String unique_field_id) {
         this.unique_field_id = unique_field_id;
-    }
-
-    public String getFertilizer_1_status() {
-        return fertilizer_1_status;
-    }
-
-    public void setFertilizer_1_status(String fertilizer_1_status) {
-        this.fertilizer_1_status = fertilizer_1_status;
-    }
-
-    public String getFertilizer_2_status() {
-        return fertilizer_2_status;
-    }
-
-    public void setFertilizer_2_status(String fertilizer_2_status) {
-        this.fertilizer_2_status = fertilizer_2_status;
     }
 
     public String getField_r_id() {

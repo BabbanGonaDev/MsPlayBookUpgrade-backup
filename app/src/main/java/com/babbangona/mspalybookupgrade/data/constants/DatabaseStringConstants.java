@@ -16,6 +16,9 @@ public class DatabaseStringConstants {
     public static final String FIELDS_TABLE                             = "fields";
     public static final String STAFF_TABLE                              = "staff";
     public static final String MEMBERS_TABLE                            = "members";
+    public static final String HG_ACTIVITY_FLAGS_TABLE                  = "hg_activities_flag";
+    public static final String HG_LIST_TABLE                            = "hg_list";
+    public static final String LOGS_TABLE                               = "logs";
 
     /**
      * activity_list column names
@@ -72,4 +75,33 @@ public class DatabaseStringConstants {
     public static final String COL_PHONE_NUMBER                         = "phone_number";
     public static final String COL_VILLAGE_NAME                         = "village_name";
 
+    /**
+     * hg_activities column names
+     */
+    public static final String COL_UNIQUE_FIELD_ID_HG_ACTIVITY          = "unique_field_id";
+    public static final String COL_HG_TYPE                              = "hg_type";
+    public static final String COL_HG_DATE                              = "hg_date";
+    public static final String COL_HG_STATUS                            = "hg_status";
+    public static final String COL_STAFF_ID_HG_ACTIVITIES               = "staff_id";
+    public static final String COL_SYNC_FLAG_HG_ACTIVITIES              = "sync_flag";
+
+    /**
+     * hg_list column names
+     */
+    public static final String COL_HG_TYPE_HG_LIST                      = "hg_type";
+    public static final String COL_HG_TYPE_DEACTIVATED_STATUS           = "deactivated_status";
+    public static final String COL_USER_CATEGORY_HG_LIST                = "user_category";
+
+    /**
+     * logs column names
+     */
+    public static final String COL_UNIQUE_FIELD_ID_LOGS                 = "unique_field_id";
+    public static final String COL_STAFF_ID_LOGS                        = "staff_id";
+    public static final String COL_ACTIVITY_TYPE_LOGS                   = "activity_type";
+    public static final String COL_DATE_LOGGED                          = "date_logged";
+    public static final String COL_ROLE                                 = "role";
+    public static final String COL_LATITUDE                             = "latitude";
+    public static final String COL_LONGITUDE                            = "longitude";
+    public static final String COL_IMEI                                 = "imei";
+    public static final String COL_SYNC_FLAG_LOGS                       = "sync_flag";
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class NormalActivitiesFlagDao {
 
     @Query(" SELECT COUNT(a.unique_field_id) FROM normal_activities_flag a JOIN fields b " +
-            "on a.unique_field_id = b.unique_field_id WHERE a.fertilizer_1_status = '1' " +
+            "ON a.unique_field_id = b.unique_field_id WHERE a.fertilizer_1_status = '1' " +
             "AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) ")
     public abstract int getFertilizer1Count(String staff_id);
 
@@ -39,6 +39,28 @@ public abstract class NormalActivitiesFlagDao {
             "AND ((b.min_lat+b.max_lat)/2) > :min_lat AND ((b.min_lat+b.max_lat)/2) <= :max_lat AND ((b.min_lng+b.max_lng)/2) > :min_lng " +
             "AND ((b.min_lng+b.max_lng)/2) <= :max_lng AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) ")
     public abstract int fieldPortionCountForFertilizer2(String staff_id, double min_lat, double max_lat, double min_lng, double max_lng);
+
+    @Query("SELECT COUNT(unique_field_id) FROM normal_activities_flag WHERE unique_field_id = :unique_field_id")
+    public abstract int countFieldInNormalActivity(String unique_field_id);
+
+    @Query("UPDATE normal_activities_flag SET fertilizer_1_status = :flag, fertilizer_1_date = :date," +
+            "staff_id = :staff_id, sync_flag = '0' " +
+            "WHERE unique_field_id = :unique_field_id")
+    public abstract void updateFert1Flag(String unique_field_id, String flag, String date, String staff_id);
+
+    @Query("UPDATE normal_activities_flag SET fertilizer_2_status = :flag, fertilizer_2_date = :date, " +
+            "staff_id = :staff_id, sync_flag = '0' " +
+            "WHERE unique_field_id = :unique_field_id")
+    public abstract void updateFert2Flag(String unique_field_id, String flag, String date, String staff_id);
+
+    @Query(" SELECT COUNT(unique_field_id) FROM normal_activities_flag WHERE sync_flag != '1' ")
+    public abstract int getUnSyncedNormalActivitiesCount();
+
+    @Query(" SELECT * FROM normal_activities_flag WHERE sync_flag != '1' ")
+    public abstract List<NormalActivitiesFlag> getUnSyncedNormalActivities();
+
+    @Query(" UPDATE normal_activities_flag SET sync_flag = '1' WHERE unique_field_id = :unique_field_id ")
+    public abstract void updateNormalActivitiesSyncFlag(String unique_field_id);
 
     /**
      * Insert the object in database

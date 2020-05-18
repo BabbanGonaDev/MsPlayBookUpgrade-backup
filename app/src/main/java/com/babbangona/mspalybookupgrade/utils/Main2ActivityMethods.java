@@ -103,9 +103,11 @@ public class Main2ActivityMethods {
     private int getLoggedFieldCount(String activity_id){
         int count_returned;
         if (activity_id.equalsIgnoreCase("1")){
-            count_returned = appDatabase.normalActivitiesFlagDao().getFertilizer1Count(sharedPrefs.getStaffID());
+            count_returned = appDatabase.normalActivitiesFlagDao().getFertilizer1Count("%"+sharedPrefs.getStaffID()+"%");
         }else if (activity_id.equalsIgnoreCase("2")){
-            count_returned = appDatabase.normalActivitiesFlagDao().getFertilizer2Count(sharedPrefs.getStaffID());
+            count_returned = appDatabase.normalActivitiesFlagDao().getFertilizer2Count("%"+sharedPrefs.getStaffID()+"%");
+        }else if (activity_id.equalsIgnoreCase("3")){
+            count_returned = appDatabase.hgActivitiesFlagDao().getHGCount("%"+sharedPrefs.getStaffID()+"%");
         }else if (activity_id.equalsIgnoreCase("4")){
             count_returned = 0;
         }else{
@@ -133,6 +135,13 @@ public class Main2ActivityMethods {
                     " " +context.getResources().getString(R.string.out_of)+
                     " "+total_field_count+
                     " "+context.getResources().getString(R.string.sentence_close);
+        }else if (activity_id.equalsIgnoreCase("3")){
+            composed_sentence = (int)percent+
+                    " "+context.getResources().getString(R.string.hg_pt_1)+
+                    " ("+logged_field_count+
+                    " " +context.getResources().getString(R.string.out_of)+
+                    " "+total_field_count+
+                    " "+context.getResources().getString(R.string.sentence_close_hg);
         }else if (activity_id.equalsIgnoreCase("4")){
             composed_sentence = context.getResources().getString(R.string.set_portfolio);
         }else{

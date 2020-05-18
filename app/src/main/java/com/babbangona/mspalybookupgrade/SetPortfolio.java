@@ -41,6 +41,7 @@ import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.MsPlaybookInputDataDownloadService;
 import com.babbangona.mspalybookupgrade.network.StaffListDownloadService;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -145,9 +146,19 @@ public class SetPortfolio extends AppCompatActivity {
     public void setFab_download_flags(){
         Set<String> portfolioSet = sharedPrefs.getKeyPortfolioList();
         if (portfolioSet.isEmpty()){
-            Toast.makeText(this, "Please select portfolio before downloading", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.select_portfolio_before_downloading), Toast.LENGTH_SHORT).show();
         }else{
-            dialogInputRecordWithSync();
+            showDialogSetPortfolioConfirmation(getResources().getString(R.string.confirm_set_portfolio),SetPortfolio.this);
+        }
+    }
+
+    @OnClick(R.id.fab_delete_flags)
+    public void setFab_delete_flags(){
+        Set<String> addedPortfolioSet = sharedPrefs.getKeyAddedPortfolioList();
+        if (addedPortfolioSet.isEmpty()){
+            Toast.makeText(this, getResources().getString(R.string.select_portfolio_before_deleting), Toast.LENGTH_SHORT).show();
+        }else{
+            showDialogDeletePortfolioConfirmation(getResources().getString(R.string.confirm_deleting_portfolio),SetPortfolio.this);
         }
     }
 
@@ -489,6 +500,66 @@ public class SetPortfolio extends AppCompatActivity {
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             return (T) new PortfolioPageListModelClass(application, context);
+        }
+    }
+
+    private void showDialogSetPortfolioConfirmation(String s, Context context) {
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showDialogSetPortfolioConfirmation(builder,s,context);
+    }
+
+    private void showDialogSetPortfolioConfirmation(MaterialAlertDialogBuilder builder, String s, Context context) {
+        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_warning))
+                .setTitle(context.getResources().getString(R.string.attention))
+                .setMessage(s)
+                .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                    dialogInputRecordWithSync();
+                })
+                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    private void showDialogDeletePortfolioConfirmation(String s, Context context) {
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showDialogDeletePortfolioConfirmation(builder,s,context);
+    }
+
+    private void showDialogDeletePortfolioConfirmation(MaterialAlertDialogBuilder builder, String s, Context context) {
+        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_warning))
+                .setTitle(context.getResources().getString(R.string.attention))
+                .setMessage(s)
+                .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                    deletePortfolio(sharedPrefs.getKeyAddedPortfolioList());
+                })
+                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    void deletePortfolio(Set<String> set_portfolio_list){
+        for (String x: set_portfolio_list) {
+            appDatabase.fieldsDao().deleteRecords(x);
+        }
+        Set<String> get_set_portfolio = sharedPrefs.getKeyPortfolioList();
+        Set<String> get_added_portfolio = sharedPrefs.getKeyAddedPortfolioList();
+        if (!get_set_portfolio.isEmpty()){
+            get_set_portfolio.removeAll(get_added_portfolio);
+            sharedPrefs.setKeyPortfolioList(get_set_portfolio);
+        }
+        if (!get_added_portfolio.isEmpty()){
+            get_added_portfolio.clear();
+            sharedPrefs.setKeyAddedPortfolioList(get_added_portfolio);
         }
     }
 

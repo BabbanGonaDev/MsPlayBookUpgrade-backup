@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/search_button"
+        android:padding="@dimen/dimen_10dp"
         android:textColor="@color/colorWhite" />
 
     <androidx.recyclerview.widget.RecyclerView

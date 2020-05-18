@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 
@@ -18,10 +20,9 @@ import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class GridDetails extends AppCompatActivity {
-
-
 
     @BindView(R.id.toolbar_grid_details)
     Toolbar toolbar_grid_details;
@@ -48,6 +49,8 @@ public class GridDetails extends AppCompatActivity {
 
         initActivitiesRecycler();
 
+        toolbar_grid_details.setNavigationOnClickListener(v -> loadPreviousActivity());
+
     }
 
     public void initActivitiesRecycler(){
@@ -66,5 +69,27 @@ public class GridDetails extends AppCompatActivity {
                     gridDetailsRecyclerAdapter.notifyDataSetChanged();
                 });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        loadPreviousActivity();
+    }
+
+    @OnClick(R.id.btn_filter)
+    public void loadAllFields(){
+        Intent intent;
+        if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("3")) {
+            intent = new Intent(GridDetails.this, HGFieldListPage.class);
+        } else {
+            intent = new Intent(GridDetails.this, FieldListPage.class);
+        }
+        sharedPrefs.setKeyRouteType("3");
+        startActivity(intent);
+    }
+
+    void loadPreviousActivity(){
+        startActivity(new Intent(GridDetails.this,Homepage.class));
     }
 }

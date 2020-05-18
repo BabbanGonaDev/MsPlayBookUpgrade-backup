@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListAdapter;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -260,8 +261,18 @@ public class Homepage extends AppCompatActivity {
     }
 
     void syncRecords() {
-        Intent i = new Intent(this, ActivityListDownloadService.class);
-        this.startService(i);
+        if (sharedPrefs.getStaffRole().equalsIgnoreCase("LMIk") ||
+                sharedPrefs.getStaffRole().equalsIgnoreCase("MSS")){
+            if (sharedPrefs.getKeyPortfolioList().isEmpty()){
+                Toast.makeText(this, getResources().getString(R.string.set_portfolio_before_sync), Toast.LENGTH_SHORT).show();
+            }else{
+                Intent i = new Intent(this, ActivityListDownloadService.class);
+                this.startService(i);
+            }
+        }else{
+            Intent i = new Intent(this, ActivityListDownloadService.class);
+            this.startService(i);
+        }
     }
 
     public void initActivitiesRecycler(){
