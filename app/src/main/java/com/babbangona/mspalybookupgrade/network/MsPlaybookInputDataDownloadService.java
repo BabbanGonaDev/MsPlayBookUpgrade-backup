@@ -10,11 +10,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
-import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
+import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
-import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
 import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.gson.Gson;
@@ -49,6 +48,7 @@ public class MsPlaybookInputDataDownloadService extends IntentService {
         super.onCreate();
         sharedPrefs = new SharedPrefs(getApplicationContext());
         setPortfolioMethods = new SetPortfolioMethods();
+        appDatabase = AppDatabase.getInstance(getApplicationContext());
 
         // if you override onCreate(), make sure to call super().
         // If a Context object is needed, call getApplicationContext() here.
@@ -61,7 +61,7 @@ public class MsPlaybookInputDataDownloadService extends IntentService {
 
     public void getInputData() {
 
-        String last_synced = "2019-01-01 00:00:00";
+        String last_synced = getLastSyncTimeInputRecords();
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<MsPlaybookInputDownload> call = retrofitInterface.getMsPlaybookInputDataDownload(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
@@ -78,10 +78,24 @@ public class MsPlaybookInputDataDownloadService extends IntentService {
                         List<Fields> fieldsList = msPlaybookInputDownload.getFields();
                         List<Members> membersList = msPlaybookInputDownload.getMembers();
                         if (fieldsList.size() > 0){
-                            saveToFieldsTable(fieldsList);
+                            saveToFieldsTable(fieldsList);if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncFields(sharedPrefs.getStaffID(),msPlaybookInputDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_fields(msPlaybookInputDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
                         }
                         if (membersList.size() > 0){
-                            saveToMembersTable(membersList);
+                            saveToMembersTable(membersList);if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncMembers(sharedPrefs.getStaffID(),msPlaybookInputDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_members(msPlaybookInputDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
                         }
                     }
                 }else {
@@ -90,15 +104,15 @@ public class MsPlaybookInputDataDownloadService extends IntentService {
                     switch (sc) {
                         case 400:
                             Log.e("Error 400", "Bad Request");
-                            Toast.makeText(MsPlaybookInputDataDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(MsPlaybookInputDataDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         case 404:
                             Log.e("Error 404", "Not Found");
-                            Toast.makeText(MsPlaybookInputDataDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(MsPlaybookInputDataDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         default:
                             Log.e("Error", "Generic Error");
-                            Toast.makeText(MsPlaybookInputDataDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(MsPlaybookInputDataDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -208,6 +222,32 @@ public class MsPlaybookInputDataDownloadService extends IntentService {
         public void setID(String ID) {
             this.ID = ID;
         }
+    }
+
+    String getLastSyncTimeInputRecords(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncFields(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    int getStaffCountLastSync(){
+
+        int count = 0;
+        try {
+            count = appDatabase.lastSyncTableDao().getStaffCount(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            count = 0;
+        }
+        return count;
     }
 
 }

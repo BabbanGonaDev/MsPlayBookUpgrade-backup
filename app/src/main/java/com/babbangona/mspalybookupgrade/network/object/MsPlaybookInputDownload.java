@@ -2,7 +2,6 @@ package com.babbangona.mspalybookupgrade.network.object;
 
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
-import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

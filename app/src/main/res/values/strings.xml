@@ -24,6 +24,9 @@
     <string name="all_staff">All Staff</string>
     <string name="added_staff">Added Staff</string>
     <string name="set_portfolio_title">Set Portfolio</string>
+    <string name="fert_1_title">Fertilizer 1</string>
+    <string name="fert_2_title">Fertilizer 2</string>
+    <string name="HG_title">HG Log</string>
     <string name="download_staff_list">Download Staff List</string>
     <string name="home_place_holder">Home</string>
     <string name="search_button">Search</string>
@@ -70,4 +73,6 @@
     <string name="confirm">Confirm</string>
     <string name="filter_fields">Filter Fields</string>
     <string name="view">View</string>
+    <string name="load_all_fields">Search all fields</string>
+    <string name="visitation_logged">Visitation Logged</string>
 </resources>

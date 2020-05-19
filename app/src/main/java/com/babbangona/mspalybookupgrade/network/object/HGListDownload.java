@@ -1,6 +1,5 @@
 package com.babbangona.mspalybookupgrade.network.object;
 
-import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
 import com.google.gson.annotations.SerializedName;
 

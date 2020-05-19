@@ -1,10 +1,13 @@
 package com.babbangona.mspalybookupgrade.network;
 
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
+import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
+import com.babbangona.mspalybookupgrade.network.object.LogsDownload;
 import com.babbangona.mspalybookupgrade.network.object.LogsUpload;
 import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
+import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 
@@ -36,6 +39,17 @@ public interface RetrofitInterface {
     Call<MsPlaybookInputDownload> getMsPlaybookInputDataDownload(@Query("staff_id") String staff_id,
                                                                  @Query("portfolio_list") String portfolio_list,
                                                                  @Query("last_synced_time") String last_synced_time);
+
+
+
+    @GET("downloadLogs")
+    Call<LogsDownload> downloadLogs(@Query("staff_id") String staff_id, @Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadHGActivityFlag")
+    Call<HGActivitiesFlagDownload> downloadHGActivityFlag(@Query("staff_id") String staff_id, @Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadNormalActivityFlag")
+    Call<NormalActivitiesFlagDownload> downloadNormalActivityFlag(@Query("staff_id") String staff_id, @Query("last_synced_time") String last_synced_time);
 
     @FormUrlEncoded
     @POST("uploadLogsRecord")

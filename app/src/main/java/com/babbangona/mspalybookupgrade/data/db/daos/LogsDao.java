@@ -8,12 +8,11 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
-import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 
 import java.util.List;
 
 @Dao
-public interface LogsDao {
+public abstract class LogsDao {
 
     @Query(" SELECT COUNT(unique_field_id) FROM logs WHERE sync_flag != '1' ")
     public abstract int getUnSyncedLogsCount();
@@ -30,24 +29,24 @@ public interface LogsDao {
      * @param logs, object to be inserted
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Logs logs);
+    public abstract void insert(Logs logs);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(List<Logs> logs);
+    public abstract void insert(List<Logs> logs);
 
     /**
      * update the object in database
      * @param logs, object to be updated
      */
     @Update
-    void update(Logs logs);
+    public abstract void update(Logs logs);
 
     /**
      * delete the object from database
      * @param logs, object to be deleted
      */
     @Delete
-    void delete(Logs logs);
+    public abstract void delete(Logs logs);
 
 
 

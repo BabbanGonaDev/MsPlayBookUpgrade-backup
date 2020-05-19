@@ -39,6 +39,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecora
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.network.ActivityListDownloadService;
 import com.babbangona.mspalybookupgrade.network.MsPlaybookInputDataDownloadService;
 import com.babbangona.mspalybookupgrade.network.StaffListDownloadService;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -277,7 +278,7 @@ public class SetPortfolio extends AppCompatActivity {
     }
 
     void syncInputRecords(){
-        Intent i = new Intent(this, MsPlaybookInputDataDownloadService.class);
+        Intent i = new Intent(this, ActivityListDownloadService.class);
         this.startService(i);
     }
 

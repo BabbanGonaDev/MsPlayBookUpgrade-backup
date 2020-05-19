@@ -2,9 +2,7 @@ package com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -37,7 +35,6 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -141,7 +138,8 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
             tv_latitude.setText(latitude);
             tv_longitude.setText(longitude);
             String activity_status = getStatus(fieldListRecyclerModel,btn_log_activity,iv_activity_signal);
-            btn_log_activity.setOnClickListener(v -> logActivity(fieldListRecyclerModel,activity_status,context,getAdapterPosition()));
+            btn_log_activity.setOnClickListener(v -> logActivity(fieldListRecyclerModel,activity_status,context,getAdapterPosition(),"activity"));
+            btn_log_visitation.setOnClickListener(v -> logActivity(fieldListRecyclerModel,activity_status,context,getAdapterPosition(),"visitation"));
             btn_phone_call.setOnClickListener(v -> callMemberDialog(context,fieldListRecyclerModel));
         }
 
@@ -187,7 +185,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
         }
 
         private void logActivity(FieldListRecyclerModel fieldListRecyclerModel, String activity_status,
-                                 Context context, int position){
+                                 Context context, int position, String module){
 
             locationGetter = GPSController.initialiseLocationListener((Activity)context);
             double latitude = locationGetter.getLatitude();
@@ -205,13 +203,24 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
             Log.d("present_location",latitude + "|"+longitude);
 
             if (locationDistance <= allowedDistance){
-                showLogDialogStarter(fieldListRecyclerModel, activity_status,position,longitude,latitude);
+                if (module.equalsIgnoreCase("visitation")){
+                    logVisitation(fieldListRecyclerModel,latitude,longitude);
+                }else{
+                    showLogDialogStarter(fieldListRecyclerModel, activity_status,position,longitude,latitude);
+                }
             }else{
                 locationMismatchedDialog(latitude,longitude,min_lat,max_lat,min_lng,max_lng,
                         context,fieldListRecyclerModel.getUnique_field_id(),
                         context.getResources().getString(R.string.wrong_location));
             }
         }
+    }
+
+    private void logVisitation(FieldListRecyclerModel fieldListRecyclerModel, double latitude, double longitude){
+        appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                "Visitation",getDate("normal"),sharedPrefs.getStaffRole(),
+                String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+        Toast.makeText(context, context.getResources().getString(R.string.visitation_logged), Toast.LENGTH_SHORT).show();
     }
 
     private void showLogDialogStarter(FieldListRecyclerModel fieldListRecyclerModel,
@@ -295,6 +304,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
                 fieldListRecyclerModel.setFertilizer_1_status("1");
                 notifyItemChanged(position);
             }
+            Log.d("position_logger",position+"");
         }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
             if (field_existence > 0){
                 appDatabase.normalActivitiesFlagDao().updateFert2Flag(fieldListRecyclerModel.getUnique_field_id(),"1",

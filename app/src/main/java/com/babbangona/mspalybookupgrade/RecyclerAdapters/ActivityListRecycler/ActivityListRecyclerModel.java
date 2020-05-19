@@ -1,10 +1,5 @@
 package com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler;
 
-import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
-
 public class ActivityListRecyclerModel {
 
     private String activity_id;

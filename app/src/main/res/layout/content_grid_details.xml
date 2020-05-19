@@ -13,8 +13,9 @@
         android:id="@+id/btn_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/search_button"
+        android:text="@string/load_all_fields"
         android:padding="@dimen/dimen_10dp"
+        android:layout_margin="@dimen/dimen_10dp"
         android:textColor="@color/colorWhite" />
 
     <androidx.recyclerview.widget.RecyclerView

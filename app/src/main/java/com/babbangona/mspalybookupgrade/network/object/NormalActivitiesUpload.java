@@ -7,8 +7,12 @@ public class NormalActivitiesUpload {
     @SerializedName("unique_field_id")
     private String unique_field_id;
 
-    public NormalActivitiesUpload(String unique_field_id) {
+    @SerializedName("last_synced")
+    private String last_synced;
+
+    public NormalActivitiesUpload(String unique_field_id, String last_synced) {
         this.unique_field_id = unique_field_id;
+        this.last_synced = last_synced;
     }
 
     public String getUnique_field_id() {
@@ -17,5 +21,13 @@ public class NormalActivitiesUpload {
 
     public void setUnique_field_id(String unique_field_id) {
         this.unique_field_id = unique_field_id;
+    }
+
+    public String getLast_synced() {
+        return last_synced;
+    }
+
+    public void setLast_synced(String last_synced) {
+        this.last_synced = last_synced;
     }
 }

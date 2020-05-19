@@ -14,16 +14,22 @@ import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
+import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
+import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
+import com.babbangona.mspalybookupgrade.network.object.LogsDownload;
 import com.babbangona.mspalybookupgrade.network.object.LogsUpload;
 import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
+import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -56,7 +62,8 @@ public class ActivityListDownloadService extends IntentService {
     public void onCreate() {
         super.onCreate();
         sharedPrefs = new SharedPrefs(getApplicationContext());
-        setPortfolioMethods = new SetPortfolioMethods();
+        setPortfolioMethods = new SetPortfolioMethods();/**/
+        appDatabase = AppDatabase.getInstance(getApplicationContext());
 
         // if you override onCreate(), make sure to call super().
         // If a Context object is needed, call getApplicationContext() here.
@@ -64,9 +71,11 @@ public class ActivityListDownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        getActivityList();
-        getHGList();
         getInputData();
+        getHGList();
+        getHGACtivitiesFlagDownload();
+        getNormalActivitiesFlagDownload();
+
         if (appDatabase.logsDao().getUnSyncedLogsCount() > 0){
             syncUpLogs();
         }
@@ -76,11 +85,13 @@ public class ActivityListDownloadService extends IntentService {
         if (appDatabase.normalActivitiesFlagDao().getUnSyncedNormalActivitiesCount() > 0){
             syncUpNormalActivities();
         }
+        getStaffList();
+        getLogsDownload();
     }
 
     public void getActivityList() {
 
-        String last_synced = "2019-01-01 00:00:00";
+        String last_synced = getLastSyncActivityList();
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<ActivityListDownload> call = retrofitInterface.getActivityListDownload(last_synced);
@@ -97,6 +108,14 @@ public class ActivityListDownloadService extends IntentService {
                         List<ActivityList> activityLists = activityListDownload.getDownload_list();
                         if (activityLists.size() > 0){
                             saveToActivityListTable(activityLists);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncActivityList(sharedPrefs.getStaffID(),activityListDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_activity_list(activityListDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
                         }
                     }
 
@@ -106,15 +125,15 @@ public class ActivityListDownloadService extends IntentService {
                     switch (sc) {
                         case 400:
                             Log.e("Error 400", "Bad Request");
-                            Toast.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         case 404:
                             Log.e("Error 404", "Not Found");
-                            Toast.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         default:
                             Log.e("Error", "Generic Error");
-                            Toast.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -168,7 +187,7 @@ public class ActivityListDownloadService extends IntentService {
 
     public void getHGList() {
 
-        String last_synced = "2019-01-01 00:00:00";
+        String last_synced = getLastSyncTimeHGList();
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<HGListDownload> call = retrofitInterface.getHGListDownload(last_synced);
@@ -185,6 +204,14 @@ public class ActivityListDownloadService extends IntentService {
                         List<HGList> hgLists = hgListDownload.getDownload_list();
                         if (hgLists.size() > 0){
                             saveToHGListTable(hgLists);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncHGList(sharedPrefs.getStaffID(),hgListDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_hg_list(hgListDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
                         }
                     }
 
@@ -194,15 +221,15 @@ public class ActivityListDownloadService extends IntentService {
                     switch (sc) {
                         case 400:
                             Log.e("Error 400", "Bad Request");
-                            Toast.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         case 404:
                             Log.e("Error 404", "Not Found");
-                            Toast.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         default:
                             Log.e("Error", "Generic Error");
-                            Toast.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -256,7 +283,7 @@ public class ActivityListDownloadService extends IntentService {
 
     public void getInputData() {
 
-        String last_synced = "2019-01-01 00:00:00";
+        String last_synced = getLastSyncTimeInputRecords();
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<MsPlaybookInputDownload> call = retrofitInterface.getMsPlaybookInputDataDownload(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
@@ -274,27 +301,45 @@ public class ActivityListDownloadService extends IntentService {
                         List<Members> membersList = msPlaybookInputDownload.getMembers();
                         if (fieldsList.size() > 0){
                             saveToFieldsTable(fieldsList);
+                            saveToFieldsTable(fieldsList);if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncFields(sharedPrefs.getStaffID(),msPlaybookInputDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_fields(msPlaybookInputDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
                         }
                         if (membersList.size() > 0){
                             saveToMembersTable(membersList);
+                            saveToFieldsTable(fieldsList);if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncMembers(sharedPrefs.getStaffID(),msPlaybookInputDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_members(msPlaybookInputDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
                         }
                     }
+                    getActivityList();
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
                     switch (sc) {
                         case 400:
                             Log.e("Error 400", "Bad Request");
-                            Toast.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         case 404:
                             Log.e("Error 404", "Not Found");
-                            Toast.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         default:
                             Log.e("Error", "Generic Error");
-                            Toast.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
+                    getActivityList();
                 }
 
             }
@@ -302,7 +347,7 @@ public class ActivityListDownloadService extends IntentService {
             @Override
             public void onFailure(@NotNull Call<MsPlaybookInputDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_check_list", t.toString());
-
+                getActivityList();
             }
         });
 
@@ -431,6 +476,14 @@ public class ActivityListDownloadService extends IntentService {
                                 appDatabase.logsDao().updateLogs(logsUpload.getUnique_field_id(),logsUpload.getStaff_id(),logsUpload.getActivity_type(),logsUpload.getDate_logged());
                             }
                         });
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncUpLogs(sharedPrefs.getStaffID(),logsUploadList.get(0).getLast_synced());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_up_logs(logsUploadList.get(0).getLast_synced());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                        }
 
                     }
 
@@ -497,6 +550,14 @@ public class ActivityListDownloadService extends IntentService {
                                 appDatabase.hgActivitiesFlagDao().updateHGActivitiesSyncFlags(hgActivitiesUpload.getUnique_field_id(),hgActivitiesUpload.getHg_type());
                             }
                         });
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncUpHGActivitiesFlag(sharedPrefs.getStaffID(),hgActivitiesUploadList.get(0).getLast_synced());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_up_hg_activities_flag(hgActivitiesUploadList.get(0).getLast_synced());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                        }
 
                     }
 
@@ -559,6 +620,14 @@ public class ActivityListDownloadService extends IntentService {
                                 appDatabase.normalActivitiesFlagDao().updateNormalActivitiesSyncFlag(normalActivitiesUpload.getUnique_field_id());
                             }
                         });
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncUpNormalActivitiesFlag(sharedPrefs.getStaffID(),normalActivitiesUploadList.get(0).getLast_synced());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_up_normal_activities_flag(normalActivitiesUploadList.get(0).getLast_synced());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                        }
 
                     }
 
@@ -597,6 +666,501 @@ public class ActivityListDownloadService extends IntentService {
                 Log.d("TobiNewNormalActivities", t.toString());
             }
         });
+    }
+
+    public void getStaffList() {
+
+        String last_synced = getLastSyncTimeStaffList();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<StaffListDownload> call = retrofitInterface.getStaffListDownload(last_synced);
+
+        call.enqueue(new Callback<StaffListDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<StaffListDownload> call,
+                                   @NonNull Response<StaffListDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    StaffListDownload staffListDownload = response.body();
+
+                    if (staffListDownload != null) {
+                        List<StaffList> staffLists = staffListDownload.getDownload_list();
+                        if (staffLists.size() > 0){
+                            saveToStaffListTable(staffLists);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncStaff(sharedPrefs.getStaffID(),staffListDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_staff(staffListDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<StaffListDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_staff_list", t.toString());
+
+            }
+        });
+
+    }
+
+    void saveToStaffListTable(List<StaffList> staffLists){
+        SaveStaffListTable saveStaffListTable = new SaveStaffListTable();
+        saveStaffListTable.execute(staffLists);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveStaffListTable extends AsyncTask<List<StaffList>, Void, Void> {
+
+
+        private final String TAG = SaveStaffListTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<StaffList>... params) {
+
+            List<StaffList> staffLists = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.staffListDao().insert(staffLists);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    public void getLogsDownload() {
+
+        String last_synced = getLastSyncLogs();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<LogsDownload> call = retrofitInterface.downloadLogs(sharedPrefs.getStaffID(),last_synced);
+
+        call.enqueue(new Callback<LogsDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<LogsDownload> call,
+                                   @NonNull Response<LogsDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    LogsDownload logsDownload = response.body();
+
+                    if (logsDownload != null) {
+                        List<Logs> logsList = logsDownload.getDownload_list();
+                        if (logsList.size() > 0){
+                            saveToLogsTable(logsList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncDownLogs(sharedPrefs.getStaffID(),logsDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_logs(logsDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<LogsDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_staff_list", t.toString());
+
+            }
+        });
+
+    }
+
+    void saveToLogsTable(List<Logs> staffLists){
+        SaveLogsTable saveLogsTable = new SaveLogsTable();
+        saveLogsTable.execute(staffLists);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveLogsTable extends AsyncTask<List<Logs>, Void, Void> {
+
+
+        private final String TAG = SaveStaffListTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<Logs>... params) {
+
+            List<Logs> logsList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.logsDao().insert(logsList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    public void getHGACtivitiesFlagDownload() {
+
+        String last_synced = getLastSyncHGActivities();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<HGActivitiesFlagDownload> call = retrofitInterface.downloadHGActivityFlag(sharedPrefs.getStaffID(),last_synced);
+
+        call.enqueue(new Callback<HGActivitiesFlagDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<HGActivitiesFlagDownload> call,
+                                   @NonNull Response<HGActivitiesFlagDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    HGActivitiesFlagDownload hgActivitiesFlagDownload = response.body();
+
+                    if (hgActivitiesFlagDownload != null) {
+                        List<HGActivitiesFlag> hgActivitiesFlagList = hgActivitiesFlagDownload.getDownload_list();
+                        if (hgActivitiesFlagList.size() > 0){
+                            saveToHGActivitiesFlagTable(hgActivitiesFlagList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncDownHGActivitiesFlag(sharedPrefs.getStaffID(),hgActivitiesFlagDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_hg_activities_flag(hgActivitiesFlagDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<HGActivitiesFlagDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_staff_list", t.toString());
+
+            }
+        });
+
+    }
+
+    void saveToHGActivitiesFlagTable(List<HGActivitiesFlag> hgActivitiesFlagList){
+        SaveHGActivitiesFlagTable saveHGActivitiesFlagTable = new SaveHGActivitiesFlagTable();
+        saveHGActivitiesFlagTable.execute(hgActivitiesFlagList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveHGActivitiesFlagTable extends AsyncTask<List<HGActivitiesFlag>, Void, Void> {
+
+
+        private final String TAG = SaveHGActivitiesFlagTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<HGActivitiesFlag>... params) {
+
+            List<HGActivitiesFlag> hgActivitiesFlagList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.hgActivitiesFlagDao().insert(hgActivitiesFlagList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    public void getNormalActivitiesFlagDownload() {
+
+        String last_synced = getLastSyncNormalActivities();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<NormalActivitiesFlagDownload> call = retrofitInterface.downloadNormalActivityFlag(sharedPrefs.getStaffID(),last_synced);
+
+        call.enqueue(new Callback<NormalActivitiesFlagDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<NormalActivitiesFlagDownload> call,
+                                   @NonNull Response<NormalActivitiesFlagDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    NormalActivitiesFlagDownload normalActivitiesFlagDownload = response.body();
+
+                    if (normalActivitiesFlagDownload != null) {
+                        List<NormalActivitiesFlag> normalActivitiesFlagList = normalActivitiesFlagDownload.getDownload_list();
+                        if (normalActivitiesFlagList.size() > 0){
+                            saveToNormalActivitiesFlagTable(normalActivitiesFlagList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncDownNormalActivitiesFlag(sharedPrefs.getStaffID(),normalActivitiesFlagDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_normal_activities_flag(normalActivitiesFlagDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<NormalActivitiesFlagDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_staff_list", t.toString());
+
+            }
+        });
+
+    }
+
+    void saveToNormalActivitiesFlagTable(List<NormalActivitiesFlag> normalActivitiesFlagList){
+        SaveNormalActivitiesFlagTable saveNormalActivitiesFlagTable = new SaveNormalActivitiesFlagTable();
+        saveNormalActivitiesFlagTable.execute(normalActivitiesFlagList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveNormalActivitiesFlagTable extends AsyncTask<List<NormalActivitiesFlag>, Void, Void> {
+
+
+        private final String TAG = SaveNormalActivitiesFlagTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<NormalActivitiesFlag>... params) {
+
+            List<NormalActivitiesFlag> normalActivitiesFlagList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.normalActivitiesFlagDao().insert(normalActivitiesFlagList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+
+
+    String getLastSyncTimeStaffList(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncStaff(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncTimeInputRecords(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncFields(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncTimeHGList(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncHGList(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncActivityList(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncActivityList(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncLogs(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownLogs(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncHGActivities(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownHGActivitiesFlag(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncNormalActivities(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownNormalActivitiesFlag(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    int getStaffCountLastSync(){
+        int count = 0;
+        try {
+            count = appDatabase.lastSyncTableDao().getStaffCount(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            count = 0;
+        }
+        return count;
     }
 
 }

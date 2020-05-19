@@ -19,6 +19,7 @@ public class DatabaseStringConstants {
     public static final String HG_ACTIVITY_FLAGS_TABLE                  = "hg_activities_flag";
     public static final String HG_LIST_TABLE                            = "hg_list";
     public static final String LOGS_TABLE                               = "logs";
+    public static final String LAST_SYNC_TABLE                          = "last_sync";
 
     /**
      * activity_list column names
@@ -104,4 +105,19 @@ public class DatabaseStringConstants {
     public static final String COL_LONGITUDE                            = "longitude";
     public static final String COL_IMEI                                 = "imei";
     public static final String COL_SYNC_FLAG_LOGS                       = "sync_flag";
+
+    /**
+     * last_sync column names
+     */
+    public static final String LAST_SYNC_ACTIVITY_LIST_TABLE                = "last_sync_activity_list";
+    public static final String LAST_SYNC_UP_NORMAL_ACTIVITY_FLAGS_TABLE     = "last_sync_up_normal_activities_flag";
+    public static final String LAST_SYNC_DOWN_NORMAL_ACTIVITY_FLAGS_TABLE   = "last_sync_down_normal_activities_flag";
+    public static final String LAST_SYNC_FIELDS_TABLE                       = "last_sync_fields";
+    public static final String LAST_SYNC_STAFF_TABLE                        = "last_sync_staff";
+    public static final String LAST_SYNC_MEMBERS_TABLE                      = "last_sync_members";
+    public static final String LAST_SYNC_UP_HG_ACTIVITY_FLAGS_TABLE         = "last_sync_up_hg_activities_flag";
+    public static final String LAST_SYNC_DOWN_HG_ACTIVITY_FLAGS_TABLE       = "last_sync_down_hg_activities_flag";
+    public static final String LAST_SYNC_HG_LIST_TABLE                      = "last_sync_hg_list";
+    public static final String LAST_SYNC_UP_LOGS_TABLE                      = "last_sync_up_logs";
+    public static final String LAST_SYNC_DOWN_LOGS_TABLE                    = "last_sync_down_logs";
 }

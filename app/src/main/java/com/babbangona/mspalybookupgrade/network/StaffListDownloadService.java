@@ -10,9 +10,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
-import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
+import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
-import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
+import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +29,7 @@ public class StaffListDownloadService extends IntentService {
 
     RetrofitInterface retrofitInterface;
     AppDatabase appDatabase;
+    SharedPrefs sharedPrefs;
 
     public StaffListDownloadService() {
         // Used to name the worker thread, important only for debugging.
@@ -38,6 +39,8 @@ public class StaffListDownloadService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        sharedPrefs = new SharedPrefs(getApplicationContext());
+        appDatabase = AppDatabase.getInstance(getApplicationContext());
 
         // if you override onCreate(), make sure to call super().
         // If a Context object is needed, call getApplicationContext() here.
@@ -50,7 +53,9 @@ public class StaffListDownloadService extends IntentService {
 
     public void getStaffList() {
 
-        String last_synced = "2019-01-01 00:00:00";
+        String last_synced = getLastSyncTimeStaffList();
+
+        Log.d("get_string_last_synced",last_synced);
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<StaffListDownload> call = retrofitInterface.getStaffListDownload(last_synced);
@@ -67,6 +72,14 @@ public class StaffListDownloadService extends IntentService {
                         List<StaffList> staffLists = staffListDownload.getDownload_list();
                         if (staffLists.size() > 0){
                             saveToStaffListTable(staffLists);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncStaff(sharedPrefs.getStaffID(),staffListDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_staff(staffListDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
                         }
                     }
 
@@ -76,15 +89,15 @@ public class StaffListDownloadService extends IntentService {
                     switch (sc) {
                         case 400:
                             Log.e("Error 400", "Bad Request");
-                            Toast.makeText(StaffListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(StaffListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         case 404:
                             Log.e("Error 404", "Not Found");
-                            Toast.makeText(StaffListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(StaffListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                             break;
                         default:
                             Log.e("Error", "Generic Error");
-                            Toast.makeText(StaffListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            //Toasst.makeText(StaffListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -134,6 +147,31 @@ public class StaffListDownloadService extends IntentService {
 
             return null;
         }
+    }
+
+    String getLastSyncTimeStaffList(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncStaff(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    int getStaffCountLastSync(){
+        int count = 0;
+        try {
+            count = appDatabase.lastSyncTableDao().getStaffCount(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            count = 0;
+        }
+        return count;
     }
 
 }

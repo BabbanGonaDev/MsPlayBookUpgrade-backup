@@ -1,23 +1,24 @@
 package com.babbangona.mspalybookupgrade.network.object;
 
+import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class StaffListDownload {
+public class HGActivitiesFlagDownload {
 
     @SerializedName("download_list")
-    private List<StaffList> download_list;
+    private List<HGActivitiesFlag> download_list;
 
     @SerializedName("last_sync_time")
     private String last_sync_time;
 
-    public List<StaffList> getDownload_list() {
+    public List<HGActivitiesFlag> getDownload_list() {
         return download_list;
     }
 
-    public void setDownload_list(List<StaffList> download_list) {
+    public void setDownload_list(List<HGActivitiesFlag> download_list) {
         this.download_list = download_list;
     }
 

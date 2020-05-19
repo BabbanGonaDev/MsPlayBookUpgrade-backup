@@ -8,7 +8,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
-import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
 
 import java.util.List;
 

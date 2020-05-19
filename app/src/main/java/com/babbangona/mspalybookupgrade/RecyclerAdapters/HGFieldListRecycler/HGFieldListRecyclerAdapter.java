@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +27,9 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.babbangona.mspalybookupgrade.R;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
-import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.google.android.material.button.MaterialButton;
@@ -40,7 +37,6 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -146,7 +142,8 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             tv_latitude.setText(latitude);
             tv_longitude.setText(longitude);
             getStatus(hgFieldListRecyclerModel,btn_log_activity,iv_activity_signal,tv_hg_list);
-            btn_log_activity.setOnClickListener(v -> logActivity(hgFieldListRecyclerModel,context,getAdapterPosition()));
+            btn_log_activity.setOnClickListener(v -> logActivity(hgFieldListRecyclerModel,context,getAdapterPosition(),"activity"));
+            btn_log_visitation.setOnClickListener(v -> logActivity(hgFieldListRecyclerModel,context,getAdapterPosition(),"visitation"));
             btn_phone_call.setOnClickListener(v -> callMemberDialog(context,hgFieldListRecyclerModel));
         }
 
@@ -171,7 +168,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         }
 
         private void logActivity(HGFieldListRecyclerModel hgFieldListRecyclerModel,
-                                 Context context, int position){
+                                 Context context, int position, String module){
 
             locationGetter = GPSController.initialiseLocationListener((Activity)context);
             double latitude = locationGetter.getLatitude();
@@ -189,13 +186,24 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             Log.d("present_location",latitude + "|"+longitude);
 
             if (locationDistance <= allowedDistance){
-                showLogDialogStarter(hgFieldListRecyclerModel, position,latitude,longitude);
+                if (module.equalsIgnoreCase("visitation")){
+                    logVisitation(hgFieldListRecyclerModel,latitude,longitude);
+                }else{
+                    showLogDialogStarter(hgFieldListRecyclerModel, position,latitude,longitude);
+                }
             }else{
                 locationMismatchedDialog(latitude,longitude,min_lat,max_lat,min_lng,max_lng,
                         context,hgFieldListRecyclerModel.getUnique_field_id(),
                         context.getResources().getString(R.string.wrong_location));
             }
         }
+    }
+
+    private void logVisitation(HGFieldListRecyclerModel hgFieldListRecyclerModel, double latitude, double longitude){
+        appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                "Visitation",getDate("normal"),sharedPrefs.getStaffRole(),
+                String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+        Toast.makeText(context, context.getResources().getString(R.string.visitation_logged), Toast.LENGTH_SHORT).show();
     }
 
     private void showLogDialogStarter(HGFieldListRecyclerModel hgFieldListRecyclerModel, int position,

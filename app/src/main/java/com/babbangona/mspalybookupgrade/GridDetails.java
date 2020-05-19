@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 
@@ -17,6 +16,8 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.GridDetailsRecycler.Gri
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,11 +47,27 @@ public class GridDetails extends AppCompatActivity {
         appDatabase = AppDatabase.getInstance(GridDetails.this);
         sharedPrefs = new SharedPrefs(GridDetails.this);
         gridDetailsRecyclerModel = new GridDetailsRecyclerModel();
+        setSupportActionBar(toolbar_grid_details);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getActivityTitle());
 
         initActivitiesRecycler();
 
         toolbar_grid_details.setNavigationOnClickListener(v -> loadPreviousActivity());
 
+    }
+
+    String getActivityTitle(){
+        String title;
+        if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("1")){
+            title = getResources().getString(R.string.fert_1_title);
+        }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
+            title = getResources().getString(R.string.fert_2_title);
+        }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("3")){
+            title = getResources().getString(R.string.HG_title);
+        }else{
+            title = "";
+        }
+        return title;
     }
 
     public void initActivitiesRecycler(){

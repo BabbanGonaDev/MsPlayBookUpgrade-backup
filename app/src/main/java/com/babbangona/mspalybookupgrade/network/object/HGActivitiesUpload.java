@@ -10,9 +10,13 @@ public class HGActivitiesUpload {
     @SerializedName("hg_type")
     private String hg_type;
 
-    public HGActivitiesUpload(String unique_field_id, String hg_type) {
+    @SerializedName("last_synced")
+    private String last_synced;
+
+    public HGActivitiesUpload(String unique_field_id, String hg_type, String last_synced) {
         this.unique_field_id = unique_field_id;
         this.hg_type = hg_type;
+        this.last_synced = last_synced;
     }
 
     public String getUnique_field_id() {
@@ -29,5 +33,13 @@ public class HGActivitiesUpload {
 
     public void setHg_type(String hg_type) {
         this.hg_type = hg_type;
+    }
+
+    public String getLast_synced() {
+        return last_synced;
+    }
+
+    public void setLast_synced(String last_synced) {
+        this.last_synced = last_synced;
     }
 }

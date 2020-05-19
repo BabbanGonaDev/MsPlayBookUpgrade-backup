@@ -16,11 +16,15 @@ public class LogsUpload {
     @SerializedName("date_logged")
     private String date_logged;
 
-    public LogsUpload(String unique_field_id, String staff_id, String activity_type, String date_logged) {
+    @SerializedName("last_synced")
+    private String last_synced;
+
+    public LogsUpload(String unique_field_id, String staff_id, String activity_type, String date_logged, String last_synced) {
         this.unique_field_id = unique_field_id;
         this.staff_id = staff_id;
         this.activity_type = activity_type;
         this.date_logged = date_logged;
+        this.last_synced = last_synced;
     }
 
     public String getUnique_field_id() {
@@ -53,5 +57,13 @@ public class LogsUpload {
 
     public void setDate_logged(String date_logged) {
         this.date_logged = date_logged;
+    }
+
+    public String getLast_synced() {
+        return last_synced;
+    }
+
+    public void setLast_synced(String last_synced) {
+        this.last_synced = last_synced;
     }
 }

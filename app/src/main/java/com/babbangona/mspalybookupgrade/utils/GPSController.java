@@ -3,14 +3,12 @@ package com.babbangona.mspalybookupgrade.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -18,9 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class GPSController {
 
@@ -43,7 +39,7 @@ public class GPSController {
 
                 if (location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
                     //Toast.makeText(context, "GPS Longitude" + location.getLongitude() +" Latitude"+location.getLatitude(), Toast.LENGTH_LONG).show();
-                    Log.d("Location", "Time GPS: " + time);
+                    //Log.d("Location", "Time GPS: " + time);
                 }// This is what we want!
                 else {
 
