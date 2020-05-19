@@ -148,11 +148,14 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
             String status;
             String button_text;
             if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("1")){
-                if (fieldListRecyclerModel.getFertilizer_1_status() == null ||
-                        fieldListRecyclerModel.getFertilizer_1_status().equalsIgnoreCase("")){
+                try {
+                    status = appDatabase.normalActivitiesFlagDao().getFert1Status(fieldListRecyclerModel.getUnique_field_id());
+                } catch (Exception e) {
+                    e.printStackTrace();
                     status = "0";
-                }else{
-                    status = fieldListRecyclerModel.getFertilizer_1_status();
+                }
+                if (status == null || status.equalsIgnoreCase("")){
+                    status = "0";
                 }
                 if (status.equalsIgnoreCase("0")){
                     button_text = context.getResources().getString(R.string.log_fertilizer_1);
@@ -160,11 +163,14 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
                     button_text = context.getResources().getString(R.string.reset_fertilizer_1);
                 }
             }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
-                if (fieldListRecyclerModel.getFertilizer_2_status() == null ||
-                        fieldListRecyclerModel.getFertilizer_2_status().equalsIgnoreCase("")){
+                try {
+                    status = appDatabase.normalActivitiesFlagDao().getFert2Status(fieldListRecyclerModel.getUnique_field_id());
+                } catch (Exception e) {
+                    e.printStackTrace();
                     status = "0";
-                }else{
-                    status = fieldListRecyclerModel.getFertilizer_2_status();
+                }
+                if (status == null || status.equalsIgnoreCase("")){
+                    status = "0";
                 }
                 if (status.equalsIgnoreCase("0")){
                     button_text = context.getResources().getString(R.string.log_fertilizer_2);
@@ -214,178 +220,179 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
                         context.getResources().getString(R.string.wrong_location));
             }
         }
-    }
 
-    private void logVisitation(FieldListRecyclerModel fieldListRecyclerModel, double latitude, double longitude){
-        appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                "Visitation",getDate("normal"),sharedPrefs.getStaffRole(),
-                String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
-        Toast.makeText(context, context.getResources().getString(R.string.visitation_logged), Toast.LENGTH_SHORT).show();
-    }
-
-    private void showLogDialogStarter(FieldListRecyclerModel fieldListRecyclerModel,
-                                      String activity_status, int position, double latitude,
-                                      double longitude){
-
-        if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("1")){
-
-            if (activity_status.equalsIgnoreCase("1")){
-                showLogDialog(context.getResources().getString(R.string.fert_1_reset_question),
-                        context,fieldListRecyclerModel,"reset",position, latitude, longitude);
-            }else if (activity_status.equalsIgnoreCase("0")){
-                showLogDialog(context.getResources().getString(R.string.fert_1_question),
-                        context,fieldListRecyclerModel,"update",position, latitude, longitude);
-            }
-
-        }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
-
-            if (activity_status.equalsIgnoreCase("1")){
-                showLogDialog(context.getResources().getString(R.string.fert_2_reset_question),
-                        context,fieldListRecyclerModel,"reset",position, latitude, longitude);
-            }else if (activity_status.equalsIgnoreCase("0")){
-                showLogDialog(context.getResources().getString(R.string.fert_2_question),
-                        context,fieldListRecyclerModel,"update",position, latitude, longitude);
-            }
-
-        }else{
-            Toast.makeText(context, "Activity not found", Toast.LENGTH_SHORT).show();
+        private void logVisitation(FieldListRecyclerModel fieldListRecyclerModel, double latitude, double longitude){
+            appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                    "Visitation",getDate("normal"),sharedPrefs.getStaffRole(),
+                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+            Toast.makeText(context, context.getResources().getString(R.string.visitation_logged), Toast.LENGTH_SHORT).show();
         }
-    }
 
-    private void showLogDialog(String message, Context context, FieldListRecyclerModel fieldListRecyclerModel,
-                               String module, int position, double latitude, double longitude) {
-        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
-        if (module.equalsIgnoreCase("update")){
-            showUpdateDialog(builder,message,context,fieldListRecyclerModel,position, latitude,longitude);
-        }else if (module.equalsIgnoreCase("reset")){
-            showResetDialog(builder,message,context,fieldListRecyclerModel,position, latitude, longitude);
-        }
-    }
+        private void showLogDialogStarter(FieldListRecyclerModel fieldListRecyclerModel,
+                                          String activity_status, int position, double latitude,
+                                          double longitude){
 
-    private void showUpdateDialog(MaterialAlertDialogBuilder builder, String message, Context context,
-                                  FieldListRecyclerModel fieldListRecyclerModel, int position,
-                                  double latitude, double longitude) {
+            if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("1")){
 
-        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_update_details))
-                .setTitle(context.getResources().getString(R.string.log_activity))
-                .setMessage(message)
-                .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
-                    //this is to dismiss the dialog
-                    dialog.dismiss();
-                    updateActivity(fieldListRecyclerModel,position, latitude, longitude);
-                })
-                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
-                    //this is to dismiss the dialog
-                    dialog.dismiss();
-                })
-                .setCancelable(false)
-                .show();
-    }
+                if (activity_status.equalsIgnoreCase("1")){
+                    showLogDialog(context.getResources().getString(R.string.fert_1_reset_question),
+                            context,fieldListRecyclerModel,"reset",position, latitude, longitude);
+                }else if (activity_status.equalsIgnoreCase("0")){
+                    showLogDialog(context.getResources().getString(R.string.fert_1_question),
+                            context,fieldListRecyclerModel,"update",position, latitude, longitude);
+                }
 
-    private void updateActivity(FieldListRecyclerModel fieldListRecyclerModel,int position,
-                                double latitude, double longitude){
-        int field_existence = appDatabase.normalActivitiesFlagDao().countFieldInNormalActivity(fieldListRecyclerModel.getUnique_field_id());
-        if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("1")){
-            if (field_existence > 0){
-                appDatabase.normalActivitiesFlagDao().updateFert1Flag(fieldListRecyclerModel.getUnique_field_id(),"1",
-                        getDate("spread"),sharedPrefs.getStaffID());
-                appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                        "Log Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
-                        String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
-                fieldListRecyclerModel.setFertilizer_1_status("1");
-                notifyItemChanged(position);
+            }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
+
+                if (activity_status.equalsIgnoreCase("1")){
+                    showLogDialog(context.getResources().getString(R.string.fert_2_reset_question),
+                            context,fieldListRecyclerModel,"reset",position, latitude, longitude);
+                }else if (activity_status.equalsIgnoreCase("0")){
+                    showLogDialog(context.getResources().getString(R.string.fert_2_question),
+                            context,fieldListRecyclerModel,"update",position, latitude, longitude);
+                }
+
             }else{
-                appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
-                        "1",getDate("spread"),"0","0000-00-00",
-                        sharedPrefs.getStaffID(),"0"));
-                appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                        "Log Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
-                        String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
-                fieldListRecyclerModel.setFertilizer_1_status("1");
-                notifyItemChanged(position);
-            }
-            Log.d("position_logger",position+"");
-        }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
-            if (field_existence > 0){
-                appDatabase.normalActivitiesFlagDao().updateFert2Flag(fieldListRecyclerModel.getUnique_field_id(),"1",
-                        getDate("spread"),sharedPrefs.getStaffID());
-                appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                        "Log Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
-                        String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
-                fieldListRecyclerModel.setFertilizer_2_status("1");
-                notifyItemChanged(position);
-            }else{
-                appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
-                        "0","0000-00-00","1",getDate("spread"),
-                        sharedPrefs.getStaffID(),"0"));
-                appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                        "Log Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
-                        String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
-                fieldListRecyclerModel.setFertilizer_2_status("1");
-                notifyItemChanged(position);
+                Toast.makeText(context, "Activity not found", Toast.LENGTH_SHORT).show();
             }
         }
-    }
 
-    private void showResetDialog(MaterialAlertDialogBuilder builder, String message, Context context,
-                                 FieldListRecyclerModel fieldListRecyclerModel, int position,
-                                 double latitude, double longitude) {
-
-        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_update_details))
-                .setTitle(context.getResources().getString(R.string.log_activity))
-                .setMessage(message)
-                .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
-                    //this is to dismiss the dialog
-                    dialog.dismiss();
-                    resetActivity(fieldListRecyclerModel,position,latitude,longitude);
-                })
-                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
-                    //this is to dismiss the dialog
-                    dialog.dismiss();
-                })
-                .setCancelable(false)
-                .show();
-    }
-
-    private void resetActivity(FieldListRecyclerModel fieldListRecyclerModel, int position, double latitude, double longitude){
-        int field_existence = appDatabase.normalActivitiesFlagDao().countFieldInNormalActivity(fieldListRecyclerModel.getUnique_field_id());
-        if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("1")){
-            if (field_existence > 0){
-                appDatabase.normalActivitiesFlagDao().updateFert1Flag(fieldListRecyclerModel.getUnique_field_id(),"0",
-                        getDate("spread"),sharedPrefs.getStaffID());
-                appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                        "Reset Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
-                        String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
-                fieldListRecyclerModel.setFertilizer_1_status("0");
-                notifyItemChanged(position);
-            }else{
-                appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
-                        "0",getDate("spread"),"0","0000-00-00",
-                        sharedPrefs.getStaffID(),"0"));
-                appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                        "Reset Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
-                        String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
-                fieldListRecyclerModel.setFertilizer_1_status("0");
-                notifyItemChanged(position);
+        private void showLogDialog(String message, Context context, FieldListRecyclerModel fieldListRecyclerModel,
+                                   String module, int position, double latitude, double longitude) {
+            MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+            if (module.equalsIgnoreCase("update")){
+                showUpdateDialog(builder,message,context,fieldListRecyclerModel,position, latitude,longitude);
+            }else if (module.equalsIgnoreCase("reset")){
+                showResetDialog(builder,message,context,fieldListRecyclerModel,position, latitude, longitude);
             }
-        }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
-            if (field_existence > 0){
-                appDatabase.normalActivitiesFlagDao().updateFert2Flag(fieldListRecyclerModel.getUnique_field_id(),"0",
-                        getDate("spread"),sharedPrefs.getStaffID());
-                appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                        "Reset Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
-                        String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
-                fieldListRecyclerModel.setFertilizer_2_status("0");
-                notifyItemChanged(position);
-            }else{
-                appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
-                        "0","0000-00-00","0",getDate("spread"),
-                        sharedPrefs.getStaffID(),"0"));
-                appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                        "Reset Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
-                        String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
-                fieldListRecyclerModel.setFertilizer_2_status("0");
-                notifyItemChanged(position);
+        }
+
+        private void showUpdateDialog(MaterialAlertDialogBuilder builder, String message, Context context,
+                                      FieldListRecyclerModel fieldListRecyclerModel, int position,
+                                      double latitude, double longitude) {
+
+            builder.setIcon(context.getResources().getDrawable(R.drawable.ic_update_details))
+                    .setTitle(context.getResources().getString(R.string.log_activity))
+                    .setMessage(message)
+                    .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
+                        //this is to dismiss the dialog
+                        dialog.dismiss();
+                        updateActivity(fieldListRecyclerModel,position, latitude, longitude);
+                    })
+                    .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+                        //this is to dismiss the dialog
+                        dialog.dismiss();
+                    })
+                    .setCancelable(false)
+                    .show();
+        }
+
+        private void updateActivity(FieldListRecyclerModel fieldListRecyclerModel,int position,
+                                    double latitude, double longitude){
+            int field_existence = appDatabase.normalActivitiesFlagDao().countFieldInNormalActivity(fieldListRecyclerModel.getUnique_field_id());
+            if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("1")){
+                if (field_existence > 0){
+                    appDatabase.normalActivitiesFlagDao().updateFert1Flag(fieldListRecyclerModel.getUnique_field_id(),"1",
+                            getDate("spread"),sharedPrefs.getStaffID());
+                    appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                            "Log Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
+                            String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                    fieldListRecyclerModel.setFertilizer_1_status("1");
+                    notifyItemChanged(getAdapterPosition());
+                }else{
+                    appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
+                            "1",getDate("spread"),"0","0000-00-00",
+                            sharedPrefs.getStaffID(),"0"));
+                    appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                            "Log Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
+                            String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                    fieldListRecyclerModel.setFertilizer_1_status("1");
+                    notifyItemChanged(getAdapterPosition());
+                }
+                Log.d("position_logger",position+"");
+            }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
+                if (field_existence > 0){
+                    appDatabase.normalActivitiesFlagDao().updateFert2Flag(fieldListRecyclerModel.getUnique_field_id(),"1",
+                            getDate("spread"),sharedPrefs.getStaffID());
+                    appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                            "Log Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
+                            String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                    fieldListRecyclerModel.setFertilizer_2_status("1");
+                    notifyItemChanged(getAdapterPosition());
+                }else{
+                    appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
+                            "0","0000-00-00","1",getDate("spread"),
+                            sharedPrefs.getStaffID(),"0"));
+                    appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                            "Log Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
+                            String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                    fieldListRecyclerModel.setFertilizer_2_status("1");
+                    notifyItemChanged(getAdapterPosition());
+                }
+            }
+        }
+
+        private void showResetDialog(MaterialAlertDialogBuilder builder, String message, Context context,
+                                     FieldListRecyclerModel fieldListRecyclerModel, int position,
+                                     double latitude, double longitude) {
+
+            builder.setIcon(context.getResources().getDrawable(R.drawable.ic_update_details))
+                    .setTitle(context.getResources().getString(R.string.log_activity))
+                    .setMessage(message)
+                    .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
+                        //this is to dismiss the dialog
+                        dialog.dismiss();
+                        resetActivity(fieldListRecyclerModel,position,latitude,longitude);
+                    })
+                    .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+                        //this is to dismiss the dialog
+                        dialog.dismiss();
+                    })
+                    .setCancelable(false)
+                    .show();
+        }
+
+        private void resetActivity(FieldListRecyclerModel fieldListRecyclerModel, int position,
+                                   double latitude, double longitude){
+            int field_existence = appDatabase.normalActivitiesFlagDao().countFieldInNormalActivity(fieldListRecyclerModel.getUnique_field_id());
+            if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("1")){
+                if (field_existence > 0){
+                    appDatabase.normalActivitiesFlagDao().updateFert1Flag(fieldListRecyclerModel.getUnique_field_id(),"0",
+                            getDate("spread"),sharedPrefs.getStaffID());
+                    appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                            "Reset Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
+                            String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                    fieldListRecyclerModel.setFertilizer_1_status("0");
+                    notifyItemChanged(getAdapterPosition());
+                }else{
+                    appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
+                            "0",getDate("spread"),"0","0000-00-00",
+                            sharedPrefs.getStaffID(),"0"));
+                    appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                            "Reset Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
+                            String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                    fieldListRecyclerModel.setFertilizer_1_status("0");
+                    notifyItemChanged(getAdapterPosition());
+                }
+            }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
+                if (field_existence > 0){
+                    appDatabase.normalActivitiesFlagDao().updateFert2Flag(fieldListRecyclerModel.getUnique_field_id(),"0",
+                            getDate("spread"),sharedPrefs.getStaffID());
+                    appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                            "Reset Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
+                            String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                    fieldListRecyclerModel.setFertilizer_2_status("0");
+                    notifyItemChanged(getAdapterPosition());
+                }else{
+                    appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
+                            "0","0000-00-00","0",getDate("spread"),
+                            sharedPrefs.getStaffID(),"0"));
+                    appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                            "Reset Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
+                            String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                    fieldListRecyclerModel.setFertilizer_2_status("0");
+                    notifyItemChanged(getAdapterPosition());
+                }
             }
         }
     }
