@@ -26,6 +26,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecora
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 
 import java.util.Objects;
 
@@ -84,6 +85,8 @@ public class FieldListPage extends AppCompatActivity {
         }
         setAdapter(offset);
         toolbar_field_list.setNavigationOnClickListener(v -> startPreviousActivity());
+        Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(FieldListPage.this);
+        main2ActivityMethods.confirmPhoneDate();
     }
 
     @OnClick(R.id.et_search)

@@ -17,6 +17,8 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,11 +32,16 @@ import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -86,6 +93,12 @@ public class Homepage extends AppCompatActivity {
 
     AppDatabase appDatabase;
 
+    boolean doubleBackToExitPressedOnce = false;
+
+    ProgressDialog pd;
+
+    Handler mHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +110,12 @@ public class Homepage extends AppCompatActivity {
         setSupportActionBar(toolbar_landing);
         collapsingToolbarTitle();
         displayUserDetails();
+        checkActivityListForSyncDialog();
+        confirmPhoneDate();
+        mHandler = new Handler();
         runOnUiThread(this::initActivitiesRecycler);
+        pd = new ProgressDialog(Homepage.this);
+        startRepeatingTask();
     }
 
     @Override
@@ -127,15 +145,8 @@ public class Homepage extends AppCompatActivity {
     }
 
     void dialogWithSync(){
-        ProgressDialog pd;
-        pd = new ProgressDialog(Homepage.this);
-        pd.setTitle(getResources().getString(R.string.downloading_data));
-        pd.setMessage(getResources().getString(R.string.please_wait));
-        pd.setCancelable(false);
-        pd.show();
         syncRecords();
         runOnUiThread(this::initActivitiesRecycler);
-        pd.dismiss();
     }
 
     @Override
@@ -290,8 +301,126 @@ public class Homepage extends AppCompatActivity {
 
     }
 
+    void checkActivityListForSyncDialog(){
+        if (appDatabase.activityListDao().countActivities() <= 1){
+            showDialogForSync(getResources().getString(R.string.click_sync_message),Homepage.this);
+        }
+    }
+
+
+
+    private void showDialogForSync(String s, Context context) {
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showDialogForSync(builder,s,context);
+    }
+
+    private void showDialogForSync(MaterialAlertDialogBuilder builder, String s, Context context) {
+        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_warning))
+                .setTitle(context.getResources().getString(R.string.attention))
+                .setMessage(s)
+                .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    public void confirmPhoneDate(){
+        //TODO --- Get the apps list last sync date for now, get a better one later.
+        String str_default_date = getLastSyncTimeStaffList();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        Date def_date = null;
+        try {
+            def_date = sdf.parse(str_default_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (new Date().before(def_date)) {
+            //Current Date is behind default date or last sync date, redirect
+            new MaterialAlertDialogBuilder(Homepage.this)
+                    .setIcon(getResources().getDrawable(R.drawable.ic_wrong_calendar))
+                    .setTitle(getResources().getString(R.string.wrong_date_title))
+                    .setMessage(getResources().getString(R.string.wrong_date_msg))
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.change_date), (dialogInterface, i) -> {
+                        startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
+                    }).show();
+        }
+    }
+
+    String getLastSyncTimeStaffList(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncStaff(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2020-05-20 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2020-05-20 00:00:00";
+        }
+        return last_sync_time;
+    }
+
     @Override
     public void onBackPressed() {
         //TODO
+        if (doubleBackToExitPressedOnce) {
+            finish();
+            Intent homeScreenIntent = new Intent(Intent.ACTION_MAIN);
+            homeScreenIntent.addCategory(Intent.CATEGORY_HOME);
+            homeScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(homeScreenIntent);
+        }else{
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, getResources().getString(R.string.exit_app), Toast.LENGTH_SHORT).show();
+        }
+
+
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopRepeatingTask();
+    }
+
+    void startRepeatingTask() {
+        mSyncTask.run();
+    }
+
+    Runnable mSyncTask = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                checkProgressDialogStatus(); //this function can change value of mInterval.
+            } finally {
+                // 100% guarantee that this always happens, even if
+                // your update method throws an exception
+                int mInterval = 500;
+                mHandler.postDelayed(mSyncTask, mInterval);
+            }
+        }
+    };
+
+    void stopRepeatingTask() {
+        mHandler.removeCallbacks(mSyncTask);
+    }
+
+    public void checkProgressDialogStatus(){
+        int progress_dialog_status = sharedPrefs.getKeyProgressDialogStatus();
+        if (progress_dialog_status == 0) {
+            pd.setTitle(getResources().getString(R.string.downloading_data));
+            pd.setMessage(getResources().getString(R.string.please_wait));
+            pd.setCancelable(false);
+            pd.show();
+        } else if (progress_dialog_status == 1) {
+            //pd.show();
+            pd.dismiss();
+        }
     }
 }

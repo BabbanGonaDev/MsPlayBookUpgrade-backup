@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.google.android.material.button.MaterialButton;
 
 import butterknife.BindView;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         sharedPrefs = new SharedPrefs(MainActivity.this);
         appDatabase  = AppDatabase.getInstance(MainActivity.this);
         addDataToDatabase();
+        Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(MainActivity.this);
+        main2ActivityMethods.confirmPhoneDate();
     }
 
     @OnClick(R.id.btn_open_access_control)

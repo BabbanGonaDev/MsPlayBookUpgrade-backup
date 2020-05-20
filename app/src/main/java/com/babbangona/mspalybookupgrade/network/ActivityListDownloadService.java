@@ -95,7 +95,7 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<ActivityListDownload> call = retrofitInterface.getActivityListDownload(last_synced);
-
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<ActivityListDownload>() {
             @Override
             public void onResponse(@NonNull Call<ActivityListDownload> call,
@@ -108,17 +108,17 @@ public class ActivityListDownloadService extends IntentService {
                         List<ActivityList> activityLists = activityListDownload.getDownload_list();
                         if (activityLists.size() > 0){
                             saveToActivityListTable(activityLists);
-                            if (getStaffCountLastSync() > 0){
-                                appDatabase.lastSyncTableDao().updateLastSyncActivityList(sharedPrefs.getStaffID(),activityListDownload.getLast_sync_time());
-                            }else{
-                                LastSyncTable lastSyncTable = new LastSyncTable();
-                                lastSyncTable.setLast_sync_activity_list(activityListDownload.getLast_sync_time());
-                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
-                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
-                            }
+
+                        }
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncActivityList(sharedPrefs.getStaffID(),activityListDownload.getLast_sync_time());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_activity_list(activityListDownload.getLast_sync_time());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
                         }
                     }
-
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
@@ -136,13 +136,13 @@ public class ActivityListDownloadService extends IntentService {
                             //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NotNull Call<ActivityListDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_check_list", t.toString());
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
 
@@ -191,7 +191,7 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<HGListDownload> call = retrofitInterface.getHGListDownload(last_synced);
-
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<HGListDownload>() {
             @Override
             public void onResponse(@NonNull Call<HGListDownload> call,
@@ -214,7 +214,6 @@ public class ActivityListDownloadService extends IntentService {
                             }
                         }
                     }
-
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
@@ -232,13 +231,13 @@ public class ActivityListDownloadService extends IntentService {
                             //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NotNull Call<HGListDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_check_list", t.toString());
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
 
@@ -287,7 +286,7 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<MsPlaybookInputDownload> call = retrofitInterface.getMsPlaybookInputDataDownload(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<MsPlaybookInputDownload>() {
             @Override
             public void onResponse(@NonNull Call<MsPlaybookInputDownload> call,
@@ -339,14 +338,16 @@ public class ActivityListDownloadService extends IntentService {
                             Log.e("Error", "Generic Error");
                             //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
+                    sharedPrefs.setKeyProgressDialogStatus(1);
                     getActivityList();
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NotNull Call<MsPlaybookInputDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_check_list", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
                 getActivityList();
             }
         });
@@ -456,6 +457,7 @@ public class ActivityListDownloadService extends IntentService {
         Log.d("composed_json",composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<LogsUpload>> call = retrofitInterface.uploadLogsRecord(composed_json, sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<List<LogsUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<LogsUpload>> call, @NonNull Response<List<LogsUpload>> response) {
@@ -484,9 +486,7 @@ public class ActivityListDownloadService extends IntentService {
                             lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
                             appDatabase.lastSyncTableDao().insert(lastSyncTable);
                         }
-
                     }
-
                 } else {
                     Log.i("tobi_tfm", "onResponse ERROR: " + response.body());
                     int sc = response.code();
@@ -514,12 +514,13 @@ public class ActivityListDownloadService extends IntentService {
                             break;
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NonNull Call<List<LogsUpload>> call, @NonNull Throwable t) {
                 Log.d("TobiNewLogsUpload", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
     }
@@ -530,6 +531,7 @@ public class ActivityListDownloadService extends IntentService {
         Log.d("composed_json",composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<HGActivitiesUpload>> call = retrofitInterface.uploadHGActivitiesRecord(composed_json, sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<List<HGActivitiesUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<HGActivitiesUpload>> call, @NonNull Response<List<HGActivitiesUpload>> response) {
@@ -560,7 +562,6 @@ public class ActivityListDownloadService extends IntentService {
                         }
 
                     }
-
                 } else {
                     Log.i("tobi_tfm", "onResponse ERROR: " + response.body());
                     int sc = response.code();
@@ -588,12 +589,13 @@ public class ActivityListDownloadService extends IntentService {
                             break;
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NonNull Call<List<HGActivitiesUpload>> call, @NonNull Throwable t) {
                 Log.d("TobiNewHGUpload", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
     }
@@ -603,6 +605,7 @@ public class ActivityListDownloadService extends IntentService {
         String composed_json = new Gson().toJson(normalActivitiesFlagList);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<NormalActivitiesUpload>> call = retrofitInterface.uploadNormalActivitiesRecord(composed_json, sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<List<NormalActivitiesUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<NormalActivitiesUpload>> call, @NonNull Response<List<NormalActivitiesUpload>> response) {
@@ -630,7 +633,6 @@ public class ActivityListDownloadService extends IntentService {
                         }
 
                     }
-
                 } else {
                     Log.i("tobi_tfm", "onResponse ERROR: " + response.body());
                     int sc = response.code();
@@ -658,12 +660,13 @@ public class ActivityListDownloadService extends IntentService {
                             break;
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NonNull Call<List<NormalActivitiesUpload>> call, @NonNull Throwable t) {
                 Log.d("TobiNewNormalActivities", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
     }
@@ -674,7 +677,7 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<StaffListDownload> call = retrofitInterface.getStaffListDownload(last_synced);
-
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<StaffListDownload>() {
             @Override
             public void onResponse(@NonNull Call<StaffListDownload> call,
@@ -697,7 +700,6 @@ public class ActivityListDownloadService extends IntentService {
                             }
                         }
                     }
-
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
@@ -715,13 +717,13 @@ public class ActivityListDownloadService extends IntentService {
                             //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NotNull Call<StaffListDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_staff_list", t.toString());
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
 
@@ -770,7 +772,7 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<LogsDownload> call = retrofitInterface.downloadLogs(sharedPrefs.getStaffID(),last_synced);
-
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<LogsDownload>() {
             @Override
             public void onResponse(@NonNull Call<LogsDownload> call,
@@ -811,13 +813,13 @@ public class ActivityListDownloadService extends IntentService {
                             //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NotNull Call<LogsDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_staff_list", t.toString());
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
 
@@ -866,7 +868,7 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<HGActivitiesFlagDownload> call = retrofitInterface.downloadHGActivityFlag(sharedPrefs.getStaffID(),last_synced);
-
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<HGActivitiesFlagDownload>() {
             @Override
             public void onResponse(@NonNull Call<HGActivitiesFlagDownload> call,
@@ -907,13 +909,13 @@ public class ActivityListDownloadService extends IntentService {
                             //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NotNull Call<HGActivitiesFlagDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_staff_list", t.toString());
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
 
@@ -962,7 +964,7 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<NormalActivitiesFlagDownload> call = retrofitInterface.downloadNormalActivityFlag(sharedPrefs.getStaffID(),last_synced);
-
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<NormalActivitiesFlagDownload>() {
             @Override
             public void onResponse(@NonNull Call<NormalActivitiesFlagDownload> call,
@@ -1003,13 +1005,13 @@ public class ActivityListDownloadService extends IntentService {
                             //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NotNull Call<NormalActivitiesFlagDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_staff_list", t.toString());
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
 

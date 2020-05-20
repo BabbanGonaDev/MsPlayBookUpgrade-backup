@@ -16,6 +16,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.GridDetailsRecycler.Gri
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 
 import java.util.Objects;
 
@@ -53,6 +54,8 @@ public class GridDetails extends AppCompatActivity {
         initActivitiesRecycler();
 
         toolbar_grid_details.setNavigationOnClickListener(v -> loadPreviousActivity());
+        Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(GridDetails.this);
+        main2ActivityMethods.confirmPhoneDate();
 
     }
 

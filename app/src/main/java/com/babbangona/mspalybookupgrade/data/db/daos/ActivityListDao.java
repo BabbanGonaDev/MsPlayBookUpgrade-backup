@@ -20,6 +20,9 @@ public interface ActivityListDao {
             "AND language_id = :language_id ORDER BY activity_id ASC ")
     LiveData<List<ActivityList>> getAllActivityList(String language_id, String app_role);
 
+    @Query(" SELECT COUNT(activity_id) FROM activity_list")
+    int countActivities();
+
     /**
      * Insert the object in database
      * @param activityList, object to be inserted

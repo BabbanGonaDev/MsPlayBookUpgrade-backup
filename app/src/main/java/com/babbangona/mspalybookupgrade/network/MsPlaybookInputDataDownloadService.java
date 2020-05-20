@@ -65,7 +65,7 @@ public class MsPlaybookInputDataDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<MsPlaybookInputDownload> call = retrofitInterface.getMsPlaybookInputDataDownload(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<MsPlaybookInputDownload>() {
             @Override
             public void onResponse(@NonNull Call<MsPlaybookInputDownload> call,
@@ -115,13 +115,13 @@ public class MsPlaybookInputDataDownloadService extends IntentService {
                             //Toasst.makeText(MsPlaybookInputDataDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NotNull Call<MsPlaybookInputDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_check_list", t.toString());
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
 

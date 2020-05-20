@@ -19,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -42,6 +43,7 @@ import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.ActivityListDownloadService;
 import com.babbangona.mspalybookupgrade.network.MsPlaybookInputDataDownloadService;
 import com.babbangona.mspalybookupgrade.network.StaffListDownloadService;
+import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -112,6 +114,10 @@ public class SetPortfolio extends AppCompatActivity {
             Manifest.permission.CALL_PHONE
     };
 
+    ProgressDialog pd;
+
+    Handler mHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +146,15 @@ public class SetPortfolio extends AppCompatActivity {
         }else{
             offset = 0;
         }
+        mHandler = new Handler();
         setAdapter(offset);
+
+        pd = new ProgressDialog(SetPortfolio.this);
+        startRepeatingTask();
+
+
+        Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(SetPortfolio.this);
+        main2ActivityMethods.confirmPhoneDate();
     }
 
     @OnClick(R.id.fab_download_flags)
@@ -250,15 +264,8 @@ public class SetPortfolio extends AppCompatActivity {
     }
 
     void dialogWithSync(){
-        ProgressDialog pd;
-        pd = new ProgressDialog(SetPortfolio.this);
-        pd.setTitle(getResources().getString(R.string.downloading_data));
-        pd.setMessage(getResources().getString(R.string.please_wait));
-        pd.setCancelable(false);
-        pd.show();
         syncRecords();
         runOnUiThread(this::setAllStaffAdapter);
-        pd.dismiss();
     }
 
     void dialogInputRecordWithSync(){
@@ -570,6 +577,47 @@ public class SetPortfolio extends AppCompatActivity {
             removeSearchTray();
         }else{
             loadPreviousActivity();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopRepeatingTask();
+    }
+
+    void startRepeatingTask() {
+        mSyncTask.run();
+    }
+
+    Runnable mSyncTask = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                checkProgressDialogStatus(); //this function can change value of mInterval.
+            } finally {
+                // 100% guarantee that this always happens, even if
+                // your update method throws an exception
+                int mInterval = 500;
+                mHandler.postDelayed(mSyncTask, mInterval);
+            }
+        }
+    };
+
+    void stopRepeatingTask() {
+        mHandler.removeCallbacks(mSyncTask);
+    }
+
+    public void checkProgressDialogStatus(){
+        int progress_dialog_status = sharedPrefs.getKeyProgressDialogStatus();
+        if (progress_dialog_status == 0) {
+            pd.setTitle(getResources().getString(R.string.downloading_data));
+            pd.setMessage(getResources().getString(R.string.please_wait));
+            pd.setCancelable(false);
+            pd.show();
+        } else if (progress_dialog_status == 1) {
+            //pd.show();
+            pd.dismiss();
         }
     }
 }

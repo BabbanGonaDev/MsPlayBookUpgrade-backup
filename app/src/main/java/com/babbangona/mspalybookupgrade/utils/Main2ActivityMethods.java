@@ -1,20 +1,27 @@
 package com.babbangona.mspalybookupgrade.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.provider.Settings;
 
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Main2ActivityMethods {
@@ -148,5 +155,44 @@ public class Main2ActivityMethods {
             composed_sentence = context.getResources().getString(R.string.strange_activity);
         }
         return composed_sentence;
+    }
+
+    public void confirmPhoneDate(){
+        //TODO --- Get the apps list last sync date for now, get a better one later.
+        String str_default_date = getLastSyncTimeStaffList();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        Date def_date = null;
+        try {
+            def_date = sdf.parse(str_default_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (new Date().before(def_date)) {
+            //Current Date is behind default date or last sync date, redirect
+            new MaterialAlertDialogBuilder(context)
+                    .setIcon(context.getResources().getDrawable(R.drawable.ic_wrong_calendar))
+                    .setTitle(context.getResources().getString(R.string.wrong_date_title))
+                    .setMessage(context.getResources().getString(R.string.wrong_date_msg))
+                    .setCancelable(false)
+                    .setPositiveButton(context.getResources().getString(R.string.change_date), (dialogInterface, i) -> {
+                        context.startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
+                    }).show();
+        }
+    }
+
+    private String getLastSyncTimeStaffList(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncStaff(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2020-05-20 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2020-05-20 00:00:00";
+        }
+        return last_sync_time;
     }
 }

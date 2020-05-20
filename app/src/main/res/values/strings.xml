@@ -75,4 +75,9 @@
     <string name="view">View</string>
     <string name="load_all_fields">Search all fields</string>
     <string name="visitation_logged">Visitation Logged</string>
+    <string name="exit_app">Please click BACK again to exit</string>
+    <string name="click_sync_message">Please click SYNC to start using this application</string>
+    <string name="change_date">Change Date</string>
+    <string name="wrong_date_title">Wrong Date/Time</string>
+    <string name="wrong_date_msg">Wrong date/time detected. Kindly correct phone date in order to use this application.</string>
 </resources>

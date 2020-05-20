@@ -59,7 +59,7 @@ public class StaffListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<StaffListDownload> call = retrofitInterface.getStaffListDownload(last_synced);
-
+        sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<StaffListDownload>() {
             @Override
             public void onResponse(@NonNull Call<StaffListDownload> call,
@@ -82,7 +82,6 @@ public class StaffListDownloadService extends IntentService {
                             }
                         }
                     }
-
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
@@ -100,13 +99,13 @@ public class StaffListDownloadService extends IntentService {
                             //Toasst.makeText(StaffListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
                 }
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
             @Override
             public void onFailure(@NotNull Call<StaffListDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_staff_list", t.toString());
-
+                sharedPrefs.setKeyProgressDialogStatus(1);
             }
         });
 

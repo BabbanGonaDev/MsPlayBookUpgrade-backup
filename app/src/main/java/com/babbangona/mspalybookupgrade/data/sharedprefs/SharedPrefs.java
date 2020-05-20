@@ -52,11 +52,22 @@ public class SharedPrefs {
     public static final String KEY_ADAPTER_OFFSET_FIELD_LIST = "adapter_offset_field_list";
     public static final String KEY_ADAPTER_OFFSET_HG_FIELD_LIST = "adapter_offset_hg_field_list";
 
+    public static final String KEY_PROGRESS_DIALOG_STATUS = "progress_dialog_status";
+
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyProgressDialogStatus(int progress_dialog_status){
+        // Storing role in pref
+        editor.putInt(KEY_PROGRESS_DIALOG_STATUS, progress_dialog_status);
+
+
+        // commit changes
+        editor.commit();
     }
 
     public void setKeyAdapterOffsetHgFieldList(int offset){
@@ -277,6 +288,10 @@ public class SharedPrefs {
 
     public int getKeyAdapterOffsetHgFieldList(){
         return pref.getInt(KEY_ADAPTER_OFFSET_HG_FIELD_LIST ,0);
+    }
+
+    public int getKeyProgressDialogStatus(){
+        return pref.getInt(KEY_PROGRESS_DIALOG_STATUS ,1);
     }
 
 
