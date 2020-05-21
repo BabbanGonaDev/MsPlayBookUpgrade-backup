@@ -32,6 +32,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
+import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -50,12 +51,14 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
     private AppDatabase appDatabase;
     private GPSController gpsController;
     private GPSController.LocationGetter locationGetter;
+    private SetPortfolioMethods setPortfolioMethods;
 
     public HGFieldListRecyclerAdapter(Context context) {
         super(USER_DIFF);
         this.context = context;
         sharedPrefs = new SharedPrefs(this.context);
         appDatabase = AppDatabase.getInstance(this.context);
+        setPortfolioMethods = new SetPortfolioMethods();
     }
 
     @NonNull
@@ -120,6 +123,13 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         @BindView(R.id.tv_hg_list)
         TextView tv_hg_list;
 
+        @BindView(R.id.hg_list_container)
+        LinearLayout hg_list_container;
+
+        TextView tv;
+
+        boolean show_hg_list = false;
+
         ViewHolder(View itemView){
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -141,61 +151,141 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             tv_village_name.setText(village);
             tv_latitude.setText(latitude);
             tv_longitude.setText(longitude);
-            getStatus(hgFieldListRecyclerModel,btn_log_activity,iv_activity_signal,tv_hg_list);
+            hg_list_container.setOrientation(LinearLayout.VERTICAL);
+            getStatus(hgFieldListRecyclerModel,btn_log_activity,iv_activity_signal,tv_hg_list,hg_list_container,getAdapterPosition());
             btn_log_activity.setOnClickListener(v -> logActivity(hgFieldListRecyclerModel,context,getAdapterPosition(),"activity"));
             btn_log_visitation.setOnClickListener(v -> logActivity(hgFieldListRecyclerModel,context,getAdapterPosition(),"visitation"));
             btn_phone_call.setOnClickListener(v -> callMemberDialog(context,hgFieldListRecyclerModel));
+            tv_hg_list.setOnClickListener(v -> {
+                show_hg_list = !show_hg_list;
+                setTv_hg_list(show_hg_list,hg_list_container,tv_hg_list);
+            });
         }
 
-        void getStatus(HGFieldListRecyclerModel hgFieldListRecyclerModel,
-                         MaterialButton btn_log_activity, ImageView iv_activity_signal,TextView tv_hg_list){
+        private void getStatus(HGFieldListRecyclerModel hgFieldListRecyclerModel,
+                               MaterialButton btn_log_activity, ImageView iv_activity_signal,
+                               TextView tv_hg_list, LinearLayout hg_list_container, int position){
             int status = appDatabase.hgActivitiesFlagDao().countFieldInHGActivity(hgFieldListRecyclerModel.getUnique_field_id());
             String button_text = context.getResources().getString(R.string.hg_button_text);
             btn_log_activity.setText(button_text);
             if (status > 0){
                 iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.colorRed));
                 tv_hg_list.setVisibility(View.VISIBLE);
-                StringBuilder initialString = new StringBuilder(context.getResources().getString(R.string.hg_list_header) + "\n" + "---------------------\n");
-                List<String> recorded_hg = appDatabase.hgActivitiesFlagDao().getAllFieldHGs(hgFieldListRecyclerModel.getUnique_field_id());
-                for (int i = 0; i < recorded_hg.size(); i++) {
-                    initialString.append(recorded_hg.get(i)).append("\n");
+                hg_list_container.setVisibility(View.GONE);
+                tv_hg_list.setText(context.getResources().getString(R.string.show_all_hgs));
+                //List<String> recorded_hg = appDatabase.hgActivitiesFlagDao().getAllFieldHGs(hgFieldListRecyclerModel.getUnique_field_id());
+                List<HGFieldListRecyclerModel.HGListModel> allFieldHGs = appDatabase.hgActivitiesFlagDao().getAllActiveHGs(hgFieldListRecyclerModel.getUnique_field_id());
+
+                if(hg_list_container.getChildCount() > 0){
+                    hg_list_container.removeAllViews();
                 }
-                tv_hg_list.setText(initialString);
+
+                for (int i = 0; i < allFieldHGs.size(); i++) {
+                    TextView tv = new TextView(context);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
+                            (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                    tv.setTextSize((float) 12);
+                    tv.setPadding(20, 30, 20, 30);
+                    tv.setLayoutParams(params);
+                    tv.setText(allFieldHGs.get(i).getHg_type());
+                    params.setMargins(0,0,0,10);
+                    if (allFieldHGs.get(i).getHg_status().equalsIgnoreCase("1")){
+                        tv.setBackgroundColor(context.getResources().getColor(R.color.view_red));
+                        tv.setTextColor(context.getResources().getColor(R.color.colorWhite));
+                    }else if (allFieldHGs.get(i).getHg_status().equalsIgnoreCase("2")){
+                        tv.setBackgroundColor(context.getResources().getColor(R.color.view_orange));
+                        tv.setTextColor(context.getResources().getColor(R.color.colorWhite));
+                    }
+                    hg_list_container.addView(tv);
+                    int finalI = i;
+                    tv.setOnClickListener(v -> logSolveHG(hgFieldListRecyclerModel,context,position,allFieldHGs.get(finalI)));
+                }
+
             }else{
                 iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.colorGreen));
                 tv_hg_list.setVisibility(View.GONE);
+                hg_list_container.setVisibility(View.GONE);
             }
         }
 
-        private void logActivity(HGFieldListRecyclerModel hgFieldListRecyclerModel,
-                                 Context context, int position, String module){
 
-            locationGetter = GPSController.initialiseLocationListener((Activity)context);
-            double latitude = locationGetter.getLatitude();
-            double longitude = locationGetter.getLongitude();
-            double min_lat = Double.parseDouble(hgFieldListRecyclerModel.getMin_lat());
-            double max_lat = Double.parseDouble(hgFieldListRecyclerModel.getMax_lat());
-            double min_lng = Double.parseDouble(hgFieldListRecyclerModel.getMin_lng());
-            double max_lng = Double.parseDouble(hgFieldListRecyclerModel.getMax_lng());
-            double mid_lat = (max_lat+min_lat)/2.0;
-            double mid_lng = (max_lng+min_lng)/2.0;
+    }
 
-            double allowedDistance = allowedDistanceToFieldBoundary(min_lat,min_lng,mid_lat,mid_lng);
-            double locationDistance = locationDistanceToFieldCentre(latitude,longitude,mid_lat,mid_lng);
+    private void setTv_hg_list(boolean show_hg_list, LinearLayout hg_list_container, TextView tv_hg_list){
+        if (show_hg_list){
+            hg_list_container.setVisibility(View.VISIBLE);
+            tv_hg_list.setText(context.getResources().getString(R.string.hide_all_hgs));
+        }else{
+            hg_list_container.setVisibility(View.GONE);
+            tv_hg_list.setText(context.getResources().getString(R.string.show_all_hgs));
+        }
+    }
 
-            Log.d("present_location",latitude + "|"+longitude);
+    private void logActivity(HGFieldListRecyclerModel hgFieldListRecyclerModel,
+                             Context context, int position, String module){
 
-            if (locationDistance <= allowedDistance){
-                if (module.equalsIgnoreCase("visitation")){
-                    logVisitation(hgFieldListRecyclerModel,latitude,longitude);
-                }else{
-                    showLogDialogStarter(hgFieldListRecyclerModel, position,latitude,longitude);
-                }
+        locationGetter = GPSController.initialiseLocationListener((Activity)context);
+        double latitude = locationGetter.getLatitude();
+        double longitude = locationGetter.getLongitude();
+        double min_lat = Double.parseDouble(hgFieldListRecyclerModel.getMin_lat());
+        double max_lat = Double.parseDouble(hgFieldListRecyclerModel.getMax_lat());
+        double min_lng = Double.parseDouble(hgFieldListRecyclerModel.getMin_lng());
+        double max_lng = Double.parseDouble(hgFieldListRecyclerModel.getMax_lng());
+        double mid_lat = (max_lat+min_lat)/2.0;
+        double mid_lng = (max_lng+min_lng)/2.0;
+
+        double allowedDistance = allowedDistanceToFieldBoundary(min_lat,min_lng,mid_lat,mid_lng);
+        double locationDistance = locationDistanceToFieldCentre(latitude,longitude,mid_lat,mid_lng);
+
+        Log.d("present_location",latitude + "|"+longitude);
+
+        if (locationDistance <= allowedDistance){
+            if (module.equalsIgnoreCase("visitation")){
+                logVisitation(hgFieldListRecyclerModel,latitude,longitude);
             }else{
-                locationMismatchedDialog(latitude,longitude,min_lat,max_lat,min_lng,max_lng,
-                        context,hgFieldListRecyclerModel.getUnique_field_id(),
-                        context.getResources().getString(R.string.wrong_location));
+                showLogDialogStarter(hgFieldListRecyclerModel, position,latitude,longitude);
             }
+        }else{
+            locationMismatchedDialog(latitude,longitude,min_lat,max_lat,min_lng,max_lng,
+                    context,hgFieldListRecyclerModel.getUnique_field_id(),
+                    context.getResources().getString(R.string.wrong_location));
+        }
+    }
+
+    private void logSolveHG(HGFieldListRecyclerModel hgFieldListRecyclerModel,
+                             Context context, int position, HGFieldListRecyclerModel.HGListModel hgListModel){
+
+        locationGetter = GPSController.initialiseLocationListener((Activity)context);
+        double latitude = locationGetter.getLatitude();
+        double longitude = locationGetter.getLongitude();
+        double min_lat = Double.parseDouble(hgFieldListRecyclerModel.getMin_lat());
+        double max_lat = Double.parseDouble(hgFieldListRecyclerModel.getMax_lat());
+        double min_lng = Double.parseDouble(hgFieldListRecyclerModel.getMin_lng());
+        double max_lng = Double.parseDouble(hgFieldListRecyclerModel.getMax_lng());
+        double mid_lat = (max_lat+min_lat)/2.0;
+        double mid_lng = (max_lng+min_lng)/2.0;
+
+        double allowedDistance = allowedDistanceToFieldBoundary(min_lat,min_lng,mid_lat,mid_lng);
+        double locationDistance = locationDistanceToFieldCentre(latitude,longitude,mid_lat,mid_lng);
+
+        Log.d("present_location",latitude + "|"+longitude);
+
+        if (locationDistance <= allowedDistance){
+            String message = context.getResources().getString(R.string.solve_hg_message_1_1);
+            if (hgListModel.getHg_status().equalsIgnoreCase("1")){
+                message = message + " " +
+                        hgListModel.getHg_type() + " " +context.getResources().getString(R.string.solve_hg_message_2);
+            }else if (hgListModel.getHg_status().equalsIgnoreCase("2")){
+                message = context.getResources().getString(R.string.solve_hg_message_1_2)+ " " +
+                        hgListModel.getHg_type() + " " +context.getResources().getString(R.string.solve_hg_message_2);
+            }
+            showDialogStartSolveHG(message,context,hgFieldListRecyclerModel,position,latitude,
+                    longitude,"Solve_"+hgListModel.getHg_type());
+        }else{
+            locationMismatchedDialog(latitude,longitude,min_lat,max_lat,min_lng,max_lng,
+                    context,hgFieldListRecyclerModel.getUnique_field_id(),
+                    context.getResources().getString(R.string.wrong_location));
         }
     }
 
@@ -261,6 +351,30 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
                     dialog.dismiss();
                 })
                 .setCancelable(false)
+                .show();
+    }
+
+    private void showDialogStartSolveHG(String message, Context context,
+                                            HGFieldListRecyclerModel hgFieldListRecyclerModel, int position,
+                                            double latitude, double longitude, String hg_type) {
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showDialogSolveHG(builder,message,context,hgFieldListRecyclerModel,position,latitude,longitude,hg_type);
+    }
+
+    private void showDialogSolveHG(MaterialAlertDialogBuilder builder, String message, Context context,
+                                            HGFieldListRecyclerModel hgFieldListRecyclerModel, int position,
+                                            double latitude, double longitude, String hg_type) {
+        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_update_details))
+                .setTitle(context.getResources().getString(R.string.log_hg))
+                .setMessage(message)
+                .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                    updateActivity(hgFieldListRecyclerModel,position,hg_type,latitude,longitude);
+                }).setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+            //this is to dismiss the dialog
+            dialog.dismiss();
+        }).setCancelable(false)
                 .show();
     }
 
@@ -434,7 +548,15 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         String device_id;
         TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         if(ContextCompat.checkSelfPermission(context, Manifest.permission. READ_PHONE_STATE)== PackageManager.PERMISSION_GRANTED){
-            device_id = tm.getDeviceId();
+            try {
+                device_id = tm.getDeviceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                device_id = "";
+            }
+            if (device_id == null){
+                device_id = "";
+            }
         } else{
             device_id = "";
         }

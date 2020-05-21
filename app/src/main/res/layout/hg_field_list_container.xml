@@ -135,12 +135,30 @@
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="155dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/tv_hg_list"
                     android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_gravity="center"
                     android:gravity="center"
-                    android:textAppearance="?attr/textAppearanceBody2" />
+                    android:textSize="15sp"
+                    android:textColor="@color/text_color_white"
+                    android:text="@string/show_all_hgs"
+                    android:padding="@dimen/dimen_5dp"
+                    android:background="@drawable/show_hide_hg_look"/>
+
+                <LinearLayout
+                    android:id="@+id/hg_list_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                </LinearLayout>
 
             </LinearLayout>
 

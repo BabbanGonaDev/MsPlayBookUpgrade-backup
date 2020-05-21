@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.HGFieldListRecycler.HGFieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public abstract class HGActivitiesFlagDao {
             "AND ((b.min_lng+b.max_lng)/2) <= :max_lng AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) ")
     public abstract int fieldPortionCountForHG(String staff_id, double min_lat, double max_lat, double min_lng, double max_lng);
 
-    @Query("SELECT COUNT(unique_field_id) FROM hg_activities_flag WHERE unique_field_id = :unique_field_id AND hg_status = '1'")
+    @Query("SELECT COUNT(unique_field_id) FROM hg_activities_flag WHERE unique_field_id = :unique_field_id AND hg_status != '0'")
     public abstract int countFieldInHGActivity(String unique_field_id);
 
     @Query("SELECT COUNT(unique_field_id) FROM hg_activities_flag " +
@@ -37,8 +38,11 @@ public abstract class HGActivitiesFlagDao {
             "WHERE unique_field_id = :unique_field_id AND hg_type = :hg_type")
     public abstract void updateHGFlag(String unique_field_id, String hg_type, String status, String date, String staff_id);
 
-    @Query("SELECT hg_type FROM hg_activities_flag WHERE unique_field_id = :unique_field_id AND hg_status = '1'")
+    @Query("SELECT hg_type FROM hg_activities_flag WHERE unique_field_id = :unique_field_id AND hg_status != '0'")
     public abstract List<String> getAllFieldHGs(String unique_field_id);
+
+    @Query("SELECT hg_type, hg_status FROM hg_activities_flag WHERE unique_field_id = :unique_field_id AND hg_status != '0'")
+    public abstract List<HGFieldListRecyclerModel.HGListModel> getAllActiveHGs(String unique_field_id);
 
     @Query(" SELECT COUNT(unique_field_id) FROM hg_activities_flag WHERE sync_flag != '1' ")
     public abstract int getUnSyncedHGActivitiesCount();

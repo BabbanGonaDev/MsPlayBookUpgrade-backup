@@ -536,7 +536,15 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
         String device_id;
         TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         if(ContextCompat.checkSelfPermission(context, Manifest.permission. READ_PHONE_STATE)== PackageManager.PERMISSION_GRANTED){
-            device_id = tm.getDeviceId();
+            try {
+                device_id = tm.getDeviceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                device_id = "";
+            }
+            if (device_id == null){
+                device_id = "";
+            }
         } else{
             device_id = "";
         }

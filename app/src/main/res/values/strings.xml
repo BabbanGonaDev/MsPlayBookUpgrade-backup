@@ -80,4 +80,9 @@
     <string name="change_date">Change Date</string>
     <string name="wrong_date_title">Wrong Date/Time</string>
     <string name="wrong_date_msg">Wrong date/time detected. Kindly correct phone date in order to use this application.</string>
+    <string name="show_all_hgs">SHOW ALL HGs</string>
+    <string name="hide_all_hgs">HIDE ALL HGs</string>
+    <string name="solve_hg_message_2">for this field?</string>
+    <string name="solve_hg_message_1_2">Do you want to confirm solving this</string>
+    <string name="solve_hg_message_1_1">Do you want to solve this</string>
 </resources>

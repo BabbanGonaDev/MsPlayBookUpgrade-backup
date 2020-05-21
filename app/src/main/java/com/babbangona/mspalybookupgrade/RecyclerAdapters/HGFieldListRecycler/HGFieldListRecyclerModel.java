@@ -116,4 +116,31 @@ public class HGFieldListRecyclerModel {
     public void setField_size(String field_size) {
         this.field_size = field_size;
     }
+
+    public static class HGListModel{
+        private String hg_type;
+
+        private String hg_status;
+
+        public HGListModel(String hg_type, String hg_status) {
+            this.hg_type = hg_type;
+            this.hg_status = hg_status;
+        }
+
+        public String getHg_type() {
+            return hg_type;
+        }
+
+        public void setHg_type(String hg_type) {
+            this.hg_type = hg_type;
+        }
+
+        public String getHg_status() {
+            return hg_status;
+        }
+
+        public void setHg_status(String hg_status) {
+            this.hg_status = hg_status;
+        }
+    }
 }
