@@ -22,9 +22,12 @@ public class HGFieldListRecyclerModel {
 
     private String field_size;
 
+    private String ik_number;
+
     public HGFieldListRecyclerModel(String unique_field_id, String field_r_id, String member_name,
                                     String phone_number, String village_name, String min_lat,
-                                    String max_lat, String min_lng, String max_lng, String field_size) {
+                                    String max_lat, String min_lng, String max_lng, String field_size,
+                                    String ik_number) {
         this.unique_field_id = unique_field_id;
         this.field_r_id = field_r_id;
         this.member_name = member_name;
@@ -35,6 +38,7 @@ public class HGFieldListRecyclerModel {
         this.min_lng = min_lng;
         this.max_lng = max_lng;
         this.field_size = field_size;
+        this.ik_number = ik_number;
     }
 
     public String getUnique_field_id() {
@@ -115,6 +119,14 @@ public class HGFieldListRecyclerModel {
 
     public void setField_size(String field_size) {
         this.field_size = field_size;
+    }
+
+    public String getIk_number() {
+        return ik_number;
+    }
+
+    public void setIk_number(String ik_number) {
+        this.ik_number = ik_number;
     }
 
     public static class HGListModel{

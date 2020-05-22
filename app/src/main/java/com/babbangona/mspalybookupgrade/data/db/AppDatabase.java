@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.daos.ActivityListDao;
@@ -55,6 +57,20 @@ public abstract class AppDatabase extends RoomDatabase {
         return appDatabase;
     }
 
+    /*
+    public static final String NORMAL_ACTIVITY_FLAGS_TABLE              = "normal_activities_flag";
+    public static final String HG_ACTIVITY_FLAGS_TABLE                  = "hg_activities_flag";
+    public static final String LOGS_TABLE                               = "logs"; */
+
+    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE hg_activities_flag ADD COLUMN 'ik_number' TEXT DEFAULT '0'");
+            database.execSQL("ALTER TABLE normal_activities_flag ADD COLUMN 'ik_number' TEXT DEFAULT '0'");
+            database.execSQL("ALTER TABLE logs ADD COLUMN 'ik_number' TEXT DEFAULT '0'");
+        }
+    };
+
 
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
@@ -62,6 +78,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 AppDatabase.class,
                 DatabaseStringConstants.MS_PLAYBOOK_DATABASE_NAME)
                 .allowMainThreadQueries()
+                .addMigrations(MIGRATION_1_2)
                 .build();
 //                .fallbackToDestructiveMigration()
     }

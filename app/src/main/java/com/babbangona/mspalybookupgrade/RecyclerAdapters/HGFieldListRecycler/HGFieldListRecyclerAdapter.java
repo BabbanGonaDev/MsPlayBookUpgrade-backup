@@ -87,6 +87,9 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         @BindView(R.id.tv_field_r_id)
         TextView tv_field_r_id;
 
+        @BindView(R.id.tv_ik_number)
+        TextView tv_ik_number;
+
         @BindView(R.id.tv_member_name)
         TextView tv_member_name;
 
@@ -137,7 +140,8 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         }
 
         void nowBind(HGFieldListRecyclerModel hgFieldListRecyclerModel){
-            String field_r_id = hgFieldListRecyclerModel.getField_r_id();
+            String field_r_id = hgFieldListRecyclerModel.getUnique_field_id();
+            String ik_number = context.getResources().getString(R.string.ik_number) +" "+ hgFieldListRecyclerModel.getIk_number();
             String member_name = context.getResources().getString(R.string.member_name) +" "+ hgFieldListRecyclerModel.getMember_name();
             String phone_number = context.getResources().getString(R.string.member_phone_number) +" "+ hgFieldListRecyclerModel.getPhone_number();
             String field_size = context.getResources().getString(R.string.field_size) +" "+ hgFieldListRecyclerModel.getField_size();
@@ -145,6 +149,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             String latitude = "Lat.: " + (Double.parseDouble(hgFieldListRecyclerModel.getMin_lat())+Double.parseDouble(hgFieldListRecyclerModel.getMax_lat()))/2;
             String longitude = "Long.: " + (Double.parseDouble(hgFieldListRecyclerModel.getMin_lng())+Double.parseDouble(hgFieldListRecyclerModel.getMax_lng()))/2;
             tv_field_r_id.setText(field_r_id);
+            tv_ik_number.setText(ik_number);
             tv_member_name.setText(member_name);
             tv_phone_number.setText(phone_number);
             tv_field_size.setText(field_size);
@@ -292,7 +297,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
     private void logVisitation(HGFieldListRecyclerModel hgFieldListRecyclerModel, double latitude, double longitude){
         appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                 "Visitation",getDate("normal"),sharedPrefs.getStaffRole(),
-                String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",hgFieldListRecyclerModel.getIk_number()));
         Toast.makeText(context, context.getResources().getString(R.string.visitation_logged), Toast.LENGTH_SHORT).show();
     }
 
@@ -396,14 +401,14 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
                         getDate("spread"),sharedPrefs.getStaffID());
             appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                     initial_activity,getDate("normal"),sharedPrefs.getStaffRole(),
-                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",hgFieldListRecyclerModel.getIk_number()));
             notifyItemChanged(position);
         }else{
             appDatabase.hgActivitiesFlagDao().insert(new HGActivitiesFlag(hgFieldListRecyclerModel.getUnique_field_id(),
-                    hg_selected,getDate("spread"),flag, sharedPrefs.getStaffID(),"0"));
+                    hg_selected,getDate("spread"),flag, sharedPrefs.getStaffID(),"0",hgFieldListRecyclerModel.getIk_number()));
             appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                     initial_activity,getDate("normal"),sharedPrefs.getStaffRole(),
-                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0"));
+                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",hgFieldListRecyclerModel.getIk_number()));
             notifyItemChanged(position);
         }
     }

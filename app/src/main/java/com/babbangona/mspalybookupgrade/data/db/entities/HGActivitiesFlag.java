@@ -32,14 +32,18 @@ public class HGActivitiesFlag {
     @ColumnInfo(name = DatabaseStringConstants.COL_SYNC_FLAG_HG_ACTIVITIES)
     private String sync_flag;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_IK_NUMBER_HG_ACTIVITIES)
+    private String ik_number;
+
     public HGActivitiesFlag(@NonNull String unique_field_id, @NonNull String hg_type, String hg_date,
-                            String hg_status, String staff_id, String sync_flag) {
+                            String hg_status, String staff_id, String sync_flag, String ik_number) {
         this.unique_field_id = unique_field_id;
         this.hg_type = hg_type;
         this.hg_date = hg_date;
         this.hg_status = hg_status;
         this.staff_id = staff_id;
         this.sync_flag = sync_flag;
+        this.ik_number = ik_number;
     }
 
     @NonNull
@@ -90,5 +94,13 @@ public class HGActivitiesFlag {
 
     public void setSync_flag(String sync_flag) {
         this.sync_flag = sync_flag;
+    }
+
+    public String getIk_number() {
+        return ik_number;
+    }
+
+    public void setIk_number(String ik_number) {
+        this.ik_number = ik_number;
     }
 }

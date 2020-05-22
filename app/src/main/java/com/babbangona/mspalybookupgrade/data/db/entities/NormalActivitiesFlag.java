@@ -33,9 +33,13 @@ public class NormalActivitiesFlag {
     @ColumnInfo(name = DatabaseStringConstants.COL_SYNC_FLAG)
     private String sync_flag;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_IK_NUMBER_NORMAL_ACTIVITIES)
+    private String ik_number;
+
     public NormalActivitiesFlag(@NonNull String unique_field_id, String fertilizer_1_status,
                                 String fertilizer_1_date, String fertilizer_2_status,
-                                String fertilizer_2_date, String staff_id, String sync_flag) {
+                                String fertilizer_2_date, String staff_id,
+                                String sync_flag, String ik_number) {
         this.unique_field_id = unique_field_id;
         this.fertilizer_1_status = fertilizer_1_status;
         this.fertilizer_1_date = fertilizer_1_date;
@@ -43,6 +47,7 @@ public class NormalActivitiesFlag {
         this.fertilizer_2_date = fertilizer_2_date;
         this.staff_id = staff_id;
         this.sync_flag = sync_flag;
+        this.ik_number = ik_number;
     }
 
     @NonNull
@@ -100,5 +105,13 @@ public class NormalActivitiesFlag {
 
     public void setSync_flag(String sync_flag) {
         this.sync_flag = sync_flag;
+    }
+
+    public String getIk_number() {
+        return ik_number;
+    }
+
+    public void setIk_number(String ik_number) {
+        this.ik_number = ik_number;
     }
 }

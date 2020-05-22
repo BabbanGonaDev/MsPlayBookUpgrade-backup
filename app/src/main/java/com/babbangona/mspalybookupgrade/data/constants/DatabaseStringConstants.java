@@ -6,18 +6,18 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 1;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 2;
 
     /**
      * Names of tables
      */
     public static final String ACTIVITY_LIST_TABLE                      = "activity_list";
-    public static final String NORMAL_ACTIVITY_FLAGS_TABLE              = "normal_activities_flag";
     public static final String FIELDS_TABLE                             = "fields";
     public static final String STAFF_TABLE                              = "staff";
     public static final String MEMBERS_TABLE                            = "members";
-    public static final String HG_ACTIVITY_FLAGS_TABLE                  = "hg_activities_flag";
     public static final String HG_LIST_TABLE                            = "hg_list";
+    public static final String NORMAL_ACTIVITY_FLAGS_TABLE              = "normal_activities_flag";
+    public static final String HG_ACTIVITY_FLAGS_TABLE                  = "hg_activities_flag";
     public static final String LOGS_TABLE                               = "logs";
     public static final String LAST_SYNC_TABLE                          = "last_sync";
 
@@ -42,6 +42,7 @@ public class DatabaseStringConstants {
     public static final String COL_FERTILIZER_2_DATE                    = "fertilizer_2_date";
     public static final String COL_STAFF_ID                             = "staff_id";
     public static final String COL_SYNC_FLAG                            = "sync_flag";
+    public static final String COL_IK_NUMBER_NORMAL_ACTIVITIES          = "ik_number";
 
     /**
      * fields column names
@@ -85,6 +86,7 @@ public class DatabaseStringConstants {
     public static final String COL_HG_STATUS                            = "hg_status";
     public static final String COL_STAFF_ID_HG_ACTIVITIES               = "staff_id";
     public static final String COL_SYNC_FLAG_HG_ACTIVITIES              = "sync_flag";
+    public static final String COL_IK_NUMBER_HG_ACTIVITIES              = "ik_number";
 
     /**
      * hg_list column names
@@ -105,6 +107,7 @@ public class DatabaseStringConstants {
     public static final String COL_LONGITUDE                            = "longitude";
     public static final String COL_IMEI                                 = "imei";
     public static final String COL_SYNC_FLAG_LOGS                       = "sync_flag";
+    public static final String COL_IK_NUMBER_LOGS                       = "ik_number";
 
     /**
      * last_sync column names

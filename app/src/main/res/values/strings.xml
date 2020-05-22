@@ -34,6 +34,7 @@
     <string name="log_activity">Log Activity</string>
     <string name="field_r_id">Field R ID</string>
     <string name="member_name">Member Name:</string>
+    <string name="ik_number">IK Number:</string>
     <string name="member_phone_number">Phone Number:</string>
     <string name="field_size">Field Size:</string>
     <string name="member_village">Village:</string>

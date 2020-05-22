@@ -26,10 +26,12 @@ public class FieldListRecyclerModel {
 
     private String field_size;
 
-    public FieldListRecyclerModel(String unique_field_id, String fertilizer_1_status, String fertilizer_2_status,
-                                  String field_r_id, String member_name, String phone_number,
-                                  String village_name, String min_lat, String max_lat, String min_lng,
-                                  String max_lng, String field_size) {
+    private String ik_number;
+
+    public FieldListRecyclerModel(String unique_field_id, String fertilizer_1_status,
+                                  String fertilizer_2_status, String field_r_id, String member_name,
+                                  String phone_number, String village_name, String min_lat, String max_lat,
+                                  String min_lng, String max_lng, String field_size, String ik_number) {
         this.unique_field_id = unique_field_id;
         this.fertilizer_1_status = fertilizer_1_status;
         this.fertilizer_2_status = fertilizer_2_status;
@@ -42,6 +44,7 @@ public class FieldListRecyclerModel {
         this.min_lng = min_lng;
         this.max_lng = max_lng;
         this.field_size = field_size;
+        this.ik_number = ik_number;
     }
 
     public String getUnique_field_id() {
@@ -138,5 +141,13 @@ public class FieldListRecyclerModel {
 
     public void setField_size(String field_size) {
         this.field_size = field_size;
+    }
+
+    public String getIk_number() {
+        return ik_number;
+    }
+
+    public void setIk_number(String ik_number) {
+        this.ik_number = ik_number;
     }
 }

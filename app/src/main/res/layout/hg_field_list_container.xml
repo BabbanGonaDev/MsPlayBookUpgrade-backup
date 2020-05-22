@@ -46,6 +46,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/tv_ik_number"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:text="@string/ik_number"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?android:attr/textColorSecondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:id="@+id/tv_member_name"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:text="@string/member_name"
