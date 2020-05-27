@@ -1,6 +1,7 @@
 package com.babbangona.mspalybookupgrade.network;
 
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
+import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
@@ -43,13 +44,22 @@ public interface RetrofitInterface {
 
 
     @GET("downloadLogs")
-    Call<LogsDownload> downloadLogs(@Query("staff_id") String staff_id, @Query("last_synced_time") String last_synced_time);
+    Call<LogsDownload> downloadLogs(@Query("staff_id") String staff_id,
+                                    @Query("portfolio_list") String portfolio_list,
+                                    @Query("last_synced_time") String last_synced_time);
 
     @GET("downloadHGActivityFlag")
-    Call<HGActivitiesFlagDownload> downloadHGActivityFlag(@Query("staff_id") String staff_id, @Query("last_synced_time") String last_synced_time);
+    Call<HGActivitiesFlagDownload> downloadHGActivityFlag(@Query("staff_id") String staff_id,
+                                                          @Query("portfolio_list") String portfolio_list,
+                                                          @Query("last_synced_time") String last_synced_time);
 
     @GET("downloadNormalActivityFlag")
-    Call<NormalActivitiesFlagDownload> downloadNormalActivityFlag(@Query("staff_id") String staff_id, @Query("last_synced_time") String last_synced_time);
+    Call<NormalActivitiesFlagDownload> downloadNormalActivityFlag(@Query("staff_id") String staff_id,
+                                                                  @Query("portfolio_list") String portfolio_list,
+                                                                  @Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadCategory")
+    Call<CategoryDownload> downloadCategory(@Query("last_synced_time") String last_synced_time);
 
     @FormUrlEncoded
     @POST("uploadLogsRecord")

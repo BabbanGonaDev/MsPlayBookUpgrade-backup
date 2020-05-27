@@ -86,4 +86,11 @@
     <string name="solve_hg_message_2">for this field?</string>
     <string name="solve_hg_message_1_2">Do you want to confirm solving this</string>
     <string name="solve_hg_message_1_1">Do you want to solve this</string>
+    <string name="table_name">Table name</string>
+    <string name="time">Last Sync Time:</string>
+    <string name="remarks">Remarks:</string>
+    <string name="error_solve_hg">You cannot solve this HG</string>
+    <string name="sync_summary_title">Sync Summary</string>
+    <string name="hg_field_list_title">Field List (HG)</string>
+    <string name="field_list_title">Field List</string>
 </resources>

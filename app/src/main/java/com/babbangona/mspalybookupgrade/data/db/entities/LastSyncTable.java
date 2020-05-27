@@ -50,15 +50,18 @@ public class LastSyncTable {
     @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_LOGS_TABLE)
     private String last_sync_down_logs;
 
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_CATEGORY_TABLE)
+    private String last_sync_category;
+
     public LastSyncTable() {
     }
 
     public LastSyncTable(@NonNull String staff_id, String last_sync_activity_list,
-                         String last_sync_up_normal_activities_flag,
-                         String last_sync_down_normal_activities_flag, String last_sync_fields,
-                         String last_sync_staff, String last_sync_members,
+                         String last_sync_up_normal_activities_flag, String last_sync_down_normal_activities_flag,
+                         String last_sync_fields, String last_sync_staff, String last_sync_members,
                          String last_sync_up_hg_activities_flag, String last_sync_down_hg_activities_flag,
-                         String last_sync_hg_list, String last_sync_up_logs, String last_sync_down_logs) {
+                         String last_sync_hg_list, String last_sync_up_logs, String last_sync_down_logs,
+                         String last_sync_category) {
         this.staff_id = staff_id;
         this.last_sync_activity_list = last_sync_activity_list;
         this.last_sync_up_normal_activities_flag = last_sync_up_normal_activities_flag;
@@ -71,6 +74,7 @@ public class LastSyncTable {
         this.last_sync_hg_list = last_sync_hg_list;
         this.last_sync_up_logs = last_sync_up_logs;
         this.last_sync_down_logs = last_sync_down_logs;
+        this.last_sync_category = last_sync_category;
     }
 
     @NonNull
@@ -168,5 +172,13 @@ public class LastSyncTable {
 
     public void setLast_sync_down_logs(String last_sync_down_logs) {
         this.last_sync_down_logs = last_sync_down_logs;
+    }
+
+    public String getLast_sync_category() {
+        return last_sync_category;
+    }
+
+    public void setLast_sync_category(String last_sync_category) {
+        this.last_sync_category = last_sync_category;
     }
 }

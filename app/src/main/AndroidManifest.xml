@@ -22,54 +22,69 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.babbangona.mspalybookupgrade.SearchActivity">
+        <activity
+            android:name=".SyncSummary"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
+        <activity
+            android:name=".SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
 
         <service
-            android:name="com.babbangona.mspalybookupgrade.network.ActivityListDownloadService"
+            android:name=".network.ActivityListDownloadService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name="com.babbangona.mspalybookupgrade.network.StaffListDownloadService"
+            android:name=".network.StaffListDownloadService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name="com.babbangona.mspalybookupgrade.network.MsPlaybookInputDataDownloadService"
+            android:name=".network.MsPlaybookInputDataDownloadService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name="com.babbangona.mspalybookupgrade.FieldListPage"
+            android:name=".FieldListPage"
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
-            android:name="com.babbangona.mspalybookupgrade.HGFieldListPage"
+            android:name=".HGFieldListPage"
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
-            android:name="com.babbangona.mspalybookupgrade.GridDetails"
+            android:name=".GridDetails"
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
-            android:name="com.babbangona.mspalybookupgrade.Main2Activity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name="com.babbangona.mspalybookupgrade.SetPortfolio"
+            android:name=".Main2Activity"
+            android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
-            android:name="com.babbangona.mspalybookupgrade.ComingSoon"
+            android:name=".SetPortfolio"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".ComingSoon"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.babbangona.mspalybookupgrade.Homepage"
+            android:name=".Homepage"
             android:exported="true"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
-            android:name="com.babbangona.mspalybookupgrade.MainActivity"
+            android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

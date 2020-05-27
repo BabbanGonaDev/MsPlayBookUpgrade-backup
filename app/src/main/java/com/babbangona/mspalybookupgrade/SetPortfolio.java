@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -92,6 +93,9 @@ public class SetPortfolio extends AppCompatActivity {
 
     @BindView(R.id.fab_delete_flags)
     FloatingActionButton fab_delete_flags;
+
+    @BindView(R.id.emptyView)
+    ImageView emptyView;
 
     PortfolioPageListModelClass portfolioPageListModelClass;
 
@@ -472,10 +476,48 @@ public class SetPortfolio extends AppCompatActivity {
             recycler_view.addItemDecoration(verticalSpaceItemDecoration);
         }
         recycler_view.setLayoutManager(layoutManager);
-        portfolioPageListModelClass.setPortfolioRecyclerModelList.observe(this,setPortfolioAdapter::submitList);
+        //portfolioPageListModelClass.setPortfolioRecyclerModelList.observe(this,setPortfolioAdapter::submitList);
+        portfolioPageListModelClass.setPortfolioRecyclerModelList.observe(this,setPortfolioRecyclerModelList -> {
+
+
+            updateView(setPortfolioRecyclerModelList.size());
+            setPortfolioAdapter.submitList(setPortfolioRecyclerModelList);
+
+            setPortfolioRecyclerModelList.addWeakCallback(null, new PagedList.Callback() {
+                @Override
+                public void onChanged(int position, int count) {
+                    updateView(setPortfolioRecyclerModelList.size());
+                }
+
+                @Override
+                public void onInserted(int position, int count) {
+
+                }
+
+                @Override
+                public void onRemoved(int position, int count) {
+
+                }
+            });
+        });
         recycler_view.setAdapter(setPortfolioAdapter);
 
         textWatcher(search_edit_text,portfolioPageListModelClass);
+
+    }
+
+
+
+    private void updateView(int itemCount) {
+        if (itemCount > 0) {
+            // The list is not empty. Show the recycler view.
+            showView(recycler_view);
+            hideView(emptyView);
+        } else {
+            // The list is empty. Show the empty list view
+            hideView(recycler_view);
+            showView(emptyView);
+        }
 
     }
 
@@ -488,7 +530,30 @@ public class SetPortfolio extends AppCompatActivity {
             recycler_view.addItemDecoration(verticalSpaceItemDecoration);
         }
         recycler_view.setLayoutManager(layoutManager);
-        portfolioPageListModelClass.setPortfolioRecyclerModelList1.observe(this,setAddedPortfolioAdapter::submitList);
+        //portfolioPageListModelClass.setPortfolioRecyclerModelList1.observe(this,setAddedPortfolioAdapter::submitList);
+        portfolioPageListModelClass.setPortfolioRecyclerModelList1.observe(this,setPortfolioRecyclerModelList1 -> {
+
+
+            updateView(setPortfolioRecyclerModelList1.size());
+            setAddedPortfolioAdapter.submitList(setPortfolioRecyclerModelList1);
+
+            setPortfolioRecyclerModelList1.addWeakCallback(null, new PagedList.Callback() {
+                @Override
+                public void onChanged(int position, int count) {
+                    updateView(setPortfolioRecyclerModelList1.size());
+                }
+
+                @Override
+                public void onInserted(int position, int count) {
+
+                }
+
+                @Override
+                public void onRemoved(int position, int count) {
+
+                }
+            });
+        });
         recycler_view.setAdapter(setAddedPortfolioAdapter);
 
         textWatcherAdded(search_edit_text,portfolioPageListModelClass);

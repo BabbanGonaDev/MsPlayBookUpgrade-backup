@@ -32,7 +32,7 @@ public class Main2Activity extends AppCompatActivity {
                 mStaffProgram  = (String) b.get("staff_program");
             }
 
-            new SharedPrefs(this).CreateLoginSession(mStaffName,mStaffId,LeadMIKAdjustment(mStaffRole),mStaffProgram);
+            new SharedPrefs(this).CreateLoginSession(mStaffName,mStaffId,mStaffRole,mStaffProgram);
 
 
         }catch(Exception e){
@@ -44,13 +44,5 @@ public class Main2Activity extends AppCompatActivity {
     void startHomepageActivity(){
         finish();
         startActivity(new Intent(Main2Activity.this,Homepage.class));
-    }
-
-    String LeadMIKAdjustment(String staff_role){
-        if (staff_role.equalsIgnoreCase("LMIK")){
-            return "LMIk";
-        }else{
-            return staff_role;
-        }
     }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SyncSummary"
+    android:orientation="vertical"
+    android:background="@color/recycler_back">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:theme="@style/Theme.MsPlaybook"
+        android:padding="@dimen/dimen_5dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_sync_summary"
+            style="@style/Widget.MsPlaybook.Toolbar"
+            android:layout_width="match_parent"
+            android:background="@color/colorWhite"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_back_button"
+            app:title="@string/home_place_holder" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:padding="@dimen/dimen_10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/emptyView"
+        android:src="@drawable/recycler_empty_state"/>
+
+</LinearLayout>

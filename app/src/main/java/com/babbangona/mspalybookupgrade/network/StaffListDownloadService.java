@@ -9,9 +9,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
+import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 
@@ -81,7 +83,21 @@ public class StaffListDownloadService extends IntentService {
                                 appDatabase.lastSyncTableDao().insert(lastSyncTable);
                             }
                         }
+                        insetToSyncSummary(DatabaseStringConstants.STAFF_TABLE,
+                                "Staff List Download",
+                                "1",
+                                returnRemark(staffLists.size()),
+                                staffListDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.STAFF_TABLE,
+                                "Staff List Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
                     }
+                    Toast.makeText(StaffListDownloadService.this, "Download done", Toast.LENGTH_LONG).show();
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
@@ -98,6 +114,13 @@ public class StaffListDownloadService extends IntentService {
                             Log.e("Error", "Generic Error");
                             //Toasst.makeText(StaffListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
                     }
+                    saveToSyncSummary(DatabaseStringConstants.STAFF_TABLE,
+                            "Staff List Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                    Toast.makeText(StaffListDownloadService.this, "Download failed, network error", Toast.LENGTH_LONG).show();
                 }
                 sharedPrefs.setKeyProgressDialogStatus(1);
             }
@@ -106,6 +129,13 @@ public class StaffListDownloadService extends IntentService {
             public void onFailure(@NotNull Call<StaffListDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_staff_list", t.toString());
                 sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.STAFF_TABLE,
+                        "Staff List Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+                Toast.makeText(StaffListDownloadService.this, "Download failed", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -171,6 +201,62 @@ public class StaffListDownloadService extends IntentService {
             count = 0;
         }
         return count;
+    }
+
+    int getTableIDCount(String table_id, String staff_id){
+        int result = 0;
+        try {
+            result = appDatabase.syncSummaryDao().countTableID(table_id, staff_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = 0;
+        }
+        return result;
+    }
+
+    void saveToSyncSummary(String table_id, String table_name, String status, String remarks, String sync_time){
+
+        if (getTableIDCount(table_id, sharedPrefs.getStaffID()) > 0){
+            appDatabase.syncSummaryDao().updateStatus(
+                    table_id,
+                    sharedPrefs.getStaffID(),
+                    remarks,
+                    status
+            );
+        }else{
+            appDatabase.syncSummaryDao().insert(new SyncSummary(
+                            table_id,
+                            sharedPrefs.getStaffID(),
+                            table_name,
+                            status,
+                            remarks,
+                            sync_time
+                    )
+            );
+        }
+    }
+
+    String returnRemark(int size){
+        String statement;
+        if (size > 0){
+            statement = "Download successful";
+        }else{
+            statement = "Download Empty";
+        }
+        return statement;
+    }
+
+    void insetToSyncSummary(String table_id, String table_name, String status, String remarks, String sync_time){
+
+        appDatabase.syncSummaryDao().insert(new SyncSummary(
+                        table_id,
+                        sharedPrefs.getStaffID(),
+                        table_name,
+                        status,
+                        remarks,
+                        sync_time
+                )
+        );
     }
 
 }

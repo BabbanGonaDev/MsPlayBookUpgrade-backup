@@ -10,9 +10,13 @@ import android.widget.Toast;
 
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
+import com.babbangona.mspalybookupgrade.data.db.entities.Category;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,7 +81,14 @@ public class MainActivity extends AppCompatActivity {
             if (sharedPrefs.getKeyFirstTimeDataFlag().equalsIgnoreCase("0")){
                 appDatabase.activityListDao().insert(new ActivityList("4","en",
                         "Set Portfolio", "com.babbangona.mspalybookupgrade.SetPortfolio",
-                        "1","MSS,LMIk","0"));
+                        "1","supr,subd","0"));
+                List<Category> categoryList = new ArrayList<>();
+                categoryList.add(new Category("MIK","subd"));
+                categoryList.add(new Category("MSB","subd"));
+                categoryList.add(new Category("MSS","supr"));
+                categoryList.add(new Category("LMIK","supr"));
+                categoryList.add(new Category("PC","supr"));
+                appDatabase.categoryDao().insert(categoryList);
                 sharedPrefs.setKeyFirstTimeDataFlag("1");
             }
 

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FieldListPage"
+    android:background="@color/recycler_back"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -85,5 +86,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="5dp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/emptyView"
+        android:src="@drawable/recycler_empty_state"/>
 
 </LinearLayout>

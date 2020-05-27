@@ -6,6 +6,9 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.WindowManager;
 
+import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
+import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +49,7 @@ public class SetPortfolioMethods {
     }
 
     public int getScreenWidthInDPs(Context context){
-        /**
+        /*
             DisplayMetrics
                 A structure describing general information about a display,
                 such as its size, density, and font scaling.
@@ -87,14 +90,16 @@ public class SetPortfolioMethods {
                 outMetrics A DisplayMetrics object to receive the metrics.
         */
         WindowManager windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(dm);
+        if (windowManager != null) {
+            windowManager.getDefaultDisplay().getMetrics(dm);
+        }
         int widthInDP = Math.round(dm.widthPixels / dm.density);
         return getPixelsFromDPs( context, widthInDP);
     }
 
 
     // Method for converting DP/DIP value to pixels
-    public int getPixelsFromDPs(Context activity, int dps){
+    private int getPixelsFromDPs(Context activity, int dps){
         /*
             public abstract Resources getResources ()
 
@@ -104,5 +109,23 @@ public class SetPortfolioMethods {
 
         return (int) (TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, dps, r.getDisplayMetrics()));
+    }
+
+
+
+    public String getCategory(Context context){
+        AppDatabase appDatabase = AppDatabase.getInstance(context);
+        SharedPrefs sharedPrefs = new SharedPrefs(context);
+        String category;
+        try {
+            category = appDatabase.categoryDao().getRoleCategory(sharedPrefs.getStaffRole());
+        } catch (Exception e) {
+            e.printStackTrace();
+            category = "subd";
+        }
+        if (category == null || category.equalsIgnoreCase("")){
+            category = "subd";
+        }
+        return category;
     }
 }

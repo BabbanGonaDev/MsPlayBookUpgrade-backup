@@ -16,9 +16,9 @@ import java.util.List;
 public interface ActivityListDao {
 
 
-    @Query(" SELECT * FROM activity_list WHERE deactivated = '0' AND user_category LIKE :app_role " +
+    @Query(" SELECT * FROM activity_list WHERE deactivated = '0' AND user_category LIKE :user_category " +
             "AND language_id = :language_id ORDER BY activity_id ASC ")
-    LiveData<List<ActivityList>> getAllActivityList(String language_id, String app_role);
+    LiveData<List<ActivityList>> getAllActivityList(String language_id, String user_category);
 
     @Query(" SELECT COUNT(activity_id) FROM activity_list")
     int countActivities();

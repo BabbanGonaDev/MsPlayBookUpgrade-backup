@@ -16,6 +16,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.GridDetailsRecycler.Gri
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 
 import java.util.Objects;
@@ -47,6 +48,7 @@ public class GridDetails extends AppCompatActivity {
         ButterKnife.bind(this);
         appDatabase = AppDatabase.getInstance(GridDetails.this);
         sharedPrefs = new SharedPrefs(GridDetails.this);
+        GPSController.initialiseLocationListener(GridDetails.this);
         gridDetailsRecyclerModel = new GridDetailsRecyclerModel();
         setSupportActionBar(toolbar_grid_details);
         Objects.requireNonNull(getSupportActionBar()).setTitle(getActivityTitle());

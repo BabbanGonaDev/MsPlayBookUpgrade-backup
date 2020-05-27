@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.Ac
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.ActivityListDownloadService;
+import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -107,6 +109,7 @@ public class Homepage extends AppCompatActivity {
         sharedPrefs = new SharedPrefs(Homepage.this);
         main2ActivityMethods = new Main2ActivityMethods(Homepage.this);
         appDatabase = AppDatabase.getInstance(Homepage.this);
+        GPSController.initialiseLocationListener(Homepage.this);
         setSupportActionBar(toolbar_landing);
         collapsingToolbarTitle();
         displayUserDetails();
@@ -138,6 +141,7 @@ public class Homepage extends AppCompatActivity {
                 }
                 return true;
             case R.id.homepage_menu_sync_summary:
+                openSyncSummary();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -272,8 +276,7 @@ public class Homepage extends AppCompatActivity {
     }
 
     void syncRecords() {
-        if (sharedPrefs.getStaffRole().equalsIgnoreCase("LMIk") ||
-                sharedPrefs.getStaffRole().equalsIgnoreCase("MSS")){
+        if (getCategory().equalsIgnoreCase("supr")){
             if (sharedPrefs.getKeyPortfolioList().isEmpty()){
                 Toast.makeText(this, getResources().getString(R.string.set_portfolio_before_sync), Toast.LENGTH_SHORT).show();
             }else{
@@ -287,9 +290,10 @@ public class Homepage extends AppCompatActivity {
     }
 
     public void initActivitiesRecycler(){
+
         appDatabase
                 .activityListDao()
-                .getAllActivityList(sharedPrefs.getKeyAppLanguage(),"%"+sharedPrefs.getStaffRole()+"%")
+                .getAllActivityList(sharedPrefs.getKeyAppLanguage(),"%"+getCategory()+"%")
                 .observe(this,activityLists -> {
                     activityListAdapter = new ActivityListAdapter(main2ActivityMethods.composingRecyclerList(activityLists), Homepage.this);
                     RecyclerView.LayoutManager aLayoutManager = new LinearLayoutManager(Homepage.this);
@@ -422,5 +426,23 @@ public class Homepage extends AppCompatActivity {
             //pd.show();
             pd.dismiss();
         }
+    }
+
+    String getCategory(){
+        String category;
+        try {
+            category = appDatabase.categoryDao().getRoleCategory(sharedPrefs.getStaffRole());
+        } catch (Exception e) {
+            e.printStackTrace();
+            category = "subd";
+        }
+        if (category == null || category.equalsIgnoreCase("")){
+            category = "subd";
+        }
+        return category;
+    }
+
+    void openSyncSummary(){
+        startActivity(new Intent(this, SyncSummary.class));
     }
 }

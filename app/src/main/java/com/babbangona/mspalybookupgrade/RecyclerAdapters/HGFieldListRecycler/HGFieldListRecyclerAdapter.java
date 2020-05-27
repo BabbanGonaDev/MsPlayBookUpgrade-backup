@@ -285,8 +285,14 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
                 message = context.getResources().getString(R.string.solve_hg_message_1_2)+ " " +
                         hgListModel.getHg_type() + " " +context.getResources().getString(R.string.solve_hg_message_2);
             }
-            showDialogStartSolveHG(message,context,hgFieldListRecyclerModel,position,latitude,
-                    longitude,"Solve_"+hgListModel.getHg_type());
+            String user_category = setPortfolioMethods.getCategory(context);
+            String allowed_user_category = appDatabase.hgListDao().getHGRoleCategory("Solve_"+hgListModel.getHg_type());
+            if (allowed_user_category.toLowerCase().contains(user_category.toLowerCase())){
+                showDialogStartSolveHG(message,context,hgFieldListRecyclerModel,position,latitude,
+                        longitude,"Solve_"+hgListModel.getHg_type());
+            }else{
+                Toast.makeText(context, context.getResources().getString(R.string.error_solve_hg), Toast.LENGTH_SHORT).show();
+            }
         }else{
             locationMismatchedDialog(latitude,longitude,min_lat,max_lat,min_lng,max_lng,
                     context,hgFieldListRecyclerModel.getUnique_field_id(),
@@ -324,7 +330,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         float density = context.getResources().getDisplayMetrics().density;
         int paddingPixel = (int)(paddingDp * density);
 
-        List<String> whole_hg_list = appDatabase.hgListDao().getAllHGs("%"+sharedPrefs.getStaffRole()+"%");
+        List<String> whole_hg_list = appDatabase.hgListDao().getAllHGs("%"+setPortfolioMethods.getCategory(context)+"%");
 
         ArrayAdapter hg_adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, whole_hg_list);
 

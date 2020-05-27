@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +27,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecora
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 
 import java.util.Objects;
@@ -57,6 +59,9 @@ public class FieldListPage extends AppCompatActivity {
     @BindView(R.id.recycler_view)
     RecyclerView recycler_view;
 
+    @BindView(R.id.emptyView)
+    ImageView emptyView;
+
     FieldListPageListModelClass fieldListPageListModelClass;
 
     AppDatabase appDatabase;
@@ -71,8 +76,10 @@ public class FieldListPage extends AppCompatActivity {
         setContentView(R.layout.activity_field_list_page);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar_field_list);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.field_list_title));
         appDatabase = AppDatabase.getInstance(FieldListPage.this);
         sharedPrefs = new SharedPrefs(FieldListPage.this);
+        GPSController.initialiseLocationListener(FieldListPage.this);
         showView(toolbar_linear_layout);
         hideView(search_linear_layout);
         loadAdapter(sharedPrefs.getKeyRouteType());
@@ -213,9 +220,46 @@ public class FieldListPage extends AppCompatActivity {
         recycler_view.addItemDecoration(verticalSpaceItemDecoration);
         recycler_view.setLayoutManager(layoutManager);
         fieldListPageListModelClass.fieldListRecyclerModel.observe(this,fieldListRecyclerAdapter::submitList);
+
+        fieldListPageListModelClass.fieldListRecyclerModel.observe(this,fieldListRecyclerModel -> {
+
+
+            updateView(fieldListRecyclerModel.size());
+            fieldListRecyclerAdapter.submitList(fieldListRecyclerModel);
+
+            fieldListRecyclerModel.addWeakCallback(null, new PagedList.Callback() {
+                @Override
+                public void onChanged(int position, int count) {
+                    updateView(fieldListRecyclerModel.size());
+                }
+
+                @Override
+                public void onInserted(int position, int count) {
+
+                }
+
+                @Override
+                public void onRemoved(int position, int count) {
+
+                }
+            });
+        });
         recycler_view.setAdapter(fieldListRecyclerAdapter);
 
         textWatcher(search_edit_text,fieldListPageListModelClass);
+
+    }
+
+    private void updateView(int itemCount) {
+        if (itemCount > 0) {
+            // The list is not empty. Show the recycler view.
+            showView(recycler_view);
+            hideView(emptyView);
+        } else {
+            // The list is empty. Show the empty list view
+            hideView(recycler_view);
+            showView(emptyView);
+        }
 
     }
 

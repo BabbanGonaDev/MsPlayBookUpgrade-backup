@@ -10,6 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.daos.ActivityListDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.CategoryDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGListDao;
@@ -18,7 +19,9 @@ import com.babbangona.mspalybookupgrade.data.db.daos.LogsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.MembersDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.NormalActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.SyncSummaryDao;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
+import com.babbangona.mspalybookupgrade.data.db.entities.Category;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
@@ -27,10 +30,12 @@ import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
+import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
 
 
 @Database(entities = {ActivityList.class, NormalActivitiesFlag.class, Fields.class, StaffList.class,
-        Members.class, HGActivitiesFlag.class, HGList.class, Logs.class, LastSyncTable.class},
+        Members.class, HGActivitiesFlag.class, HGList.class, Logs.class, LastSyncTable.class, Category.class,
+        SyncSummary.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -46,6 +51,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract HGListDao hgListDao();
     public abstract LogsDao logsDao();
     public abstract LastSyncTableDao lastSyncTableDao();
+    public abstract CategoryDao categoryDao();
+    public abstract SyncSummaryDao syncSummaryDao();
 
     /**
      * Return instance of database creation
@@ -57,17 +64,34 @@ public abstract class AppDatabase extends RoomDatabase {
         return appDatabase;
     }
 
-    /*
-    public static final String NORMAL_ACTIVITY_FLAGS_TABLE              = "normal_activities_flag";
-    public static final String HG_ACTIVITY_FLAGS_TABLE                  = "hg_activities_flag";
-    public static final String LOGS_TABLE                               = "logs"; */
-
     private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE hg_activities_flag ADD COLUMN 'ik_number' TEXT DEFAULT '0'");
             database.execSQL("ALTER TABLE normal_activities_flag ADD COLUMN 'ik_number' TEXT DEFAULT '0'");
             database.execSQL("ALTER TABLE logs ADD COLUMN 'ik_number' TEXT DEFAULT '0'");
+        }
+    };
+
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS category (" +
+                    "role TEXT PRIMARY KEY NOT NULL," +
+                    "category TEXT)");
+
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_category' TEXT DEFAULT '2019-01-01 00:00:00'");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS sync_summary (" +
+                    "table_id TEXT  NOT NULL," +
+                    "staff_id TEXT  NOT NULL," +
+                    "table_name TEXT," +
+                    "status TEXT," +
+                    "remarks TEXT," +
+                    "sync_time TEXT," +
+                    "PRIMARY KEY(table_id,staff_id))"
+            );
         }
     };
 
@@ -78,7 +102,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 AppDatabase.class,
                 DatabaseStringConstants.MS_PLAYBOOK_DATABASE_NAME)
                 .allowMainThreadQueries()
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2,MIGRATION_2_3)
                 .build();
 //                .fallbackToDestructiveMigration()
     }

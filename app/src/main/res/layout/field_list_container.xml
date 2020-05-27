@@ -9,6 +9,8 @@
     app:cardCornerRadius="@dimen/dimen_10dp"
     app:cardPreventCornerOverlap="true"
     android:id="@+id/field_list_container"
+    android:layout_marginStart="@dimen/dimen_5dp"
+    android:layout_marginEnd="@dimen/dimen_5dp"
     android:clickable="true"
     android:focusable="true"
     android:checkable="true"

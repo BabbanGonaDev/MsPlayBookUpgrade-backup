@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 2;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 3;
 
     /**
      * Names of tables
@@ -20,6 +20,8 @@ public class DatabaseStringConstants {
     public static final String HG_ACTIVITY_FLAGS_TABLE                  = "hg_activities_flag";
     public static final String LOGS_TABLE                               = "logs";
     public static final String LAST_SYNC_TABLE                          = "last_sync";
+    public static final String CATEGORY_TABLE                           = "category";
+    public static final String SYNC_SUMMARY_TABLE                       = "sync_summary";
 
     /**
      * activity_list column names
@@ -123,4 +125,22 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_HG_LIST_TABLE                      = "last_sync_hg_list";
     public static final String LAST_SYNC_UP_LOGS_TABLE                      = "last_sync_up_logs";
     public static final String LAST_SYNC_DOWN_LOGS_TABLE                    = "last_sync_down_logs";
+    public static final String LAST_SYNC_CATEGORY_TABLE                     = "last_sync_category";
+
+    /**
+     * category column names
+     */
+    public static final String COL_STAFF_ROLE                               = "role";
+    public static final String COL_CATEGORY                                 = "category";
+
+    /**
+     * sync_summary column names
+     */
+    public static final String COL_TABLE_ID                                 = "table_id";
+    public static final String COL_STAFF_ID_SYNC_SUMMARY                    = "staff_id";
+    public static final String COL_TABLE_NAME                               = "table_name";
+    public static final String COL_STATUS                                   = "status";
+    public static final String COL_REMARKS                                  = "remarks";
+    public static final String COL_SYNC_TIME                                = "sync_time";
+
 }

@@ -15,8 +15,11 @@ import java.util.List;
 public interface HGListDao {
 
     @Query(" SELECT hg_type FROM hg_list WHERE deactivated_status = '0' " +
-            "AND user_category LIKE :staff_role ")
-    List<String> getAllHGs(String staff_role);
+            "AND user_category LIKE :role_category ")
+    List<String> getAllHGs(String role_category);
+
+    @Query(" SELECT user_category FROM hg_list WHERE hg_type = :hg_type ")
+    String getHGRoleCategory(String hg_type);
 
     /**
      * Insert the object in database
