@@ -47,9 +47,12 @@ public class Fields {
     @ColumnInfo(name = DatabaseStringConstants.COL_MSS)
     private String mss;
 
-    public Fields(@NotNull String unique_field_id, String unique_member_id, String field_size,
+    @ColumnInfo(name = DatabaseStringConstants.COL_CROP_TYPE_FIELDS)
+    private String crop_type;
+
+    public Fields(@NonNull String unique_field_id, String unique_member_id, String field_size,
                   String staff_id, String middle, String min_lat, String max_lat, String min_lng,
-                  String max_lng, String deactivate, String mss) {
+                  String max_lng, String deactivate, String mss, String crop_type) {
         this.unique_field_id = unique_field_id;
         this.unique_member_id = unique_member_id;
         this.field_size = field_size;
@@ -61,6 +64,7 @@ public class Fields {
         this.max_lng = max_lng;
         this.deactivate = deactivate;
         this.mss = mss;
+        this.crop_type = crop_type;
     }
 
     @NotNull
@@ -150,5 +154,13 @@ public class Fields {
 
     public void setMss(String mss) {
         this.mss = mss;
+    }
+
+    public String getCrop_type() {
+        return crop_type;
+    }
+
+    public void setCrop_type(String crop_type) {
+        this.crop_type = crop_type;
     }
 }

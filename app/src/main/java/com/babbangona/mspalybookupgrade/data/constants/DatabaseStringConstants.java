@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 3;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 5;
 
     /**
      * Names of tables
@@ -22,6 +22,8 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_TABLE                          = "last_sync";
     public static final String CATEGORY_TABLE                           = "category";
     public static final String SYNC_SUMMARY_TABLE                       = "sync_summary";
+    public static final String HARVEST_LOCATION_TABLE                   = "harvest_location";
+    public static final String APP_VARIABLES                            = "app_variables";
 
     /**
      * activity_list column names
@@ -45,6 +47,8 @@ public class DatabaseStringConstants {
     public static final String COL_STAFF_ID                             = "staff_id";
     public static final String COL_SYNC_FLAG                            = "sync_flag";
     public static final String COL_IK_NUMBER_NORMAL_ACTIVITIES          = "ik_number";
+    public static final String COL_CROP_TYPE_NORMAL_ACTIVITIES          = "crop_type";
+    public static final String COL_CC_HARVEST                           = "cc_harvest";
 
     /**
      * fields column names
@@ -60,6 +64,7 @@ public class DatabaseStringConstants {
     public static final String COL_MAX_LNG                              = "max_lng";
     public static final String COL_DEACTIVATE                           = "deactivate";
     public static final String COL_MSS                                  = "mss";
+    public static final String COL_CROP_TYPE_FIELDS                     = "crop_type";
 
     /**
      * staff column names
@@ -89,6 +94,7 @@ public class DatabaseStringConstants {
     public static final String COL_STAFF_ID_HG_ACTIVITIES               = "staff_id";
     public static final String COL_SYNC_FLAG_HG_ACTIVITIES              = "sync_flag";
     public static final String COL_IK_NUMBER_HG_ACTIVITIES              = "ik_number";
+    public static final String COL_CROP_TYPE_HG_ACTIVITIES              = "crop_type";
 
     /**
      * hg_list column names
@@ -110,6 +116,7 @@ public class DatabaseStringConstants {
     public static final String COL_IMEI                                 = "imei";
     public static final String COL_SYNC_FLAG_LOGS                       = "sync_flag";
     public static final String COL_IK_NUMBER_LOGS                       = "ik_number";
+    public static final String COL_CROP_TYPE_LOGS                       = "crop_type";
 
     /**
      * last_sync column names
@@ -126,6 +133,7 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_UP_LOGS_TABLE                      = "last_sync_up_logs";
     public static final String LAST_SYNC_DOWN_LOGS_TABLE                    = "last_sync_down_logs";
     public static final String LAST_SYNC_CATEGORY_TABLE                     = "last_sync_category";
+    public static final String LAST_SYNC_HARVEST_LOCATION                   = "last_sync_harvest_location";
 
     /**
      * category column names
@@ -142,5 +150,21 @@ public class DatabaseStringConstants {
     public static final String COL_STATUS                                   = "status";
     public static final String COL_REMARKS                                  = "remarks";
     public static final String COL_SYNC_TIME                                = "sync_time";
+
+    /**
+     * sync_summary column names
+     */
+    public static final String COL_STATE                                    = "state";
+    public static final String COL_LGA                                      = "lga";
+    public static final String COL_WARD                                     = "ward";
+    public static final String COL_CENTER                                   = "centre";
+    public static final String COL_DEACTIVATE_HARVEST                       = "deactivate";
+
+    /**
+     * app_variables column names
+     */
+    public static final String VARIABLE_ID                                  = "variable_id";
+    public static final String EDIT_HARVEST_LOCATION_FLAG                   = "edit_harvest_location_flag";
+
 
 }

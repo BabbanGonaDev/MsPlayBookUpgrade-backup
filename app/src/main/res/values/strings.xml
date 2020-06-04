@@ -38,6 +38,7 @@
     <string name="member_phone_number">Phone Number:</string>
     <string name="field_size">Field Size:</string>
     <string name="member_village">Village:</string>
+    <string name="member_crop_type">Crop Type:</string>
     <string name="field_longitude">Longitude</string>
     <string name="field_latitude">Latitude</string>
     <string name="log_fertilizer_1">Log Fert. 1</string>
@@ -93,4 +94,24 @@
     <string name="sync_summary_title">Sync Summary</string>
     <string name="hg_field_list_title">Field List (HG)</string>
     <string name="field_list_title">Field List</string>
+    <string name="bottom_sheet_state">State:</string>
+    <string name="bottom_sheet_lga">LGA:</string>
+    <string name="bottom_sheet_ward">Ward:</string>
+    <string name="bottom_sheet_cc_center">Har. Collection Point:</string>
+    <string name="state">State</string>
+    <string name="lga">LGA</string>
+    <string name="ward">Ward</string>
+    <string name="harvest_cc_center">Har. Collection Point</string>
+    <string name="harvest_cc_center_title">Harvest Collection Center</string>
+    <string name="error_message_state">Please select state</string>
+    <string name="error_message_lga">Please select LGA</string>
+    <string name="error_message_ward">Please select ward</string>
+    <string name="error_harvest_collection_point_location">Please select harvest collection center</string>
+    <string name="dialog_congrats">CONGRATULATIONS</string>
+    <string name="harvest_collection_point_success">Harvest collection center saved successfully</string>
+    <string name="harvest_cc_request">Harvest collection center not found, please add harvest collection point.</string>
+    <string name="harvest_cc_edit_request">Harvest collection center added, would you like to edit?</string>
+    <string name="oops">Oops</string>
+    <string name="harvest_cc_edit_locked">Sorry you cannot edit your harvest collection center at this time.</string>
+    <string name="collection_center_finish">Save Collection Point</string>
 </resources>

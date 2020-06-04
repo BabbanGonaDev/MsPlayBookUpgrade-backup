@@ -12,10 +12,12 @@ import androidx.annotation.NonNull;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
+import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
 import com.babbangona.mspalybookupgrade.data.db.entities.Category;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
+import com.babbangona.mspalybookupgrade.data.db.entities.HarvestLocationsTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
@@ -24,10 +26,12 @@ import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
+import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
+import com.babbangona.mspalybookupgrade.network.object.HarvestLocationDownload;
 import com.babbangona.mspalybookupgrade.network.object.LogsDownload;
 import com.babbangona.mspalybookupgrade.network.object.LogsUpload;
 import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
@@ -80,6 +84,8 @@ public class ActivityListDownloadService extends IntentService {
         getHGACtivitiesFlagDownload();
         getNormalActivitiesFlagDownload();
         getCategoryDownload();
+        getHarvestLocationDownload();
+        getAppVariablesDownload();
 
         if (appDatabase.logsDao().getUnSyncedLogsCount() > 0){
             syncUpLogs();
@@ -1074,7 +1080,7 @@ public class ActivityListDownloadService extends IntentService {
 
             @Override
             public void onFailure(@NotNull Call<LogsDownload> call, @NotNull Throwable t) {
-                Log.d("tobi_staff_list", t.toString());
+                Log.d("tobi_logs_download", t.toString());
                 sharedPrefs.setKeyProgressDialogStatus(1);
                 saveToSyncSummary(DatabaseStringConstants.LOGS_TABLE+"_download",
                         "Logs Download",
@@ -1195,7 +1201,7 @@ public class ActivityListDownloadService extends IntentService {
 
             @Override
             public void onFailure(@NotNull Call<HGActivitiesFlagDownload> call, @NotNull Throwable t) {
-                Log.d("tobi_staff_list", t.toString());
+                Log.d("tobi_hg_flag_download", t.toString());
                 sharedPrefs.setKeyProgressDialogStatus(1);
                 saveToSyncSummary(DatabaseStringConstants.HG_ACTIVITY_FLAGS_TABLE+"_download",
                         "HG Activities Download",
@@ -1316,7 +1322,7 @@ public class ActivityListDownloadService extends IntentService {
 
             @Override
             public void onFailure(@NotNull Call<NormalActivitiesFlagDownload> call, @NotNull Throwable t) {
-                Log.d("tobi_staff_list", t.toString());
+                Log.d("tobi_normal_download", t.toString());
                 sharedPrefs.setKeyProgressDialogStatus(1);
                 saveToSyncSummary(DatabaseStringConstants.NORMAL_ACTIVITY_FLAGS_TABLE+"_download",
                         "Normal Activities Download",
@@ -1487,6 +1493,238 @@ public class ActivityListDownloadService extends IntentService {
         }
     }
 
+    public void getHarvestLocationDownload() {
+
+        String last_synced = getLastSyncHarvestLocation();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<HarvestLocationDownload> call = retrofitInterface.downloadHarvestLocation(last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<HarvestLocationDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<HarvestLocationDownload> call,
+                                   @NonNull Response<HarvestLocationDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    HarvestLocationDownload harvestLocationDownload = response.body();
+
+                    if (harvestLocationDownload != null) {
+                        List<HarvestLocationsTable> harvestLocationsTableList = harvestLocationDownload.getDownload_list();
+                        if (harvestLocationsTableList.size() > 0){
+                            saveToHarvestLocationsTable(harvestLocationsTableList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncHarvestLocation(sharedPrefs.getStaffID(),harvestLocationDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_harvest_location(harvestLocationDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.HARVEST_LOCATION_TABLE,
+                                "Harvest Collection Centres Download",
+                                "1",
+                                returnRemark(harvestLocationsTableList.size()),
+                                harvestLocationDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.HARVEST_LOCATION_TABLE,
+                                "Harvest Collection Centres Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode Category:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.HARVEST_LOCATION_TABLE,
+                            "Harvest Collection Centres Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<HarvestLocationDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_harvest_locations_table", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.HARVEST_LOCATION_TABLE,
+                        "Harvest Collection Centres Download",
+                        "0",
+                        "Download empty",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToHarvestLocationsTable(List<HarvestLocationsTable> harvestLocationsTableList){
+        SaveToHarvestLocationsTable saveToHarvestLocationsTable = new SaveToHarvestLocationsTable();
+        saveToHarvestLocationsTable.execute(harvestLocationsTableList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveToHarvestLocationsTable extends AsyncTask<List<HarvestLocationsTable>, Void, Void> {
+
+
+        private final String TAG = SaveToHarvestLocationsTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<HarvestLocationsTable>... params) {
+
+            List<HarvestLocationsTable> harvestLocationsTableList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.harvestLocationsDao().insert(harvestLocationsTableList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    public void getAppVariablesDownload() {
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<AppVariablesDownload> call = retrofitInterface.downloadAppVariables(sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<AppVariablesDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<AppVariablesDownload> call,
+                                   @NonNull Response<AppVariablesDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    AppVariablesDownload appVariablesDownload = response.body();
+
+                    if (appVariablesDownload != null) {
+                        List<AppVariables> appVariablesList = appVariablesDownload.getDownload_list();
+                        if (appVariablesList.size() > 0){
+                            saveToAppVariablesTable(appVariablesList);
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.APP_VARIABLES,
+                                "App Variables Download",
+                                "1",
+                                returnRemark(appVariablesList.size()),
+                                appVariablesDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.APP_VARIABLES,
+                                "App Variables Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode Category:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.APP_VARIABLES,
+                            "App Variables Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<AppVariablesDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_apps_variable", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.APP_VARIABLES,
+                        "App Variables Download",
+                        "0",
+                        "Download empty",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToAppVariablesTable(List<AppVariables> appVariablesList){
+        SaveToAppVariablesTable saveToAppVariablesTable = new SaveToAppVariablesTable();
+        saveToAppVariablesTable.execute(appVariablesList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveToAppVariablesTable extends AsyncTask<List<AppVariables>, Void, Void> {
+
+
+        private final String TAG = SaveToAppVariablesTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<AppVariables>... params) {
+
+            List<AppVariables> appVariablesList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.appVariablesDao().insert(appVariablesList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
     String getLastSyncTimeStaffList(){
         String last_sync_time;
         try {
@@ -1600,6 +1838,20 @@ public class ActivityListDownloadService extends IntentService {
         String last_sync_time;
         try {
             last_sync_time = appDatabase.lastSyncTableDao().getLastSyncCategory(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncHarvestLocation(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncHarvestLocation(sharedPrefs.getStaffID());
         } catch (Exception e) {
             e.printStackTrace();
             last_sync_time = "2019-01-01 00:00:00";

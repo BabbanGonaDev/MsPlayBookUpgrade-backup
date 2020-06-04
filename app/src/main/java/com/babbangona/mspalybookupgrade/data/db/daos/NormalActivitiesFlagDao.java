@@ -68,6 +68,12 @@ public abstract class NormalActivitiesFlagDao {
     @Query(" SELECT fertilizer_2_status FROM normal_activities_flag WHERE unique_field_id = :unique_field_id ")
     public abstract String getFert2Status(String unique_field_id);
 
+    @Query("UPDATE normal_activities_flag SET cc_harvest = :location_id, sync_flag='0' WHERE unique_field_id = :unique_filed_id" )
+    public abstract void updateLocationID(String location_id, String unique_filed_id);
+
+    @Query("SELECT cc_harvest FROM normal_activities_flag WHERE unique_field_id = :unique_field_id")
+    public abstract String getHarvestCollectionCenter(String unique_field_id);
+
     /**
      * Insert the object in database
      * @param normalActivitiesFlag, object to be inserted

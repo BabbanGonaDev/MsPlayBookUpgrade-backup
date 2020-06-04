@@ -36,10 +36,16 @@ public class NormalActivitiesFlag {
     @ColumnInfo(name = DatabaseStringConstants.COL_IK_NUMBER_NORMAL_ACTIVITIES)
     private String ik_number;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_CROP_TYPE_NORMAL_ACTIVITIES)
+    private String crop_type;
+
+    @ColumnInfo(name = DatabaseStringConstants.COL_CC_HARVEST)
+    private String cc_harvest;
+
     public NormalActivitiesFlag(@NonNull String unique_field_id, String fertilizer_1_status,
                                 String fertilizer_1_date, String fertilizer_2_status,
-                                String fertilizer_2_date, String staff_id,
-                                String sync_flag, String ik_number) {
+                                String fertilizer_2_date, String staff_id, String sync_flag,
+                                String ik_number, String crop_type, String cc_harvest) {
         this.unique_field_id = unique_field_id;
         this.fertilizer_1_status = fertilizer_1_status;
         this.fertilizer_1_date = fertilizer_1_date;
@@ -48,6 +54,8 @@ public class NormalActivitiesFlag {
         this.staff_id = staff_id;
         this.sync_flag = sync_flag;
         this.ik_number = ik_number;
+        this.crop_type = crop_type;
+        this.cc_harvest = cc_harvest;
     }
 
     @NonNull
@@ -113,5 +121,21 @@ public class NormalActivitiesFlag {
 
     public void setIk_number(String ik_number) {
         this.ik_number = ik_number;
+    }
+
+    public String getCrop_type() {
+        return crop_type;
+    }
+
+    public void setCrop_type(String crop_type) {
+        this.crop_type = crop_type;
+    }
+
+    public String getCc_harvest() {
+        return cc_harvest;
+    }
+
+    public void setCc_harvest(String cc_harvest) {
+        this.cc_harvest = cc_harvest;
     }
 }

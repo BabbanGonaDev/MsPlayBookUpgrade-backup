@@ -5,11 +5,12 @@ android {
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.babbangona.mspalybookupgrade"
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0.3"
+        versionName "1.0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //multiDexEnabled true
     }
     buildTypes {
         release {
@@ -24,6 +25,11 @@ android {
     dataBinding {
         //this enables the use of databinding in the project
         enabled = true
+    }
+    configurations {
+        all {
+            exclude module: 'commons-logging'
+        }
     }
 }
 
@@ -69,6 +75,8 @@ dependencies {
     // optional - RxJava support
     implementation "androidx.paging:paging-rxjava2:$paging_version"
     implementation 'androidx.work:work-runtime:2.3.4'
+
+    //implementation 'com.android.support:multidex:1.0.3'
 
 
 }

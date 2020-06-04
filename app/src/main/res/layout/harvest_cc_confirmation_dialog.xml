@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/search_confirmation_dialog"
+    android:id="@+id/harvest_cc_confirmation_dialog"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/custom_layout"
@@ -26,49 +26,39 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:drawablePadding="5dp"
-                android:text="@string/static_village"
+                android:text="@string/bottom_sheet_state"
+                android:textSize="18sp"
+                android:id="@+id/state"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:drawablePadding="5dp"
+                android:text="@string/bottom_sheet_lga"
+                android:textSize="18sp"
+                android:id="@+id/lga"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:drawablePadding="5dp"
+                android:text="@string/bottom_sheet_ward"
+                android:textSize="18sp"
+                android:id="@+id/ward"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:drawablePadding="5dp"
+                android:text="@string/bottom_sheet_cc_center"
                 android:textSize="18sp"
                 android:id="@+id/village"
-                android:textColor="@color/text_color_black"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:drawablePadding="5dp"
-                android:text="@string/static_ik_number"
-                android:textSize="18sp"
-                android:id="@+id/ik_number"
-                android:textColor="@color/text_color_black"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:drawablePadding="5dp"
-                android:text="@string/static_member_id"
-                android:textSize="18sp"
-                android:id="@+id/member_id"
-                android:textColor="@color/text_color_black"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:drawablePadding="5dp"
-                android:text="@string/static_member_name"
-                android:textSize="18sp"
-                android:id="@+id/member_name"
-                android:textColor="@color/text_color_black"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:drawablePadding="5dp"
-                android:text="@string/static_field_id"
-                android:textSize="18sp"
-                android:id="@+id/field_id"
                 android:textColor="@color/text_color_black"/>
 
         </LinearLayout>
@@ -81,59 +71,47 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="@dimen/dimen_5dp"
                 android:drawablePadding="5dp"
-                android:text="@string/static_village"
+                android:text="@string/state"
+                android:textSize="18sp"
+                android:id="@+id/bottom_sheet_state"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:drawablePadding="5dp"
+                android:text="@string/lga"
+                android:textSize="18sp"
+                android:id="@+id/bottom_sheet_lga"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:drawablePadding="5dp"
+                android:id="@+id/bottom_sheet_ward"
+                android:text="@string/ward"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="18sp"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:drawablePadding="5dp"
+                android:text="@string/harvest_cc_center"
                 android:textSize="18sp"
                 android:id="@+id/bottom_sheet_village"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textColor="@color/text_color_black"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:drawablePadding="5dp"
-                android:text="@string/static_ik_number"
-                android:textSize="18sp"
-                android:id="@+id/bottom_sheet_ik_number"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textColor="@color/text_color_black"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:drawablePadding="5dp"
-                android:id="@+id/bottom_sheet_member_id"
-                android:text="@string/static_member_id"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="18sp"
-                android:textColor="@color/text_color_black"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:drawablePadding="5dp"
-                android:text="@string/static_member_name"
-                android:textSize="18sp"
-                android:id="@+id/bottom_sheet_member_name"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textColor="@color/text_color_black"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:drawablePadding="5dp"
-                android:text="@string/static_field_id"
-                android:textSize="18sp"
-                android:id="@+id/bottom_sheet_field_id"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textColor="@color/text_color_black"/>
@@ -158,8 +136,7 @@
             android:backgroundTint="@color/view_red"
             android:text="@string/cancel"
             android:textColor="@color/text_color_black"
-            android:layout_marginEnd="4dp"
-            style="?android:attr/buttonBarButtonStyle"
+            android:layout_marginEnd="@dimen/dimen_5dp"
             android:textSize="16sp" />
 
         <Button
@@ -172,8 +149,7 @@
             android:baselineAligned="false"
             android:text="@string/confirm"
             android:textColor="@color/text_color_black"
-            android:layout_marginStart="4dp"
-            style="?android:attr/buttonBarButtonStyle"
+            android:layout_marginStart="@dimen/dimen_5dp"
             android:textSize="16sp" />
 
 

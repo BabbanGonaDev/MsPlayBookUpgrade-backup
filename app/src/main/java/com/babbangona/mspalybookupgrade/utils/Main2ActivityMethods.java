@@ -3,6 +3,7 @@ package com.babbangona.mspalybookupgrade.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
+import android.widget.AutoCompleteTextView;
 
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListRecyclerModel;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class Main2ActivityMethods {
 
@@ -194,5 +196,33 @@ public class Main2ActivityMethods {
             last_sync_time = "2020-05-20 00:00:00";
         }
         return last_sync_time;
+    }
+
+    public int validateMemberInfo(AutoCompleteTextView state, AutoCompleteTextView lga, AutoCompleteTextView ward, AutoCompleteTextView village){
+
+        // Checks if the state field is empty
+        if(Objects.requireNonNull(state.getText()).toString().matches("")) {
+            return 0;
+        }
+
+        // Checks if the lga field is empty
+        else if(Objects.requireNonNull(lga.getText()).toString().matches("")) {
+            return 0;
+        }
+
+        // Checks if the ward field is empty
+        else if(Objects.requireNonNull(ward.getText()).toString().matches("")) {
+            return 0;
+        }
+
+        // Checks if the age village is empty
+        else if(Objects.requireNonNull(village.getText()).toString().matches("")) {
+            return 0;
+        }
+
+        //all checks are passed
+        else{
+            return 1;
+        }
     }
 }

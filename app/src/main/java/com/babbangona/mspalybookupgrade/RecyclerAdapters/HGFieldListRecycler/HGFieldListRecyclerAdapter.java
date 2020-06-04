@@ -111,6 +111,9 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         @BindView(R.id.tv_latitude)
         TextView tv_latitude;
 
+        @BindView(R.id.tv_crop_type)
+        TextView tv_crop_type;
+
         @BindView(R.id.btn_log_visitation)
         MaterialButton btn_log_visitation;
 
@@ -146,6 +149,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             String phone_number = context.getResources().getString(R.string.member_phone_number) +" "+ hgFieldListRecyclerModel.getPhone_number();
             String field_size = context.getResources().getString(R.string.field_size) +" "+ hgFieldListRecyclerModel.getField_size();
             String village = context.getResources().getString(R.string.member_village) +" "+ hgFieldListRecyclerModel.getVillage_name();
+            String crop_type = context.getResources().getString(R.string.member_crop_type) +" "+ hgFieldListRecyclerModel.getCrop_type();
             String latitude = "Lat.: " + (Double.parseDouble(hgFieldListRecyclerModel.getMin_lat())+Double.parseDouble(hgFieldListRecyclerModel.getMax_lat()))/2;
             String longitude = "Long.: " + (Double.parseDouble(hgFieldListRecyclerModel.getMin_lng())+Double.parseDouble(hgFieldListRecyclerModel.getMax_lng()))/2;
             tv_field_r_id.setText(field_r_id);
@@ -154,6 +158,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             tv_phone_number.setText(phone_number);
             tv_field_size.setText(field_size);
             tv_village_name.setText(village);
+            tv_crop_type.setText(crop_type);
             tv_latitude.setText(latitude);
             tv_longitude.setText(longitude);
             hg_list_container.setOrientation(LinearLayout.VERTICAL);
@@ -303,7 +308,8 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
     private void logVisitation(HGFieldListRecyclerModel hgFieldListRecyclerModel, double latitude, double longitude){
         appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                 "Visitation",getDate("normal"),sharedPrefs.getStaffRole(),
-                String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",hgFieldListRecyclerModel.getIk_number()));
+                String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
+                hgFieldListRecyclerModel.getIk_number(),hgFieldListRecyclerModel.getCrop_type()));
         Toast.makeText(context, context.getResources().getString(R.string.visitation_logged), Toast.LENGTH_SHORT).show();
     }
 
@@ -407,14 +413,17 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
                         getDate("spread"),sharedPrefs.getStaffID());
             appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                     initial_activity,getDate("normal"),sharedPrefs.getStaffRole(),
-                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",hgFieldListRecyclerModel.getIk_number()));
+                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
+                    hgFieldListRecyclerModel.getIk_number(),hgFieldListRecyclerModel.getCrop_type()));
             notifyItemChanged(position);
         }else{
             appDatabase.hgActivitiesFlagDao().insert(new HGActivitiesFlag(hgFieldListRecyclerModel.getUnique_field_id(),
-                    hg_selected,getDate("spread"),flag, sharedPrefs.getStaffID(),"0",hgFieldListRecyclerModel.getIk_number()));
+                    hg_selected,getDate("spread"),flag, sharedPrefs.getStaffID(),"0",hgFieldListRecyclerModel.getIk_number(),
+                    hgFieldListRecyclerModel.getCrop_type()));
             appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                     initial_activity,getDate("normal"),sharedPrefs.getStaffRole(),
-                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",hgFieldListRecyclerModel.getIk_number()));
+                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
+                    hgFieldListRecyclerModel.getIk_number(),hgFieldListRecyclerModel.getCrop_type()));
             notifyItemChanged(position);
         }
     }

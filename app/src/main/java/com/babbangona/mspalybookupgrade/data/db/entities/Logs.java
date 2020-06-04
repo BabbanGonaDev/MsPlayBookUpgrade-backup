@@ -46,9 +46,12 @@ public class Logs {
     @ColumnInfo(name = DatabaseStringConstants.COL_IK_NUMBER_LOGS)
     private String ik_number;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_CROP_TYPE_LOGS)
+    private String crop_type;
+
     public Logs(@NonNull String unique_field_id, @NonNull String staff_id, @NonNull String activity_type,
-                @NonNull String date_logged, String role, String latitude, String longitude, String imei,
-                String sync_flag, String ik_number) {
+                @NonNull String date_logged, String role, String latitude, String longitude,
+                String imei, String sync_flag, String ik_number, String crop_type) {
         this.unique_field_id = unique_field_id;
         this.staff_id = staff_id;
         this.activity_type = activity_type;
@@ -59,6 +62,7 @@ public class Logs {
         this.imei = imei;
         this.sync_flag = sync_flag;
         this.ik_number = ik_number;
+        this.crop_type = crop_type;
     }
 
     @NonNull
@@ -143,5 +147,13 @@ public class Logs {
 
     public void setIk_number(String ik_number) {
         this.ik_number = ik_number;
+    }
+
+    public String getCrop_type() {
+        return crop_type;
+    }
+
+    public void setCrop_type(String crop_type) {
+        this.crop_type = crop_type;
     }
 }

@@ -1,10 +1,12 @@
 package com.babbangona.mspalybookupgrade.network;
 
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
+import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
+import com.babbangona.mspalybookupgrade.network.object.HarvestLocationDownload;
 import com.babbangona.mspalybookupgrade.network.object.LogsDownload;
 import com.babbangona.mspalybookupgrade.network.object.LogsUpload;
 import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
@@ -41,8 +43,6 @@ public interface RetrofitInterface {
                                                                  @Query("portfolio_list") String portfolio_list,
                                                                  @Query("last_synced_time") String last_synced_time);
 
-
-
     @GET("downloadLogs")
     Call<LogsDownload> downloadLogs(@Query("staff_id") String staff_id,
                                     @Query("portfolio_list") String portfolio_list,
@@ -60,6 +60,12 @@ public interface RetrofitInterface {
 
     @GET("downloadCategory")
     Call<CategoryDownload> downloadCategory(@Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadHarvestLocation")
+    Call<HarvestLocationDownload> downloadHarvestLocation(@Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadMsPlaybookAppVariables")
+    Call<AppVariablesDownload> downloadAppVariables(@Query("staff_id") String staff_id);
 
     @FormUrlEncoded
     @POST("uploadLogsRecord")

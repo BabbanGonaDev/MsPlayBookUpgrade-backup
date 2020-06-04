@@ -24,10 +24,12 @@ public class HGFieldListRecyclerModel {
 
     private String ik_number;
 
+    private String crop_type;
+
     public HGFieldListRecyclerModel(String unique_field_id, String field_r_id, String member_name,
                                     String phone_number, String village_name, String min_lat,
                                     String max_lat, String min_lng, String max_lng, String field_size,
-                                    String ik_number) {
+                                    String ik_number, String crop_type) {
         this.unique_field_id = unique_field_id;
         this.field_r_id = field_r_id;
         this.member_name = member_name;
@@ -39,6 +41,7 @@ public class HGFieldListRecyclerModel {
         this.max_lng = max_lng;
         this.field_size = field_size;
         this.ik_number = ik_number;
+        this.crop_type = crop_type;
     }
 
     public String getUnique_field_id() {
@@ -127,6 +130,14 @@ public class HGFieldListRecyclerModel {
 
     public void setIk_number(String ik_number) {
         this.ik_number = ik_number;
+    }
+
+    public String getCrop_type() {
+        return crop_type;
+    }
+
+    public void setCrop_type(String crop_type) {
+        this.crop_type = crop_type;
     }
 
     public static class HGListModel{

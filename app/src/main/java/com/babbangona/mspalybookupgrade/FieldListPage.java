@@ -315,4 +315,10 @@ public class FieldListPage extends AppCompatActivity {
     public void hideView(View view) {
         view.setVisibility(View.GONE);
     }
+
+    @Override
+    protected void onResume() {
+        fieldListRecyclerAdapter.notifyDataSetChanged();
+        super.onResume();
+    }
 }

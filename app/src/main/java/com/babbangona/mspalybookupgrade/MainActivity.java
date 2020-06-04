@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             if (sharedPrefs.getKeyFirstTimeDataFlag().equalsIgnoreCase("0")){
                 appDatabase.activityListDao().insert(new ActivityList("4","en",
                         "Set Portfolio", "com.babbangona.mspalybookupgrade.SetPortfolio",
-                        "1","supr,subd","0"));
+                        "1","supr","0"));
                 List<Category> categoryList = new ArrayList<>();
                 categoryList.add(new Category("MIK","subd"));
                 categoryList.add(new Category("MSB","subd"));

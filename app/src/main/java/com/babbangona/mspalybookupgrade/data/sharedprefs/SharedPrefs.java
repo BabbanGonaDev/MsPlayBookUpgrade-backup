@@ -53,12 +53,27 @@ public class SharedPrefs {
     public static final String KEY_ADAPTER_OFFSET_HG_FIELD_LIST = "adapter_offset_hg_field_list";
 
     public static final String KEY_PROGRESS_DIALOG_STATUS = "progress_dialog_status";
+    public static final String KEY_HARVEST_CC_UNIQUE_FIELD_ID = "harvest_cc_unique_field_id";
+    public static final String KEY_HARVEST_CC_IK_NUMBER = "harvest_cc_ik_number";
+    public static final String KEY_HARVEST_CC_CROP_TYPE = "harvest_cc_crop_type";
 
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyHarvestCcProperties(String harvest_cc_unique_field_id, String harvest_cc_ik_number,
+                                             String harvest_cc_crop_type){
+        // Storing role in pref
+        editor.putString(KEY_HARVEST_CC_UNIQUE_FIELD_ID, harvest_cc_unique_field_id);
+        editor.putString(KEY_HARVEST_CC_IK_NUMBER, harvest_cc_ik_number);
+        editor.putString(KEY_HARVEST_CC_CROP_TYPE, harvest_cc_crop_type);
+
+
+        // commit changes
+        editor.commit();
     }
 
     public void setKeyProgressDialogStatus(int progress_dialog_status){
@@ -292,6 +307,18 @@ public class SharedPrefs {
 
     public int getKeyProgressDialogStatus(){
         return pref.getInt(KEY_PROGRESS_DIALOG_STATUS ,1);
+    }
+
+    public String getKeyHarvestCcUniqueFieldId(){
+        return pref.getString(KEY_HARVEST_CC_UNIQUE_FIELD_ID,"0");
+    }
+
+    public String getKeyHarvestCcIkNumber(){
+        return pref.getString(KEY_HARVEST_CC_IK_NUMBER,"None");
+    }
+
+    public String getKeyHarvestCcCropType(){
+        return pref.getString(KEY_HARVEST_CC_CROP_TYPE,"None");
     }
 
 

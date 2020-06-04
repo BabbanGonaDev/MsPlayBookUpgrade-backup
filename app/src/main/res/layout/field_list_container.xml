@@ -11,9 +11,6 @@
     android:id="@+id/field_list_container"
     android:layout_marginStart="@dimen/dimen_5dp"
     android:layout_marginEnd="@dimen/dimen_5dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:checkable="true"
     app:cardElevation="@dimen/dimen_10dp">
 
     <LinearLayout
@@ -69,6 +66,15 @@
                     android:id="@+id/tv_phone_number"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:text="@string/member_phone_number"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?android:attr/textColorSecondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_crop_type"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:text="@string/member_crop_type"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary" />
 
@@ -142,6 +148,32 @@
                         android:textAppearance="?attr/textAppearanceBody2"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_weight="3"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_harvest_cc"
+                        android:gravity="center"
+                        android:background="@drawable/ic_edit"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_harvest_cc"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:maxLines="1"
+                        android:text="@string/bottom_sheet_cc_center"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary"/>
 
                 </LinearLayout>
 

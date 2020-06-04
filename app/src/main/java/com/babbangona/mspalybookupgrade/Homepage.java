@@ -151,6 +151,7 @@ public class Homepage extends AppCompatActivity {
     void dialogWithSync(){
         syncRecords();
         runOnUiThread(this::initActivitiesRecycler);
+        activityListAdapter.notifyDataSetChanged();
     }
 
     @Override
