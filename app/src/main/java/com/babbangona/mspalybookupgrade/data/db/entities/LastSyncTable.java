@@ -56,6 +56,15 @@ public class LastSyncTable {
     @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_HARVEST_LOCATION)
     private String last_sync_harvest_location;
 
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_RF_LIST_TABLE)
+    private String last_sync_rf_list;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_UP_RF_ACTIVITY_FLAGS_TABLE)
+    private String last_sync_up_rf_activities_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_RF_ACTIVITY_FLAGS_TABLE)
+    private String last_sync_down_rf_activities_flag;
+
     public LastSyncTable() {
     }
 
@@ -64,7 +73,8 @@ public class LastSyncTable {
                          String last_sync_fields, String last_sync_staff, String last_sync_members,
                          String last_sync_up_hg_activities_flag, String last_sync_down_hg_activities_flag,
                          String last_sync_hg_list, String last_sync_up_logs, String last_sync_down_logs,
-                         String last_sync_category, String last_sync_harvest_location) {
+                         String last_sync_category, String last_sync_harvest_location, String last_sync_rf_list,
+                         String last_sync_up_rf_activities_flag, String last_sync_down_rf_activities_flag) {
         this.staff_id = staff_id;
         this.last_sync_activity_list = last_sync_activity_list;
         this.last_sync_up_normal_activities_flag = last_sync_up_normal_activities_flag;
@@ -79,6 +89,9 @@ public class LastSyncTable {
         this.last_sync_down_logs = last_sync_down_logs;
         this.last_sync_category = last_sync_category;
         this.last_sync_harvest_location = last_sync_harvest_location;
+        this.last_sync_rf_list = last_sync_rf_list;
+        this.last_sync_up_rf_activities_flag = last_sync_up_rf_activities_flag;
+        this.last_sync_down_rf_activities_flag = last_sync_down_rf_activities_flag;
     }
 
     @NonNull
@@ -192,5 +205,29 @@ public class LastSyncTable {
 
     public void setLast_sync_harvest_location(String last_sync_harvest_location) {
         this.last_sync_harvest_location = last_sync_harvest_location;
+    }
+
+    public String getLast_sync_rf_list() {
+        return last_sync_rf_list;
+    }
+
+    public void setLast_sync_rf_list(String last_sync_rf_list) {
+        this.last_sync_rf_list = last_sync_rf_list;
+    }
+
+    public String getLast_sync_up_rf_activities_flag() {
+        return last_sync_up_rf_activities_flag;
+    }
+
+    public void setLast_sync_up_rf_activities_flag(String last_sync_up_rf_activities_flag) {
+        this.last_sync_up_rf_activities_flag = last_sync_up_rf_activities_flag;
+    }
+
+    public String getLast_sync_down_rf_activities_flag() {
+        return last_sync_down_rf_activities_flag;
+    }
+
+    public void setLast_sync_down_rf_activities_flag(String last_sync_down_rf_activities_flag) {
+        this.last_sync_down_rf_activities_flag = last_sync_down_rf_activities_flag;
     }
 }

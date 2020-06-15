@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 5;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 6;
 
     /**
      * Names of tables
@@ -16,8 +16,10 @@ public class DatabaseStringConstants {
     public static final String STAFF_TABLE                              = "staff";
     public static final String MEMBERS_TABLE                            = "members";
     public static final String HG_LIST_TABLE                            = "hg_list";
+    public static final String RF_LIST_TABLE                            = "rf_list";
     public static final String NORMAL_ACTIVITY_FLAGS_TABLE              = "normal_activities_flag";
     public static final String HG_ACTIVITY_FLAGS_TABLE                  = "hg_activities_flag";
+    public static final String RF_ACTIVITY_FLAGS_TABLE                  = "rf_activities_flag";
     public static final String LOGS_TABLE                               = "logs";
     public static final String LAST_SYNC_TABLE                          = "last_sync";
     public static final String CATEGORY_TABLE                           = "category";
@@ -100,6 +102,7 @@ public class DatabaseStringConstants {
      * hg_list column names
      */
     public static final String COL_HG_TYPE_HG_LIST                      = "hg_type";
+    public static final String COL_SUB_HG_TYPE_HG_LIST                  = "sub_hg_type";
     public static final String COL_HG_TYPE_DEACTIVATED_STATUS           = "deactivated_status";
     public static final String COL_USER_CATEGORY_HG_LIST                = "user_category";
 
@@ -134,6 +137,9 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_DOWN_LOGS_TABLE                    = "last_sync_down_logs";
     public static final String LAST_SYNC_CATEGORY_TABLE                     = "last_sync_category";
     public static final String LAST_SYNC_HARVEST_LOCATION                   = "last_sync_harvest_location";
+    public static final String LAST_SYNC_RF_LIST_TABLE                      = "last_sync_rf_list";
+    public static final String LAST_SYNC_UP_RF_ACTIVITY_FLAGS_TABLE         = "last_sync_up_rf_activities_flag";
+    public static final String LAST_SYNC_DOWN_RF_ACTIVITY_FLAGS_TABLE       = "last_sync_down_rf_activities_flag";
 
     /**
      * category column names
@@ -166,5 +172,23 @@ public class DatabaseStringConstants {
     public static final String VARIABLE_ID                                  = "variable_id";
     public static final String EDIT_HARVEST_LOCATION_FLAG                   = "edit_harvest_location_flag";
 
+    /**
+     * rf_list column names
+     */
+    public static final String COL_RF_TYPE_RF_LIST                          = "rf_type";
+    public static final String COL_RF_TYPE_DEACTIVATED_STATUS               = "deactivated_status";
+    public static final String COL_USER_CATEGORY_RF_LIST                    = "user_category";
+
+    /**
+     * hg_activities column names
+     */
+    public static final String COL_UNIQUE_FIELD_ID_RF_ACTIVITY          = "unique_field_id";
+    public static final String COL_RF_TYPE                              = "rf_type";
+    public static final String COL_RF_DATE                              = "rf_date";
+    public static final String COL_RF_STATUS                            = "rf_status";
+    public static final String COL_STAFF_ID_RF_ACTIVITIES               = "staff_id";
+    public static final String COL_SYNC_FLAG_RF_ACTIVITIES              = "sync_flag";
+    public static final String COL_IK_NUMBER_RF_ACTIVITIES              = "ik_number";
+    public static final String COL_CROP_TYPE_RF_ACTIVITIES              = "crop_type";
 
 }

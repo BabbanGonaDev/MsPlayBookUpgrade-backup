@@ -3,8 +3,15 @@ package com.babbangona.mspalybookupgrade.data.sharedprefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.HGFieldListRecycler.HGFieldListRecyclerModel;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class SharedPrefs {
@@ -22,46 +29,58 @@ public class SharedPrefs {
 
 
     //TODO: CHANGE THESE TO THE SPECIFIED STRINGS YOU NEED
-    public static final String KEY_STAFF_NAME  = "staff_name";
-    public static final String KEY_STAFF_ID = "staff_id";
-    public static final String KEY_STAFF_ROLE = "staff_role";
-    public static final String KEY_STAFF_PROGRAM = "staff_program";
+    public static final String KEY_STAFF_NAME                       = "staff_name";
+    public static final String KEY_STAFF_ID                         = "staff_id";
+    public static final String KEY_STAFF_ROLE                       = "staff_role";
+    public static final String KEY_STAFF_PROGRAM                    = "staff_program";
 
     //add additional string below this comment
-    public static final String KEY_APP_LANGUAGE = "app_language";
-    public static final String KEY_FIRST_TIME_DATA_FLAG = "first_time_data_flag";
-    public static final String KEY_PORTFOLIO_LIST = "portfolio_list";
-    public static final String KEY_ADDED_PORTFOLIO_LIST = "added_portfolio_list";
-    public static final String KEY_ADAPTER_OFFSET = "adapter_offset";
-    public static final String KEY_ADAPTER_OFFSET_1 = "adapter_offset_1";
-    public static final String KEY_ACTIVITY_TYPE = "activity_type";
+    public static final String KEY_APP_LANGUAGE                     = "app_language";
+    public static final String KEY_FIRST_TIME_DATA_FLAG             = "first_time_data_flag";
+    public static final String KEY_PORTFOLIO_LIST                   = "portfolio_list";
+    public static final String KEY_ADDED_PORTFOLIO_LIST             = "added_portfolio_list";
+    public static final String KEY_ADAPTER_OFFSET                   = "adapter_offset";
+    public static final String KEY_ADAPTER_OFFSET_1                 = "adapter_offset_1";
+    public static final String KEY_ACTIVITY_TYPE                    = "activity_type";
 
-    public static final String KEY_ROUTE_TYPE = "route_type";
+    public static final String KEY_ROUTE_TYPE                       = "route_type";
 
-    public static final String KEY_GRID_MIN_LAT = "min_lat";
-    public static final String KEY_GRID_MAX_LAT = "max_lat";
-    public static final String KEY_GRID_MIN_LNG = "min_lng";
-    public static final String KEY_GRID_MAX_LNG = "max_lng";
+    public static final String KEY_GRID_MIN_LAT                     = "min_lat";
+    public static final String KEY_GRID_MAX_LAT                     = "max_lat";
+    public static final String KEY_GRID_MIN_LNG                     = "min_lng";
+    public static final String KEY_GRID_MAX_LNG                     = "max_lng";
 
 
-    public static final String KEY_SEARCH_UNIQUE_FIELD_ID = "unique_field_id";
-    public static final String KEY_SEARCH_IK_NUMBER = "ik_number";
-    public static final String KEY_SEARCH_MEMBER_ID = "member_id";
-    public static final String KEY_SEARCH_MEMBER_NAME = "member_name";
-    public static final String KEY_SEARCH_VILLAGE = "village";
-    public static final String KEY_ADAPTER_OFFSET_FIELD_LIST = "adapter_offset_field_list";
-    public static final String KEY_ADAPTER_OFFSET_HG_FIELD_LIST = "adapter_offset_hg_field_list";
+    public static final String KEY_SEARCH_UNIQUE_FIELD_ID           = "unique_field_id";
+    public static final String KEY_SEARCH_IK_NUMBER                 = "ik_number";
+    public static final String KEY_SEARCH_MEMBER_ID                 = "member_id";
+    public static final String KEY_SEARCH_MEMBER_NAME               = "member_name";
+    public static final String KEY_SEARCH_VILLAGE                   = "village";
+    public static final String KEY_ADAPTER_OFFSET_FIELD_LIST        = "adapter_offset_field_list";
+    public static final String KEY_ADAPTER_OFFSET_HG_FIELD_LIST     = "adapter_offset_hg_field_list";
 
-    public static final String KEY_PROGRESS_DIALOG_STATUS = "progress_dialog_status";
-    public static final String KEY_HARVEST_CC_UNIQUE_FIELD_ID = "harvest_cc_unique_field_id";
-    public static final String KEY_HARVEST_CC_IK_NUMBER = "harvest_cc_ik_number";
-    public static final String KEY_HARVEST_CC_CROP_TYPE = "harvest_cc_crop_type";
+    public static final String KEY_PROGRESS_DIALOG_STATUS           = "progress_dialog_status";
+    public static final String KEY_HARVEST_CC_UNIQUE_FIELD_ID       = "harvest_cc_unique_field_id";
+    public static final String KEY_HARVEST_CC_IK_NUMBER             = "harvest_cc_ik_number";
+    public static final String KEY_HARVEST_CC_CROP_TYPE             = "harvest_cc_crop_type";
+
+    public static final String KEY_HG_FIELD_MODEL                   = "clearance_list";
 
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyHgFieldModel(HGFieldListRecyclerModel hgFieldListRecyclerModel){
+        Gson gson = new Gson();
+        String json = gson.toJson(hgFieldListRecyclerModel);
+        // Storing model in pref
+        editor.putString(KEY_HG_FIELD_MODEL, json);
+
+        // commit changes
+        editor.commit();
     }
 
     public void setKeyHarvestCcProperties(String harvest_cc_unique_field_id, String harvest_cc_ik_number,
@@ -319,6 +338,12 @@ public class SharedPrefs {
 
     public String getKeyHarvestCcCropType(){
         return pref.getString(KEY_HARVEST_CC_CROP_TYPE,"None");
+    }
+
+    public HGFieldListRecyclerModel getKeyHgFieldModel() {
+        Gson gson = new Gson();
+        String json = pref.getString(KEY_HG_FIELD_MODEL, "");
+        return gson.fromJson(json, HGFieldListRecyclerModel.class);
     }
 
 

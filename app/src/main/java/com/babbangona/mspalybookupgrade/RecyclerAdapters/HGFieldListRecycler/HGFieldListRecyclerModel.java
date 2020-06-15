@@ -26,6 +26,9 @@ public class HGFieldListRecyclerModel {
 
     private String crop_type;
 
+    public HGFieldListRecyclerModel() {
+    }
+
     public HGFieldListRecyclerModel(String unique_field_id, String field_r_id, String member_name,
                                     String phone_number, String village_name, String min_lat,
                                     String max_lat, String min_lng, String max_lng, String field_size,
@@ -164,6 +167,33 @@ public class HGFieldListRecyclerModel {
 
         public void setHg_status(String hg_status) {
             this.hg_status = hg_status;
+        }
+    }
+
+    public static class RFListModel{
+        private String rf_type;
+
+        private String rf_status;
+
+        public RFListModel(String rf_type, String rf_status) {
+            this.rf_type = rf_type;
+            this.rf_status = rf_status;
+        }
+
+        public String getRf_type() {
+            return rf_type;
+        }
+
+        public void setRf_type(String rf_type) {
+            this.rf_type = rf_type;
+        }
+
+        public String getRf_status() {
+            return rf_status;
+        }
+
+        public void setRf_status(String rf_status) {
+            this.rf_status = rf_status;
         }
     }
 }

@@ -22,6 +22,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +34,8 @@ import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.CustomDialogFragment;
+import com.babbangona.mspalybookupgrade.utils.CustomDialogFragmentRedFlags;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.android.material.button.MaterialButton;
@@ -114,8 +119,8 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         @BindView(R.id.tv_crop_type)
         TextView tv_crop_type;
 
-        @BindView(R.id.btn_log_visitation)
-        MaterialButton btn_log_visitation;
+        @BindView(R.id.btn_log_rf)
+        MaterialButton btn_log_rf;
 
         @BindView(R.id.btn_log_activity)
         MaterialButton btn_log_activity;
@@ -132,9 +137,16 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         @BindView(R.id.hg_list_container)
         LinearLayout hg_list_container;
 
+        @BindView(R.id.tv_rf_list)
+        TextView tv_rf_list;
+
+        @BindView(R.id.rf_list_container)
+        LinearLayout rf_list_container;
+
         TextView tv;
 
         boolean show_hg_list = false;
+        boolean show_rf_list = false;
 
         ViewHolder(View itemView){
             super(itemView);
@@ -162,28 +174,32 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             tv_latitude.setText(latitude);
             tv_longitude.setText(longitude);
             hg_list_container.setOrientation(LinearLayout.VERTICAL);
-            getStatus(hgFieldListRecyclerModel,btn_log_activity,iv_activity_signal,tv_hg_list,hg_list_container,getAdapterPosition());
-            btn_log_activity.setOnClickListener(v -> logActivity(hgFieldListRecyclerModel,context,getAdapterPosition(),"activity"));
-            btn_log_visitation.setOnClickListener(v -> logActivity(hgFieldListRecyclerModel,context,getAdapterPosition(),"visitation"));
+            getStatus(hgFieldListRecyclerModel,iv_activity_signal,tv_hg_list,hg_list_container,getAdapterPosition(),
+                    tv_rf_list,rf_list_container);
+            btn_log_activity.setOnClickListener(v -> logActivity(hgFieldListRecyclerModel,context,getAdapterPosition(),"log_hg"));
+            btn_log_rf.setOnClickListener(v -> logActivity(hgFieldListRecyclerModel,context,getAdapterPosition(),"log_rf"));
             btn_phone_call.setOnClickListener(v -> callMemberDialog(context,hgFieldListRecyclerModel));
             tv_hg_list.setOnClickListener(v -> {
                 show_hg_list = !show_hg_list;
                 setTv_hg_list(show_hg_list,hg_list_container,tv_hg_list);
             });
+            tv_rf_list.setOnClickListener(v -> {
+                show_rf_list = !show_rf_list;
+                setTv_rf_list(show_rf_list,rf_list_container,tv_rf_list);
+            });
         }
 
-        private void getStatus(HGFieldListRecyclerModel hgFieldListRecyclerModel,
-                               MaterialButton btn_log_activity, ImageView iv_activity_signal,
-                               TextView tv_hg_list, LinearLayout hg_list_container, int position){
+        private void getStatus(HGFieldListRecyclerModel hgFieldListRecyclerModel, ImageView iv_activity_signal,
+                               TextView tv_hg_list, LinearLayout hg_list_container, int position,
+                               TextView tv_rf_list, LinearLayout rf_list_container){
             int status = appDatabase.hgActivitiesFlagDao().countFieldInHGActivity(hgFieldListRecyclerModel.getUnique_field_id());
-            String button_text = context.getResources().getString(R.string.hg_button_text);
-            btn_log_activity.setText(button_text);
+            int rf_status = appDatabase.rfActivitiesFlagDao().countFieldInRFActivity(hgFieldListRecyclerModel.getUnique_field_id());
+
             if (status > 0){
                 iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.colorRed));
                 tv_hg_list.setVisibility(View.VISIBLE);
                 hg_list_container.setVisibility(View.GONE);
                 tv_hg_list.setText(context.getResources().getString(R.string.show_all_hgs));
-                //List<String> recorded_hg = appDatabase.hgActivitiesFlagDao().getAllFieldHGs(hgFieldListRecyclerModel.getUnique_field_id());
                 List<HGFieldListRecyclerModel.HGListModel> allFieldHGs = appDatabase.hgActivitiesFlagDao().getAllActiveHGs(hgFieldListRecyclerModel.getUnique_field_id());
 
                 if(hg_list_container.getChildCount() > 0){
@@ -196,7 +212,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
                             (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
                     tv.setTextSize((float) 12);
-                    tv.setPadding(20, 30, 20, 30);
+                    tv.setPadding(5, 5, 5, 5);
                     tv.setLayoutParams(params);
                     tv.setText(allFieldHGs.get(i).getHg_type());
                     params.setMargins(0,0,0,10);
@@ -208,14 +224,42 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
                         tv.setTextColor(context.getResources().getColor(R.color.colorWhite));
                     }
                     hg_list_container.addView(tv);
-                    int finalI = i;
-                    tv.setOnClickListener(v -> logSolveHG(hgFieldListRecyclerModel,context,position,allFieldHGs.get(finalI)));
                 }
 
             }else{
                 iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.colorGreen));
                 tv_hg_list.setVisibility(View.GONE);
                 hg_list_container.setVisibility(View.GONE);
+            }
+
+            if (rf_status > 0){
+                tv_rf_list.setVisibility(View.VISIBLE);
+                rf_list_container.setVisibility(View.GONE);
+                tv_rf_list.setText(context.getResources().getString(R.string.show_all_rfs));
+                List<String> allFieldRFs = appDatabase.rfActivitiesFlagDao().getAllFieldRFs(hgFieldListRecyclerModel.getUnique_field_id());
+
+                if(rf_list_container.getChildCount() > 0){
+                    rf_list_container.removeAllViews();
+                }
+
+                for (int i = 0; i < allFieldRFs.size(); i++) {
+                    TextView tv = new TextView(context);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
+                            (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                    tv.setTextSize((float) 12);
+                    tv.setPadding(5, 5, 5, 5);
+                    tv.setLayoutParams(params);
+                    tv.setText(allFieldRFs.get(i));
+                    params.setMargins(0,0,0,10);
+                    tv.setBackgroundColor(context.getResources().getColor(R.color.view_red));
+                    tv.setTextColor(context.getResources().getColor(R.color.colorWhite));
+                    rf_list_container.addView(tv);
+                }
+
+            }else{
+                tv_rf_list.setVisibility(View.GONE);
+                rf_list_container.setVisibility(View.GONE);
             }
         }
 
@@ -230,6 +274,48 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             hg_list_container.setVisibility(View.GONE);
             tv_hg_list.setText(context.getResources().getString(R.string.show_all_hgs));
         }
+    }
+
+    private void setTv_rf_list(boolean show_rf_list, LinearLayout rf_list_container, TextView tv_rf_list){
+        if (show_rf_list){
+            rf_list_container.setVisibility(View.VISIBLE);
+            tv_rf_list.setText(context.getResources().getString(R.string.hide_all_rfs));
+        }else{
+            rf_list_container.setVisibility(View.GONE);
+            tv_rf_list.setText(context.getResources().getString(R.string.show_all_rfs));
+        }
+    }
+
+    public void showDialog(HGFieldListRecyclerModel hgFieldListRecyclerModel) {
+        sharedPrefs.setKeyHgFieldModel(hgFieldListRecyclerModel);
+
+        FragmentManager fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
+        CustomDialogFragment newFragment = new CustomDialogFragment();
+
+            // The device is smaller, so show the fragment fullscreen
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            // For a little polish, specify a transition animation
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            // To make it fullscreen, use the 'content' root view as the container
+            // for the fragment, which is always the root view for the activity
+            transaction.add(android.R.id.content, newFragment)
+                    .addToBackStack("").commit();
+    }
+
+    public void showRFDialog(HGFieldListRecyclerModel hgFieldListRecyclerModel) {
+        sharedPrefs.setKeyHgFieldModel(hgFieldListRecyclerModel);
+
+        FragmentManager fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
+        CustomDialogFragmentRedFlags newFragment = new CustomDialogFragmentRedFlags();
+
+            // The device is smaller, so show the fragment fullscreen
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            // For a little polish, specify a transition animation
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            // To make it fullscreen, use the 'content' root view as the container
+            // for the fragment, which is always the root view for the activity
+            transaction.add(android.R.id.content, newFragment)
+                    .addToBackStack("").commit();
     }
 
     private void logActivity(HGFieldListRecyclerModel hgFieldListRecyclerModel,
@@ -253,6 +339,10 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         if (locationDistance <= allowedDistance){
             if (module.equalsIgnoreCase("visitation")){
                 logVisitation(hgFieldListRecyclerModel,latitude,longitude);
+            }else if (module.equalsIgnoreCase("log_hg")){
+                showDialog(hgFieldListRecyclerModel);
+            }else if (module.equalsIgnoreCase("log_rf")){
+                showRFDialog(hgFieldListRecyclerModel);
             }else{
                 showLogDialogStarter(hgFieldListRecyclerModel, position,latitude,longitude);
             }
@@ -338,7 +428,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
 
         List<String> whole_hg_list = appDatabase.hgListDao().getAllHGs("%"+setPortfolioMethods.getCategory(context)+"%");
 
-        ArrayAdapter hg_adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, whole_hg_list);
+        ArrayAdapter<String> hg_adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, whole_hg_list);
 
         final AutoCompleteTextView act_hg_list = new AutoCompleteTextView(context);
         act_hg_list.setHint(context.getResources().getString(R.string.hg_autocomplete_hint));

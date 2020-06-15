@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1049005783105",
+    "firebase_url": "https://ms-playbook-upgrade.firebaseio.com",
+    "project_id": "ms-playbook-upgrade",
+    "storage_bucket": "ms-playbook-upgrade.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049005783105:android:4aea80222c3889701aeec0",
+        "android_client_info": {
+          "package_name": "com.babbangona.mspalybookupgrade"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049005783105-5sppc2jahvmv4j32u2m87hpi6i58fjf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDakIX4h-bqXU61dLoz3qqy_-1ymCC-0D4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1049005783105-5sppc2jahvmv4j32u2m87hpi6i58fjf3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

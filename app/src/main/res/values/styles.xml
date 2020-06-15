@@ -29,8 +29,8 @@
         <item name="boxBackgroundColor">@android:color/white</item>
         <!-- supposed to set the background color of the dropdown menu - does nothing -->
         <item name="android:popupBackground">#003296</item>
-        <item name="boxStrokeColor">#003296</item>
-        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="boxStrokeColor">@color/text_color_black</item>
+        <item name="android:textColorHint">@color/text_color_black</item>
         <item name="android:textStyle">bold</item>
         <item name="errorEnabled">true</item>
         <item name="android:textSize">20sp</item>

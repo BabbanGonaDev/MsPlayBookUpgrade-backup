@@ -56,6 +56,7 @@
     <string name="call_question">Do You want to call</string>
     <string name="contact_member">Member Contact</string>
     <string name="hg_list_header">HG LIST</string>
+    <string name="rf_list_header">RF LIST</string>
     <string name="select_valid_hg">Please select a valid HG activity</string>
     <string name="hg_autocomplete_hint">Enter HG or Solve</string>
     <string name="hg_button_text">Update HG List</string>
@@ -83,7 +84,9 @@
     <string name="wrong_date_title">Wrong Date/Time</string>
     <string name="wrong_date_msg">Wrong date/time detected. Kindly correct phone date in order to use this application.</string>
     <string name="show_all_hgs">SHOW ALL HGs</string>
+    <string name="show_all_rfs">SHOW ALL RFs</string>
     <string name="hide_all_hgs">HIDE ALL HGs</string>
+    <string name="hide_all_rfs">HIDE ALL RFs</string>
     <string name="solve_hg_message_2">for this field?</string>
     <string name="solve_hg_message_1_2">Do you want to confirm solving this</string>
     <string name="solve_hg_message_1_1">Do you want to solve this</string>
@@ -114,4 +117,15 @@
     <string name="oops">Oops</string>
     <string name="harvest_cc_edit_locked">Sorry you cannot edit your harvest collection center at this time.</string>
     <string name="collection_center_finish">Save Collection Point</string>
+    <string name="hg_type">HG Types</string>
+    <string name="select_hg_type">Select HG Type</string>
+    <string name="select_rf_type">Select RF Type</string>
+    <string name="select_hg_sub_type">Select HG Sub Types</string>
+    <string name="log_hg_activity">Log/Solve HG Activity</string>
+    <string name="log_rf_activity">Log/Solve RF Activity</string>
+    <string name="log_solve_hg">Log/Solve HG</string>
+    <string name="log_solve_rf">Log/Solve RF</string>
+    <string name="error_message_hg_type">Please select HG type</string>
+    <string name="error_message_rf_type">Please select RF type</string>
+    <string name="error_message_hg_sub_type">Please select HG sub type</string>
 </resources>

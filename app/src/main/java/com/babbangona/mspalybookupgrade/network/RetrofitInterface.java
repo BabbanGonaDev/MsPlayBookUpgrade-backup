@@ -12,6 +12,9 @@ import com.babbangona.mspalybookupgrade.network.object.LogsUpload;
 import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
 import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.RFActivitiesFlagDownload;
+import com.babbangona.mspalybookupgrade.network.object.RFActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.RFListDownload;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 
 import java.util.List;
@@ -78,6 +81,18 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("uploadNormalActivitiesRecord")
     Call<List<NormalActivitiesUpload>> uploadNormalActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
+
+    @GET("downloadRFList")
+    Call<RFListDownload> getRFListDownload(@Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadRFActivityFlag")
+    Call<RFActivitiesFlagDownload> downloadRFActivityFlag(@Query("staff_id") String staff_id,
+                                                          @Query("portfolio_list") String portfolio_list,
+                                                          @Query("last_synced_time") String last_synced_time);
+
+    @FormUrlEncoded
+    @POST("uploadRFActivitiesRecord")
+    Call<List<RFActivitiesUpload>> uploadRFActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
 
     @FormUrlEncoded
     @POST("yourPHPName.php")

@@ -94,6 +94,21 @@ public interface LastSyncTableDao {
     @Query("UPDATE last_sync SET last_sync_harvest_location =:last_sync_harvest_location WHERE staff_id = :staff_id")
     void updateLastSyncHarvestLocation(String staff_id, String last_sync_harvest_location);
 
+    @Query("SELECT last_sync_rf_list FROM last_sync WHERE staff_id = :staff_id")
+    String getLastSyncRFList(String staff_id);
+
+    @Query("UPDATE last_sync SET last_sync_rf_list =:last_sync_rf_list WHERE staff_id = :staff_id")
+    void updateLastSyncRFList(String staff_id, String last_sync_rf_list);
+
+    @Query("UPDATE last_sync SET last_sync_up_rf_activities_flag =:last_sync_up_rf_activities_flag WHERE staff_id = :staff_id")
+    void updateLastSyncUpRFActivitiesFlag(String staff_id, String last_sync_up_rf_activities_flag);
+
+    @Query("SELECT last_sync_down_rf_activities_flag FROM last_sync WHERE staff_id = :staff_id")
+    String getLastSyncDownRFActivitiesFlag(String staff_id);
+
+    @Query("UPDATE last_sync SET last_sync_down_rf_activities_flag =:last_sync_down_rf_activities_flag WHERE staff_id = :staff_id")
+    void updateLastSyncDownRFActivitiesFlag(String staff_id, String last_sync_down_rf_activities_flag);
+
     /**
      * Insert the object in database
      * @param lastSyncTable, object to be inserted

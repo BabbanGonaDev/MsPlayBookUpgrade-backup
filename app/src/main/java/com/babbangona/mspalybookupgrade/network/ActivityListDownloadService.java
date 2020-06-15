@@ -22,6 +22,8 @@ import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.RFActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
@@ -37,6 +39,9 @@ import com.babbangona.mspalybookupgrade.network.object.LogsUpload;
 import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
 import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.RFActivitiesFlagDownload;
+import com.babbangona.mspalybookupgrade.network.object.RFActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.RFListDownload;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.gson.Gson;
@@ -81,7 +86,9 @@ public class ActivityListDownloadService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         getInputData();
         getHGList();
+        getRFList();
         getHGACtivitiesFlagDownload();
+        getRFActivitiesFlagDownload();
         getNormalActivitiesFlagDownload();
         getCategoryDownload();
         getHarvestLocationDownload();
@@ -95,6 +102,9 @@ public class ActivityListDownloadService extends IntentService {
         }
         if (appDatabase.normalActivitiesFlagDao().getUnSyncedNormalActivitiesCount() > 0){
             syncUpNormalActivities();
+        }
+        if (appDatabase.rfActivitiesFlagDao().getUnSyncedRFActivitiesCount() > 0){
+            syncUpRFActivities();
         }
         getStaffList();
         getLogsDownload();
@@ -1725,6 +1735,354 @@ public class ActivityListDownloadService extends IntentService {
         }
     }
 
+    public void getRFList() {
+
+        String last_synced = getLastSyncTimeRFList();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<RFListDownload> call = retrofitInterface.getRFListDownload(last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<RFListDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<RFListDownload> call,
+                                   @NonNull Response<RFListDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    RFListDownload rfListDownload = response.body();
+
+                    if (rfListDownload != null) {
+                        List<RFList> rfLists = rfListDownload.getDownload_list();
+                        if (rfLists.size() > 0){
+                            saveToRFListTable(rfLists);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncRFList(sharedPrefs.getStaffID(),rfListDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_rf_list(rfListDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.RF_LIST_TABLE,
+                                "RF List Download",
+                                "1",
+                                returnRemark(rfLists.size()),
+                                rfListDownload.getLast_sync_time()
+
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.RF_LIST_TABLE,
+                                "RF List Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.RF_LIST_TABLE,
+                            "RF List Download",
+                            "0",
+                            "Download Error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<RFListDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_rf_list", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.RF_LIST_TABLE,
+                        "RF List Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToRFListTable(List<RFList> rfLists){
+        SaveRFListTable saveRFListTable = new SaveRFListTable();
+        saveRFListTable.execute(rfLists);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveRFListTable extends AsyncTask<List<RFList>, Void, Void> {
+
+
+        private final String TAG = SaveRFListTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<RFList>... params) {
+
+            List<RFList> rfLists = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.rfListDao().insert(rfLists);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    public void getRFActivitiesFlagDownload() {
+
+        String last_synced = getLastSyncRFActivities();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<RFActivitiesFlagDownload> call = retrofitInterface.downloadRFActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<RFActivitiesFlagDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<RFActivitiesFlagDownload> call,
+                                   @NonNull Response<RFActivitiesFlagDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    RFActivitiesFlagDownload rfActivitiesFlagDownload = response.body();
+
+                    if (rfActivitiesFlagDownload != null) {
+                        List<RFActivitiesFlag> rfActivitiesFlagList = rfActivitiesFlagDownload.getDownload_list();
+                        if (rfActivitiesFlagList.size() > 0){
+                            saveToRFActivitiesFlagTable(rfActivitiesFlagList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncDownRFActivitiesFlag(sharedPrefs.getStaffID(),rfActivitiesFlagDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_rf_activities_flag(rfActivitiesFlagDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_download",
+                                "RF Activities Download",
+                                "1",
+                                returnRemark(rfActivitiesFlagList.size()),
+                                rfActivitiesFlagDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_download",
+                                "RF Activities Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_download",
+                            "RF Activities Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<RFActivitiesFlagDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_rf_flag_download", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_download",
+                        "RF Activities Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToRFActivitiesFlagTable(List<RFActivitiesFlag> rfActivitiesFlagList){
+        SaveRFActivitiesFlagTable saveRFActivitiesFlagTable = new SaveRFActivitiesFlagTable();
+        saveRFActivitiesFlagTable.execute(rfActivitiesFlagList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveRFActivitiesFlagTable extends AsyncTask<List<RFActivitiesFlag>, Void, Void> {
+
+
+        private final String TAG = SaveRFActivitiesFlagTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<RFActivitiesFlag>... params) {
+
+            List<RFActivitiesFlag> rfActivitiesFlagList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.rfActivitiesFlagDao().insert(rfActivitiesFlagList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    private void syncUpRFActivities() {
+        List<RFActivitiesFlag> rfActivitiesFlagList = appDatabase.rfActivitiesFlagDao().getUnSyncedRFActivities();
+        String composed_json = new Gson().toJson(rfActivitiesFlagList);
+        Log.d("composed_json",composed_json);
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<List<RFActivitiesUpload>> call = retrofitInterface.uploadRFActivitiesRecord(composed_json, sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<List<RFActivitiesUpload>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<RFActivitiesUpload>> call, @NonNull Response<List<RFActivitiesUpload>> response) {
+                Log.d("RETROFIT_TFM_DATA", "onResponse: " + response.body());
+                if (response.isSuccessful()) {
+
+                    List<RFActivitiesUpload> rfActivitiesUploadList = response.body();
+
+                    //Log.d("syncingResponseTFM", Objects.requireNonNull(rfActivitiesUploadList).toString());
+                    if (rfActivitiesUploadList == null){
+                        Log.d("result", "null");
+                        saveToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_upload",
+                                "RF Activities Upload",
+                                "0",
+                                "Upload null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else if(rfActivitiesUploadList.size() == 0){
+                        Log.d("result", "0");
+                        saveToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_upload",
+                                "RF Activities Upload",
+                                "0",
+                                "Upload empty",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else {
+                        AsyncTask.execute(()->{
+                            for (int i = 0; i < rfActivitiesUploadList.size(); i++) {
+                                RFActivitiesUpload rfActivitiesUpload = rfActivitiesUploadList.get(i);
+                                appDatabase.rfActivitiesFlagDao().updateRFActivitiesSyncFlags(rfActivitiesUpload.getUnique_field_id(),rfActivitiesUpload.getHg_type());
+                            }
+                            insetToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_upload",
+                                    "RF Activities Upload",
+                                    "1",
+                                    returnRemark(rfActivitiesUploadList.size()),
+                                    rfActivitiesUploadList.get(0).getLast_synced()
+
+                            );
+                        });
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncUpRFActivitiesFlag(sharedPrefs.getStaffID(),rfActivitiesUploadList.get(0).getLast_synced());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_up_rf_activities_flag(rfActivitiesUploadList.get(0).getLast_synced());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                        }
+
+                    }
+                } else {
+                    Log.i("tobi_rf_upload ", "onResponse ERROR: " + response.body());
+                    int sc = response.code();
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            break;
+                        case 401:
+                            Log.e("Error 401", "Bad Request");
+                            break;
+                        case 403:
+                            Log.e("Error 403", "Bad Request");
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            break;
+                        case 500:
+                            Log.e("Error 500", "Bad Request");
+                            break;
+                        case 501:
+                            Log.e("Error 501", "Bad Request");
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error " + response.code());
+                            break;
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_upload",
+                            "RF Activities Upload",
+                            "0",
+                            "Upload error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<RFActivitiesUpload>> call, @NonNull Throwable t) {
+                Log.d("TobiNewRFUpload", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_upload",
+                        "RF Activities Upload",
+                        "0",
+                        "Upload failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+    }
+
     String getLastSyncTimeStaffList(){
         String last_sync_time;
         try {
@@ -1852,6 +2210,34 @@ public class ActivityListDownloadService extends IntentService {
         String last_sync_time;
         try {
             last_sync_time = appDatabase.lastSyncTableDao().getLastSyncHarvestLocation(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncTimeRFList(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncRFList(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncRFActivities(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownRFActivitiesFlag(sharedPrefs.getStaffID());
         } catch (Exception e) {
             e.printStackTrace();
             last_sync_time = "2019-01-01 00:00:00";

@@ -14,9 +14,13 @@ import java.util.List;
 @Dao
 public interface HGListDao {
 
-    @Query(" SELECT hg_type FROM hg_list WHERE deactivated_status = '0' " +
+    @Query(" SELECT DISTINCT hg_type FROM hg_list WHERE deactivated_status = '0' " +
             "AND user_category LIKE :role_category ")
     List<String> getAllHGs(String role_category);
+
+    @Query(" SELECT DISTINCT sub_hg_type FROM hg_list WHERE deactivated_status = '0' " +
+            "AND hg_type LIKE :hg_type ")
+    List<String> getHGSubTypes(String hg_type);
 
     @Query(" SELECT user_category FROM hg_list WHERE hg_type = :hg_type ")
     String getHGRoleCategory(String hg_type);

@@ -152,29 +152,68 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="155dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tv_hg_list"
-                    android:layout_marginTop="@dimen/dimen_5dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textSize="15sp"
-                    android:textColor="@color/text_color_white"
-                    android:text="@string/show_all_hgs"
-                    android:padding="@dimen/dimen_5dp"
-                    android:background="@drawable/show_hide_hg_look"/>
-
                 <LinearLayout
-                    android:id="@+id/hg_list_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingRight="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:layout_width="155dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_hg_list"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_color_white"
+                        android:text="@string/show_all_hgs"
+                        android:padding="@dimen/dimen_5dp"
+                        android:background="@drawable/show_hide_hg_look"/>
+
+                    <LinearLayout
+                        android:id="@+id/hg_list_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_rf_list"
+                        android:layout_width="155dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:background="@drawable/show_hide_hg_look"
+                        android:gravity="center"
+                        android:padding="@dimen/dimen_5dp"
+                        android:text="@string/show_all_rfs"
+                        android:textColor="@color/text_color_white"
+                        android:textSize="15sp" />
+
+                    <LinearLayout
+                        android:id="@+id/rf_list_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -191,9 +230,9 @@
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btn_log_visitation"
+                    android:id="@+id/btn_log_rf"
                     android:layout_marginEnd="@dimen/dimen_10dp"
-                    android:text="@string/log_visitation"
+                    android:text="@string/log_solve_rf"
                     app:cornerRadius="@dimen/dimen_5dp"
                     style="?attr/borderlessButtonStyle"
                     android:layout_weight="2"/>
@@ -202,7 +241,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_log_activity"
-                    android:text="@string/log_activity"
+                    android:text="@string/log_solve_hg"
                     android:layout_marginEnd="@dimen/dimen_10dp"
                     style="?attr/borderlessButtonStyle"
                     app:cornerRadius="@dimen/dimen_5dp"

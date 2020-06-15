@@ -110,6 +110,12 @@ public class HGFieldListPage extends AppCompatActivity {
         removeSearchTray();
     }
 
+    @Override
+    protected void onResume() {
+        hgFieldListRecyclerAdapter.notifyDataSetChanged();
+        super.onResume();
+    }
+
     void loadAdapter(String route){
         Log.d("hello_there:-",route);
         String min_lat = sharedPrefs.getKeyGridMinLat();
@@ -287,11 +293,17 @@ public class HGFieldListPage extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (search_linear_layout.getVisibility() == View.VISIBLE){
-            removeSearchTray();
-        }else{
-            startPreviousActivity();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+            hgFieldListRecyclerAdapter.notifyDataSetChanged();
+        }else {
+            if (search_linear_layout.getVisibility() == View.VISIBLE){
+                removeSearchTray();
+            }else{
+                startPreviousActivity();
+            }
         }
+
     }
 
     void startPreviousActivity(){
@@ -313,5 +325,14 @@ public class HGFieldListPage extends AppCompatActivity {
 
     public void hideView(View view) {
         view.setVisibility(View.GONE);
+    }
+
+    public void myMethod(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hgFieldListRecyclerAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
