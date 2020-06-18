@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
+import com.uxcam.UXCam;
 
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         addDataToDatabase();
         Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(MainActivity.this);
         main2ActivityMethods.confirmPhoneDate();
+        UXCam.startWithKey("l5h2x6r7c5j34t5");
     }
 
     @OnClick(R.id.btn_open_access_control)

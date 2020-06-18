@@ -121,7 +121,7 @@ public class CustomDialogFragment extends DialogFragment {
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("");
         GPSController.initialiseLocationListener(getActivity());
 
-        toolbar_hg_fragment.setNavigationOnClickListener(v -> dismiss());
+        toolbar_hg_fragment.setNavigationOnClickListener(v -> dismissAndRefresh());
 
         String field_r_id = hgFieldListRecyclerModel.getUnique_field_id();
         String ik_number = Objects.requireNonNull(getActivity()).getResources().getString(R.string.ik_number) +" "+ hgFieldListRecyclerModel.getIk_number();
@@ -371,6 +371,9 @@ public class CustomDialogFragment extends DialogFragment {
     void dismissAndRefresh(){
         dismiss();
         ((HGFieldListPage) Objects.requireNonNull(getActivity())).myMethod();
+        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getActivity().getSupportFragmentManager().popBackStack();
+        }
     }
 
 }
