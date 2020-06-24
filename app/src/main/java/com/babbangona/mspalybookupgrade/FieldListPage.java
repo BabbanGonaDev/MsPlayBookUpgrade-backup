@@ -94,6 +94,7 @@ public class FieldListPage extends AppCompatActivity {
         toolbar_field_list.setNavigationOnClickListener(v -> startPreviousActivity());
         Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(FieldListPage.this);
         main2ActivityMethods.confirmPhoneDate();
+        main2ActivityMethods.confirmLocationOpen();
     }
 
     @OnClick(R.id.et_search)
@@ -320,5 +321,9 @@ public class FieldListPage extends AppCompatActivity {
     protected void onResume() {
         fieldListRecyclerAdapter.notifyDataSetChanged();
         super.onResume();
+    }
+
+    public void myMethod(){
+        runOnUiThread(() -> fieldListRecyclerAdapter.notifyDataSetChanged());
     }
 }

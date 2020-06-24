@@ -38,9 +38,12 @@ public class RFActivitiesFlag {
     @ColumnInfo(name = DatabaseStringConstants.COL_CROP_TYPE_RF_ACTIVITIES)
     private String crop_type;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_DATE_LOGGED_RF)
+    private String date_logged;
+
     public RFActivitiesFlag(@NonNull String unique_field_id, @NonNull String rf_type, String rf_date,
                             String rf_status, String staff_id, String sync_flag, String ik_number,
-                            String crop_type) {
+                            String crop_type, String date_logged) {
         this.unique_field_id = unique_field_id;
         this.rf_type = rf_type;
         this.rf_date = rf_date;
@@ -49,6 +52,7 @@ public class RFActivitiesFlag {
         this.sync_flag = sync_flag;
         this.ik_number = ik_number;
         this.crop_type = crop_type;
+        this.date_logged = date_logged;
     }
 
     @NonNull
@@ -115,5 +119,13 @@ public class RFActivitiesFlag {
 
     public void setCrop_type(String crop_type) {
         this.crop_type = crop_type;
+    }
+
+    public String getDate_logged() {
+        return date_logged;
+    }
+
+    public void setDate_logged(String date_logged) {
+        this.date_logged = date_logged;
     }
 }

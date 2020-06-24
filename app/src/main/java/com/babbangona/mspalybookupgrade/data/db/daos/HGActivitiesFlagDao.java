@@ -34,9 +34,10 @@ public abstract class HGActivitiesFlagDao {
     public abstract int countFieldSpecificHGActivity(String unique_field_id, String hg_type);
 
     @Query("UPDATE hg_activities_flag SET hg_status = :status, hg_date = :date," +
-            "staff_id = :staff_id, sync_flag = '0' " +
+            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged " +
             "WHERE unique_field_id = :unique_field_id AND hg_type = :hg_type")
-    public abstract void updateHGFlag(String unique_field_id, String hg_type, String status, String date, String staff_id);
+    public abstract void updateHGFlag(String unique_field_id, String hg_type, String status,
+                                      String date, String staff_id, String date_logged);
 
     @Query("SELECT hg_type FROM hg_activities_flag WHERE unique_field_id = :unique_field_id AND hg_status != '0'")
     public abstract List<String> getAllFieldHGs(String unique_field_id);

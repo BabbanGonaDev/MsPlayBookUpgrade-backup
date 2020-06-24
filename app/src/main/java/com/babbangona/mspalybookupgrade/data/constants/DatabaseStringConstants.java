@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 6;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 7;
 
     /**
      * Names of tables
@@ -26,6 +26,7 @@ public class DatabaseStringConstants {
     public static final String SYNC_SUMMARY_TABLE                       = "sync_summary";
     public static final String HARVEST_LOCATION_TABLE                   = "harvest_location";
     public static final String APP_VARIABLES                            = "app_variables";
+    public static final String TABLE_PICTURE_SYNC                       = "picture_sync";
 
     /**
      * activity_list column names
@@ -51,6 +52,7 @@ public class DatabaseStringConstants {
     public static final String COL_IK_NUMBER_NORMAL_ACTIVITIES          = "ik_number";
     public static final String COL_CROP_TYPE_NORMAL_ACTIVITIES          = "crop_type";
     public static final String COL_CC_HARVEST                           = "cc_harvest";
+    public static final String COL_DATE_LOGGED_NORMAL                   = "date_logged";
 
     /**
      * fields column names
@@ -97,6 +99,7 @@ public class DatabaseStringConstants {
     public static final String COL_SYNC_FLAG_HG_ACTIVITIES              = "sync_flag";
     public static final String COL_IK_NUMBER_HG_ACTIVITIES              = "ik_number";
     public static final String COL_CROP_TYPE_HG_ACTIVITIES              = "crop_type";
+    public static final String COL_DATE_LOGGED_HG                       = "date_logged";
 
     /**
      * hg_list column names
@@ -171,6 +174,8 @@ public class DatabaseStringConstants {
      */
     public static final String VARIABLE_ID                                  = "variable_id";
     public static final String EDIT_HARVEST_LOCATION_FLAG                   = "edit_harvest_location_flag";
+    public static final String MINIMUM_LOG_DATE_FLAG                        = "minimum_log_date";
+    public static final String MAXIMUM_LOG_DATE_FLAG                        = "maximum_log_date";
 
     /**
      * rf_list column names
@@ -180,7 +185,7 @@ public class DatabaseStringConstants {
     public static final String COL_USER_CATEGORY_RF_LIST                    = "user_category";
 
     /**
-     * hg_activities column names
+     * rf_activities column names
      */
     public static final String COL_UNIQUE_FIELD_ID_RF_ACTIVITY          = "unique_field_id";
     public static final String COL_RF_TYPE                              = "rf_type";
@@ -190,5 +195,19 @@ public class DatabaseStringConstants {
     public static final String COL_SYNC_FLAG_RF_ACTIVITIES              = "sync_flag";
     public static final String COL_IK_NUMBER_RF_ACTIVITIES              = "ik_number";
     public static final String COL_CROP_TYPE_RF_ACTIVITIES              = "crop_type";
+    public static final String COL_DATE_LOGGED_RF                       = "date_logged";
+
+    /**
+     * picture location
+     */
+    public static final String HG_ACTIVITY_PICTURE_LOCATION             = "MsPlaybookPictures/HG_Activities";
+    public static final String RF_ACTIVITY_PICTURE_LOCATION             = "MsPlaybookPictures/RF_Activities";
+    public static final String NORMAL_ACTIVITY_PICTURE_LOCATION         = "MsPlaybookPictures/Normal_Activities";
+    public static final String MS_PLAYBOOK_PICTURE_LOCATION             = "MsPlaybookPictures";
+
+    /**
+     * picture_sync column names
+     */
+    public static final String COL_PICTURE_NAME                     = "picture_name";
 
 }

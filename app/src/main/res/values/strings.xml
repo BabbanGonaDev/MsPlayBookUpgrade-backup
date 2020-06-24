@@ -33,6 +33,7 @@
     <string name="log_visitation">Log Visit</string>
     <string name="log_activity">Log Activity</string>
     <string name="field_r_id">Field R ID</string>
+    <string name="member_r_id">Member R ID:</string>
     <string name="member_name">Member Name:</string>
     <string name="ik_number">IK Number:</string>
     <string name="member_phone_number">Phone Number:</string>
@@ -81,8 +82,11 @@
     <string name="exit_app">Please click BACK again to exit</string>
     <string name="click_sync_message">Please click SYNC to start using this application</string>
     <string name="change_date">Change Date</string>
+    <string name="turn_location_on">Enable Location</string>
     <string name="wrong_date_title">Wrong Date/Time</string>
+    <string name="location_off_title">Phone Location Disabled</string>
     <string name="wrong_date_msg">Wrong date/time detected. Kindly correct phone date in order to use this application.</string>
+    <string name="location_off_msg">Phone location Disabled. Kindly enable location in order to use this application.</string>
     <string name="show_all_hgs">SHOW ALL HGs</string>
     <string name="show_all_rfs">SHOW ALL RFs</string>
     <string name="hide_all_hgs">HIDE ALL HGs</string>
@@ -128,4 +132,11 @@
     <string name="error_message_hg_type">Please select HG type</string>
     <string name="error_message_rf_type">Please select RF type</string>
     <string name="error_message_hg_sub_type">Please select HG sub type</string>
+    <string name="activity_enter_date">Enter activity date</string>
+    <string name="activity_confirm_date">Confirm activity date</string>
+    <string name="error_message_enter_date">Please enter date</string>
+    <string name="error_message_confirm_date">Please confirm entered date</string>
+    <string name="error_date_abnormal">Please date should be within 15th of May and 15th of August and not greater than today</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="take_location_picture">You are close to the field location, please take picture of the field</string>
 </resources>

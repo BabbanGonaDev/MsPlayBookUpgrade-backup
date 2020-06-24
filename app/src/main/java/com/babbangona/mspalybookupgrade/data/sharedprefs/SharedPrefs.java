@@ -3,6 +3,7 @@ package com.babbangona.mspalybookupgrade.data.sharedprefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.HGFieldListRecycler.HGFieldListRecyclerModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -65,12 +66,32 @@ public class SharedPrefs {
     public static final String KEY_HARVEST_CC_CROP_TYPE             = "harvest_cc_crop_type";
 
     public static final String KEY_HG_FIELD_MODEL                   = "clearance_list";
+    public static final String KEY_FIELD_MODEL                      = "field_model";
+    public static final String KEY_IMAGE_CAPTURE_FLAG               = "image_capture_flag";
 
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyImageCaptureFlag(String image_capture_flag){
+        // Storing name in pref
+        editor.putString(KEY_IMAGE_CAPTURE_FLAG, image_capture_flag);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeyFieldModel(FieldListRecyclerModel fieldListRecyclerModel){
+        Gson gson = new Gson();
+        String json = gson.toJson(fieldListRecyclerModel);
+        // Storing model in pref
+        editor.putString(KEY_FIELD_MODEL, json);
+
+        // commit changes
+        editor.commit();
     }
 
     public void setKeyHgFieldModel(HGFieldListRecyclerModel hgFieldListRecyclerModel){
@@ -338,12 +359,22 @@ public class SharedPrefs {
 
     public String getKeyHarvestCcCropType(){
         return pref.getString(KEY_HARVEST_CC_CROP_TYPE,"None");
+
     }
 
     public HGFieldListRecyclerModel getKeyHgFieldModel() {
         Gson gson = new Gson();
         String json = pref.getString(KEY_HG_FIELD_MODEL, "");
         return gson.fromJson(json, HGFieldListRecyclerModel.class);
+    }
+    public FieldListRecyclerModel getKeyFieldModel() {
+        Gson gson = new Gson();
+        String json = pref.getString(KEY_FIELD_MODEL, "");
+        return gson.fromJson(json, FieldListRecyclerModel.class);
+    }
+
+    public String getKeyImageCaptureFlag(){
+        return pref.getString(KEY_IMAGE_CAPTURE_FLAG,"0");
     }
 
 

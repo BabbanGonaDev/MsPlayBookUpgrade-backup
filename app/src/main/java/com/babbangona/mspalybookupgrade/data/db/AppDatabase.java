@@ -20,6 +20,7 @@ import com.babbangona.mspalybookupgrade.data.db.daos.LastSyncTableDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.LogsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.MembersDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.NormalActivitiesFlagDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.PictureSyncDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.RFActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.RFListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
@@ -35,6 +36,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.PictureSync;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
@@ -43,7 +45,8 @@ import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
 
 @Database(entities = {ActivityList.class, NormalActivitiesFlag.class, Fields.class, StaffList.class,
         Members.class, HGActivitiesFlag.class, HGList.class, Logs.class, LastSyncTable.class, Category.class,
-        SyncSummary.class, HarvestLocationsTable.class, AppVariables.class, RFActivitiesFlag.class, RFList.class},
+        SyncSummary.class, HarvestLocationsTable.class, AppVariables.class, RFActivitiesFlag.class,
+        RFList.class, PictureSync.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -65,6 +68,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract AppVariablesDao appVariablesDao();
     public abstract RFActivitiesFlagDao rfActivitiesFlagDao();
     public abstract RFListDao rfListDao();
+    public abstract PictureSyncDao pictureSyncDao();
 
     /**
      * Return instance of database creation
@@ -181,13 +185,31 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+
+
+    private static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE normal_activities_flag ADD COLUMN 'date_logged' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE hg_activities_flag ADD COLUMN 'date_logged' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE rf_activities_flag ADD COLUMN 'date_logged' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'minimum_log_date' TEXT DEFAULT '2020-05-15'");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'maximum_log_date' TEXT DEFAULT '2020-08-15'");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS picture_sync (" +
+                    "picture_name TEXT NOT NULL," +
+                    "PRIMARY KEY(picture_name))"
+            );
+        }
+    };
+
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
                 context,
                 AppDatabase.class,
                 DatabaseStringConstants.MS_PLAYBOOK_DATABASE_NAME)
                 .allowMainThreadQueries()
-                .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6)
+                .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,MIGRATION_6_7)
                 .build();
 //                .fallbackToDestructiveMigration()
     }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.PictureSync;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
@@ -42,6 +44,7 @@ import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.RFListDownload;
+import com.babbangona.mspalybookupgrade.network.object.ServerResponse;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.gson.Gson;
@@ -49,11 +52,15 @@ import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -94,6 +101,8 @@ public class ActivityListDownloadService extends IntentService {
         getHarvestLocationDownload();
         getAppVariablesDownload();
 
+        File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_PICTURE_LOCATION);
+
         if (appDatabase.logsDao().getUnSyncedLogsCount() > 0){
             syncUpLogs();
         }
@@ -108,6 +117,7 @@ public class ActivityListDownloadService extends IntentService {
         }
         getStaffList();
         getLogsDownload();
+        pictureLoop(ImgDirectory);
     }
 
     /*
@@ -2081,6 +2091,98 @@ public class ActivityListDownloadService extends IntentService {
                 );
             }
         });
+    }
+
+    //function to loop through files in folder
+    private void pictureLoop(File dir) {
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        pictureLoop(file);
+                    } else {
+
+                        //Log.d("DIRect:",file.toString());
+
+
+                        File file2 = new File(file.toString());
+
+                        //Log.d("damiFile",file2.getName());
+                        int check_if_picture_synced = appDatabase.pictureSyncDao().getPictureNameCount(file.getName());
+                        if (check_if_picture_synced > 0) {
+                            Log.d("pictureSynced", file.getName());
+                        } else {
+                            uploadFile(file2, file.getName());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //upload file function
+    private void uploadFile(File file, String name) {
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+
+        // LmrApiInterface getResponse = LmrApiClient.getClient(LmrApiClient.BASE_URL).create(LmrApiClient.class);
+
+        RetrofitInterface getResponse = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call call = getResponse.uploadMsPlaybookPicture(fileToUpload, filename);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                ServerResponse serverResponse = (ServerResponse) response.body();
+                if (serverResponse != null) {
+                    if (serverResponse.getSuccess()) {
+                        //Log.d("ServerResponse","Successful "+ name);
+                        //boolean deleted = file.delete();
+                        //Log.d("result",String.valueOf(deleted));
+                        SaveIntoDatabasePictures task = new SaveIntoDatabasePictures();
+                        task.execute(name);
+                    } else {
+                        //Log.d("ServerResponse","Not_Successful "+ name);
+                    }
+                } else {
+                    //Log.d("ServerResponse","Null Response");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull Throwable t) {
+                Log.d("ServerResponse","Error Uploading Files" + t.toString());
+            }
+        });
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class SaveIntoDatabasePictures extends AsyncTask<String, Void, Void> {
+
+
+        private final String TAG = SaveIntoDatabasePictures.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            PictureSync pictureSync = new PictureSync(params[0]);
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.pictureSyncDao().insert(pictureSync);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
     }
 
     String getLastSyncTimeStaffList(){

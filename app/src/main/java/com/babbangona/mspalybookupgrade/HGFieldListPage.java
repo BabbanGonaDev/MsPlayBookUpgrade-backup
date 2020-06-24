@@ -94,6 +94,7 @@ public class HGFieldListPage extends AppCompatActivity {
         toolbar_field_list.setNavigationOnClickListener(v -> startPreviousActivity());
         Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(HGFieldListPage.this);
         main2ActivityMethods.confirmPhoneDate();
+        main2ActivityMethods.confirmLocationOpen();
     }
 
     @OnClick(R.id.et_search)

@@ -2,9 +2,11 @@ package com.babbangona.mspalybookupgrade.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.provider.Settings;
 import android.widget.AutoCompleteTextView;
 
+import com.babbangona.mspalybookupgrade.Homepage;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -180,6 +182,34 @@ public class Main2ActivityMethods {
                     .setCancelable(false)
                     .setPositiveButton(context.getResources().getString(R.string.change_date), (dialogInterface, i) -> {
                         context.startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
+                    }).show();
+        }
+    }
+
+
+
+    public void confirmLocationOpen(){
+        LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            if (lm != null) {
+                gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+
+        if(!gps_enabled) {
+            // notify user
+            new MaterialAlertDialogBuilder(context)
+                    .setIcon(context.getResources().getDrawable(R.drawable.ic_location_signs))
+                    .setTitle(context.getResources().getString(R.string.location_off_title))
+                    .setMessage(context.getResources().getString(R.string.location_off_msg))
+                    .setCancelable(false)
+                    .setPositiveButton(context.getResources().getString(R.string.turn_location_on), (dialogInterface, i) -> {
+                        context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }).show();
         }
     }

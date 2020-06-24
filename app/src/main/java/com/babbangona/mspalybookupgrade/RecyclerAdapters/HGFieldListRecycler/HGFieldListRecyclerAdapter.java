@@ -92,6 +92,9 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         @BindView(R.id.tv_field_r_id)
         TextView tv_field_r_id;
 
+        @BindView(R.id.tv_member_r_id)
+        TextView tv_member_r_id;
+
         @BindView(R.id.tv_ik_number)
         TextView tv_ik_number;
 
@@ -162,6 +165,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             String field_size = context.getResources().getString(R.string.field_size) +" "+ hgFieldListRecyclerModel.getField_size();
             String village = context.getResources().getString(R.string.member_village) +" "+ hgFieldListRecyclerModel.getVillage_name();
             String crop_type = context.getResources().getString(R.string.member_crop_type) +" "+ hgFieldListRecyclerModel.getCrop_type();
+            String member_r_id = context.getResources().getString(R.string.member_r_id) +" "+ hgFieldListRecyclerModel.getField_r_id();
             String latitude = "Lat.: " + (Double.parseDouble(hgFieldListRecyclerModel.getMin_lat())+Double.parseDouble(hgFieldListRecyclerModel.getMax_lat()))/2;
             String longitude = "Long.: " + (Double.parseDouble(hgFieldListRecyclerModel.getMin_lng())+Double.parseDouble(hgFieldListRecyclerModel.getMax_lng()))/2;
             tv_field_r_id.setText(field_r_id);
@@ -173,6 +177,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             tv_crop_type.setText(crop_type);
             tv_latitude.setText(latitude);
             tv_longitude.setText(longitude);
+            tv_member_r_id.setText(member_r_id);
             hg_list_container.setOrientation(LinearLayout.VERTICAL);
             getStatus(hgFieldListRecyclerModel,iv_activity_signal,tv_hg_list,hg_list_container,getAdapterPosition(),
                     tv_rf_list,rf_list_container);
@@ -336,20 +341,14 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
 
         Log.d("present_location",latitude + "|"+longitude);
 
-        if (locationDistance <= allowedDistance){
-            if (module.equalsIgnoreCase("visitation")){
-                logVisitation(hgFieldListRecyclerModel,latitude,longitude);
-            }else if (module.equalsIgnoreCase("log_hg")){
-                showDialog(hgFieldListRecyclerModel);
-            }else if (module.equalsIgnoreCase("log_rf")){
-                showRFDialog(hgFieldListRecyclerModel);
-            }else{
-                showLogDialogStarter(hgFieldListRecyclerModel, position,latitude,longitude);
-            }
+        if (module.equalsIgnoreCase("visitation")){
+            logVisitation(hgFieldListRecyclerModel,latitude,longitude);
+        }else if (module.equalsIgnoreCase("log_hg")){
+            showDialog(hgFieldListRecyclerModel);
+        }else if (module.equalsIgnoreCase("log_rf")){
+            showRFDialog(hgFieldListRecyclerModel);
         }else{
-            locationMismatchedDialog(latitude,longitude,min_lat,max_lat,min_lng,max_lng,
-                    context,hgFieldListRecyclerModel.getUnique_field_id(),
-                    context.getResources().getString(R.string.wrong_location));
+            showLogDialogStarter(hgFieldListRecyclerModel, position,latitude,longitude);
         }
     }
 
@@ -500,22 +499,17 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
 
         if (field_hg_activity_existence > 0){
             appDatabase.hgActivitiesFlagDao().updateHGFlag(hgFieldListRecyclerModel.getUnique_field_id(),hg_selected,flag,
-                        getDate("spread"),sharedPrefs.getStaffID());
-            appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                    initial_activity,getDate("normal"),sharedPrefs.getStaffRole(),
-                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
-                    hgFieldListRecyclerModel.getIk_number(),hgFieldListRecyclerModel.getCrop_type()));
-            notifyItemChanged(position);
+                        getDate("spread"),sharedPrefs.getStaffID(),getDate("spread"));
         }else{
             appDatabase.hgActivitiesFlagDao().insert(new HGActivitiesFlag(hgFieldListRecyclerModel.getUnique_field_id(),
                     hg_selected,getDate("spread"),flag, sharedPrefs.getStaffID(),"0",hgFieldListRecyclerModel.getIk_number(),
-                    hgFieldListRecyclerModel.getCrop_type()));
-            appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                    initial_activity,getDate("normal"),sharedPrefs.getStaffRole(),
-                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
-                    hgFieldListRecyclerModel.getIk_number(),hgFieldListRecyclerModel.getCrop_type()));
-            notifyItemChanged(position);
+                    hgFieldListRecyclerModel.getCrop_type(),getDate("spread")));
         }
+        appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                initial_activity,getDate("normal"),sharedPrefs.getStaffRole(),
+                String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
+                hgFieldListRecyclerModel.getIk_number(),hgFieldListRecyclerModel.getCrop_type()));
+        notifyItemChanged(position);
     }
 
     private void locationMismatchedDialog(double latitude,

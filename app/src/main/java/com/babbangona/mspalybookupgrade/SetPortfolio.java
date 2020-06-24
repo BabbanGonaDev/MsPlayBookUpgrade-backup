@@ -159,6 +159,7 @@ public class SetPortfolio extends AppCompatActivity {
 
         Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(SetPortfolio.this);
         main2ActivityMethods.confirmPhoneDate();
+        main2ActivityMethods.confirmLocationOpen();
     }
 
     @OnClick(R.id.fab_download_flags)

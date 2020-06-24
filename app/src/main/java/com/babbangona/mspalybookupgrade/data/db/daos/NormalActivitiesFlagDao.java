@@ -44,14 +44,14 @@ public abstract class NormalActivitiesFlagDao {
     public abstract int countFieldInNormalActivity(String unique_field_id);
 
     @Query("UPDATE normal_activities_flag SET fertilizer_1_status = :flag, fertilizer_1_date = :date," +
-            "staff_id = :staff_id, sync_flag = '0' " +
+            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged " +
             "WHERE unique_field_id = :unique_field_id")
-    public abstract void updateFert1Flag(String unique_field_id, String flag, String date, String staff_id);
+    public abstract void updateFert1Flag(String unique_field_id, String flag, String date, String staff_id, String date_logged);
 
     @Query("UPDATE normal_activities_flag SET fertilizer_2_status = :flag, fertilizer_2_date = :date, " +
-            "staff_id = :staff_id, sync_flag = '0' " +
+            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged " +
             "WHERE unique_field_id = :unique_field_id")
-    public abstract void updateFert2Flag(String unique_field_id, String flag, String date, String staff_id);
+    public abstract void updateFert2Flag(String unique_field_id, String flag, String date, String staff_id, String date_logged);
 
     @Query(" SELECT COUNT(unique_field_id) FROM normal_activities_flag WHERE sync_flag != '1' ")
     public abstract int getUnSyncedNormalActivitiesCount();

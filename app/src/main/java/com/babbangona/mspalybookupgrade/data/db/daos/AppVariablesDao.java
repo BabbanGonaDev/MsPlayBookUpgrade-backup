@@ -17,6 +17,12 @@ public interface AppVariablesDao {
     @Query("SELECT edit_harvest_location_flag FROM app_variables WHERE variable_id = :variable_id")
     String getEditHarvestLocationFlag(String variable_id);
 
+    @Query("SELECT minimum_log_date FROM app_variables WHERE variable_id = :variable_id")
+    String getMinimumLogDate(String variable_id);
+
+    @Query("SELECT maximum_log_date FROM app_variables WHERE variable_id = :variable_id")
+    String getMaximumLogDate(String variable_id);
+
     /**
      * Insert the object in database
      * @param appVariables, object to be inserted

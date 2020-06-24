@@ -15,15 +15,20 @@ import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.RFListDownload;
+import com.babbangona.mspalybookupgrade.network.object.ServerResponse;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface RetrofitInterface {
@@ -93,6 +98,10 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("uploadRFActivitiesRecord")
     Call<List<RFActivitiesUpload>> uploadRFActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
+
+    @Multipart
+    @POST("syncMsPlaybookPicture")
+    Call <ServerResponse> uploadMsPlaybookPicture(@Part MultipartBody.Part file, @Part("file") RequestBody name);
 
     @FormUrlEncoded
     @POST("yourPHPName.php")

@@ -58,6 +58,7 @@ public class GridDetails extends AppCompatActivity {
         toolbar_grid_details.setNavigationOnClickListener(v -> loadPreviousActivity());
         Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(GridDetails.this);
         main2ActivityMethods.confirmPhoneDate();
+        main2ActivityMethods.confirmLocationOpen();
 
     }
 

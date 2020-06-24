@@ -15,6 +15,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -115,6 +116,7 @@ public class Homepage extends AppCompatActivity {
         displayUserDetails();
         checkActivityListForSyncDialog();
         confirmPhoneDate();
+        confirmLocationOpen();
         mHandler = new Handler();
         runOnUiThread(this::initActivitiesRecycler);
         pd = new ProgressDialog(Homepage.this);
@@ -352,6 +354,32 @@ public class Homepage extends AppCompatActivity {
                     .setCancelable(false)
                     .setPositiveButton(getResources().getString(R.string.change_date), (dialogInterface, i) -> {
                         startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
+                    }).show();
+        }
+    }
+
+    public void confirmLocationOpen(){
+        LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            if (lm != null) {
+                gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+
+        if(!gps_enabled ) {
+            // notify user
+            new MaterialAlertDialogBuilder(Homepage.this)
+                    .setIcon(getResources().getDrawable(R.drawable.ic_location_signs))
+                    .setTitle(getResources().getString(R.string.location_off_title))
+                    .setMessage(getResources().getString(R.string.location_off_msg))
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.turn_location_on), (dialogInterface, i) -> {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }).show();
         }
     }

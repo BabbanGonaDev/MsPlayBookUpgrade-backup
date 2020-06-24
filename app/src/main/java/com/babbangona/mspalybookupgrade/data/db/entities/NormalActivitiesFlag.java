@@ -42,10 +42,14 @@ public class NormalActivitiesFlag {
     @ColumnInfo(name = DatabaseStringConstants.COL_CC_HARVEST)
     private String cc_harvest;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_DATE_LOGGED_NORMAL)
+    private String date_logged;
+
     public NormalActivitiesFlag(@NonNull String unique_field_id, String fertilizer_1_status,
                                 String fertilizer_1_date, String fertilizer_2_status,
                                 String fertilizer_2_date, String staff_id, String sync_flag,
-                                String ik_number, String crop_type, String cc_harvest) {
+                                String ik_number, String crop_type, String cc_harvest,
+                                String date_logged) {
         this.unique_field_id = unique_field_id;
         this.fertilizer_1_status = fertilizer_1_status;
         this.fertilizer_1_date = fertilizer_1_date;
@@ -56,6 +60,7 @@ public class NormalActivitiesFlag {
         this.ik_number = ik_number;
         this.crop_type = crop_type;
         this.cc_harvest = cc_harvest;
+        this.date_logged = date_logged;
     }
 
     @NonNull
@@ -137,5 +142,13 @@ public class NormalActivitiesFlag {
 
     public void setCc_harvest(String cc_harvest) {
         this.cc_harvest = cc_harvest;
+    }
+
+    public String getDate_logged() {
+        return date_logged;
+    }
+
+    public void setDate_logged(String date_logged) {
+        this.date_logged = date_logged;
     }
 }

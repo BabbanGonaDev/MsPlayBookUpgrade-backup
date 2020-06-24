@@ -38,9 +38,12 @@ public class HGActivitiesFlag {
     @ColumnInfo(name = DatabaseStringConstants.COL_CROP_TYPE_HG_ACTIVITIES)
     private String crop_type;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_DATE_LOGGED_HG)
+    private String date_logged;
+
     public HGActivitiesFlag(@NonNull String unique_field_id, @NonNull String hg_type, String hg_date,
                             String hg_status, String staff_id, String sync_flag, String ik_number,
-                            String crop_type) {
+                            String crop_type, String date_logged) {
         this.unique_field_id = unique_field_id;
         this.hg_type = hg_type;
         this.hg_date = hg_date;
@@ -49,6 +52,7 @@ public class HGActivitiesFlag {
         this.sync_flag = sync_flag;
         this.ik_number = ik_number;
         this.crop_type = crop_type;
+        this.date_logged = date_logged;
     }
 
     @NonNull
@@ -115,5 +119,13 @@ public class HGActivitiesFlag {
 
     public void setCrop_type(String crop_type) {
         this.crop_type = crop_type;
+    }
+
+    public String getDate_logged() {
+        return date_logged;
+    }
+
+    public void setDate_logged(String date_logged) {
+        this.date_logged = date_logged;
     }
 }

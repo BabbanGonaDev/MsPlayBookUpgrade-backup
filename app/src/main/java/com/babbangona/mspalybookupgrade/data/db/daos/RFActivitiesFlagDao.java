@@ -34,9 +34,10 @@ public abstract class RFActivitiesFlagDao {
     public abstract int countFieldSpecificRFActivity(String unique_field_id, String hg_type);
 
     @Query("UPDATE rf_activities_flag SET rf_status = :status, rf_date = :date," +
-            "staff_id = :staff_id, sync_flag = '0' " +
+            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged " +
             "WHERE unique_field_id = :unique_field_id AND rf_type = :rf_type")
-    public abstract void updateRFFlag(String unique_field_id, String rf_type, String status, String date, String staff_id);
+    public abstract void updateRFFlag(String unique_field_id, String rf_type, String status,
+                                      String date, String staff_id, String date_logged);
 
     @Query("SELECT rf_type FROM rf_activities_flag WHERE unique_field_id = :unique_field_id AND rf_status != '0'")
     public abstract List<String> getAllFieldRFs(String unique_field_id);

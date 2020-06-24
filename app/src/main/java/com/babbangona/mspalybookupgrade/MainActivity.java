@@ -43,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
         addDataToDatabase();
         Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(MainActivity.this);
         main2ActivityMethods.confirmPhoneDate();
+        main2ActivityMethods.confirmLocationOpen();
         UXCam.startWithKey("l5h2x6r7c5j34t5");
+        UXCam.setUserIdentity(new SharedPrefs(getApplicationContext()).getStaffID());
     }
 
     @OnClick(R.id.btn_open_access_control)

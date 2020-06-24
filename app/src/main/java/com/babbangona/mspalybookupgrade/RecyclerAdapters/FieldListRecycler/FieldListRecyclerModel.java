@@ -30,6 +30,9 @@ public class FieldListRecyclerModel {
 
     private String crop_type;
 
+    public FieldListRecyclerModel() {
+    }
+
     public FieldListRecyclerModel(String unique_field_id, String fertilizer_1_status, String fertilizer_2_status,
                                   String field_r_id, String member_name, String phone_number, String village_name,
                                   String min_lat, String max_lat, String min_lng, String max_lng, String field_size,

@@ -284,7 +284,7 @@ public class HarvestCollectionCenter extends AppCompatActivity {
                 appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(unique_field_id,
                         "0","0000-00-00","0","0000-00-00",
                         sharedPrefs.getStaffID(),"0",sharedPrefs.getKeyHarvestCcIkNumber(),
-                        sharedPrefs.getKeyHarvestCcCropType(),location_id));
+                        sharedPrefs.getKeyHarvestCcCropType(),location_id,"0000-00-00"));
             }
             flag = "1";
         } catch (Exception e) {

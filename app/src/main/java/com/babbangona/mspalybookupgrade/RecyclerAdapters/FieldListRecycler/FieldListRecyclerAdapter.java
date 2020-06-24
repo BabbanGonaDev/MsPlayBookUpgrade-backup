@@ -20,16 +20,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.babbangona.mspalybookupgrade.HarvestCollectionCenter;
 import com.babbangona.mspalybookupgrade.R;
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.HGFieldListRecycler.HGFieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.CustomDialogFragment;
+import com.babbangona.mspalybookupgrade.utils.CustomDialogFragmentFertilizer;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -83,6 +89,9 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
 
         @BindView(R.id.tv_field_r_id)
         TextView tv_field_r_id;
+
+        @BindView(R.id.tv_member_r_id)
+        TextView tv_member_r_id;
 
         @BindView(R.id.tv_member_name)
         TextView tv_member_name;
@@ -143,6 +152,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
             String field_size = context.getResources().getString(R.string.field_size) +" "+ fieldListRecyclerModel.getField_size();
             String village = context.getResources().getString(R.string.member_village) +" "+ fieldListRecyclerModel.getVillage_name();
             String crop_type = context.getResources().getString(R.string.member_crop_type) +" "+ fieldListRecyclerModel.getCrop_type();
+            String member_r_id = context.getResources().getString(R.string.member_r_id) +" "+ fieldListRecyclerModel.getField_r_id();
             String latitude = "Lat.: " + (Double.parseDouble(fieldListRecyclerModel.getMin_lat())+Double.parseDouble(fieldListRecyclerModel.getMax_lat()))/2;
             String longitude = "Long.: " + (Double.parseDouble(fieldListRecyclerModel.getMin_lng())+Double.parseDouble(fieldListRecyclerModel.getMax_lng()))/2;
             String harvest_cc = context.getResources().getString(R.string.bottom_sheet_cc_center) +" "+ getHarvestCollectionCenter(fieldListRecyclerModel.getUnique_field_id());
@@ -155,6 +165,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
             tv_crop_type.setText(crop_type);
             tv_latitude.setText(latitude);
             tv_longitude.setText(longitude);
+            tv_member_r_id.setText(member_r_id);
             tv_harvest_cc.setText(harvest_cc);
             String activity_status = getStatus(fieldListRecyclerModel,btn_log_activity,iv_activity_signal);
             btn_log_activity.setOnClickListener(v -> logActivity(fieldListRecyclerModel,activity_status,context,getAdapterPosition(),"activity"));
@@ -286,10 +297,28 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
                                    String module, int position, double latitude, double longitude) {
             MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
             if (module.equalsIgnoreCase("update")){
-                showUpdateDialog(builder,message,context,fieldListRecyclerModel,position, latitude,longitude);
+                showDialog(fieldListRecyclerModel);
             }else if (module.equalsIgnoreCase("reset")){
                 showResetDialog(builder,message,context,fieldListRecyclerModel,position, latitude, longitude);
             }
+        }
+
+
+
+        public void showDialog(FieldListRecyclerModel fieldListRecyclerModel) {
+            sharedPrefs.setKeyFieldModel(fieldListRecyclerModel);
+
+            FragmentManager fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
+            CustomDialogFragmentFertilizer newFragment = new CustomDialogFragmentFertilizer();
+
+            // The device is smaller, so show the fragment fullscreen
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            // For a little polish, specify a transition animation
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            // To make it fullscreen, use the 'content' root view as the container
+            // for the fragment, which is always the root view for the activity
+            transaction.add(android.R.id.content, newFragment)
+                    .addToBackStack("").commit();
         }
 
         private void editHarvestLocation(Context context, FieldListRecyclerModel fieldListRecyclerModel){
@@ -335,7 +364,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
             if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("1")){
                 if (field_existence > 0){
                     appDatabase.normalActivitiesFlagDao().updateFert1Flag(fieldListRecyclerModel.getUnique_field_id(),"1",
-                            getDate("spread"),sharedPrefs.getStaffID());
+                            getDate("spread"),sharedPrefs.getStaffID(),getDate("spread"));
                     appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                             "Log Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
                             String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
@@ -346,7 +375,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
                     appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
                             "1",getDate("spread"),"0","0000-00-00",
                             sharedPrefs.getStaffID(),"0",fieldListRecyclerModel.getIk_number(),
-                            fieldListRecyclerModel.getCrop_type(),"0"));
+                            fieldListRecyclerModel.getCrop_type(),"0",getDate("spread")));
                     appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                             "Log Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
                             String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
@@ -358,7 +387,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
             }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
                 if (field_existence > 0){
                     appDatabase.normalActivitiesFlagDao().updateFert2Flag(fieldListRecyclerModel.getUnique_field_id(),"1",
-                            getDate("spread"),sharedPrefs.getStaffID());
+                            getDate("spread"),sharedPrefs.getStaffID(),getDate("spread"));
                     appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                             "Log Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
                             String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
@@ -369,7 +398,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
                     appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
                             "0","0000-00-00","1",getDate("spread"),
                             sharedPrefs.getStaffID(),"0",fieldListRecyclerModel.getIk_number(),
-                            fieldListRecyclerModel.getCrop_type(),"0"));
+                            fieldListRecyclerModel.getCrop_type(),"0",getDate("spread")));
                     appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                             "Log Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
                             String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
@@ -425,7 +454,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
             if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("1")){
                 if (field_existence > 0){
                     appDatabase.normalActivitiesFlagDao().updateFert1Flag(fieldListRecyclerModel.getUnique_field_id(),"0",
-                            getDate("spread"),sharedPrefs.getStaffID());
+                            getDate("spread"),sharedPrefs.getStaffID(),getDate("spread"));
                     appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                             "Reset Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
                             String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
@@ -436,7 +465,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
                     appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
                             "0",getDate("spread"),"0","0000-00-00",
                             sharedPrefs.getStaffID(),"0",fieldListRecyclerModel.getIk_number(),
-                            fieldListRecyclerModel.getCrop_type(),"0"));
+                            fieldListRecyclerModel.getCrop_type(),"0",getDate("spread")));
                     appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                             "Reset Fertilizer 1",getDate("normal"),sharedPrefs.getStaffRole(),
                             String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
@@ -447,7 +476,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
             }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
                 if (field_existence > 0){
                     appDatabase.normalActivitiesFlagDao().updateFert2Flag(fieldListRecyclerModel.getUnique_field_id(),"0",
-                            getDate("spread"),sharedPrefs.getStaffID());
+                            getDate("spread"),sharedPrefs.getStaffID(),getDate("spread"));
                     appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                             "Reset Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
                             String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
@@ -458,7 +487,7 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
                     appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
                             "0","0000-00-00","0",getDate("spread"),
                             sharedPrefs.getStaffID(),"0",fieldListRecyclerModel.getIk_number(),
-                            fieldListRecyclerModel.getCrop_type(),"0"));
+                            fieldListRecyclerModel.getCrop_type(),"0",getDate("spread")));
                     appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                             "Reset Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
                             String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
