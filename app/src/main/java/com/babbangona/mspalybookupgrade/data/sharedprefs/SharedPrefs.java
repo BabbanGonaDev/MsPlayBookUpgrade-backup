@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.HGFieldListRecycler.HGFieldListRecyclerModel;
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.PWSFieldListRecycler.PWSFieldListRecyclerModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -69,11 +70,51 @@ public class SharedPrefs {
     public static final String KEY_FIELD_MODEL                      = "field_model";
     public static final String KEY_IMAGE_CAPTURE_FLAG               = "image_capture_flag";
 
+    public static final String KEY_PWS_FIELD_MODEL                  = "PWS_list";
+    public static final String KEY_ADAPTER_OFFSET_PWS_LIST          = "adapter_offset_pws";
+    public static final String KEY_PWS_CAPTURE_LIST                 = "pws_capture_list";
+
+    public static final String KEY_PWS_ID                           = "pws_id";
+    public static final String KEY_PWS_VIEW_ROLE                    = "pws_view_role";
+    public static final String KEY_PC_PWS_HOME_STAFF_ID             = "pc_pws_home_staff_id";
+
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyPcPwsHomeStaffId(String pc_pws_home_staff_id){
+
+        editor.putString(KEY_PC_PWS_HOME_STAFF_ID, pc_pws_home_staff_id);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeyPWSViewRole(String pws_view_role){
+
+        editor.putString(KEY_PWS_VIEW_ROLE, pws_view_role);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeyPwsId(String pws_id){
+
+        editor.putString(KEY_PWS_ID, pws_id);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeyPWSCaptureList(Set<String> pws_capture_list){
+
+        editor.putStringSet(KEY_PWS_CAPTURE_LIST, pws_capture_list);
+
+        // commit changes
+        editor.commit();
     }
 
     public void setKeyImageCaptureFlag(String image_capture_flag){
@@ -99,6 +140,16 @@ public class SharedPrefs {
         String json = gson.toJson(hgFieldListRecyclerModel);
         // Storing model in pref
         editor.putString(KEY_HG_FIELD_MODEL, json);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeyPWSFieldModel(PWSFieldListRecyclerModel pwsFieldListRecyclerModel){
+        Gson gson = new Gson();
+        String json = gson.toJson(pwsFieldListRecyclerModel);
+        // Storing model in pref
+        editor.putString(KEY_PWS_FIELD_MODEL, json);
 
         // commit changes
         editor.commit();
@@ -175,6 +226,15 @@ public class SharedPrefs {
     public void setKeyAdapterOffset1(int offset){
         // Storing role in pref
         editor.putInt(KEY_ADAPTER_OFFSET_1, offset);
+
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeyAdapterOffsetPwsList(int offset){
+        // Storing role in pref
+        editor.putInt(KEY_ADAPTER_OFFSET_PWS_LIST, offset);
 
 
         // commit changes
@@ -367,6 +427,7 @@ public class SharedPrefs {
         String json = pref.getString(KEY_HG_FIELD_MODEL, "");
         return gson.fromJson(json, HGFieldListRecyclerModel.class);
     }
+
     public FieldListRecyclerModel getKeyFieldModel() {
         Gson gson = new Gson();
         String json = pref.getString(KEY_FIELD_MODEL, "");
@@ -377,6 +438,32 @@ public class SharedPrefs {
         return pref.getString(KEY_IMAGE_CAPTURE_FLAG,"0");
     }
 
+    public PWSFieldListRecyclerModel getKeyPWSFieldModel() {
+        Gson gson = new Gson();
+        String json = pref.getString(KEY_PWS_FIELD_MODEL, "");
+        return gson.fromJson(json, PWSFieldListRecyclerModel.class);
+    }
 
+    public int getKeyAdapterOffsetPWSList(){
+        return pref.getInt(KEY_ADAPTER_OFFSET_PWS_LIST ,0);
+    }
 
+    public Set<String> getKeyPwsCaptureList() {
+        return pref.getStringSet(KEY_PWS_CAPTURE_LIST, new HashSet<>());
+    }
+
+    public String getKeyPwsId() {
+        return pref.getString(KEY_PWS_ID,"0");
+
+    }
+
+    public String getKeyPwsViewRole() {
+        return pref.getString(KEY_PWS_VIEW_ROLE,"mik");
+
+    }
+
+    public String getKeyPcPwsHomeStaffId() {
+        return pref.getString(KEY_PC_PWS_HOME_STAFF_ID,"nada");
+
+    }
 }

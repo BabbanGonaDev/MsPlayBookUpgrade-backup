@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.network;
 
+import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
 import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
@@ -12,6 +13,11 @@ import com.babbangona.mspalybookupgrade.network.object.LogsUpload;
 import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
 import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.PCPWSActivitiesFlagDownload;
+import com.babbangona.mspalybookupgrade.network.object.PCPWSActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.PWSActivitiesFlagDownload;
+import com.babbangona.mspalybookupgrade.network.object.PWSActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.PWSCategoryListDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.RFListDownload;
@@ -102,6 +108,27 @@ public interface RetrofitInterface {
     @Multipart
     @POST("syncMsPlaybookPicture")
     Call <ServerResponse> uploadMsPlaybookPicture(@Part MultipartBody.Part file, @Part("file") RequestBody name);
+
+    @GET("downloadPWSCategoryList")
+    Call<PWSCategoryListDownload> getPWSCategoryList(@Query("last_synced_time") String last_synced_time);
+
+    @FormUrlEncoded
+    @POST("uploadPWSActivitiesRecord")
+    Call<List<PWSActivitiesUpload>> uploadPWSActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
+
+    @FormUrlEncoded
+    @POST("uploadPCPWSActivitiesRecord")
+    Call<List<PCPWSActivitiesUpload>> uploadPCPWSActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
+
+    @GET("downloadPWSActivityFlag")
+    Call<PWSActivitiesFlagDownload> downloadPWSActivityFlag(@Query("staff_id") String staff_id,
+                                                            @Query("portfolio_list") String portfolio_list,
+                                                            @Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadPCPWSActivityFlag")
+    Call<PCPWSActivitiesFlagDownload> downloadPCPWSActivityFlag(@Query("staff_id") String staff_id,
+                                                              @Query("portfolio_list") String portfolio_list,
+                                                              @Query("last_synced_time") String last_synced_time);
 
     @FormUrlEncoded
     @POST("yourPHPName.php")

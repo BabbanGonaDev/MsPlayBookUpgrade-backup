@@ -6,7 +6,9 @@ import androidx.room.Entity;
 
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 
-@Entity(primaryKeys = {DatabaseStringConstants.COL_ACTIVITY_ID,DatabaseStringConstants.COL_LANGUAGE_ID},
+@Entity(primaryKeys = {DatabaseStringConstants.COL_ACTIVITY_ID,
+        DatabaseStringConstants.COL_LANGUAGE_ID,
+        DatabaseStringConstants.COL_USER_CATEGORY},
         tableName = DatabaseStringConstants.ACTIVITY_LIST_TABLE)
 public class ActivityList {
 
@@ -28,14 +30,15 @@ public class ActivityList {
     private String activity_priority;
 
     @ColumnInfo(name = DatabaseStringConstants.COL_USER_CATEGORY)
+    @NonNull
     private String user_category;
 
     @ColumnInfo(name = DatabaseStringConstants.COL_DEACTIVATED)
     private String deactivated;
 
-    public ActivityList(@NonNull String activity_id, @NonNull String language_id,
-                        String activity_name, String activity_destination,
-                        String activity_priority, String user_category, String deactivated) {
+    public ActivityList(@NonNull String activity_id, @NonNull String language_id, String activity_name,
+                        String activity_destination, String activity_priority, @NonNull String user_category,
+                        String deactivated) {
         this.activity_id = activity_id;
         this.language_id = language_id;
         this.activity_name = activity_name;
@@ -87,11 +90,12 @@ public class ActivityList {
         this.activity_priority = activity_priority;
     }
 
+    @NonNull
     public String getUser_category() {
         return user_category;
     }
 
-    public void setUser_category(String user_category) {
+    public void setUser_category(@NonNull String user_category) {
         this.user_category = user_category;
     }
 

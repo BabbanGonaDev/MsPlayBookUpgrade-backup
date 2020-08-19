@@ -19,6 +19,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
@@ -102,6 +103,8 @@ public class Homepage extends AppCompatActivity {
 
     Handler mHandler;
 
+    CountDownTimer timer = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +123,7 @@ public class Homepage extends AppCompatActivity {
         mHandler = new Handler();
         runOnUiThread(this::initActivitiesRecycler);
         pd = new ProgressDialog(Homepage.this);
+        sharedPrefs.setKeyProgressDialogStatus(1);
         startRepeatingTask();
     }
 
@@ -279,15 +283,17 @@ public class Homepage extends AppCompatActivity {
     }
 
     void syncRecords() {
-        if (getCategory().equalsIgnoreCase("supr")){
+        if (!getCategory().equalsIgnoreCase("subd")){
             if (sharedPrefs.getKeyPortfolioList().isEmpty()){
                 Toast.makeText(this, getResources().getString(R.string.set_portfolio_before_sync), Toast.LENGTH_SHORT).show();
             }else{
                 Intent i = new Intent(this, ActivityListDownloadService.class);
+                exitProgressDialog();
                 this.startService(i);
             }
         }else{
             Intent i = new Intent(this, ActivityListDownloadService.class);
+            exitProgressDialog();
             this.startService(i);
         }
     }
@@ -296,7 +302,7 @@ public class Homepage extends AppCompatActivity {
 
         appDatabase
                 .activityListDao()
-                .getAllActivityList(sharedPrefs.getKeyAppLanguage(),"%"+getCategory()+"%")
+                .getAllActivityList(sharedPrefs.getKeyAppLanguage(),sharedPrefs.getStaffRole().toLowerCase())
                 .observe(this,activityLists -> {
                     activityListAdapter = new ActivityListAdapter(main2ActivityMethods.composingRecyclerList(activityLists), Homepage.this);
                     RecyclerView.LayoutManager aLayoutManager = new LinearLayoutManager(Homepage.this);
@@ -353,6 +359,7 @@ public class Homepage extends AppCompatActivity {
                     .setMessage(getResources().getString(R.string.wrong_date_msg))
                     .setCancelable(false)
                     .setPositiveButton(getResources().getString(R.string.change_date), (dialogInterface, i) -> {
+                        cancelTimer();
                         startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
                     }).show();
         }
@@ -379,6 +386,7 @@ public class Homepage extends AppCompatActivity {
                     .setMessage(getResources().getString(R.string.location_off_msg))
                     .setCancelable(false)
                     .setPositiveButton(getResources().getString(R.string.turn_location_on), (dialogInterface, i) -> {
+                        cancelTimer();
                         startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }).show();
         }
@@ -406,6 +414,7 @@ public class Homepage extends AppCompatActivity {
             Intent homeScreenIntent = new Intent(Intent.ACTION_MAIN);
             homeScreenIntent.addCategory(Intent.CATEGORY_HOME);
             homeScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            cancelTimer();
             startActivity(homeScreenIntent);
         }else{
             this.doubleBackToExitPressedOnce = true;
@@ -472,6 +481,26 @@ public class Homepage extends AppCompatActivity {
     }
 
     void openSyncSummary(){
+        cancelTimer();
         startActivity(new Intent(this, SyncSummary.class));
+    }
+
+    //start timer
+    void exitProgressDialog(){
+        timer = new CountDownTimer(300000, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+            public void onFinish() {
+                //change the stuff here.
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+        };
+        timer.start();
+    }
+
+    //cancel timer
+    void cancelTimer() {
+        if(timer!=null)
+            timer.cancel();
     }
 }

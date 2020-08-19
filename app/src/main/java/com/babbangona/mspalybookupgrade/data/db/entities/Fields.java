@@ -1,5 +1,7 @@
 package com.babbangona.mspalybookupgrade.data.db.entities;
 
+import android.content.ContentValues;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -49,6 +51,9 @@ public class Fields {
 
     @ColumnInfo(name = DatabaseStringConstants.COL_CROP_TYPE_FIELDS)
     private String crop_type;
+
+    public Fields() {
+    }
 
     public Fields(@NonNull String unique_field_id, String unique_member_id, String field_size,
                   String staff_id, String middle, String min_lat, String max_lat, String min_lng,
@@ -162,5 +167,59 @@ public class Fields {
 
     public void setCrop_type(String crop_type) {
         this.crop_type = crop_type;
+    }
+
+    public static Fields fromContentValues(ContentValues contentValues) {
+
+        Fields fields = new Fields();
+        if (contentValues.containsKey(DatabaseStringConstants.COL_UNIQUE_FIELD_ID_FIELDS)) {
+            fields.setUnique_field_id(contentValues.getAsString(DatabaseStringConstants.COL_UNIQUE_FIELD_ID_FIELDS));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_UNIQUE_MEMBER_ID)) {
+            fields.setUnique_member_id(contentValues.getAsString(DatabaseStringConstants.COL_UNIQUE_MEMBER_ID));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_FIELD_SIZE)) {
+            fields.setField_size(contentValues.getAsString(DatabaseStringConstants.COL_FIELD_SIZE));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_STAFF_ID_FIELDS)) {
+            fields.setStaff_id(contentValues.getAsString(DatabaseStringConstants.COL_STAFF_ID_FIELDS));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_MIDDLE)) {
+            fields.setMiddle(contentValues.getAsString(DatabaseStringConstants.COL_MIDDLE));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_MIN_LAT)) {
+            fields.setMin_lat(contentValues.getAsString(DatabaseStringConstants.COL_MIN_LAT));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_MAX_LAT)) {
+            fields.setMax_lat(contentValues.getAsString(DatabaseStringConstants.COL_MAX_LAT));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_MIN_LNG)) {
+            fields.setMin_lng(contentValues.getAsString(DatabaseStringConstants.COL_MIN_LNG));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_MAX_LNG)) {
+            fields.setMax_lng(contentValues.getAsString(DatabaseStringConstants.COL_MAX_LNG));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_DEACTIVATE)) {
+            fields.setDeactivate(contentValues.getAsString(DatabaseStringConstants.COL_DEACTIVATE));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_MSS)) {
+            fields.setMss(contentValues.getAsString(DatabaseStringConstants.COL_MSS));
+        }
+
+        if (contentValues.containsKey(DatabaseStringConstants.COL_CROP_TYPE_FIELDS)) {
+            fields.setCrop_type(contentValues.getAsString(DatabaseStringConstants.COL_CROP_TYPE_FIELDS));
+        }
+
+        return fields;
     }
 }

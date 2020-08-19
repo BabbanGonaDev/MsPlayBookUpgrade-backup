@@ -109,6 +109,30 @@ public interface LastSyncTableDao {
     @Query("UPDATE last_sync SET last_sync_down_rf_activities_flag =:last_sync_down_rf_activities_flag WHERE staff_id = :staff_id")
     void updateLastSyncDownRFActivitiesFlag(String staff_id, String last_sync_down_rf_activities_flag);
 
+    @Query("SELECT last_sync_pws_category_list FROM last_sync WHERE staff_id = :staff_id")
+    String getLastSyncPWSCategoryList(String staff_id);
+
+    @Query("UPDATE last_sync SET last_sync_pws_category_list =:last_sync_pws_category_list WHERE staff_id = :staff_id")
+    void updateLastSyncPWSCategoryList(String staff_id, String last_sync_pws_category_list);
+
+    @Query("UPDATE last_sync SET last_sync_up_pws_activities_flag =:last_sync_up_pws_activities_flag WHERE staff_id = :staff_id")
+    void updateLastSyncUpPWSActivitiesFlag(String staff_id, String last_sync_up_pws_activities_flag);
+
+    @Query("SELECT last_sync_down_pws_activities_flag FROM last_sync WHERE staff_id = :staff_id")
+    String getLastSyncDownPWSActivitiesFlag(String staff_id);
+
+    @Query("UPDATE last_sync SET last_sync_down_pws_activities_flag =:last_sync_down_pws_activities_flag WHERE staff_id = :staff_id")
+    void updateLastSyncDownPWSActivitiesFlag(String staff_id, String last_sync_down_pws_activities_flag);
+
+    @Query("UPDATE last_sync SET last_sync_up_pc_pws_activities_flag =:last_sync_up_pc_pws_activities_flag WHERE staff_id = :staff_id")
+    void updateLastSyncUpPCPWSActivitiesFlag(String staff_id, String last_sync_up_pc_pws_activities_flag);
+
+    @Query("SELECT last_sync_down_pc_pws_activities_flag FROM last_sync WHERE staff_id = :staff_id")
+    String getLastSyncDownPCPWSActivitiesFlag(String staff_id);
+
+    @Query("UPDATE last_sync SET last_sync_down_pc_pws_activities_flag =:last_sync_down_pc_pws_activities_flag WHERE staff_id = :staff_id")
+    void updateLastSyncDownPCPWSActivitiesFlag(String staff_id, String last_sync_down_pc_pws_activities_flag);
+
     /**
      * Insert the object in database
      * @param lastSyncTable, object to be inserted

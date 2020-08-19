@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="5dp"
+    android:translationZ="5dp"
+    app:cardCornerRadius="@dimen/dimen_10dp"
+    app:cardPreventCornerOverlap="true"
+    android:id="@+id/pc_staff_pws_list_container"
+    android:clickable="true"
+    android:focusable="true"
+    android:checkable="true"
+    app:cardElevation="@dimen/dimen_10dp"
+    android:layout_margin="@dimen/dimen_10dp">
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="vertical">
+
+         <!-- Title, secondary and supporting text -->
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="10dp"
+             android:layout_marginLeft="10dp"
+             android:layout_marginRight="10dp"
+             android:id="@+id/tv_staff_id"
+             android:text="@string/staff_id"
+             android:textAppearance="?attr/textAppearanceHeadline6" />
+
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/tv_staff_name"
+             android:layout_marginTop="@dimen/dimen_5dp"
+             android:layout_marginLeft="10dp"
+             android:layout_marginRight="10dp"
+             android:text="@string/staff_name"
+             android:textAppearance="?attr/textAppearanceBody2"
+             android:textColor="?android:attr/textColorSecondary" />
+
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/tv_unreviewed_claims"
+             android:layout_marginTop="@dimen/dimen_5dp"
+             android:layout_marginLeft="10dp"
+             android:layout_marginRight="10dp"
+             android:text="@string/no_unreviewed_claims"
+             android:textAppearance="?attr/textAppearanceBody2"
+             android:textColor="?android:attr/textColorSecondary" />
+
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/tv_total_claims"
+             android:layout_marginTop="@dimen/dimen_5dp"
+             android:layout_marginLeft="10dp"
+             android:layout_marginRight="10dp"
+             android:text="@string/no_total_claims"
+             android:textAppearance="?attr/textAppearanceBody2"
+             android:textColor="?android:attr/textColorSecondary" />
+
+         <com.google.android.material.button.MaterialButton
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/btn_phone_call"
+             android:layout_gravity="end"
+             app:icon="@drawable/ic_communications"
+             style="@style/Widget.App.Button.OutlinedButton.IconOnly"/>
+
+        </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

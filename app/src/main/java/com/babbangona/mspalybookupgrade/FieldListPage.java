@@ -220,7 +220,7 @@ public class FieldListPage extends AppCompatActivity {
         VerticalSpaceItemDecoration verticalSpaceItemDecoration = new VerticalSpaceItemDecoration(smallPadding);
         recycler_view.addItemDecoration(verticalSpaceItemDecoration);
         recycler_view.setLayoutManager(layoutManager);
-        fieldListPageListModelClass.fieldListRecyclerModel.observe(this,fieldListRecyclerAdapter::submitList);
+        //fieldListPageListModelClass.fieldListRecyclerModel.observe(this,fieldListRecyclerAdapter::submitList);
 
         fieldListPageListModelClass.fieldListRecyclerModel.observe(this,fieldListRecyclerModel -> {
 

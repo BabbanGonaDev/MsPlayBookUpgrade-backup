@@ -14,6 +14,7 @@
     <string name="out_of">out of</string>
     <string name="sentence_close">fields.)</string>
     <string name="sentence_close_hg">fields have HGs.)</string>
+    <string name="sentence_close_pws">have been affected by poor weather.)</string>
     <string name="set_portfolio">This activity allow supervisors select staff under their portfolio</string>
     <string name="strange_activity">Please contact your supervisors before using this activity</string>
     <string name="downloading_data">Downloading Data</string>
@@ -24,9 +25,11 @@
     <string name="all_staff">All Staff</string>
     <string name="added_staff">Added Staff</string>
     <string name="set_portfolio_title">Set Portfolio</string>
+    <string name="pws_title">Poor Weather Support</string>
     <string name="fert_1_title">Fertilizer 1</string>
     <string name="fert_2_title">Fertilizer 2</string>
     <string name="HG_title">HG Log</string>
+    <string name="poor_weather_support_title">Poor Weather Support</string>
     <string name="download_staff_list">Download Staff List</string>
     <string name="home_place_holder">Home</string>
     <string name="search_button">Search</string>
@@ -58,6 +61,7 @@
     <string name="contact_member">Member Contact</string>
     <string name="hg_list_header">HG LIST</string>
     <string name="rf_list_header">RF LIST</string>
+    <string name="pws_list_header">POOR WEATHER SUPPORT CLAIM LIST</string>
     <string name="select_valid_hg">Please select a valid HG activity</string>
     <string name="hg_autocomplete_hint">Enter HG or Solve</string>
     <string name="hg_button_text">Update HG List</string>
@@ -89,8 +93,10 @@
     <string name="location_off_msg">Phone location Disabled. Kindly enable location in order to use this application.</string>
     <string name="show_all_hgs">SHOW ALL HGs</string>
     <string name="show_all_rfs">SHOW ALL RFs</string>
+    <string name="show_all_pws">SHOW ALL PWS Claims</string>
     <string name="hide_all_hgs">HIDE ALL HGs</string>
     <string name="hide_all_rfs">HIDE ALL RFs</string>
+    <string name="hide_all_pws">HIDE ALL PWS Claims</string>
     <string name="solve_hg_message_2">for this field?</string>
     <string name="solve_hg_message_1_2">Do you want to confirm solving this</string>
     <string name="solve_hg_message_1_1">Do you want to solve this</string>
@@ -100,6 +106,7 @@
     <string name="error_solve_hg">You cannot solve this HG</string>
     <string name="sync_summary_title">Sync Summary</string>
     <string name="hg_field_list_title">Field List (HG)</string>
+    <string name="pws_field_list_title">Field List (P.W.S.)</string>
     <string name="field_list_title">Field List</string>
     <string name="bottom_sheet_state">State:</string>
     <string name="bottom_sheet_lga">LGA:</string>
@@ -126,9 +133,11 @@
     <string name="select_rf_type">Select RF Type</string>
     <string name="select_hg_sub_type">Select HG Sub Types</string>
     <string name="log_hg_activity">Log/Solve HG Activity</string>
+    <string name="log_pws_activity">Log PWS Activity</string>
     <string name="log_rf_activity">Log/Solve RF Activity</string>
     <string name="log_solve_hg">Log/Solve HG</string>
     <string name="log_solve_rf">Log/Solve RF</string>
+    <string name="pws_summary">Poor Weather Support Summary</string>
     <string name="error_message_hg_type">Please select HG type</string>
     <string name="error_message_rf_type">Please select RF type</string>
     <string name="error_message_hg_sub_type">Please select HG sub type</string>
@@ -137,6 +146,57 @@
     <string name="error_message_enter_date">Please enter date</string>
     <string name="error_message_confirm_date">Please confirm entered date</string>
     <string name="error_date_abnormal">Please date should be within 15th of May and 15th of August and not greater than today</string>
+    <string name="error_date_mismatch">Confirm activity date mismatch</string>
     <string name="take_picture">Take Picture</string>
     <string name="take_location_picture">You are close to the field location, please take picture of the field</string>
+    <string name="pws_id">PWS ID</string>
+    <string name="claim_category">Claim Category:</string>
+    <string name="pws_size">PWS Size:</string>
+    <string name="pws_date_logged">Date Logged:</string>
+    <string name="pws_date_reviewed">Date Reviewed:</string>
+    <string name="pws_no_issues_found">No Issues Found</string>
+    <string name="pws_take_picture_preamble">Please click on capture to take 4 clear pictures of the affected area from different angles</string>
+    <string name="pws_log_picture1">Picture 1.jpg</string>
+    <string name="pws_log_picture2">Picture 2.jpg</string>
+    <string name="pws_log_picture3">Picture 3.jpg</string>
+    <string name="pws_log_picture4">Picture 4.jpg</string>
+    <string name="pws_log_capture">CAPTURE</string>
+    <string name="pws_map_area">MAP</string>
+    <string name="pws_mapped_area">X.XX HA</string>
+    <string name="mik_claim_description">Claim Description</string>
+    <string name="pws_submit">SUBMIT CLAIM</string>
+    <string name="select_pws_category">Category</string>
+    <string name="error_message_pws_category">Poor weather support category empty</string>
+    <string name="endMap">End Mapping Session</string>
+    <string name="mappingField">Mapping Field</string>
+    <string name="endMapSession">End mapping session</string>
+    <string name="theFieldA">The field you mapped has an area of</string>
+    <string name="theFieldA2">  hectares.</string>
+    <string name="saveDet">Yes, save details</string>
+    <string name="farFromStart">You are far from the starting point.</string>
+    <string name="farNorth">Field is too far North and cannot be mapped.</string>
+    <string name="notEnoughPoints">You have not gotten enough points to map an area. Please, Restart mapping session</string>
+    <string name="error_message_pws_description">Please enter weather support description</string>
+    <string name="pws_pending">Pending</string>
+    <string name="pws_reviewed">Reviewed</string>
+    <string name="pws_pending_count">0</string>
+    <string name="pws_review_claim">Review Claim</string>
+    <string name="pws_view_details">View Details</string>
+    <string name="pws_view_picture_preamble">Please click on each picture card to view image</string>
+    <string name="log_claim_description">Logger Claim Description</string>
+    <string name="rev_claim_description">Reviewer Claim Description</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="submit_question">Are you sure you want to submit?</string>
+    <string name="staff_id">Staff ID</string>
+    <string name="staff_name">Staff Name:</string>
+    <string name="no_unreviewed_claims">No of Unreviewed Claims:</string>
+    <string name="no_total_claims">Total No of Claims:</string>
+
+
+
+
+    <string name="title_activity_p_c_tabbed_view">PCTabbedView</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 </resources>

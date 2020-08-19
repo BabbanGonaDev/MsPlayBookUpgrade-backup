@@ -16,7 +16,7 @@ import java.util.List;
 public interface RFListDao {
 
     @Query(" SELECT DISTINCT rf_type FROM rf_list WHERE deactivated_status = '0' " +
-            "AND user_category LIKE :role_category ")
+            "AND LOWER(user_category) = :role_category ")
     List<String> getAllRFs(String role_category);
 
     @Query(" SELECT DISTINCT user_category FROM rf_list WHERE rf_type = :rf_type ")

@@ -14,6 +14,7 @@ import android.widget.Button;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.GridDetailsRecycler.GridDetailsRecyclerAdapter;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.GridDetailsRecycler.GridDetailsRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
+import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
@@ -24,6 +25,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 
 public class GridDetails extends AppCompatActivity {
 
@@ -70,6 +72,8 @@ public class GridDetails extends AppCompatActivity {
             title = getResources().getString(R.string.fert_2_title);
         }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("3")){
             title = getResources().getString(R.string.HG_title);
+        }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("5")){
+            title = getResources().getString(R.string.poor_weather_support_title);
         }else{
             title = "";
         }
@@ -103,8 +107,10 @@ public class GridDetails extends AppCompatActivity {
     @OnClick(R.id.btn_filter)
     public void loadAllFields(){
         Intent intent;
-        if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("3")) {
+        if (sharedPrefs.getKeyActivityType().equalsIgnoreCase(DatabaseStringConstants.LOG_HG_ACTIVITY)) {
             intent = new Intent(GridDetails.this, HGFieldListPage.class);
+        }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase(DatabaseStringConstants.POOR_WEATHER_SUPPORT_ACTIVITY)) {
+            intent = new Intent(GridDetails.this, PWSFieldListPage.class);
         } else {
             intent = new Intent(GridDetails.this, FieldListPage.class);
         }

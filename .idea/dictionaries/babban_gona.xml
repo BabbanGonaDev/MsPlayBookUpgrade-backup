@@ -3,8 +3,11 @@
     <words>
       <w>fert</w>
       <w>imei</w>
+      <w>pcpws</w>
       <w>subd</w>
+      <w>supd</w>
       <w>supr</w>
+      <w>unreviewed</w>
     </words>
   </dictionary>
 </component>

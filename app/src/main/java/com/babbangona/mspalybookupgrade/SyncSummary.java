@@ -14,6 +14,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.SyncSummaryAdapter;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.util.Objects;
 
@@ -31,6 +32,9 @@ public class SyncSummary extends AppCompatActivity {
     @BindView(R.id.toolbar_sync_summary)
     Toolbar toolbar_sync_summary;
 
+    @BindView(R.id.staff_id)
+    MaterialTextView staff_id;
+
     SyncSummaryAdapter syncSummaryAdapter;
 
     AppDatabase appDatabase;
@@ -43,11 +47,11 @@ public class SyncSummary extends AppCompatActivity {
         setContentView(R.layout.activity_sync_summary);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar_sync_summary);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.sync_summary_title));
         sharedPrefs = new SharedPrefs(SyncSummary.this);
         appDatabase = AppDatabase.getInstance(SyncSummary.this);
-
-
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.sync_summary_title));
+        getSupportActionBar().setSubtitle(sharedPrefs.getStaffID());
+        staff_id.setText(sharedPrefs.getStaffID());
         toolbar_sync_summary.setNavigationOnClickListener(view -> onBackPressed());
 
         runOnUiThread(this::initActivitiesRecycler);

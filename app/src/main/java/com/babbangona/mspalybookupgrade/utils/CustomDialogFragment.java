@@ -195,6 +195,9 @@ public class CustomDialogFragment extends DialogFragment {
             tv_confirm_date.setEnabled(false);
             activityImage.setVisibility(View.GONE);
             sharedPrefs.setKeyImageCaptureFlag("0");
+            clearTextViewText(tv_enter_date);
+            clearTextViewText(tv_confirm_date);
+            imageRemoval();
         });
 
         actHGSubType.setOnItemClickListener((parent, view, position , rowId) -> {
@@ -204,6 +207,9 @@ public class CustomDialogFragment extends DialogFragment {
             tv_confirm_date.setEnabled(false);
             activityImage.setVisibility(View.GONE);
             sharedPrefs.setKeyImageCaptureFlag("0");
+            clearTextViewText(tv_enter_date);
+            clearTextViewText(tv_confirm_date);
+            imageRemoval();
         });
 
         int status = appDatabase.hgActivitiesFlagDao().countFieldInHGActivity(hgFieldListRecyclerModel.getUnique_field_id());
@@ -292,6 +298,9 @@ public class CustomDialogFragment extends DialogFragment {
             setErrorOfTextView(tv_enter_date,Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_abnormal));
             setErrorOfTextView(tv_confirm_date,Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_abnormal));Toast.makeText(getActivity(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_abnormal), Toast.LENGTH_LONG).show();
             Toast.makeText(getActivity(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_abnormal), Toast.LENGTH_LONG).show();
+        }else if(!tv_enter_date.getText().toString().matches(tv_confirm_date.getText().toString())){
+            setErrorOfTextView(tv_confirm_date,Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_mismatch));
+            Toast.makeText(getActivity(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_mismatch), Toast.LENGTH_LONG).show();
         }else{
             checkForEmptyAutocompleteFields();
             checkForEmptyTextViewFields();
@@ -328,7 +337,7 @@ public class CustomDialogFragment extends DialogFragment {
     }
 
     public void fillHGListSpinner(AutoCompleteTextView autoCompleteTextView, Context context) {
-        List<String> whole_hg_list = appDatabase.hgListDao().getAllHGs("%"+setPortfolioMethods.getCategory(context)+"%");
+        List<String> whole_hg_list = appDatabase.hgListDao().getAllHGs(sharedPrefs.getStaffRole().toLowerCase());
         ArrayAdapter<String> hg_adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, whole_hg_list);
         spinnerViewController(autoCompleteTextView,hg_adapter);
     }
@@ -372,9 +381,9 @@ public class CustomDialogFragment extends DialogFragment {
             return 0;
         }
 
-        else if(!tv_enter_date.getText().toString().matches(tv_confirm_date.getText().toString())) {
+        /*else if(!tv_enter_date.getText().toString().matches(tv_confirm_date.getText().toString())) {
             return 0;
-        }
+        }*/
 
         //all checks are passed
         else{
@@ -675,6 +684,7 @@ public class CustomDialogFragment extends DialogFragment {
             String text = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
             textView.setText(text);
             allowButton();
+            imageRemoval();
         }, mYear, mMonth, mDay);
         mDatePicker.setTitle(activity_string);
         mDatePicker.show();
@@ -780,14 +790,36 @@ public class CustomDialogFragment extends DialogFragment {
 
         String image_name = activity_type + "_" + hgFieldListRecyclerModel.getUnique_field_id() + "_" + getDate("concat");
 
-        String result = saveToSdCard(photo, image_name);
-        if (result.equalsIgnoreCase("success")){
-            updateActivity(hgFieldListRecyclerModel, getResultingHgActivity(actHGType,actHGSubType),
-                    latitude,longitude,Objects.requireNonNull(tv_enter_date.getText()).toString());
-            Toast.makeText(getActivity(), "Picture Saved", Toast.LENGTH_SHORT).show();
+        String hg_activity_result = getResultingHgActivity(actHGType,actHGSubType);
+
+        if (hg_activity_result.startsWith("Solve_")){
+            int field_hg_activity_existence = appDatabase.hgActivitiesFlagDao().
+                    countFieldSpecificHGActivity(hgFieldListRecyclerModel.getUnique_field_id(),
+                            hg_activity_result.replace("Solve_",""));
+            if (field_hg_activity_existence > 0){
+                String result = saveToSdCard(photo, image_name);
+                if (result.equalsIgnoreCase("success")){
+                    updateActivity(hgFieldListRecyclerModel, getResultingHgActivity(actHGType,actHGSubType),
+                            latitude,longitude,Objects.requireNonNull(tv_enter_date.getText()).toString());
+                    Toast.makeText(getActivity(), "Picture Saved", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getActivity(), "Picture Not Saved", Toast.LENGTH_SHORT).show();
+                }
+            }else {
+                Toast.makeText(getActivity(), "There is no HG to solve", Toast.LENGTH_SHORT).show();
+            }
         }else{
-            Toast.makeText(getActivity(), "Picture Not Saved", Toast.LENGTH_SHORT).show();
+            String result = saveToSdCard(photo, image_name);
+            if (result.equalsIgnoreCase("success")){
+                updateActivity(hgFieldListRecyclerModel, getResultingHgActivity(actHGType,actHGSubType),
+                        latitude,longitude,Objects.requireNonNull(tv_enter_date.getText()).toString());
+                Toast.makeText(getActivity(), "Picture Saved", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getActivity(), "Picture Not Saved", Toast.LENGTH_SHORT).show();
+            }
         }
+
+
     }
 
     String saveToSdCard(Bitmap bitmap, String filename) {
@@ -875,6 +907,13 @@ public class CustomDialogFragment extends DialogFragment {
                 })
                 .setCancelable(false)
                 .show();
+    }
+
+    void imageRemoval(){
+        if (photo != null){
+            Toast.makeText(getActivity(), "Parameter change requires image recapture.", Toast.LENGTH_SHORT).show();
+            photo = null;
+        }
     }
 
 }

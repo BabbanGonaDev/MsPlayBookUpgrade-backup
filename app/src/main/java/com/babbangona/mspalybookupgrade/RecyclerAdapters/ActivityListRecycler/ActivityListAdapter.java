@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
+import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
@@ -84,10 +85,16 @@ public class ActivityListAdapter extends RecyclerView.Adapter<ActivityListAdapte
             mtv_act_name.setText(activityListRecyclerModel.getActivity_name());
             mtv_act_desc.setText(activityListRecyclerModel.getActivity_statistics());
             String button_name = context.getResources().getString(R.string.update) + " " + activityListRecyclerModel.getActivity_name();
-            if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase("4")){
+            if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase(DatabaseStringConstants.POOR_WEATHER_SUPPORT_ACTIVITY)){
+                progress_bar.setVisibility(View.VISIBLE);
+                progress_bar.setMax(Integer.parseInt(activityListRecyclerModel.getTotal_field_count()));
+                progress_bar.setProgress(Integer.parseInt(activityListRecyclerModel.getLogged_field_count()));
+                progress_bar.setProgressDrawable(context.getResources().getDrawable(R.drawable.progress_drawable_horizontal_hg));
+                btn_act_action.setText(button_name);
+            }else if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase(DatabaseStringConstants.SET_PORTFOLIO_ACTIVITY)){
                 progress_bar.setVisibility(View.GONE);
                 btn_act_action.setText(context.getResources().getString(R.string.update_portfolio));
-            }else if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase("3")){
+            }else if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase(DatabaseStringConstants.LOG_HG_ACTIVITY)){
                 progress_bar.setVisibility(View.VISIBLE);
                 progress_bar.setMax(Integer.parseInt(activityListRecyclerModel.getTotal_field_count()));
                 progress_bar.setProgress(Integer.parseInt(activityListRecyclerModel.getLogged_field_count()));

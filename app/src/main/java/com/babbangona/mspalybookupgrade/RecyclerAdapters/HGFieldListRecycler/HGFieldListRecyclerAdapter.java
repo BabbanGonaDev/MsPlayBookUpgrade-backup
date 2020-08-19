@@ -425,7 +425,7 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
         float density = context.getResources().getDisplayMetrics().density;
         int paddingPixel = (int)(paddingDp * density);
 
-        List<String> whole_hg_list = appDatabase.hgListDao().getAllHGs("%"+setPortfolioMethods.getCategory(context)+"%");
+        List<String> whole_hg_list = appDatabase.hgListDao().getAllHGs(sharedPrefs.getStaffRole().toLowerCase());
 
         ArrayAdapter<String> hg_adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, whole_hg_list);
 

@@ -8,7 +8,8 @@ import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 
 //TODO: Revamp this page following this structure to your desired entity class
 @Entity(primaryKeys = {DatabaseStringConstants.COL_HG_TYPE_HG_LIST,
-        DatabaseStringConstants.COL_SUB_HG_TYPE_HG_LIST},
+        DatabaseStringConstants.COL_SUB_HG_TYPE_HG_LIST,
+        DatabaseStringConstants.COL_USER_CATEGORY_HG_LIST},
         tableName = DatabaseStringConstants.HG_LIST_TABLE)
 public class HGList {
 
@@ -24,9 +25,11 @@ public class HGList {
     private String deactivated_status;
 
     @ColumnInfo(name = DatabaseStringConstants.COL_USER_CATEGORY_HG_LIST)
+    @NonNull
     private String user_category;
 
-    public HGList(@NonNull String hg_type, @NonNull String sub_hg_type, String deactivated_status, String user_category) {
+    public HGList(@NonNull String hg_type, @NonNull String sub_hg_type, String deactivated_status,
+                  @NonNull String user_category) {
         this.hg_type = hg_type;
         this.sub_hg_type = sub_hg_type;
         this.deactivated_status = deactivated_status;
@@ -59,11 +62,12 @@ public class HGList {
         this.deactivated_status = deactivated_status;
     }
 
+    @NonNull
     public String getUser_category() {
         return user_category;
     }
 
-    public void setUser_category(String user_category) {
+    public void setUser_category(@NonNull String user_category) {
         this.user_category = user_category;
     }
 }

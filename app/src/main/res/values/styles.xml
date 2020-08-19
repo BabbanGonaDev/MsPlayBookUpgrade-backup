@@ -60,19 +60,24 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:actionMenuTextColor">@color/colorRed</item>
-        <item name="android:actionMenuTextAppearance">@style/TextAppearance.MsPlaybook.Toolbar</item>
+        <item name="android:actionMenuTextAppearance">@style/TextAppearance.MsPlaybook.Toolbar
+        </item>
     </style>
 
     <style name="Widget.MsPlaybook.Toolbar" parent="Widget.MaterialComponents.Toolbar">
         <item name="android:background">?attr/colorAccent</item>
         <item name="android:theme">@style/Theme.MsPlaybook</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="titleTextAppearance">@style/TextAppearance.MsPlaybook.Toolbar</item>
     </style>
 
     <style name="TextAppearance.MsPlaybook.Toolbar" parent="TextAppearance.MaterialComponents.Headline1">
         <item name="android:textSize">20sp</item>
     </style>
+
+    <!--<style name="TextAppearance.MsPlaybook.ToolbarSubtitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/text_color_black</item>
+    </style>-->
 
     <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="iconPadding">0dp</item>
@@ -84,6 +89,9 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

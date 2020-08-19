@@ -121,6 +121,8 @@ public class Main2ActivityMethods {
             count_returned = appDatabase.hgActivitiesFlagDao().getHGCount("%"+sharedPrefs.getStaffID()+"%");
         }else if (activity_id.equalsIgnoreCase("4")){
             count_returned = 0;
+        }else if (activity_id.equalsIgnoreCase("5")){
+            count_returned = appDatabase.pwsActivitiesFlagDao().getPWSCount("%"+sharedPrefs.getStaffID()+"%");
         }else{
             count_returned = 0;
         }
@@ -155,6 +157,13 @@ public class Main2ActivityMethods {
                     " "+context.getResources().getString(R.string.sentence_close_hg);
         }else if (activity_id.equalsIgnoreCase("4")){
             composed_sentence = context.getResources().getString(R.string.set_portfolio);
+        }else if (activity_id.equalsIgnoreCase("5")){
+            composed_sentence = (int)percent+
+                    " "+context.getResources().getString(R.string.hg_pt_1)+
+                    " ("+logged_field_count+
+                    " " +context.getResources().getString(R.string.out_of)+
+                    " "+total_field_count+
+                    " "+context.getResources().getString(R.string.sentence_close_pws);
         }else{
             composed_sentence = context.getResources().getString(R.string.strange_activity);
         }

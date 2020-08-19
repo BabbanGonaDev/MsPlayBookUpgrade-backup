@@ -186,6 +186,9 @@ public class CustomDialogFragmentRedFlags extends DialogFragment {
             tv_confirm_date.setEnabled(false);
             activityImage.setVisibility(View.GONE);
             sharedPrefs.setKeyImageCaptureFlag("0");
+            clearTextViewText(tv_enter_date);
+            clearTextViewText(tv_confirm_date);
+            imageRemoval();
         });
 
         int status = appDatabase.rfActivitiesFlagDao().countFieldInRFActivity(hgFieldListRecyclerModel.getUnique_field_id());
@@ -275,6 +278,9 @@ public class CustomDialogFragmentRedFlags extends DialogFragment {
             setErrorOfTextView(tv_enter_date,Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_abnormal));
             setErrorOfTextView(tv_confirm_date,Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_abnormal));
             Toast.makeText(getActivity(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_abnormal), Toast.LENGTH_LONG).show();
+        }else if(!tv_enter_date.getText().toString().matches(tv_confirm_date.getText().toString())){
+            setErrorOfTextView(tv_confirm_date,Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_mismatch));
+            Toast.makeText(getActivity(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_mismatch), Toast.LENGTH_LONG).show();
         }else{
             checkForEmptyAutocompleteFields();
             checkForEmptyTextViewFields();
@@ -309,7 +315,7 @@ public class CustomDialogFragmentRedFlags extends DialogFragment {
     }
 
     public void fillRFListSpinner(AutoCompleteTextView autoCompleteTextView, Context context) {
-        List<String> whole_rf_list = appDatabase.rfListDao().getAllRFs("%"+setPortfolioMethods.getCategory(context)+"%");
+        List<String> whole_rf_list = appDatabase.rfListDao().getAllRFs(sharedPrefs.getStaffRole().toLowerCase());
         ArrayAdapter<String> rf_adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, whole_rf_list);
         spinnerViewController(autoCompleteTextView,rf_adapter);
     }
@@ -342,9 +348,9 @@ public class CustomDialogFragmentRedFlags extends DialogFragment {
             return 0;
         }
 
-        else if(!tv_enter_date.getText().toString().matches(tv_confirm_date.getText().toString())) {
+        /*else if(!tv_enter_date.getText().toString().matches(tv_confirm_date.getText().toString())) {
             return 0;
-        }
+        }*/
 
         //all checks are passed
         else{
@@ -611,6 +617,7 @@ public class CustomDialogFragmentRedFlags extends DialogFragment {
             String text = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
             textView.setText(text);
             allowButton();
+            imageRemoval();
         }, mYear, mMonth, mDay);
         mDatePicker.setTitle(activity_string);
         mDatePicker.show();
@@ -716,13 +723,35 @@ public class CustomDialogFragmentRedFlags extends DialogFragment {
 
         String image_name = activity_type + "_" + hgFieldListRecyclerModel.getUnique_field_id() + "_" + getDate("concat");
 
-        String result = saveToSdCard(photo, image_name);
-        if (result.equalsIgnoreCase("success")){
-            updateActivity(hgFieldListRecyclerModel, actHGType.getText().toString(),
-                    latitude,longitude,Objects.requireNonNull(tv_enter_date.getText()).toString());
-            Toast.makeText(getActivity(), "Picture Saved", Toast.LENGTH_SHORT).show();
+
+
+        String rf_activity_result = actHGType.getText().toString();
+
+        if (rf_activity_result.startsWith("Solve_")){
+            int field_rf_activity_existence = appDatabase.rfActivitiesFlagDao().
+                    countFieldSpecificRFActivity(hgFieldListRecyclerModel.getUnique_field_id(),
+                            rf_activity_result.replace("Solve_",""));
+            if (field_rf_activity_existence > 0){
+                String result = saveToSdCard(photo, image_name);
+                if (result.equalsIgnoreCase("success")){
+                    updateActivity(hgFieldListRecyclerModel, actHGType.getText().toString(),
+                            latitude,longitude,Objects.requireNonNull(tv_enter_date.getText()).toString());
+                    Toast.makeText(getActivity(), "Picture Saved", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getActivity(), "Picture Not Saved", Toast.LENGTH_SHORT).show();
+                }
+            }else {
+                Toast.makeText(getActivity(), "There is no RF to solve", Toast.LENGTH_SHORT).show();
+            }
         }else{
-            Toast.makeText(getActivity(), "Picture Not Saved", Toast.LENGTH_SHORT).show();
+            String result = saveToSdCard(photo, image_name);
+            if (result.equalsIgnoreCase("success")){
+                updateActivity(hgFieldListRecyclerModel, actHGType.getText().toString(),
+                        latitude,longitude,Objects.requireNonNull(tv_enter_date.getText()).toString());
+                Toast.makeText(getActivity(), "Picture Saved", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getActivity(), "Picture Not Saved", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -811,6 +840,13 @@ public class CustomDialogFragmentRedFlags extends DialogFragment {
                 })
                 .setCancelable(false)
                 .show();
+    }
+
+    void imageRemoval(){
+        if (photo != null){
+            Toast.makeText(getActivity(), "Parameter change requires image recapture.", Toast.LENGTH_SHORT).show();
+            photo = null;
+        }
     }
 
 }

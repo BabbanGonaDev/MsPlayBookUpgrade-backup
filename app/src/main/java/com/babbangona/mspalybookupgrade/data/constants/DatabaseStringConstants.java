@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 7;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 8;
 
     /**
      * Names of tables
@@ -27,6 +27,9 @@ public class DatabaseStringConstants {
     public static final String HARVEST_LOCATION_TABLE                   = "harvest_location";
     public static final String APP_VARIABLES                            = "app_variables";
     public static final String TABLE_PICTURE_SYNC                       = "picture_sync";
+    public static final String PWS_ACTIVITY_FLAGS_TABLE                 = "pws_activities_flag";
+    public static final String PC_PWS_ACTIVITY_FLAGS_TABLE              = "pc_pws_activities_flag";
+    public static final String PWS_CATEGORY_LIST_TABLE                  = "pws_category_list";
 
     /**
      * activity_list column names
@@ -143,6 +146,11 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_RF_LIST_TABLE                      = "last_sync_rf_list";
     public static final String LAST_SYNC_UP_RF_ACTIVITY_FLAGS_TABLE         = "last_sync_up_rf_activities_flag";
     public static final String LAST_SYNC_DOWN_RF_ACTIVITY_FLAGS_TABLE       = "last_sync_down_rf_activities_flag";
+    public static final String LAST_SYNC_PWS_CATEGORY_LIST_TABLE            = "last_sync_pws_category_list";
+    public static final String LAST_SYNC_UP_PWS_ACTIVITY_FLAGS_TABLE        = "last_sync_up_pws_activities_flag";
+    public static final String LAST_SYNC_DOWN_PWS_ACTIVITY_FLAGS_TABLE      = "last_sync_down_pws_activities_flag";
+    public static final String LAST_SYNC_UP_PC_PWS_ACTIVITY_FLAGS_TABLE     = "last_sync_up_pc_pws_activities_flag";
+    public static final String LAST_SYNC_DOWN_PC_PWS_ACTIVITY_FLAGS_TABLE   = "last_sync_down_pc_pws_activities_flag";
 
     /**
      * category column names
@@ -203,11 +211,49 @@ public class DatabaseStringConstants {
     public static final String HG_ACTIVITY_PICTURE_LOCATION             = "MsPlaybookPictures/HG_Activities";
     public static final String RF_ACTIVITY_PICTURE_LOCATION             = "MsPlaybookPictures/RF_Activities";
     public static final String NORMAL_ACTIVITY_PICTURE_LOCATION         = "MsPlaybookPictures/Normal_Activities";
+    public static final String PWS_ACTIVITY_PICTURE_LOCATION            = "MsPlaybookPictures/PWS_Activities";
     public static final String MS_PLAYBOOK_PICTURE_LOCATION             = "MsPlaybookPictures";
+    public static final String FERT_1_ACTIVITY                          = "1";
+    public static final String FERT_2_ACTIVITY                          = "2";
+    public static final String LOG_HG_ACTIVITY                          = "3";
+    public static final String SET_PORTFOLIO_ACTIVITY                   = "4";
+    public static final String POOR_WEATHER_SUPPORT_ACTIVITY            = "5";
 
     /**
      * picture_sync column names
      */
     public static final String COL_PICTURE_NAME                     = "picture_name";
+
+    /**
+     * hg_activities column names
+     */
+    public static final String COL_PWS_ID                               = "pws_id";
+    public static final String COL_UNIQUE_FIELD_ID_PWS                  = "unique_field_id";
+    public static final String COL_IK_NUMBER_PWS                        = "ik_number";
+    public static final String COL_PWS_AREA                             = "pws_area";
+    public static final String COL_PWS_LAT_LNG                          = "lat_longs";
+    public static final String COL_CATEGORY_PWS                         = "category";
+    public static final String COL_LATITUDE_PWS                         = "latitude";
+    public static final String COL_LONGITUDE_PWS                        = "longitude";
+    public static final String COL_MIN_LAT_PWS                          = "min_lat";
+    public static final String COL_MAX_LAT_PWS                          = "max_lat";
+    public static final String COL_MIN_LONG_PWS                         = "min_long";
+    public static final String COL_MAX_LONG_PWS                         = "max_long";
+    public static final String COL_STAFF_ID_PWS                         = "staff_id";
+    public static final String COL_SOLVE_PWS                            = "solve";
+    public static final String COL_DEACTIVATE_PWS                       = "deactivate";
+    public static final String COL_DATE_LOGGED_PWS                      = "date_logged";
+    public static final String COL_DESCRIPTION                          = "description";
+    public static final String COL_SYNC_FLAG_PWS                        = "sync_flag";
+    public static final String COL_LOGGER_NAME                          = "member_name";
+    public static final String COL_IMEI_PWS                             = "imei";
+    public static final String COL_UNIQUE_MEMBER_ID_PWS                 = "unique_member_id";
+
+    /**
+     * pws_category_list column names
+     */
+    public static final String COL_PWS_CATEGORY                         = "pws_category";
+    public static final String COL_PWS_CATEGORY_DEACTIVATED_STATUS      = "deactivated_status";
+    public static final String COL_USER_CATEGORY_PWS                    = "user_category";
 
 }

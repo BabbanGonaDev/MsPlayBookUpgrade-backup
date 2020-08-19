@@ -26,11 +26,13 @@ public abstract class StaffListDao {
             "WHERE b.staff_id IS NULL AND LOWER(a.staff_id || ' ' || a.staff_name || ' ' || a.staff_hub) LIKE LOWER(:search) ORDER BY a.staff_id ASC")
     public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffNotAdded(String search);
 
-    @Query(" SELECT DISTINCT a.staff_id, a.staff_name, a.staff_hub, null as selected FROM staff a JOIN fields b ON a.staff_id = b.staff_id")
+    @Query(" SELECT DISTINCT a.staff_id, a.staff_name, a.staff_hub, null as selected FROM staff a " +
+            "JOIN fields b ON a.staff_id = b.staff_id WHERE b.deactivate = '0'")
     public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffAdded();
 
-    @Query(" SELECT DISTINCT a.staff_id, a.staff_name, a.staff_hub, null as selected FROM staff a JOIN fields b ON a.staff_id = b.staff_id " +
-            "WHERE LOWER(a.staff_id || ' ' || a.staff_name || ' ' || a.staff_hub) LIKE LOWER(:search) ORDER BY a.staff_id ASC")
+    @Query(" SELECT DISTINCT a.staff_id, a.staff_name, a.staff_hub, null as selected FROM staff a " +
+            "JOIN fields b ON a.staff_id = b.staff_id WHERE b.deactivate = '0' AND " +
+            "LOWER(a.staff_id || ' ' || a.staff_name || ' ' || a.staff_hub) LIKE LOWER(:search) ORDER BY a.staff_id ASC")
     public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffAdded(String search);
 
     /**

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="5dp"
+    android:translationZ="5dp"
+    app:cardCornerRadius="@dimen/dimen_10dp"
+    app:cardPreventCornerOverlap="true"
+    android:id="@+id/pws_list_container"
+    android:clickable="true"
+    android:focusable="true"
+    android:checkable="true"
+    app:cardElevation="@dimen/dimen_10dp"
+    android:layout_margin="@dimen/dimen_10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_3dp"
+            android:layout_height="match_parent"
+            android:id="@+id/iv_activity_signal"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Title, secondary and supporting text -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_pws_id"
+                    android:text="@string/pws_id"
+                    android:textAppearance="?attr/textAppearanceHeadline6" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_claim_category"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:text="@string/claim_category"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?android:attr/textColorSecondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_pws_field_size"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:text="@string/pws_size"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?android:attr/textColorSecondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_date_logged"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:text="@string/pws_date_logged"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?android:attr/textColorSecondary" />
+
+                <!--<TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_date_reviewed"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:text="@string/pws_date_reviewed"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?android:attr/textColorSecondary" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_location"
+                        android:gravity="center"
+                        android:background="@drawable/ic_location_signs"
+                        android:layout_weight="0.5"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_longitude"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:maxLines="1"
+                        android:maxLength="15"
+                        android:text="@string/field_longitude"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_weight="3"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_latitude"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:maxLines="1"
+                        android:maxLength="15"
+                        android:text="@string/field_latitude"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_weight="3"/>
+
+                </LinearLayout>-->
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</com.google.android.material.card.MaterialCardView>

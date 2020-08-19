@@ -37,6 +37,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -223,6 +224,9 @@ public class CustomDialogFragmentFertilizer extends DialogFragment {
             setErrorOfTextView(tv_enter_date,Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_abnormal));
             setErrorOfTextView(tv_confirm_date,Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_abnormal));
             Toast.makeText(getActivity(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_abnormal), Toast.LENGTH_LONG).show();
+        }else if(!tv_enter_date.getText().toString().matches(tv_confirm_date.getText().toString())){
+            setErrorOfTextView(tv_confirm_date,Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_mismatch));
+            Toast.makeText(getActivity(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error_date_mismatch), Toast.LENGTH_LONG).show();
         }else{
             checkForEmptyFields();
             GPSController.LocationGetter locationGetter = GPSController.initialiseLocationListener(Objects.requireNonNull(getActivity()));
@@ -251,13 +255,19 @@ public class CustomDialogFragmentFertilizer extends DialogFragment {
         // Checks if the state field is empty
         if(Objects.requireNonNull(tv_enter_date.getText()).toString().matches("")) {
             return 0;
-        }else if(Objects.requireNonNull(tv_confirm_date.getText()).toString().matches("")) {
-            return 0;
-        }else if(tv_confirm_date.getText().toString().matches("")) {
-            return 0;
-        }else if(!tv_enter_date.getText().toString().matches(tv_confirm_date.getText().toString())) {
+        }
+
+        else if(Objects.requireNonNull(tv_confirm_date.getText()).toString().matches("")) {
             return 0;
         }
+
+        else if(tv_confirm_date.getText().toString().matches("")) {
+            return 0;
+        }
+
+        /*else if(!tv_enter_date.getText().toString().matches(tv_confirm_date.getText().toString())) {
+            return 0;
+        }*/
 
         //all checks are passed
         else{
@@ -303,20 +313,24 @@ public class CustomDialogFragmentFertilizer extends DialogFragment {
             fieldListRecyclerModel.setFertilizer_1_status("1");
             dismissAndRefresh();
         }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("2")){
+
             if (field_existence > 0){
                 appDatabase.normalActivitiesFlagDao().updateFert2Flag(fieldListRecyclerModel.getUnique_field_id(),"1",
                         activity_date,sharedPrefs.getStaffID(),getDate("spread"));
+
+                appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
+                        "Log Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
+                        String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
+                        fieldListRecyclerModel.getIk_number(),fieldListRecyclerModel.getCrop_type()));
+                fieldListRecyclerModel.setFertilizer_2_status("1");
             }else{
-                appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
+                showDialogForLocked("Please Log Fertilizer 1 first",getActivity());
+                /*appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(fieldListRecyclerModel.getUnique_field_id(),
                         "0","0000-00-00","1",activity_date,
                         sharedPrefs.getStaffID(),"0",fieldListRecyclerModel.getIk_number(),
-                        fieldListRecyclerModel.getCrop_type(),"0",getDate("spread")));
+                        fieldListRecyclerModel.getCrop_type(),"0",getDate("spread")));*/
+
             }
-            appDatabase.logsDao().insert(new Logs(fieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
-                    "Log Fertilizer 2",getDate("normal"),sharedPrefs.getStaffRole(),
-                    String.valueOf(latitude),String.valueOf(longitude),getDeviceID(),"0",
-                    fieldListRecyclerModel.getIk_number(),fieldListRecyclerModel.getCrop_type()));
-            fieldListRecyclerModel.setFertilizer_2_status("1");
             dismissAndRefresh();
         }
     }
@@ -387,6 +401,7 @@ public class CustomDialogFragmentFertilizer extends DialogFragment {
             String text = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay ;
             textView.setText(text);
             allowButton();
+            imageRemoval();
         }, mYear, mMonth, mDay);
         activity_string = activity_string+" Date";
         mDatePicker.setTitle(activity_string);
@@ -591,6 +606,29 @@ public class CustomDialogFragmentFertilizer extends DialogFragment {
         }else{
             return "Fertilizer";
         }
+    }
+
+    void imageRemoval(){
+        if (photo != null){
+            Toast.makeText(getActivity(), "Parameter change requires image recapture.", Toast.LENGTH_SHORT).show();
+            photo = null;
+        }
+    }
+
+    private void showDialogForLocked(String s, Context context) {
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showDialogForLockedLogging(builder,s,context);
+    }
+
+    private void showDialogForLockedLogging(MaterialAlertDialogBuilder builder, String s, Context context) {
+        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_crying))
+                .setTitle(context.getResources().getString(R.string.oops))
+                .setMessage(s)
+                .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                }).setCancelable(false)
+                .show();
     }
 
 }

@@ -20,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -122,6 +123,8 @@ public class SetPortfolio extends AppCompatActivity {
 
     Handler mHandler;
 
+    CountDownTimer timer = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +157,7 @@ public class SetPortfolio extends AppCompatActivity {
         setAdapter(offset);
 
         pd = new ProgressDialog(SetPortfolio.this);
+        sharedPrefs.setKeyProgressDialogStatus(1);
         startRepeatingTask();
 
 
@@ -291,6 +295,7 @@ public class SetPortfolio extends AppCompatActivity {
 
     void syncInputRecords(){
         Intent i = new Intent(this, ActivityListDownloadService.class);
+        exitProgressDialog();
         this.startService(i);
     }
 
@@ -418,6 +423,7 @@ public class SetPortfolio extends AppCompatActivity {
     }
 
     public void loadPreviousActivity() {
+        cancelTimer();
         finish();
         startActivity(new Intent(SetPortfolio.this, Homepage.class));
     }
@@ -685,5 +691,24 @@ public class SetPortfolio extends AppCompatActivity {
             //pd.show();
             pd.dismiss();
         }
+    }
+
+    //start timer
+    void exitProgressDialog(){
+        timer = new CountDownTimer(300000, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+            public void onFinish() {
+                //change the stuff here.
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+        };
+        timer.start();
+    }
+
+    //cancel timer
+    void cancelTimer() {
+        if(timer!=null)
+            timer.cancel();
     }
 }

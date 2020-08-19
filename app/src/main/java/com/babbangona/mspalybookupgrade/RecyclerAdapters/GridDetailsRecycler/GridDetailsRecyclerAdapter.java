@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.babbangona.mspalybookupgrade.FieldListPage;
 import com.babbangona.mspalybookupgrade.HGFieldListPage;
+import com.babbangona.mspalybookupgrade.PWSFieldListPage;
 import com.babbangona.mspalybookupgrade.R;
+import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
@@ -146,23 +148,30 @@ public class GridDetailsRecyclerAdapter extends RecyclerView.Adapter<GridDetails
             int fieldPortionCountByActivity;
 
             switch (activity_type){
-                case("1"):
+                case(DatabaseStringConstants.FERT_1_ACTIVITY):
                     //fertilizer 1
                     fieldPortionCountByActivity = appDatabase.normalActivitiesFlagDao().fieldPortionCountForFertilizer1(
                             "%"+sharedPrefs.getStaffID()+"%", gridDetailsRecyclerModelList.getMin_lat(),
                             gridDetailsRecyclerModelList.getMax_lat(), gridDetailsRecyclerModelList.getMin_lng(),
                             gridDetailsRecyclerModelList.getMax_lng());
                     break;
-                case("2"):
+                case(DatabaseStringConstants.FERT_2_ACTIVITY):
                     //fertilizer 2
                     fieldPortionCountByActivity = appDatabase.normalActivitiesFlagDao().fieldPortionCountForFertilizer2(
                             "%"+sharedPrefs.getStaffID()+"%", gridDetailsRecyclerModelList.getMin_lat(),
                             gridDetailsRecyclerModelList.getMax_lat(), gridDetailsRecyclerModelList.getMin_lng(),
                             gridDetailsRecyclerModelList.getMax_lng());
                     break;
-                case("3"):
+                case(DatabaseStringConstants.LOG_HG_ACTIVITY):
                     //hg_log
                     fieldPortionCountByActivity = appDatabase.hgActivitiesFlagDao().fieldPortionCountForHG(
+                            "%"+sharedPrefs.getStaffID()+"%", gridDetailsRecyclerModelList.getMin_lat(),
+                            gridDetailsRecyclerModelList.getMax_lat(), gridDetailsRecyclerModelList.getMin_lng(),
+                            gridDetailsRecyclerModelList.getMax_lng());
+                    break;
+                case(DatabaseStringConstants.POOR_WEATHER_SUPPORT_ACTIVITY):
+                    //pws_logs
+                    fieldPortionCountByActivity = appDatabase.pwsActivitiesFlagDao().fieldPortionCountForPWS(
                             "%"+sharedPrefs.getStaffID()+"%", gridDetailsRecyclerModelList.getMin_lat(),
                             gridDetailsRecyclerModelList.getMax_lat(), gridDetailsRecyclerModelList.getMin_lng(),
                             gridDetailsRecyclerModelList.getMax_lng());
@@ -181,7 +190,8 @@ public class GridDetailsRecyclerAdapter extends RecyclerView.Adapter<GridDetails
                 string_text = string_text + (i+1) + "\n#" + fieldPortionCount;
                 tv.setText(string_text);
                 int percent_field_count_by_activity;
-                if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("3")) {
+                if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("3") ||
+                        sharedPrefs.getKeyActivityType().equalsIgnoreCase("5")) {
                     percent_field_count_by_activity = fieldPortionCountByActivity * 100 / fieldPortionCount;
                     percent_field_count_by_activity = 100 - percent_field_count_by_activity;
                 } else {
@@ -215,6 +225,8 @@ public class GridDetailsRecyclerAdapter extends RecyclerView.Adapter<GridDetails
                 Intent intent;
                 if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("3")) {
                     intent = new Intent(context, HGFieldListPage.class);
+                }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase("5")) {
+                    intent = new Intent(context, PWSFieldListPage.class);
                 } else {
                     intent = new Intent(context, FieldListPage.class);
                 }

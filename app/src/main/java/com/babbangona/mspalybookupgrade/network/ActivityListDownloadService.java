@@ -23,6 +23,9 @@ import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.PCPWSActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.PWSActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.babbangona.mspalybookupgrade.data.db.entities.PictureSync;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
@@ -41,6 +44,11 @@ import com.babbangona.mspalybookupgrade.network.object.LogsUpload;
 import com.babbangona.mspalybookupgrade.network.object.MsPlaybookInputDownload;
 import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.NormalActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.PCPWSActivitiesFlagDownload;
+import com.babbangona.mspalybookupgrade.network.object.PCPWSActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.PWSActivitiesFlagDownload;
+import com.babbangona.mspalybookupgrade.network.object.PWSActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.PWSCategoryListDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.RFListDownload;
@@ -94,9 +102,12 @@ public class ActivityListDownloadService extends IntentService {
         getInputData();
         getHGList();
         getRFList();
+        getPWSCategoryList();
         getHGACtivitiesFlagDownload();
         getRFActivitiesFlagDownload();
         getNormalActivitiesFlagDownload();
+        getPWSActivitiesFlagDownload();
+        getPCPWSActivitiesFlagDownload();
         getCategoryDownload();
         getHarvestLocationDownload();
         getAppVariablesDownload();
@@ -115,6 +126,13 @@ public class ActivityListDownloadService extends IntentService {
         if (appDatabase.rfActivitiesFlagDao().getUnSyncedRFActivitiesCount() > 0){
             syncUpRFActivities();
         }
+        if (appDatabase.pwsActivitiesFlagDao().getUnSyncedPWSActivitiesCount() > 0){
+            syncUpPWSActivities();
+        }
+        if (appDatabase.pcpwsActivitiesFlagDao().getUnSyncedPCPWSActivitiesCount() > 0){
+            syncUpPCPWSActivities();
+        }
+
         getStaffList();
         getLogsDownload();
         pictureLoop(ImgDirectory);
@@ -2185,6 +2203,581 @@ public class ActivityListDownloadService extends IntentService {
         }
     }
 
+    public void getPWSCategoryList() {
+
+        String last_synced = getLastSyncTimePWSCategoryList();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<PWSCategoryListDownload> call = retrofitInterface.getPWSCategoryList(last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<PWSCategoryListDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<PWSCategoryListDownload> call,
+                                   @NonNull Response<PWSCategoryListDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    PWSCategoryListDownload pwsCategoryListDownload = response.body();
+
+                    if (pwsCategoryListDownload != null) {
+                        List<PWSCategoryList> pwsCategoryLists = pwsCategoryListDownload.getDownload_list();
+                        if (pwsCategoryLists.size() > 0){
+                            saveToPWSCategoryListTable(pwsCategoryLists);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncRFList(sharedPrefs.getStaffID(),pwsCategoryListDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_rf_list(pwsCategoryListDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.PWS_CATEGORY_LIST_TABLE,
+                                "PWS Category List Download",
+                                "1",
+                                returnRemark(pwsCategoryLists.size()),
+                                pwsCategoryListDownload.getLast_sync_time()
+
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.PWS_CATEGORY_LIST_TABLE,
+                                "PWS Category List Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.PWS_CATEGORY_LIST_TABLE,
+                            "PWS Category List Download",
+                            "0",
+                            "Download Error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<PWSCategoryListDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_pws_category_list", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.PWS_CATEGORY_LIST_TABLE,
+                        "PWS Category List Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToPWSCategoryListTable(List<PWSCategoryList> pwsCategoryLists){
+        SavePWSCategoryListTable savePWSCategoryListTable = new SavePWSCategoryListTable();
+        savePWSCategoryListTable.execute(pwsCategoryLists);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SavePWSCategoryListTable extends AsyncTask<List<PWSCategoryList>, Void, Void> {
+
+
+        private final String TAG = SavePWSCategoryListTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<PWSCategoryList>... params) {
+
+            List<PWSCategoryList> pwsCategoryLists = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.pwsCategoryListDao().insert(pwsCategoryLists);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    private void syncUpPWSActivities() {
+        List<PWSActivitiesFlag> pwsActivitiesFlags = appDatabase.pwsActivitiesFlagDao().getUnSyncedPWSActivities();
+        String composed_json = new Gson().toJson(pwsActivitiesFlags);
+        Log.d("composed_json",composed_json);
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<List<PWSActivitiesUpload>> call = retrofitInterface.uploadPWSActivitiesRecord(composed_json, sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<List<PWSActivitiesUpload>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<PWSActivitiesUpload>> call, @NonNull Response<List<PWSActivitiesUpload>> response) {
+                //Log.d("RETROFIT_TFM_DATA", "onResponse: " + response.body());
+                if (response.isSuccessful()) {
+
+                    List<PWSActivitiesUpload> pwsActivitiesUploadList = response.body();
+
+                    //Log.d("syncingResponseTFM", Objects.requireNonNull(rfActivitiesUploadList).toString());
+                    if (pwsActivitiesUploadList == null){
+                        Log.d("result", "null");
+                        saveToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_upload",
+                                "PWS Activities Upload",
+                                "0",
+                                "Upload null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else if(pwsActivitiesUploadList.size() == 0){
+                        Log.d("result", "0");
+                        saveToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_upload",
+                                "PWS Activities Upload",
+                                "0",
+                                "Upload empty",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else {
+                        AsyncTask.execute(()->{
+                            for (int i = 0; i < pwsActivitiesUploadList.size(); i++) {
+                                PWSActivitiesUpload pwsActivitiesUpload = pwsActivitiesUploadList.get(i);
+                                appDatabase.pwsActivitiesFlagDao().updatePWSActivitiesSyncFlags(pwsActivitiesUpload.getPws_id());
+                            }
+                            insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_upload",
+                                    "PWS Activities Upload",
+                                    "1",
+                                    returnRemark(pwsActivitiesUploadList.size()),
+                                    pwsActivitiesUploadList.get(0).getLast_synced()
+
+                            );
+                        });
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncUpPWSActivitiesFlag(sharedPrefs.getStaffID(),pwsActivitiesUploadList.get(0).getLast_synced());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_up_pws_activities_flag(pwsActivitiesUploadList.get(0).getLast_synced());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                        }
+
+                    }
+                } else {
+                    Log.i("tobi_pws_upload ", "onResponse ERROR: " + response.body());
+                    int sc = response.code();
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            break;
+                        case 401:
+                            Log.e("Error 401", "Bad Request");
+                            break;
+                        case 403:
+                            Log.e("Error 403", "Bad Request");
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            break;
+                        case 500:
+                            Log.e("Error 500", "Bad Request");
+                            break;
+                        case 501:
+                            Log.e("Error 501", "Bad Request");
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error " + response.code());
+                            break;
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_upload",
+                            "PWS Activities Upload",
+                            "0",
+                            "Upload error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<PWSActivitiesUpload>> call, @NonNull Throwable t) {
+                Log.d("TobiNewPWSUpload", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_upload",
+                        "PWS Activities Upload",
+                        "0",
+                        "Upload failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+    }
+
+    private void syncUpPCPWSActivities() {
+        List<PCPWSActivitiesFlag> pcpwsActivitiesFlags = appDatabase.pcpwsActivitiesFlagDao().getUnSyncedPCPWSActivities();
+        String composed_json = new Gson().toJson(pcpwsActivitiesFlags);
+        Log.d("composed_json",composed_json);
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<List<PCPWSActivitiesUpload>> call = retrofitInterface.uploadPCPWSActivitiesRecord(composed_json, sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<List<PCPWSActivitiesUpload>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<PCPWSActivitiesUpload>> call, @NonNull Response<List<PCPWSActivitiesUpload>> response) {
+                //Log.d("RETROFIT_TFM_DATA", "onResponse: " + response.body());
+                if (response.isSuccessful()) {
+
+                    List<PCPWSActivitiesUpload> pcpwsActivitiesUploadList = response.body();
+
+                    //Log.d("syncingResponseTFM", Objects.requireNonNull(rfActivitiesUploadList).toString());
+                    if (pcpwsActivitiesUploadList == null){
+                        Log.d("result", "null");
+                        saveToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_upload",
+                                "PC PWS Activities Upload",
+                                "0",
+                                "Upload null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else if(pcpwsActivitiesUploadList.size() == 0){
+                        Log.d("result", "0");
+                        saveToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_upload",
+                                "PC PWS Activities Upload",
+                                "0",
+                                "Upload empty",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else {
+                        AsyncTask.execute(()->{
+                            for (int i = 0; i < pcpwsActivitiesUploadList.size(); i++) {
+                                PCPWSActivitiesUpload pcpwsActivitiesUpload = pcpwsActivitiesUploadList.get(i);
+                                appDatabase.pcpwsActivitiesFlagDao().updatePCPWSActivitiesSyncFlags(pcpwsActivitiesUpload.getPws_id());
+                            }
+                            insetToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_upload",
+                                    "PC PWS Activities Upload",
+                                    "1",
+                                    returnRemark(pcpwsActivitiesUploadList.size()),
+                                    pcpwsActivitiesUploadList.get(0).getLast_synced()
+
+                            );
+                        });
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncUpPCPWSActivitiesFlag(sharedPrefs.getStaffID(),pcpwsActivitiesUploadList.get(0).getLast_synced());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_up_pc_pws_activities_flag(pcpwsActivitiesUploadList.get(0).getLast_synced());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                        }
+
+                    }
+                } else {
+                    Log.i("tobi_pc_pws_upload ", "onResponse ERROR: " + response.body());
+                    int sc = response.code();
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            break;
+                        case 401:
+                            Log.e("Error 401", "Bad Request");
+                            break;
+                        case 403:
+                            Log.e("Error 403", "Bad Request");
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            break;
+                        case 500:
+                            Log.e("Error 500", "Bad Request");
+                            break;
+                        case 501:
+                            Log.e("Error 501", "Bad Request");
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error " + response.code());
+                            break;
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_upload",
+                            "PC PWS Activities Upload",
+                            "0",
+                            "Upload error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<PCPWSActivitiesUpload>> call, @NonNull Throwable t) {
+                Log.d("TobiNewPCPWSUpload", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_upload",
+                        "PC PWS Activities Upload",
+                        "0",
+                        "Upload failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+    }
+
+    public void getPWSActivitiesFlagDownload() {
+
+        String last_synced = getLastSyncTimePWSActivities();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<PWSActivitiesFlagDownload> call = retrofitInterface.downloadPWSActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<PWSActivitiesFlagDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<PWSActivitiesFlagDownload> call,
+                                   @NonNull Response<PWSActivitiesFlagDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    PWSActivitiesFlagDownload pwsActivitiesFlagDownload = response.body();
+
+                    if (pwsActivitiesFlagDownload != null) {
+                        List<PWSActivitiesFlag> pwsActivitiesFlagList = pwsActivitiesFlagDownload.getDownload_list();
+                        if (pwsActivitiesFlagList.size() > 0){
+                            saveToPWSActivitiesFlagTable(pwsActivitiesFlagList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncDownNormalActivitiesFlag(sharedPrefs.getStaffID(),pwsActivitiesFlagDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_normal_activities_flag(pwsActivitiesFlagDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_download",
+                                "PWS Activities Download",
+                                "1",
+                                returnRemark(pwsActivitiesFlagList.size()),
+                                pwsActivitiesFlagDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_download",
+                                "PWS Activities Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_download",
+                            "PWS Activities Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<PWSActivitiesFlagDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_pws_download", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_download",
+                        "PWS Activities Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToPWSActivitiesFlagTable(List<PWSActivitiesFlag> pwsActivitiesFlags){
+        SavePWSActivitiesFlagTable savePWSActivitiesFlagTable = new SavePWSActivitiesFlagTable();
+        savePWSActivitiesFlagTable.execute(pwsActivitiesFlags);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SavePWSActivitiesFlagTable extends AsyncTask<List<PWSActivitiesFlag>, Void, Void> {
+
+
+        private final String TAG = SavePWSActivitiesFlagTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<PWSActivitiesFlag>... params) {
+
+            List<PWSActivitiesFlag> pwsActivitiesFlags = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.pwsActivitiesFlagDao().insert(pwsActivitiesFlags);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    public void getPCPWSActivitiesFlagDownload() {
+
+        String last_synced = getLastSyncTimePCPWSActivities();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<PCPWSActivitiesFlagDownload> call = retrofitInterface.downloadPCPWSActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<PCPWSActivitiesFlagDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<PCPWSActivitiesFlagDownload> call,
+                                   @NonNull Response<PCPWSActivitiesFlagDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    PCPWSActivitiesFlagDownload pcpwsActivitiesFlagDownload = response.body();
+
+                    if (pcpwsActivitiesFlagDownload != null) {
+                        List<PCPWSActivitiesFlag> pcpwsActivitiesFlagList = pcpwsActivitiesFlagDownload.getDownload_list();
+                        if (pcpwsActivitiesFlagList.size() > 0){
+                            saveToPCPWSActivitiesFlagTable(pcpwsActivitiesFlagList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncDownPCPWSActivitiesFlag(sharedPrefs.getStaffID(),pcpwsActivitiesFlagDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_pc_pws_activities_flag(pcpwsActivitiesFlagDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_download",
+                                "PC PWS Activities Download",
+                                "1",
+                                returnRemark(pcpwsActivitiesFlagList.size()),
+                                pcpwsActivitiesFlagDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_download",
+                                "PC PWS Activities Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_download",
+                            "PC PWS Activities Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<PCPWSActivitiesFlagDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_pc_pws_download", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_download",
+                        "PC PWS Activities Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToPCPWSActivitiesFlagTable(List<PCPWSActivitiesFlag> pcpwsActivitiesFlags){
+        SavePCPWSActivitiesFlagTable savePCPWSActivitiesFlagTable = new SavePCPWSActivitiesFlagTable();
+        savePCPWSActivitiesFlagTable.execute(pcpwsActivitiesFlags);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SavePCPWSActivitiesFlagTable extends AsyncTask<List<PCPWSActivitiesFlag>, Void, Void> {
+
+
+        private final String TAG = SavePCPWSActivitiesFlagTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<PCPWSActivitiesFlag>... params) {
+
+            List<PCPWSActivitiesFlag> pcpwsActivitiesFlags = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.pcpwsActivitiesFlagDao().insert(pcpwsActivitiesFlags);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
     String getLastSyncTimeStaffList(){
         String last_sync_time;
         try {
@@ -2340,6 +2933,48 @@ public class ActivityListDownloadService extends IntentService {
         String last_sync_time;
         try {
             last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownRFActivitiesFlag(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncTimePWSCategoryList(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncPWSCategoryList(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncTimePWSActivities(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownPWSActivitiesFlag(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncTimePCPWSActivities(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownPCPWSActivitiesFlag(sharedPrefs.getStaffID());
         } catch (Exception e) {
             e.printStackTrace();
             last_sync_time = "2019-01-01 00:00:00";

@@ -65,16 +65,35 @@ public class LastSyncTable {
     @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_RF_ACTIVITY_FLAGS_TABLE)
     private String last_sync_down_rf_activities_flag;
 
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_PWS_CATEGORY_LIST_TABLE)
+    private String last_sync_pws_category_list;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_UP_PWS_ACTIVITY_FLAGS_TABLE)
+    private String last_sync_up_pws_activities_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_PWS_ACTIVITY_FLAGS_TABLE)
+    private String last_sync_down_pws_activities_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_UP_PC_PWS_ACTIVITY_FLAGS_TABLE)
+    private String last_sync_up_pc_pws_activities_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_PC_PWS_ACTIVITY_FLAGS_TABLE)
+    private String last_sync_down_pc_pws_activities_flag;
+
     public LastSyncTable() {
     }
 
     public LastSyncTable(@NonNull String staff_id, String last_sync_activity_list,
-                         String last_sync_up_normal_activities_flag, String last_sync_down_normal_activities_flag,
-                         String last_sync_fields, String last_sync_staff, String last_sync_members,
+                         String last_sync_up_normal_activities_flag,
+                         String last_sync_down_normal_activities_flag, String last_sync_fields,
+                         String last_sync_staff, String last_sync_members,
                          String last_sync_up_hg_activities_flag, String last_sync_down_hg_activities_flag,
                          String last_sync_hg_list, String last_sync_up_logs, String last_sync_down_logs,
                          String last_sync_category, String last_sync_harvest_location, String last_sync_rf_list,
-                         String last_sync_up_rf_activities_flag, String last_sync_down_rf_activities_flag) {
+                         String last_sync_up_rf_activities_flag, String last_sync_down_rf_activities_flag,
+                         String last_sync_pws_category_list, String last_sync_up_pws_activities_flag,
+                         String last_sync_down_pws_activities_flag, String last_sync_up_pc_pws_activities_flag,
+                         String last_sync_down_pc_pws_activities_flag) {
         this.staff_id = staff_id;
         this.last_sync_activity_list = last_sync_activity_list;
         this.last_sync_up_normal_activities_flag = last_sync_up_normal_activities_flag;
@@ -92,6 +111,11 @@ public class LastSyncTable {
         this.last_sync_rf_list = last_sync_rf_list;
         this.last_sync_up_rf_activities_flag = last_sync_up_rf_activities_flag;
         this.last_sync_down_rf_activities_flag = last_sync_down_rf_activities_flag;
+        this.last_sync_pws_category_list = last_sync_pws_category_list;
+        this.last_sync_up_pws_activities_flag = last_sync_up_pws_activities_flag;
+        this.last_sync_down_pws_activities_flag = last_sync_down_pws_activities_flag;
+        this.last_sync_up_pc_pws_activities_flag = last_sync_up_pc_pws_activities_flag;
+        this.last_sync_down_pc_pws_activities_flag = last_sync_down_pc_pws_activities_flag;
     }
 
     @NonNull
@@ -229,5 +253,45 @@ public class LastSyncTable {
 
     public void setLast_sync_down_rf_activities_flag(String last_sync_down_rf_activities_flag) {
         this.last_sync_down_rf_activities_flag = last_sync_down_rf_activities_flag;
+    }
+
+    public String getLast_sync_pws_category_list() {
+        return last_sync_pws_category_list;
+    }
+
+    public void setLast_sync_pws_category_list(String last_sync_pws_category_list) {
+        this.last_sync_pws_category_list = last_sync_pws_category_list;
+    }
+
+    public String getLast_sync_up_pws_activities_flag() {
+        return last_sync_up_pws_activities_flag;
+    }
+
+    public void setLast_sync_up_pws_activities_flag(String last_sync_up_pws_activities_flag) {
+        this.last_sync_up_pws_activities_flag = last_sync_up_pws_activities_flag;
+    }
+
+    public String getLast_sync_down_pws_activities_flag() {
+        return last_sync_down_pws_activities_flag;
+    }
+
+    public void setLast_sync_down_pws_activities_flag(String last_sync_down_pws_activities_flag) {
+        this.last_sync_down_pws_activities_flag = last_sync_down_pws_activities_flag;
+    }
+
+    public String getLast_sync_up_pc_pws_activities_flag() {
+        return last_sync_up_pc_pws_activities_flag;
+    }
+
+    public void setLast_sync_up_pc_pws_activities_flag(String last_sync_up_pc_pws_activities_flag) {
+        this.last_sync_up_pc_pws_activities_flag = last_sync_up_pc_pws_activities_flag;
+    }
+
+    public String getLast_sync_down_pc_pws_activities_flag() {
+        return last_sync_down_pc_pws_activities_flag;
+    }
+
+    public void setLast_sync_down_pc_pws_activities_flag(String last_sync_down_pc_pws_activities_flag) {
+        this.last_sync_down_pc_pws_activities_flag = last_sync_down_pc_pws_activities_flag;
     }
 }

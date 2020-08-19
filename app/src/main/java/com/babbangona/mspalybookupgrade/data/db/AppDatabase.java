@@ -20,6 +20,9 @@ import com.babbangona.mspalybookupgrade.data.db.daos.LastSyncTableDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.LogsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.MembersDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.NormalActivitiesFlagDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.PCPWSActivitiesFlagDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.PWSActivitiesFlagDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.PWSCategoryListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.PictureSyncDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.RFActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.RFListDao;
@@ -36,6 +39,9 @@ import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.PCPWSActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.PWSActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.babbangona.mspalybookupgrade.data.db.entities.PictureSync;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
@@ -46,7 +52,8 @@ import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
 @Database(entities = {ActivityList.class, NormalActivitiesFlag.class, Fields.class, StaffList.class,
         Members.class, HGActivitiesFlag.class, HGList.class, Logs.class, LastSyncTable.class, Category.class,
         SyncSummary.class, HarvestLocationsTable.class, AppVariables.class, RFActivitiesFlag.class,
-        RFList.class, PictureSync.class},
+        RFList.class, PictureSync.class, PWSActivitiesFlag.class, PWSCategoryList.class,
+        PCPWSActivitiesFlag.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -69,6 +76,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract RFActivitiesFlagDao rfActivitiesFlagDao();
     public abstract RFListDao rfListDao();
     public abstract PictureSyncDao pictureSyncDao();
+    public abstract PWSActivitiesFlagDao pwsActivitiesFlagDao();
+    public abstract PWSCategoryListDao pwsCategoryListDao();
+    public abstract PCPWSActivitiesFlagDao pcpwsActivitiesFlagDao();
 
     /**
      * Return instance of database creation
@@ -203,13 +213,115 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_7_8 = new Migration(7, 8) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS new_activity_list (" +
+                    "activity_id TEXT NOT NULL," +
+                    "language_id TEXT NOT NULL," +
+                    "user_category TEXT NOT NULL," +
+                    "activity_name TEXT," +
+                    "activity_destination TEXT," +
+                    "activity_priority TEXT," +
+                    "deactivated TEXT," +
+                    "PRIMARY KEY(activity_id,language_id,user_category))"
+            );
+            database.execSQL("DROP TABLE activity_list");
+            database.execSQL("ALTER TABLE new_activity_list RENAME TO activity_list");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS new_hg_list (" +
+                    "hg_type TEXT NOT NULL," +
+                    "sub_hg_type TEXT NOT NULL," +
+                    "deactivated_status TEXT," +
+                    "user_category TEXT NOT NULL," +
+                    "PRIMARY KEY(hg_type,sub_hg_type,user_category))"
+            );
+            database.execSQL("DROP TABLE hg_list");
+            database.execSQL("ALTER TABLE new_hg_list RENAME TO hg_list");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS new_rf_list (" +
+                    "rf_type TEXT NOT NULL," +
+                    "user_category TEXT NOT NULL," +
+                    "deactivated_status TEXT," +
+                    "PRIMARY KEY(rf_type,user_category))"
+            );
+            database.execSQL("DROP TABLE rf_list");
+            database.execSQL("ALTER TABLE new_rf_list RENAME TO rf_list");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS pws_activities_flag (" +
+                    "pws_id TEXT  NOT NULL," +
+                    "unique_field_id TEXT," +
+                    "ik_number TEXT," +
+                    "category TEXT," +
+                    "pws_area TEXT," +
+                    "lat_longs TEXT," +
+                    "min_lat TEXT," +
+                    "max_lat TEXT," +
+                    "min_long TEXT," +
+                    "max_long TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "staff_id TEXT," +
+                    "solve TEXT," +
+                    "deactivate TEXT," +
+                    "date_logged TEXT," +
+                    "description TEXT," +
+                    "member_name TEXT," +
+                    "imei TEXT," +
+                    "unique_member_id TEXT," +
+                    "sync_flag TEXT," +
+                    "PRIMARY KEY(pws_id))"
+            );
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS pc_pws_activities_flag (" +
+                    "pws_id TEXT  NOT NULL," +
+                    "unique_field_id TEXT," +
+                    "ik_number TEXT," +
+                    "category TEXT," +
+                    "pws_area TEXT," +
+                    "lat_longs TEXT," +
+                    "min_lat TEXT," +
+                    "max_lat TEXT," +
+                    "min_long TEXT," +
+                    "max_long TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "staff_id TEXT," +
+                    "solve TEXT," +
+                    "deactivate TEXT," +
+                    "date_logged TEXT," +
+                    "description TEXT," +
+                    "member_name TEXT," +
+                    "imei TEXT," +
+                    "unique_member_id TEXT," +
+                    "sync_flag TEXT," +
+                    "PRIMARY KEY(pws_id))"
+            );
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS pws_category_list (" +
+                    "pws_category TEXT NOT NULL," +
+                    "user_category TEXT NOT NULL," +
+                    "deactivated_status TEXT," +
+                    "PRIMARY KEY(pws_category,user_category))"
+            );
+
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_pws_category_list' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_up_pws_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_pws_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_up_pc_pws_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_pc_pws_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+        }
+    };
+
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
                 context,
                 AppDatabase.class,
                 DatabaseStringConstants.MS_PLAYBOOK_DATABASE_NAME)
                 .allowMainThreadQueries()
-                .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,MIGRATION_6_7)
+                .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,
+                        MIGRATION_6_7,MIGRATION_7_8)
                 .build();
 //                .fallbackToDestructiveMigration()
     }

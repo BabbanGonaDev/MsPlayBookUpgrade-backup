@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/field_list_container"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:theme="@style/Theme.MsPlaybook">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/toolbar_linear_layout"
+            android:padding="@dimen/dimen_5dp">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_hg_fragment"
+                style="@style/Widget.MsPlaybook.Toolbar"
+                android:layout_width="match_parent"
+                android:background="@color/colorWhite"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="@drawable/ic_close"
+                app:title="" />
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Title, secondary and supporting text -->
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:translationZ="5dp"
+                app:cardCornerRadius="@dimen/dimen_10dp"
+                app:cardPreventCornerOverlap="true"
+                android:id="@+id/pws_list_container"
+                android:layout_margin="@dimen/dimen_10dp"
+                app:cardElevation="@dimen/dimen_10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/recycler_back"
+                    android:padding="@dimen/dimen_10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_field_r_id"
+                        android:text="@string/field_r_id"
+                        android:textAppearance="?attr/textAppearanceHeadline6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_ik_number"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:text="@string/ik_number"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_member_name"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:text="@string/member_name"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_member_r_id"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:text="@string/member_r_id"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_phone_number"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:text="@string/member_phone_number"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_crop_type"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:text="@string/member_crop_type"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_field_size"
+                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/field_size"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="?android:attr/textColorSecondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_village_name"
+                            android:layout_marginEnd="@dimen/dimen_10dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/member_village"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="?android:attr/textColorSecondary" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:translationZ="5dp"
+                app:cardCornerRadius="@dimen/dimen_10dp"
+                app:cardPreventCornerOverlap="true"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:id="@+id/pws_supplementary_container"
+                app:cardElevation="@dimen/dimen_10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/recycler_back"
+                    android:padding="@dimen/dimen_10dp"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/edlCategory"
+                        style="@style/ExposedDropdownMenu"
+                        android:hint="@string/select_pws_category">
+
+                        <AutoCompleteTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/actCategory"
+                            android:editable="false"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:text="@string/pws_take_picture_preamble"
+                        android:textStyle="italic"
+                        android:textSize="15sp"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="@color/text_color_blue" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="@dimen/dimen_150dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_picture_name_1"
+                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:gravity="center_vertical|end"
+                            android:padding="@dimen/dimen_10dp"
+                            android:textSize="@dimen/dimen_20sp"
+                            android:text="@string/pws_log_picture1"
+                            android:ellipsize="middle"
+                            android:maxLength="15"
+                            android:background="@drawable/view_looks1"
+                            android:drawableStart="@drawable/ic_baseline_photo_camera_24"
+                            android:textColor="@color/text_color_black"
+                            android:elevation="5dp"
+                            android:singleLine="true" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/btn_capture_picture_1"
+                            android:textSize="@dimen/dimen_13sp"
+                            android:padding="@dimen/dimen_10dp"
+                            android:text="@string/pws_log_capture"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/btn_cancel_pic_1"
+                            app:icon="@drawable/ic_baseline_clear_24"
+                            android:backgroundTint="@color/view_red"
+                            style="@style/Widget.App.Button.OutlinedButton.IconOnly"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="@dimen/dimen_150dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_picture_name_2"
+                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:gravity="center_vertical|end"
+                            android:padding="@dimen/dimen_10dp"
+                            android:textSize="@dimen/dimen_20sp"
+                            android:text="@string/pws_log_picture2"
+                            android:ellipsize="middle"
+                            android:maxLength="15"
+                            android:background="@drawable/view_looks1"
+                            android:drawableStart="@drawable/ic_baseline_photo_camera_24"
+                            android:textColor="@color/text_color_black"
+                            android:singleLine="true"
+                            android:elevation="5dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/btn_capture_picture_2"
+                            android:textSize="@dimen/dimen_13sp"
+                            android:padding="@dimen/dimen_10dp"
+                            android:text="@string/pws_log_capture"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/btn_cancel_pic_2"
+                            app:icon="@drawable/ic_baseline_clear_24"
+                            android:backgroundTint="@color/view_red"
+                            style="@style/Widget.App.Button.OutlinedButton.IconOnly"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="@dimen/dimen_150dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_picture_name_3"
+                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:gravity="center_vertical|end"
+                            android:padding="@dimen/dimen_10dp"
+                            android:textSize="@dimen/dimen_20sp"
+                            android:text="@string/pws_log_picture3"
+                            android:ellipsize="middle"
+                            android:maxLength="15"
+                            android:background="@drawable/view_looks1"
+                            android:drawableStart="@drawable/ic_baseline_photo_camera_24"
+                            android:textColor="@color/text_color_black"
+                            android:singleLine="true"
+                            android:elevation="5dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/btn_capture_picture_3"
+                            android:textSize="@dimen/dimen_13sp"
+                            android:padding="@dimen/dimen_10dp"
+                            android:text="@string/pws_log_capture"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/btn_cancel_pic_3"
+                            app:icon="@drawable/ic_baseline_clear_24"
+                            android:backgroundTint="@color/view_red"
+                            style="@style/Widget.App.Button.OutlinedButton.IconOnly"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="@dimen/dimen_150dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_picture_name_4"
+                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:gravity="center_vertical|end"
+                            android:padding="@dimen/dimen_10dp"
+                            android:textSize="@dimen/dimen_20sp"
+                            android:text="@string/pws_log_picture4"
+                            android:ellipsize="middle"
+                            android:maxLength="15"
+                            android:background="@drawable/view_looks1"
+                            android:drawableStart="@drawable/ic_baseline_photo_camera_24"
+                            android:textColor="@color/text_color_black"
+                            android:singleLine="true"
+                            android:elevation="5dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/btn_capture_picture_4"
+                            android:textSize="@dimen/dimen_13sp"
+                            android:padding="@dimen/dimen_10dp"
+                            android:text="@string/pws_log_capture"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/btn_cancel_pic_4"
+                            app:icon="@drawable/ic_baseline_clear_24"
+                            android:backgroundTint="@color/view_red"
+                            style="@style/Widget.App.Button.OutlinedButton.IconOnly"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="@dimen/dimen_150dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_pws_map"
+                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:gravity="start"
+                            android:padding="@dimen/dimen_10dp"
+                            android:textSize="@dimen/dimen_20sp"
+                            android:text="@string/pws_mapped_area"
+                            android:ellipsize="end"
+                            android:maxLength="15"
+                            android:background="@drawable/view_looks1"
+                            android:textColor="@color/text_color_black"
+                            android:singleLine="true"
+                            android:elevation="5dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/btn_map_pws"
+                            android:textSize="@dimen/dimen_13sp"
+                            android:padding="@dimen/dimen_10dp"
+                            android:text="@string/pws_map_area"
+                            app:icon="@drawable/ic_baseline_location_on_24"
+                            style="@style/Widget.MaterialComponents.Button.Icon"/>
+
+                    </RelativeLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/AppTextField"
+                        android:paddingStart="@dimen/dimen_10dp"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:id="@+id/edlMIKDescription"
+                        android:hint="@string/mik_claim_description">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtMIKDescription"
+                            android:lines="5"
+                            android:minLines="3"
+                            android:gravity="top|start"
+                            android:maxLines="5"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:scrollbars="vertical"
+                            android:textSize="16sp"
+                            android:inputType="textMultiLine" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmitPWS"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/view_blue"
+                android:text="@string/pws_submit"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

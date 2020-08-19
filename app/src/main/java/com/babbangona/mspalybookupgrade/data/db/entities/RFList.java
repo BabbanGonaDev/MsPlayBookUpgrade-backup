@@ -7,7 +7,8 @@ import androidx.room.Entity;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 
 //TODO: Revamp this page following this structure to your desired entity class
-@Entity(primaryKeys = {DatabaseStringConstants.COL_RF_TYPE_RF_LIST},
+@Entity(primaryKeys = {DatabaseStringConstants.COL_RF_TYPE_RF_LIST,
+        DatabaseStringConstants.COL_USER_CATEGORY_RF_LIST},
         tableName = DatabaseStringConstants.RF_LIST_TABLE)
 public class RFList {
 
@@ -19,9 +20,10 @@ public class RFList {
     private String deactivated_status;
 
     @ColumnInfo(name = DatabaseStringConstants.COL_USER_CATEGORY_RF_LIST)
+    @NonNull
     private String user_category;
 
-    public RFList(@NonNull String rf_type, String deactivated_status, String user_category) {
+    public RFList(@NonNull String rf_type, String deactivated_status, @NonNull String user_category) {
         this.rf_type = rf_type;
         this.deactivated_status = deactivated_status;
         this.user_category = user_category;
@@ -44,11 +46,12 @@ public class RFList {
         this.deactivated_status = deactivated_status;
     }
 
+    @NonNull
     public String getUser_category() {
         return user_category;
     }
 
-    public void setUser_category(String user_category) {
+    public void setUser_category(@NonNull String user_category) {
         this.user_category = user_category;
     }
 }

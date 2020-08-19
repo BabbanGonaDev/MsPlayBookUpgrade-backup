@@ -17,13 +17,13 @@ public abstract class HGActivitiesFlagDao {
 
     @Query(" SELECT COUNT(DISTINCT a.unique_field_id) FROM hg_activities_flag a JOIN fields b " +
             "ON a.unique_field_id = b.unique_field_id WHERE a.hg_status != '0' " +
-            "AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) ")
+            "AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND b.deactivate = '0' ")
     public abstract int getHGCount(String staff_id);
 
     @Query(" SELECT COUNT(DISTINCT a.unique_field_id) FROM hg_activities_flag a JOIN fields b " +
             "ON a.unique_field_id = b.unique_field_id WHERE a.hg_status != '0' " +
             "AND ((b.min_lat+b.max_lat)/2) > :min_lat AND ((b.min_lat+b.max_lat)/2) <= :max_lat AND ((b.min_lng+b.max_lng)/2) > :min_lng " +
-            "AND ((b.min_lng+b.max_lng)/2) <= :max_lng AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) ")
+            "AND ((b.min_lng+b.max_lng)/2) <= :max_lng AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND b.deactivate = '0' ")
     public abstract int fieldPortionCountForHG(String staff_id, double min_lat, double max_lat, double min_lng, double max_lng);
 
     @Query("SELECT COUNT(unique_field_id) FROM hg_activities_flag WHERE unique_field_id = :unique_field_id AND hg_status != '0'")

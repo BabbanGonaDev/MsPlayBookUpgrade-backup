@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.uxcam.UXCam;
 
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         Main2ActivityMethods main2ActivityMethods = new Main2ActivityMethods(MainActivity.this);
         main2ActivityMethods.confirmPhoneDate();
         main2ActivityMethods.confirmLocationOpen();
+        sharedPrefs.setKeyProgressDialogStatus(1);
         UXCam.startWithKey("l5h2x6r7c5j34t5");
         UXCam.setUserIdentity(new SharedPrefs(getApplicationContext()).getStaffID());
     }
@@ -83,9 +86,17 @@ public class MainActivity extends AppCompatActivity {
     void addDataToDatabase(){
         AsyncTask.execute(()->{
             if (sharedPrefs.getKeyFirstTimeDataFlag().equalsIgnoreCase("0")){
-                appDatabase.activityListDao().insert(new ActivityList("4","en",
+                List<ActivityList> activityLists = new ArrayList<>();
+                activityLists.add(new ActivityList("4","en",
                         "Set Portfolio", "com.babbangona.mspalybookupgrade.SetPortfolio",
-                        "1","supr","0"));
+                        "1","MSS","0"));
+                activityLists.add(new ActivityList("4","en",
+                        "Set Portfolio", "com.babbangona.mspalybookupgrade.SetPortfolio",
+                        "1","LMIK","0"));
+                activityLists.add(new ActivityList("4","en",
+                        "Set Portfolio", "com.babbangona.mspalybookupgrade.SetPortfolio",
+                        "1","PC","0"));
+                appDatabase.activityListDao().insert(activityLists);
                 List<Category> categoryList = new ArrayList<>();
                 categoryList.add(new Category("MIK","subd"));
                 categoryList.add(new Category("MSB","subd"));
@@ -93,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
                 categoryList.add(new Category("LMIK","supr"));
                 categoryList.add(new Category("PC","supr"));
                 appDatabase.categoryDao().insert(categoryList);
+
+                List<PWSCategoryList> pwsCategoryLists = new ArrayList<>();
+                pwsCategoryLists.add(new PWSCategoryList("Flood","MSB","0"));
+                pwsCategoryLists.add(new PWSCategoryList("Drought","MSB","0"));
+                appDatabase.pwsCategoryListDao().insert(pwsCategoryLists);
                 sharedPrefs.setKeyFirstTimeDataFlag("1");
             }
 

@@ -14,6 +14,13 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <permission
+        android:name="com.babbangona.mspalybookupgrade.READ_DATABASE"
+        android:protectionLevel="normal" />
+    <permission
+        android:name="com.babbangona.mspalybookupgrade.WRITE_DATABASE"
+        android:protectionLevel="normal" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,6 +29,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".PCTabbedView"
+            android:label="@string/title_activity_p_c_tabbed_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PoorWeatherSupportLauncher" />
+        <activity android:name=".utils.MappingActivity" />
         <activity
             android:name=".HarvestCollectionCenter"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -45,6 +58,20 @@
             android:enabled="true"
             android:exported="true" />
 
+        <provider
+            android:name=".utils.FieldsContentProvider"
+            android:authorities="com.babbangona.mspalybookupgrade"
+            android:exported="true" />
+
+        <activity
+            android:name=".PWSFieldListPage"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PCPWSHomePage"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PCStaffPSWPage"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FieldListPage"
             android:theme="@style/AppTheme.NoActionBar" />

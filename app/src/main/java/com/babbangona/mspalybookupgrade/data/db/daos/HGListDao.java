@@ -15,7 +15,7 @@ import java.util.List;
 public interface HGListDao {
 
     @Query(" SELECT DISTINCT hg_type FROM hg_list WHERE deactivated_status = '0' " +
-            "AND user_category LIKE :role_category ")
+            "AND LOWER(user_category) = :role_category ")
     List<String> getAllHGs(String role_category);
 
     @Query(" SELECT DISTINCT sub_hg_type FROM hg_list WHERE deactivated_status = '0' " +
