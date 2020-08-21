@@ -30,6 +30,15 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".transporter.views.TransporterNamesActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterPhoneNumberActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterHomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".PCTabbedView"
             android:label="@string/title_activity_p_c_tabbed_view"
             android:theme="@style/AppTheme.NoActionBar" />
