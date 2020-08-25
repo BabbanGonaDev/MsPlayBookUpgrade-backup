@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class TSessionManager {
+
     /**
      * These keys are used to store the details of a currently registering transporter.
      */
@@ -12,6 +13,15 @@ public class TSessionManager {
     public static final String KEY_REG_LAST_NAME = "reg_last_name";
     public static final String KEY_REG_FACE_TEMPLATE = "reg_face_template";
     public static final String KEY_REG_VEHICLE_TYPE = "reg_vehicle_type";
+    public static final String KEY_REG_COLLECTION_CENTERS = "reg_collection_centers";
+
+    /**
+     * App-specific keys. (Keys needed for proper operation of the application)
+     */
+    public static final String KEY_LOG_IN_STAFF_ID = "log_in_staff_id";
+    public static final String KEY_LOG_IN_STAFF_NAME = "log_in_staff_name";
+
+
     private static final String PREF_NAME = "Transporter Preferences";
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
@@ -51,6 +61,18 @@ public class TSessionManager {
         editor.putString(KEY_REG_VEHICLE_TYPE, value).commit();
     }
 
+    public void SET_REG_COLLECTION_CENTERS(String value) {
+        editor.putString(KEY_REG_COLLECTION_CENTERS, value).commit();
+    }
+
+    public void SET_LOG_IN_STAFF_ID(String value) {
+        editor.putString(KEY_LOG_IN_STAFF_ID, value).commit();
+    }
+
+    public void SET_LOG_IN_STAFF_NAME(String value) {
+        editor.putString(KEY_LOG_IN_STAFF_NAME, value).commit();
+    }
+
 
     /**
      * =========================================================================
@@ -78,6 +100,17 @@ public class TSessionManager {
         return prefs.getString(KEY_REG_VEHICLE_TYPE, "");
     }
 
+    public String GET_REG_COLLECTION_CENTERS() {
+        return prefs.getString(KEY_REG_COLLECTION_CENTERS, "");
+    }
+
+    public String GET_LOG_IN_STAFF_ID() {
+        return prefs.getString(KEY_LOG_IN_STAFF_ID, "");
+    }
+
+    public String GET_LOG_IN_STAFF_NAME() {
+        return prefs.getString(KEY_LOG_IN_STAFF_NAME, "");
+    }
 
     /**
      * =========================================================================
@@ -91,6 +124,7 @@ public class TSessionManager {
                 .remove(KEY_REG_LAST_NAME)
                 .remove(KEY_REG_FACE_TEMPLATE)
                 .remove(KEY_REG_VEHICLE_TYPE)
+                .remove(KEY_REG_COLLECTION_CENTERS)
                 .commit();
     }
 }

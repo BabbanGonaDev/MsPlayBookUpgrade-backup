@@ -30,10 +30,24 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".transporter.views.TransporterCcActivity"
+            android:parentActivityName=".transporter.views.TransporterLocationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterLocationActivity"
+            android:parentActivityName=".transporter.views.TransporterVehicleActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterVehicleActivity"
+            android:parentActivityName=".transporter.views.TransporterNamesActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".transporter.views.TransporterNamesActivity"
+            android:parentActivityName=".transporter.views.TransporterPhoneNumberActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".transporter.views.TransporterPhoneNumberActivity"
+            android:parentActivityName=".transporter.views.TransporterHomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".transporter.views.TransporterHomeActivity"

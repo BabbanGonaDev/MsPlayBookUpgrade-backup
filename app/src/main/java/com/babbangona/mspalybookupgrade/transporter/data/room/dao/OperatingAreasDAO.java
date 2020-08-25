@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.transporter.data.room.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -16,5 +17,5 @@ public interface OperatingAreasDAO {
     void insertOpAreasList(List<OperatingAreasTable> list);
 
     @Query("SELECT * FROM operating_areas_table WHERE phone_number = :phoneNo")
-    List<OperatingAreasTable> getTransporterOperatingAreas(String phoneNo);
+    LiveData<List<OperatingAreasTable>> getTransporterOperatingAreas(String phoneNo);
 }

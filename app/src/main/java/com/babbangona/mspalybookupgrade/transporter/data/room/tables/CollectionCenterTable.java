@@ -15,7 +15,6 @@ public class CollectionCenterTable {
     private String cc_name;
     private String date_updated;
 
-
     public CollectionCenterTable(@NonNull String cc_id, String state, String lga, String cc_name, String date_updated) {
         this.cc_id = cc_id;
         this.state = state;

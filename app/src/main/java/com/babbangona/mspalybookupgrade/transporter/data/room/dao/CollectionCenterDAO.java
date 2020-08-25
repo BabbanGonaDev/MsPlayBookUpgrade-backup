@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.transporter.data.room.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -20,11 +21,11 @@ public interface CollectionCenterDAO {
     void updateCC(CollectionCenterTable cc);
 
     @Query("SELECT DISTINCT state FROM collection_center_table")
-    List<String> getAllStates();
+    LiveData<List<String>> getAllStates();
 
     @Query("SELECT DISTINCT lga FROM collection_center_table WHERE state = :state")
-    List<String> getAllLga(String state);
+    LiveData<List<String>> getAllLga(String state);
 
     @Query("SELECT * FROM collection_center_table WHERE state = :state AND lga = :lga")
-    List<CollectionCenterTable> getCollectionCenters(String state, String lga);
+    LiveData<List<CollectionCenterTable>> getCollectionCenters(String state, String lga);
 }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -6,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".transporter.views.TransporterNamesActivity">
+        tools:context=".transporter.views.TransporterVehicleActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -21,13 +22,13 @@
 
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textView2"
+            android:id="@+id/textView3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="10dp"
-            android:text="Enter Transporter Details"
+            android:text="Select Vehicle Type"
             android:textColor="@color/text_color_black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -35,52 +36,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/input_first_name"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_vehicle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="26dp"
             android:layout_marginEnd="10dp"
-            android:hint="First Name"
+            android:layout_marginBottom="26dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_continue"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_first_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/input_last_name"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="10dp"
-            android:hint="Last Name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/input_first_name">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_last_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_submit"
+            android:id="@+id/btn_continue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:text="Submit"
+            android:text="Continue"
             android:textAllCaps="false"
             android:textSize="16sp"
             app:cornerRadius="10dp"

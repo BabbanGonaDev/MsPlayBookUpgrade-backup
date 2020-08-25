@@ -33,6 +33,8 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
         db = TransporterDatabase.getInstance(this);
         session = new TSessionManager(this);
 
+        binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
+
         setPhoneNoFilter();
 
 
@@ -61,7 +63,7 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
             } else {
                 //--- GO to next page.
                 session.SET_REG_PHONE_NUMBER(phone_no);
-                startActivity(new Intent(this, TransporterPhoneNumberActivity.class));
+                startActivity(new Intent(this, TransporterNamesActivity.class));
             }
         });
     }
@@ -89,7 +91,7 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
     }
 
     public boolean isPhoneNumberVerified(String number) {
-        TransporterTable trans = db.getTransporterDao().getTransporterDetails(number);
+        TransporterTable trans = db.getTransporterDao().getTransporterDetails(number).getValue();
         //if trans is null, return true. Means, number doesn't exist.
         return trans == null;
     }
