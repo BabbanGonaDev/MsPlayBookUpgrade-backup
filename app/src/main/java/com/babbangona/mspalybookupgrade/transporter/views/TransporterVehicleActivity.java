@@ -7,18 +7,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.databinding.ActivityTransporterVehicleBinding;
 import com.babbangona.mspalybookupgrade.transporter.adapters.VehicleTypeAdapter;
 import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
-import com.babbangona.mspalybookupgrade.transporter.data.models.Vehicle;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class TransporterVehicleActivity extends AppCompatActivity {
     ActivityTransporterVehicleBinding binding;
@@ -38,15 +34,25 @@ public class TransporterVehicleActivity extends AppCompatActivity {
         db = TransporterDatabase.getInstance(this);
         session = new TSessionManager(this);
 
-        //Disable to continue button at first so they can select a vehicle type before moving forward.
-        binding.btnContinue.setEnabled(false);
         binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
-
-        initVehicleRecycler();
 
         binding.btnContinue.setOnClickListener(v -> {
             // Go to next activity.
-            startActivity(new Intent(this, TransporterLocationActivity.class));
+            if (!isAnyVehicleSelected()) {
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("Invalid Entry")
+                        .setMessage("Kindly select at least 1 vehicle type")
+                        .setIcon(R.drawable.ic_sad_face)
+                        .setPositiveButton("Okay", (dialog, which) -> {
+                            dialog.dismiss();
+                        }).setCancelable(false).show();
+            } else {
+                String selected_vehicles = getSelectedVehicles();
+                session.SET_REG_VEHICLE_TYPE(selected_vehicles);
+                Toast.makeText(this, selected_vehicles, Toast.LENGTH_LONG).show();
+
+                startActivity(new Intent(this, TransporterLocationActivity.class));
+            }
         });
     }
 
@@ -56,7 +62,35 @@ public class TransporterVehicleActivity extends AppCompatActivity {
         return true;
     }
 
-    public void initVehicleRecycler() {
+    public boolean isAnyVehicleSelected() {
+        return binding.mcbTricycle.isChecked() || binding.mcbBus.isChecked() ||
+                binding.mcbCanter.isChecked() || binding.mcbCar.isChecked() || binding.mcbMotorcycle.isChecked();
+    }
+
+    public String getSelectedVehicles() {
+        StringBuilder vehicles = new StringBuilder();
+        vehicles.append("Vehicles: ");
+
+        if (binding.mcbTricycle.isChecked()) {
+            vehicles.append("Tricycle, ");
+        }
+        if (binding.mcbMotorcycle.isChecked()) {
+            vehicles.append("Motorcycle, ");
+        }
+        if (binding.mcbCar.isChecked()) {
+            vehicles.append("Car, ");
+        }
+        if (binding.mcbCanter.isChecked()) {
+            vehicles.append("Canter, ");
+        }
+        if (binding.mcbBus.isChecked()) {
+            vehicles.append("Bus, ");
+        }
+
+        return vehicles.toString().trim();
+    }
+
+    /*public void initVehicleRecycler() {
         List<Vehicle> vehicles = createVehicleData();
 
         if (!vehicles.isEmpty()) {
@@ -86,5 +120,5 @@ public class TransporterVehicleActivity extends AppCompatActivity {
         list.add(new Vehicle("Canter", R.drawable.ic_canter_vehicle_type));
 
         return list;
-    }
+    }*/
 }
