@@ -59,6 +59,7 @@ public class TransporterNamesActivity extends AppCompatActivity {
                         .setMessage("Do you want to perform facial capture ?")
                         .setPositiveButton("Yes", (dialog, which) -> {
                             //Navigate to facial capture page
+                            startActivity(new Intent(this, TransporterTemplateCaptureActivity.class));
                         })
                         .setNegativeButton("No", (dialog, which) -> {
                             //Move to next activity
