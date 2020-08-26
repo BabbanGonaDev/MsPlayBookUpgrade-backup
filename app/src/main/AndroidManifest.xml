@@ -28,7 +28,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".transporter.views.TransporterBankOptionActivity"
+            android:parentActivityName=".transporter.views.TransporterPayOptionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterCardOptionActivity"
+            android:parentActivityName=".transporter.views.TransporterPayOptionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterPayOptionActivity"
+            android:parentActivityName=".transporter.views.TransporterCcActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".transporter.views.TransporterCcActivity"
             android:parentActivityName=".transporter.views.TransporterLocationActivity"
@@ -85,6 +98,16 @@
             android:name=".utils.FieldsContentProvider"
             android:authorities="com.babbangona.mspalybookupgrade"
             android:exported="true" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
         <activity
             android:name=".PWSFieldListPage"

@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.transporter.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -63,6 +64,7 @@ public class TransporterCcActivity extends AppCompatActivity {
             } else {
                 session.SET_REG_COLLECTION_CENTERS(new Gson().toJson(selected_ccId));
                 //Go to next activity.
+                startActivity(new Intent(this, TransporterPayOptionActivity.class));
             }
         });
     }

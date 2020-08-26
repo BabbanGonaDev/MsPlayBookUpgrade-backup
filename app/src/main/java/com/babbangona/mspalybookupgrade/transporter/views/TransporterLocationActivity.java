@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -78,6 +79,8 @@ public class TransporterLocationActivity extends AppCompatActivity {
             startActivity(new Intent(this, TransporterCcActivity.class)
                     .putExtra("state", state)
                     .putExtra("lga", lga));
+        } else {
+            Toast.makeText(this, "Kindly fill all inputs", Toast.LENGTH_LONG).show();
         }
     }
 

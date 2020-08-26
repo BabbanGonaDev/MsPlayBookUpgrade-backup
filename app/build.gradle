@@ -80,11 +80,15 @@ dependencies {
 
     //implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'com.google.firebase:firebase-analytics:17.4.3'
+    implementation 'com.google.firebase:firebase-analytics:17.5.0'
 
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'com.google.firebase:firebase-crashlytics:17.0.1'
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
     //implementation files('libs/uxcam-3.2.1.jar')
+
+    /*OTP View dependency*/
+    //implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.0'
+    implementation 'com.github.GoodieBag:Pinview:1.4'
 
     repositories {
         maven{

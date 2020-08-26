@@ -91,8 +91,10 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
     }
 
     public boolean isPhoneNumberVerified(String number) {
-        TransporterTable trans = db.getTransporterDao().getTransporterDetails(number).getValue();
-        //if trans is null, return true. Means, number doesn't exist.
-        return trans == null;
+        TransporterTable trans = db.getTransporterDao().getTransporterDetails(number);
+        if (trans != null) {
+            return false;
+        }
+        return true;
     }
 }
