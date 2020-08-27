@@ -54,7 +54,6 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
 
         binding.pinViewRightTop.setPinViewEventListener((pinview, fromUser) -> binding.pinViewBottom.requestPinEntryFocus());
 
-        //TODO: Capture picture of card and user.
         binding.btnCaptureCard.setOnClickListener(v -> {
             if (!isCardNumberEntered()) {
                 Toast.makeText(TransporterCardOptionActivity.this, "Kindly enter complete card number", Toast.LENGTH_LONG).show();

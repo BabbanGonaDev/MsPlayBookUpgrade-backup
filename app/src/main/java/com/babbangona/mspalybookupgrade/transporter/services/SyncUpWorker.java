@@ -19,13 +19,11 @@ public class SyncUpWorker extends Worker {
      * - Operating areas table.
      */
 
-
     public SyncUpWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         session = new TSessionManager(context);
         db = TransporterDatabase.getInstance(context);
     }
-
 
     @NonNull
     @Override

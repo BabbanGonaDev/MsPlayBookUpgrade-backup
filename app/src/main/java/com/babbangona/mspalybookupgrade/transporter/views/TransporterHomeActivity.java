@@ -38,6 +38,7 @@ public class TransporterHomeActivity extends AppCompatActivity {
         binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
 
         binding.btnNextActivity.setOnClickListener(v -> {
+            session.CLEAR_REG_SESSION();
             startActivity(new Intent(this, TransporterPhoneNumberActivity.class));
         });
     }

@@ -2,6 +2,7 @@ package com.babbangona.mspalybookupgrade.transporter.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 
@@ -45,9 +46,12 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
 
         binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
 
+        setAccNumberFilter();
+
+        //setAccNameTxtWatcher();
+
         initBankNameAdapter();
 
-        //TODO: Conduct filters and checks on the entered bank names.
         binding.btnSubmit.setOnClickListener(v -> {
             if (isInputsEmpty()) {
                 new MaterialAlertDialogBuilder(this)
@@ -56,6 +60,27 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
                         .setIcon(R.drawable.ic_sad_face)
                         .setPositiveButton("Okay", (dialog, which) -> {
                             dialog.dismiss();
+                        }).setCancelable(false).show();
+            } else if (!isAccNumberValid()) {
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("Invalid Entry")
+                        .setMessage("Kindly enter a valid account number of 10 digits")
+                        .setIcon(R.drawable.ic_sad_face)
+                        .setPositiveButton("Okay", (dialog, which) -> {
+                            dialog.dismiss();
+                            binding.editAccountNumber.requestFocus();
+                        }).setCancelable(false).show();
+            } else if (!isAccNameMatching()) {
+                new MaterialAlertDialogBuilder(TransporterBankOptionActivity.this)
+                        .setTitle("Are you sure ?")
+                        .setMessage("Account name doesn't match Transporter's name")
+                        .setIcon(R.drawable.ic_sad_face)
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            displayConfirmationDialog();
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> {
+                            dialog.dismiss();
+                            binding.editAccountName.requestFocus();
                         }).setCancelable(false).show();
             } else {
                 //Save details.
@@ -84,6 +109,16 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
         } else if (binding.editAccountNumber.getText().toString().isEmpty()) {
             return true;
         } else return binding.atvBank.getText().toString().isEmpty();
+    }
+
+    public boolean isAccNumberValid() {
+        return binding.editAccountNumber.getText().toString().length() == 10;
+    }
+
+    public boolean isAccNameMatching() {
+        String entered_name = binding.editAccountName.getText().toString().toLowerCase();
+        return entered_name.contains(session.GET_REG_FIRST_NAME().toLowerCase())
+                && entered_name.contains(session.GET_REG_LAST_NAME().toLowerCase());
     }
 
     public void displayConfirmationDialog() {
@@ -145,5 +180,17 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
         }
 
         return areas_list;
+    }
+
+    public void setAccNumberFilter() {
+        InputFilter filter_1 = (source, start, end, dest, dStart, dEnd) -> {
+            for (int i = start; i < end; i++) {
+                if (!Character.isDigit(source.charAt(i)) || dest.length() >= 10) {
+                    return "";
+                }
+            }
+            return null;
+        };
+        binding.editAccountNumber.setFilters(new InputFilter[]{filter_1});
     }
 }

@@ -108,7 +108,7 @@ public class TransporterTemplateCaptureActivity extends CustomLuxandActivity {
         @Override
         protected Void doInBackground(Bitmap... bitmaps) {
             TSessionManager session = new TSessionManager(getApplicationContext());
-            String file_name = session.GET_REG_PHONE_NUMBER() + "_image.jpg";
+            String file_name = session.GET_REG_PHONE_NUMBER() + "_template_face.jpg";
 
             File dir = new File(Environment.getExternalStorageDirectory().getPath(), AppUtils.facial_captures_location);
             if (!dir.exists() && !dir.mkdirs()) {
