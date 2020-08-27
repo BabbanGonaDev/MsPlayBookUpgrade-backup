@@ -55,6 +55,7 @@ public class TransporterCcActivity extends AppCompatActivity {
         }
 
         binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
+        binding.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
 
         initCollectionCentersList();
 

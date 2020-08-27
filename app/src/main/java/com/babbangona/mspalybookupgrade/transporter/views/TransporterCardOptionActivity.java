@@ -50,6 +50,9 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
         db = TransporterDatabase.getInstance(this);
         session = new TSessionManager(this);
 
+        binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
+        binding.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
+
         binding.pinViewLeftTop.setPinViewEventListener((pinview, fromUser) -> binding.pinViewRightTop.requestPinEntryFocus());
 
         binding.pinViewRightTop.setPinViewEventListener((pinview, fromUser) -> binding.pinViewBottom.requestPinEntryFocus());
@@ -140,7 +143,8 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
                 "N/A",
                 session.GET_REG_FACE_TEMPLATE(),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
-                "0");
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
+                0);
     }
 
     public List<OperatingAreasTable> getOperatingAreasInfo() {
@@ -150,7 +154,8 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
         for (String x : ops_areas) {
             areas_list.add(new OperatingAreasTable(session.GET_REG_PHONE_NUMBER(),
                     x,
-                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime())));
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
+                    0));
         }
 
         return areas_list;

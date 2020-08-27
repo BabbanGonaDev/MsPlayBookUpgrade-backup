@@ -43,6 +43,7 @@ public class TransporterPayOptionActivity extends AppCompatActivity {
         session = new TSessionManager(this);
 
         binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
+        binding.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
 
         binding.btnBank.setOnClickListener(v -> {
             //Go to bank activity
@@ -121,7 +122,8 @@ public class TransporterPayOptionActivity extends AppCompatActivity {
                 "N/A",
                 session.GET_REG_FACE_TEMPLATE(),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
-                "0");
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
+                0);
     }
 
     public List<OperatingAreasTable> getOperatingAreasInfo() {
@@ -131,7 +133,8 @@ public class TransporterPayOptionActivity extends AppCompatActivity {
         for (String x : ops_areas) {
             areas_list.add(new OperatingAreasTable(session.GET_REG_PHONE_NUMBER(),
                     x,
-                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime())));
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
+                    0));
         }
 
         return areas_list;

@@ -30,7 +30,6 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.Ac
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.ActivityListDownloadService;
-import com.babbangona.mspalybookupgrade.transporter.views.TransporterHomeActivity;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.google.android.material.appbar.AppBarLayout;
@@ -126,8 +125,7 @@ public class Homepage extends AppCompatActivity {
         sharedPrefs.setKeyProgressDialogStatus(1);
         startRepeatingTask();
 
-        //TODO: Remember to remove this part.
-        startActivity(new Intent(this, TransporterHomeActivity.class));
+        /*startActivity(new Intent(this, TransporterHomeActivity.class));*/
     }
 
     @Override

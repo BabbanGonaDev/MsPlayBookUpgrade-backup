@@ -34,6 +34,7 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
         session = new TSessionManager(this);
 
         binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
+        binding.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
 
         setPhoneNoFilter();
 

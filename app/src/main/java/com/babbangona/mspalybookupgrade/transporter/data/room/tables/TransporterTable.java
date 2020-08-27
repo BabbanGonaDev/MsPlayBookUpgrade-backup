@@ -20,9 +20,10 @@ public class TransporterTable {
     private String bank_name;
     private String template;
     private String reg_date;
-    private String sync_flag;
+    private String date_updated;
+    private Integer sync_flag;
 
-    public TransporterTable(@NonNull String phone_number, String first_name, String last_name, String vehicle_type, String payment_option, String bg_card, String account_number, String account_name, String bank_name, String template, String reg_date, String sync_flag) {
+    public TransporterTable(@NonNull String phone_number, String first_name, String last_name, String vehicle_type, String payment_option, String bg_card, String account_number, String account_name, String bank_name, String template, String reg_date, String date_updated, Integer sync_flag) {
         this.phone_number = phone_number;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -34,6 +35,7 @@ public class TransporterTable {
         this.bank_name = bank_name;
         this.template = template;
         this.reg_date = reg_date;
+        this.date_updated = date_updated;
         this.sync_flag = sync_flag;
     }
 
@@ -82,7 +84,20 @@ public class TransporterTable {
         return reg_date;
     }
 
-    public String getSync_flag() {
+    public String getDate_updated() {
+        return date_updated;
+    }
+
+    public Integer getSync_flag() {
         return sync_flag;
+    }
+
+    /**
+     * Tuple for sync_up response
+     */
+
+    public static class Response {
+        public String phone_number;
+        public Integer sync_flag;
     }
 }

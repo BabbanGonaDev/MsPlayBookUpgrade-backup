@@ -24,4 +24,10 @@ public interface TransporterDAO {
 
     @Query("SELECT * FROM transporter_table WHERE phone_number = :phone_no")
     TransporterTable getTransporterDetails(String phone_no);
+
+    @Query("SELECT * FROM transporter_table WHERE sync_flag = 0")
+    List<TransporterTable> getUnSyncedTransporterTable();
+
+    @Query("UPDATE transporter_table SET sync_flag = :flag WHERE phone_number = :phone_number")
+    void updateSyncResponse(String phone_number, Integer flag);
 }

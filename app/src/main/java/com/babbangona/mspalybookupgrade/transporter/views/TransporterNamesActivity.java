@@ -34,6 +34,7 @@ public class TransporterNamesActivity extends AppCompatActivity {
         session = new TSessionManager(this);
 
         binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
+        binding.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
 
         setNamesFilter();
 
@@ -63,6 +64,7 @@ public class TransporterNamesActivity extends AppCompatActivity {
                         })
                         .setNegativeButton("No", (dialog, which) -> {
                             //Move to next activity
+                            session.SET_REG_FACE_TEMPLATE("N/A");
                             startActivity(new Intent(this, TransporterVehicleActivity.class));
                         }).setCancelable(false).show();
             }

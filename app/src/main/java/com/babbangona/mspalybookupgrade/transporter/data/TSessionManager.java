@@ -20,6 +20,9 @@ public class TSessionManager {
      */
     public static final String KEY_LOG_IN_STAFF_ID = "log_in_staff_id";
     public static final String KEY_LOG_IN_STAFF_NAME = "log_in_staff_name";
+    public static final String KEY_LAST_SYNC_TRANSPORTER = "last_sync_transporter_table";
+    public static final String KEY_LAST_SYNC_CC = "last_sync_cc_table";
+    public static final String KEY_LAST_SYNC_OPERATING_AREAS = "last_sync_operating_areas_table";
 
 
     private static final String PREF_NAME = "Transporter Preferences";
@@ -73,6 +76,18 @@ public class TSessionManager {
         editor.putString(KEY_LOG_IN_STAFF_NAME, value).commit();
     }
 
+    public void SET_LAST_SYNC_TRANSPORTER(String value) {
+        editor.putString(KEY_LAST_SYNC_TRANSPORTER, value).commit();
+    }
+
+    public void SET_LAST_SYNC_CC(String value) {
+        editor.putString(KEY_LAST_SYNC_CC, value).commit();
+    }
+
+    public void SET_LAST_SYNC_OPERATING_AREAS(String value) {
+        editor.putString(KEY_LAST_SYNC_OPERATING_AREAS, value).commit();
+    }
+
 
     /**
      * =========================================================================
@@ -110,6 +125,18 @@ public class TSessionManager {
 
     public String GET_LOG_IN_STAFF_NAME() {
         return prefs.getString(KEY_LOG_IN_STAFF_NAME, "");
+    }
+
+    public String GET_LAST_SYNC_TRANSPORTER() {
+        return prefs.getString(KEY_LAST_SYNC_TRANSPORTER, "2020-08-26 00:00:00");
+    }
+
+    public String GET_LAST_SYNC_CC() {
+        return prefs.getString(KEY_LAST_SYNC_CC, "2020-08-26 00:00:00");
+    }
+
+    public String GET_LAST_SYNC_OPERATING_AREAS() {
+        return prefs.getString(KEY_LAST_SYNC_OPERATING_AREAS, "2020-08-26 00:00:00");
     }
 
     /**

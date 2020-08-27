@@ -1,5 +1,9 @@
 package com.babbangona.mspalybookupgrade.transporter.helpers;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -39,5 +43,18 @@ public class AppUtils {
     public final static String bg_cards_location = "MsPlaybookPictures/Transporter_Activities/BG Cards";
 
     public final static String facial_captures_location = "MsPlaybookPictures/Transporter_Activities/Facial Captures";
+
+    public static boolean isConnectedToNetwork(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        boolean isConnected = false;
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            isConnected = (activeNetwork != null) && (activeNetwork.isConnectedOrConnecting());
+        }
+
+        return isConnected;
+    }
 
 }

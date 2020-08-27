@@ -35,6 +35,7 @@ public class TransporterVehicleActivity extends AppCompatActivity {
         session = new TSessionManager(this);
 
         binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
+        binding.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
 
         binding.btnContinue.setOnClickListener(v -> {
             // Go to next activity.
@@ -69,7 +70,6 @@ public class TransporterVehicleActivity extends AppCompatActivity {
 
     public String getSelectedVehicles() {
         StringBuilder vehicles = new StringBuilder();
-        vehicles.append("Vehicles: ");
 
         if (binding.mcbTricycle.isChecked()) {
             vehicles.append("Tricycle, ");
