@@ -16,6 +16,9 @@ public interface OperatingAreasDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOpAreasList(List<OperatingAreasTable> list);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertSingleOpArea(OperatingAreasTable area);
+
     @Query("SELECT * FROM operating_areas_table WHERE phone_number = :phoneNo")
     LiveData<List<OperatingAreasTable>> getTransporterOperatingAreas(String phoneNo);
 

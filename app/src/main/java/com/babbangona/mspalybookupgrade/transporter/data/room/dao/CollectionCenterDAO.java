@@ -17,6 +17,9 @@ public interface CollectionCenterDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertCCList(List<CollectionCenterTable> list);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertSingleCC(CollectionCenterTable single);
+
     @Update
     void updateCC(CollectionCenterTable cc);
 

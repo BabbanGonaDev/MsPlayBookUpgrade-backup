@@ -16,7 +16,7 @@ public interface TransporterDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertTransporterList(List<TransporterTable> list);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSingleTransporter(TransporterTable transporter);
 
     @Update

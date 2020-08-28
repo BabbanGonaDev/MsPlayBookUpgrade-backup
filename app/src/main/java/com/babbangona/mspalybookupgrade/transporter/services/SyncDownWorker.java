@@ -58,13 +58,13 @@ public class SyncDownWorker extends Worker {
                 if (response.isSuccessful()) {
                     List<TransporterTable> res = response.body();
 
-                    try {
+                    if (res != null) {
                         AppExecutors.getInstance().diskIO().execute(() -> {
-                            db.getTransporterDao().insertTransporterList(res);
-                            session.SET_LAST_SYNC_TRANSPORTER(res.get(0).getDate_updated());
+                            for (TransporterTable t : res) {
+                                db.getTransporterDao().insertSingleTransporter(t);
+                                session.SET_LAST_SYNC_TRANSPORTER(t.getDate_updated());
+                            }
                         });
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
             }
@@ -85,13 +85,13 @@ public class SyncDownWorker extends Worker {
                 if (response.isSuccessful()) {
                     List<OperatingAreasTable> res = response.body();
 
-                    try {
+                    if (res != null) {
                         AppExecutors.getInstance().diskIO().execute(() -> {
-                            db.getOpAreaDao().insertOpAreasList(res);
-                            session.SET_LAST_SYNC_OPERATING_AREAS(res.get(0).getDate_updated());
+                            for (OperatingAreasTable x : res) {
+                                db.getOpAreaDao().insertSingleOpArea(x);
+                                session.SET_LAST_SYNC_OPERATING_AREAS(x.getDate_updated());
+                            }
                         });
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
             }
@@ -112,13 +112,13 @@ public class SyncDownWorker extends Worker {
                 if (response.isSuccessful()) {
                     List<CollectionCenterTable> res = response.body();
 
-                    try {
+                    if (res != null) {
                         AppExecutors.getInstance().diskIO().execute(() -> {
-                            db.getCcDao().insertCCList(res);
-                            session.SET_LAST_SYNC_CC(res.get(0).getDate_updated());
+                            for (CollectionCenterTable c : res) {
+                                db.getCcDao().insertSingleCC(c);
+                                session.SET_LAST_SYNC_CC(c.getDate_updated());
+                            }
                         });
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
             }
