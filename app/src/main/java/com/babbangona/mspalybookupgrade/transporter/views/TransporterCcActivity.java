@@ -80,7 +80,7 @@ public class TransporterCcActivity extends AppCompatActivity {
         selected_ccId = new ArrayList<>();
 
         db.getCcDao().getCollectionCenters(passed_state, passed_lga).observe(this, ccTables -> {
-            //Copy the collection center list into ccModel. So i can add an extra attribute.
+            //Copy the collection center list into ccModel. So i can add an extra attribute (isSelected).
             List<CcModel> ccList = new ArrayList<>();
             for (CollectionCenterTable c : ccTables) {
                 ccList.add(new CcModel(c.getCc_id(), c.getState(), c.getLga(), c.getCc_name(), c.getDate_updated()));
@@ -91,7 +91,7 @@ public class TransporterCcActivity extends AppCompatActivity {
                 public void selectCc(CcModel current_cc) {
                     binding.chipGroup.addView(createChip(current_cc.getCc_name(), current_cc.getCc_id()));
                     selected_ccId.add(current_cc.getCc_id());
-                    Toast.makeText(TransporterCcActivity.this, selected_ccId.size() + " selected.", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(TransporterCcActivity.this, selected_ccId.size() + " selected.", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -99,7 +99,7 @@ public class TransporterCcActivity extends AppCompatActivity {
                     Chip remove_chip = binding.chipGroup.findViewWithTag(current_cc.getCc_id());
                     binding.chipGroup.removeView(remove_chip);
                     selected_ccId.remove(current_cc.getCc_id());
-                    Toast.makeText(TransporterCcActivity.this, selected_ccId.size() + " selected.", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(TransporterCcActivity.this, selected_ccId.size() + " selected.", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -119,6 +119,7 @@ public class TransporterCcActivity extends AppCompatActivity {
         chip.setCheckable(false);
         chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         chip.setTag(id);
+        chip.setCloseIconVisible(false);
         chip.setChipIconResource(R.drawable.ic_transporter_warehouse);
 
         return chip;
