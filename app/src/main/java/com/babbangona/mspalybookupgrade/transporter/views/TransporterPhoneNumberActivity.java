@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.Menu;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -43,23 +44,25 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
             String phone_no = binding.editPhoneNumber.getText().toString().trim();
             if (!isPhoneNumberValid(phone_no)) {
                 //Phone number not valid
-                new MaterialAlertDialogBuilder(this)
+                AlertDialog invalid_no_check = new MaterialAlertDialogBuilder(this)
                         .setTitle("Invalid Entry")
                         .setIcon(R.drawable.ic_sad_face)
                         .setMessage("Kindly enter a valid phone number")
                         .setPositiveButton("Okay", (dialog, which) -> {
                             dialog.dismiss();
                         }).setCancelable(false).show();
+                invalid_no_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
 
             } else if (!isPhoneNumberVerified(phone_no)) {
                 //Phone number already exists.
-                new MaterialAlertDialogBuilder(this)
+                AlertDialog duplicate_no = new MaterialAlertDialogBuilder(this)
                         .setTitle("Duplicate Entry")
                         .setIcon(R.drawable.ic_sad_face)
                         .setMessage("This transporter phone number already exists")
                         .setPositiveButton("Okay", (dialog, which) -> {
                             dialog.dismiss();
                         }).setCancelable(false).show();
+                duplicate_no.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
 
             } else {
                 //--- GO to next page.

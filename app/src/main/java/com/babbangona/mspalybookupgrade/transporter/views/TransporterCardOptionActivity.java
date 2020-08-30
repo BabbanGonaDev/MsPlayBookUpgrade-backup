@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
@@ -99,7 +100,7 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
     }
 
     public void displayConfirmationDialog() {
-        new MaterialAlertDialogBuilder(this)
+        AlertDialog confirm_check = new MaterialAlertDialogBuilder(this)
                 .setTitle("Confirm details")
                 .setMessage("Are you sure you want to register this transporter ?")
                 .setPositiveButton("Yes", (dialog, which) -> {
@@ -108,6 +109,8 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", (dialog, which) -> {
                     dialog.dismiss();
                 }).setCancelable(false).show();
+        confirm_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+        confirm_check.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
     }
 
     public void saveRegDetailsCardOption() {
@@ -116,7 +119,7 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
             db.getOpAreaDao().insertOpAreasList(getOperatingAreasInfo());
 
             runOnUiThread(() -> {
-                new MaterialAlertDialogBuilder(TransporterCardOptionActivity.this)
+                AlertDialog congrats = new MaterialAlertDialogBuilder(TransporterCardOptionActivity.this)
                         .setIcon(R.drawable.ic_smiley_face)
                         .setTitle("Congratulations")
                         .setMessage("Transporter successfully registered")
@@ -126,6 +129,8 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
                             startActivity(new Intent(this, TransporterHomeActivity.class)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }).setCancelable(false).show();
+                congrats.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+                congrats.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
             });
         });
     }
@@ -140,6 +145,7 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
                 card_number.toString(),
                 "N/A",
                 "N/A",
+                0,
                 "N/A",
                 session.GET_REG_FACE_TEMPLATE(),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),

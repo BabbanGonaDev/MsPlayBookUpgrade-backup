@@ -1,6 +1,7 @@
 package com.babbangona.mspalybookupgrade.transporter.services;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -61,6 +62,7 @@ public class SyncDownWorker extends Worker {
                     if (res != null) {
                         AppExecutors.getInstance().diskIO().execute(() -> {
                             for (TransporterTable t : res) {
+                                Log.d("CHECK", "Phone No: " + t.getPhone_number());
                                 db.getTransporterDao().insertSingleTransporter(t);
                                 session.SET_LAST_SYNC_TRANSPORTER(t.getDate_updated());
                             }

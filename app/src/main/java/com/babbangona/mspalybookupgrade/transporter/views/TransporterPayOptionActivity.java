@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -57,7 +58,7 @@ public class TransporterPayOptionActivity extends AppCompatActivity {
 
         binding.btnCash.setOnClickListener(v -> {
             //Confirm from user if they truly want to do this.
-            new MaterialAlertDialogBuilder(this)
+            AlertDialog incentives = new MaterialAlertDialogBuilder(this)
                     .setTitle("Are you sure ?")
                     .setMessage("There are incentives for online payment options...")
                     .setIcon(R.drawable.ic_sad_face)
@@ -68,6 +69,8 @@ public class TransporterPayOptionActivity extends AppCompatActivity {
                     .setNegativeButton("Go Back", (dialog, which) -> {
                         dialog.dismiss();
                     }).setCancelable(false).show();
+            incentives.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+            incentives.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
         });
     }
 
@@ -95,7 +98,7 @@ public class TransporterPayOptionActivity extends AppCompatActivity {
             db.getOpAreaDao().insertOpAreasList(getOperatingAreasInfo());
 
             runOnUiThread(() -> {
-                new MaterialAlertDialogBuilder(TransporterPayOptionActivity.this)
+                AlertDialog congrats = new MaterialAlertDialogBuilder(TransporterPayOptionActivity.this)
                         .setIcon(R.drawable.ic_smiley_face)
                         .setTitle("Congratulations")
                         .setMessage("Transporter successfully registered")
@@ -105,6 +108,7 @@ public class TransporterPayOptionActivity extends AppCompatActivity {
                             startActivity(new Intent(this, TransporterHomeActivity.class)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }).setCancelable(false).show();
+                congrats.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
             });
         });
     }
@@ -119,6 +123,7 @@ public class TransporterPayOptionActivity extends AppCompatActivity {
                 "N/A",
                 "N/A",
                 "N/A",
+                0,
                 "N/A",
                 session.GET_REG_FACE_TEMPLATE(),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),

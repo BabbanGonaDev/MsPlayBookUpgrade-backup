@@ -6,6 +6,7 @@ import android.text.InputFilter;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -31,6 +32,7 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
     ActivityTransporterBankOptionBinding binding;
     TransporterDatabase db;
     TSessionManager session;
+    int name_mismatch_flag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +57,19 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
 
         binding.btnSubmit.setOnClickListener(v -> {
             if (isInputsEmpty()) {
-                new MaterialAlertDialogBuilder(this)
+
+                AlertDialog empty_inputs_check = new MaterialAlertDialogBuilder(this)
                         .setTitle("Invalid Entry")
                         .setMessage("Kindly fill in all inputs")
                         .setIcon(R.drawable.ic_sad_face)
                         .setPositiveButton("Okay", (dialog, which) -> {
                             dialog.dismiss();
                         }).setCancelable(false).show();
+                empty_inputs_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+
             } else if (!isAccNumberValid()) {
-                new MaterialAlertDialogBuilder(this)
+
+                AlertDialog valid_no_check = new MaterialAlertDialogBuilder(this)
                         .setTitle("Invalid Entry")
                         .setMessage("Kindly enter a valid account number of 10 digits")
                         .setIcon(R.drawable.ic_sad_face)
@@ -71,18 +77,27 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
                             dialog.dismiss();
                             binding.editAccountNumber.requestFocus();
                         }).setCancelable(false).show();
+                valid_no_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+
             } else if (!isAccNameMatching()) {
-                new MaterialAlertDialogBuilder(TransporterBankOptionActivity.this)
+
+                AlertDialog bank_mismatch_check = new MaterialAlertDialogBuilder(TransporterBankOptionActivity.this)
                         .setTitle("Are you sure ?")
                         .setMessage("Account name doesn't match Transporter's name")
                         .setIcon(R.drawable.ic_sad_face)
                         .setPositiveButton("Yes", (dialog, which) -> {
+                            //Set the name mismatch flag.
+                            name_mismatch_flag = 1;
                             displayConfirmationDialog();
                         })
                         .setNegativeButton("Cancel", (dialog, which) -> {
                             dialog.dismiss();
+                            name_mismatch_flag = 0;
                             binding.editAccountName.requestFocus();
                         }).setCancelable(false).show();
+                bank_mismatch_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+                bank_mismatch_check.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+
             } else {
                 //Save details.
                 displayConfirmationDialog();
@@ -124,15 +139,18 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
     }
 
     public void displayConfirmationDialog() {
-        new MaterialAlertDialogBuilder(this)
+        AlertDialog confirmation_check = new MaterialAlertDialogBuilder(this)
                 .setTitle("Confirm details")
                 .setMessage("Are you sure you want to register this transporter ?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     saveRegDetailsBankOption();
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> {
+                    name_mismatch_flag = 0;
                     dialog.dismiss();
                 }).setCancelable(false).show();
+        confirmation_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+        confirmation_check.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
     }
 
     public void saveRegDetailsBankOption() {
@@ -141,7 +159,8 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
             db.getOpAreaDao().insertOpAreasList(getOperatingAreasInfo());
 
             runOnUiThread(() -> {
-                new MaterialAlertDialogBuilder(TransporterBankOptionActivity.this)
+
+                AlertDialog congrats = new MaterialAlertDialogBuilder(TransporterBankOptionActivity.this)
                         .setIcon(R.drawable.ic_smiley_face)
                         .setTitle("Congratulations")
                         .setMessage("Transporter successfully registered")
@@ -151,6 +170,8 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
                             startActivity(new Intent(this, TransporterHomeActivity.class)
                                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }).setCancelable(false).show();
+                congrats.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+
             });
         });
     }
@@ -165,6 +186,7 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
                 "N/A",
                 binding.editAccountNumber.getText().toString(),
                 binding.editAccountName.getText().toString(),
+                name_mismatch_flag,
                 binding.atvBank.getText().toString(),
                 session.GET_REG_FACE_TEMPLATE(),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),

@@ -16,7 +16,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionC
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 
-@Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class}, version = 2, exportSchema = false)
+@Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class}, version = 1, exportSchema = false)
 public abstract class TransporterDatabase extends RoomDatabase {
     private static TransporterDatabase INSTANCE;
 

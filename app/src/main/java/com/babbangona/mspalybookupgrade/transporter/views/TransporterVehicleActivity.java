@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -40,13 +41,14 @@ public class TransporterVehicleActivity extends AppCompatActivity {
         binding.btnContinue.setOnClickListener(v -> {
             // Go to next activity.
             if (!isAnyVehicleSelected()) {
-                new MaterialAlertDialogBuilder(this)
+                AlertDialog select_vehicle_check = new MaterialAlertDialogBuilder(this)
                         .setTitle("Invalid Entry")
                         .setMessage("Kindly select at least 1 vehicle type")
                         .setIcon(R.drawable.ic_sad_face)
                         .setPositiveButton("Okay", (dialog, which) -> {
                             dialog.dismiss();
                         }).setCancelable(false).show();
+                select_vehicle_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
             } else {
                 String selected_vehicles = getSelectedVehicles();
                 session.SET_REG_VEHICLE_TYPE(selected_vehicles);

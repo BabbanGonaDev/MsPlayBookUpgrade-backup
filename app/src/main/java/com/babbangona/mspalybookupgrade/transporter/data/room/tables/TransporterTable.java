@@ -17,13 +17,14 @@ public class TransporterTable {
     private String bg_card;
     private String account_number;
     private String account_name;
+    private Integer account_mismatch_flag;
     private String bank_name;
     private String template;
     private String reg_date;
     private String date_updated;
     private Integer sync_flag;
 
-    public TransporterTable(@NonNull String phone_number, String first_name, String last_name, String vehicle_type, String payment_option, String bg_card, String account_number, String account_name, String bank_name, String template, String reg_date, String date_updated, Integer sync_flag) {
+    public TransporterTable(@NonNull String phone_number, String first_name, String last_name, String vehicle_type, String payment_option, String bg_card, String account_number, String account_name, Integer account_mismatch_flag, String bank_name, String template, String reg_date, String date_updated, Integer sync_flag) {
         this.phone_number = phone_number;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -32,6 +33,7 @@ public class TransporterTable {
         this.bg_card = bg_card;
         this.account_number = account_number;
         this.account_name = account_name;
+        this.account_mismatch_flag = account_mismatch_flag;
         this.bank_name = bank_name;
         this.template = template;
         this.reg_date = reg_date;
@@ -70,6 +72,10 @@ public class TransporterTable {
 
     public String getAccount_name() {
         return account_name;
+    }
+
+    public Integer getAccount_mismatch_flag() {
+        return account_mismatch_flag;
     }
 
     public String getBank_name() {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.Menu;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -43,18 +44,19 @@ public class TransporterNamesActivity extends AppCompatActivity {
             String l_name = binding.editLastName.getText().toString().trim();
 
             if (isNamesEmpty(f_name) || isNamesEmpty(l_name)) {
-                new MaterialAlertDialogBuilder(TransporterNamesActivity.this)
+                AlertDialog empty_entry_check = new MaterialAlertDialogBuilder(TransporterNamesActivity.this)
                         .setIcon(R.drawable.ic_sad_face)
                         .setTitle("Invalid Entry")
                         .setMessage("Kindly fill in the required details")
                         .setPositiveButton("Okay", (dialog, which) -> {
                             dialog.dismiss();
                         }).setCancelable(false).show();
+                empty_entry_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
             } else {
                 session.SET_REG_FIRST_NAME(f_name);
                 session.SET_REG_LAST_NAME(l_name);
 
-                new MaterialAlertDialogBuilder(TransporterNamesActivity.this)
+                AlertDialog facial_check = new MaterialAlertDialogBuilder(TransporterNamesActivity.this)
                         .setIcon(R.drawable.ic_smiley_face)
                         .setTitle("Facial Capture ?")
                         .setMessage("Do you want to perform facial capture ?")
@@ -67,6 +69,8 @@ public class TransporterNamesActivity extends AppCompatActivity {
                             session.SET_REG_FACE_TEMPLATE("N/A");
                             startActivity(new Intent(this, TransporterVehicleActivity.class));
                         }).setCancelable(false).show();
+                facial_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+                facial_check.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
             }
         });
 
