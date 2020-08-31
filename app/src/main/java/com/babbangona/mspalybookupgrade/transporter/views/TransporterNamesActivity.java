@@ -68,7 +68,7 @@ public class TransporterNamesActivity extends AppCompatActivity {
                             //Move to next activity
                             session.SET_REG_FACE_TEMPLATE("N/A");
                             startActivity(new Intent(this, TransporterVehicleActivity.class));
-                        }).setCancelable(false).show();
+                        }).setCancelable(true).show();
                 facial_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
                 facial_check.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
             }

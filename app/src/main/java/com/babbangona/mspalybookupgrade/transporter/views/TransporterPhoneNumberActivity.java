@@ -15,7 +15,10 @@ import com.babbangona.mspalybookupgrade.databinding.ActivityTransporterPhoneNumb
 import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
+import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.Arrays;
 
 public class TransporterPhoneNumberActivity extends AppCompatActivity {
     ActivityTransporterPhoneNumberBinding binding;
@@ -91,7 +94,13 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
     }
 
     public boolean isPhoneNumberValid(String number) {
-        return (number.length() == 11) && number.charAt(0) == '0';
+        String first_four;
+        if (number.length() > 4) {
+            first_four = number.substring(0, 4);
+            return (number.length() == 11) && Arrays.asList(AppUtils.phone_prefix).contains(first_four);
+        } else {
+            return false;
+        }
     }
 
     public boolean isPhoneNumberVerified(String number) {
