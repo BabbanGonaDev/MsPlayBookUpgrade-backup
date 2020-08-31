@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.transporter.data.room.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -24,6 +25,9 @@ public interface TransporterDAO {
 
     @Query("SELECT * FROM transporter_table WHERE phone_number = :phone_no")
     TransporterTable getTransporterDetails(String phone_no);
+
+    @Query("SELECT * FROM transporter_table")
+    LiveData<List<TransporterTable>> getAllTransporters();
 
     @Query("SELECT * FROM transporter_table WHERE sync_flag = 0")
     List<TransporterTable> getUnSyncedTransporterTable();

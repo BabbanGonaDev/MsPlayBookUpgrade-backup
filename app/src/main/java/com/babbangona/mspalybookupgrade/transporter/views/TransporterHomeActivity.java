@@ -71,6 +71,10 @@ public class TransporterHomeActivity extends AppCompatActivity {
             session.CLEAR_REG_SESSION();
             startActivity(new Intent(this, TransporterPhoneNumberActivity.class));
         });
+
+        binding.btnViewRegTransporters.setOnClickListener(v -> {
+            startActivity(new Intent(TransporterHomeActivity.this, ViewRegisteredTransporters.class));
+        });
     }
 
     @Override

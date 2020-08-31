@@ -37,10 +37,26 @@
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 app:cornerRadius="4dp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_view_reg_transporters"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:layout_constraintVertical_chainStyle="spread" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_view_reg_transporters"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="View Registered Transporters"
+                android:textAllCaps="false"
                 app:layout_constraintBottom_toTopOf="@+id/tv_last_sync_time"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_next_activity" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_last_sync_time"
@@ -69,6 +85,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/tv_last_sync_time"
                 app:layout_constraintTop_toTopOf="@+id/tv_last_sync_time" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
