@@ -35,7 +35,6 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     "transporter-db.db")
                     //.createFromAsset("database/transporter.db")
                     .allowMainThreadQueries()
-                    .fallbackToDestructiveMigration()
                     .build();
         }
 
