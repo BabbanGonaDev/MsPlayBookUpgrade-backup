@@ -91,7 +91,7 @@ public class TransporterNamesActivity extends AppCompatActivity {
     public void setNamesFilter() {
         InputFilter filter = (source, start, end, dest, dStart, dEnd) -> {
             for (int i = start; i < end; i++) {
-                if (!Character.isLetter(source.charAt(i))) {
+                if (!Character.isWhitespace(source.charAt(i)) && !Character.isLetter(source.charAt(i))) {
                     return "";
                 }
             }

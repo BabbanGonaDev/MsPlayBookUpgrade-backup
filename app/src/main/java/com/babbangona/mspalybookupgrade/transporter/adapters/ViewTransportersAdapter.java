@@ -58,7 +58,7 @@ public class ViewTransportersAdapter extends RecyclerView.Adapter<ViewTransporte
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                String char_string = constraint.toString();
+                String char_string = constraint.toString().trim();
                 if (char_string.isEmpty()) {
                     mFilteredList = list;
                 } else {
