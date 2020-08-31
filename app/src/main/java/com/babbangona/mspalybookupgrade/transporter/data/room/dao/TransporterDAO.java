@@ -26,7 +26,7 @@ public interface TransporterDAO {
     @Query("SELECT * FROM transporter_table WHERE phone_number = :phone_no")
     TransporterTable getTransporterDetails(String phone_no);
 
-    @Query("SELECT * FROM transporter_table")
+    @Query("SELECT * FROM transporter_table ORDER BY reg_date DESC")
     LiveData<List<TransporterTable>> getAllTransporters();
 
     @Query("SELECT * FROM transporter_table WHERE sync_flag = 0")

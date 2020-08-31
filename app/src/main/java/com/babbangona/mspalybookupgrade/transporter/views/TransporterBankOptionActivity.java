@@ -121,11 +121,11 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
     }
 
     public boolean isInputsEmpty() {
-        if (binding.editAccountName.getText().toString().isEmpty()) {
+        if (binding.editAccountName.getText().toString().trim().isEmpty()) {
             return true;
-        } else if (binding.editAccountNumber.getText().toString().isEmpty()) {
+        } else if (binding.editAccountNumber.getText().toString().trim().isEmpty()) {
             return true;
-        } else return binding.atvBank.getText().toString().isEmpty();
+        } else return binding.atvBank.getText().toString().trim().isEmpty();
     }
 
     public boolean isAccNumberValid() {
