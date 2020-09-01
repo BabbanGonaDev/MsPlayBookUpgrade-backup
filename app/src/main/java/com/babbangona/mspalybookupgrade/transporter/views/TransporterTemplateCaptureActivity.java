@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 
 import androidx.annotation.NonNull;
@@ -11,8 +12,10 @@ import androidx.annotation.NonNull;
 import com.babbangona.bgfr.CustomLuxandActivity;
 import com.babbangona.bgfr.Database.BGFRInfo;
 import com.babbangona.bgfr.ErrorCodes;
+import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,6 +23,11 @@ import java.io.FileOutputStream;
 
 public class TransporterTemplateCaptureActivity extends CustomLuxandActivity {
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public Boolean setDetectFakeFaces() {
@@ -52,7 +60,8 @@ public class TransporterTemplateCaptureActivity extends CustomLuxandActivity {
                 showErrorAndClose("Blink not found");
                 break;
             case ErrorCodes.KEY_FACE_NOT_MATCHED:
-                showErrorAndClose("Face not matched");
+                //Not sure why this was called though. But am hiding it for now.
+                //showErrorAndClose("Face not matched");
                 break;
         }
     }
@@ -128,8 +137,17 @@ public class TransporterTemplateCaptureActivity extends CustomLuxandActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            finish();
-            startActivity(new Intent(getApplicationContext(), TransporterVehicleActivity.class));
+
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(TransporterTemplateCaptureActivity.this)
+                    .setIcon(R.drawable.ic_smiley_face)
+                    .setTitle("Success")
+                    .setMessage("Template successfully captured")
+                    .setPositiveButton("Okay", (dialog, which) -> {
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), TransporterVehicleActivity.class));
+                    }).setCancelable(false);
+
+            if (!isFinishing()) builder.show();
         }
     }
 

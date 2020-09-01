@@ -1,13 +1,18 @@
 package com.babbangona.mspalybookupgrade.transporter.services;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.retrofit.RetrofitApiCalls;
 import com.babbangona.mspalybookupgrade.transporter.data.retrofit.RetrofitClient;
@@ -24,6 +29,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SyncUpWorker extends Worker {
+    private static final String CHANNEL_ID = "TRANSPORTER_UPLOAD";
+    private static final int NOTIFICATION_ID = 190;
+    private static String TAG = "Transporter CHECK";
+    private NotificationCompat.Builder builder;
+    private NotificationManager mNotifyManager;
+    private int CURRENT;
+
     private TSessionManager session;
     private TransporterDatabase db;
 
@@ -37,11 +49,16 @@ public class SyncUpWorker extends Worker {
         super(context, workerParams);
         session = new TSessionManager(context);
         db = TransporterDatabase.getInstance(context);
+        mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
     }
 
     @NonNull
     @Override
     public Result doWork() {
+        CURRENT = 0;
+        setNotification();
+
         syncUpTransporterTable();
         syncUpOperatingAreas();
         return Result.success();
@@ -65,6 +82,8 @@ public class SyncUpWorker extends Worker {
                                 db.getTransporterDao().updateSyncResponse(sync_res.phone_number, sync_res.sync_flag);
                             }
                         });
+
+                        sendNotification(1);
                     }
                 }
 
@@ -96,6 +115,8 @@ public class SyncUpWorker extends Worker {
                                 db.getOpAreaDao().updateSyncResponse(sync_res.phone_number, sync_res.cc_id, sync_res.sync_flag);
                             }
                         });
+
+                        sendNotification(1);
                     }
                 }
 
@@ -105,5 +126,42 @@ public class SyncUpWorker extends Worker {
                 }
             });
         });
+    }
+
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel upload_channel = new NotificationChannel(CHANNEL_ID,
+                    "Upload Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+
+            if (mNotifyManager != null) {
+                mNotifyManager.createNotificationChannel(upload_channel);
+            }
+        }
+    }
+
+    private void setNotification() {
+        createNotificationChannel();
+        builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_outline_cloud_upload_24)
+                .setProgress(0, 0, false)
+                .setContentTitle("Uploading Data")
+                .setContentText("Uploading Transporter Data")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+    }
+
+    private void sendNotification(int value) {
+        CURRENT += value;
+
+        if (CURRENT == 2) {
+            builder.setProgress(0, 0, false)
+                    .setSmallIcon(R.drawable.ic_outline_cloud_done_24)
+                    .setContentText("Transporter Upload Complete");
+        } else {
+            builder.setProgress(2, CURRENT, false);
+        }
+
+        mNotifyManager.notify(NOTIFICATION_ID, builder.build());
     }
 }
