@@ -127,6 +127,7 @@ public class TransporterTemplateCaptureActivity extends CustomLuxandActivity {
                 try {
                     FileOutputStream out_stream = new FileOutputStream(img_file);
                     bitmaps[0].compress(Bitmap.CompressFormat.JPEG, 60, out_stream);
+                    session.SET_TRANSPORTER_FACES(file_name);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

@@ -25,6 +25,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
 import com.babbangona.mspalybookupgrade.transporter.services.SyncDownWorker;
 import com.babbangona.mspalybookupgrade.transporter.services.SyncUpWorker;
+import com.babbangona.mspalybookupgrade.transporter.services.UploadImagesWorker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -39,9 +40,11 @@ public class TransporterHomeActivity extends AppCompatActivity {
     TSessionManager session;
     private static String WORK_MANAGER_SINGLE_REQ_UP = "transporter_single_sync_up";
     private static String WORK_MANAGER_SINGLE_REQ_DOWN = "transporter_single_sync_down";
+    private static String WORK_MANAGER_SINGLE_IMAGE_REQ = "transporter_single_image_sync";
     private static String WORK_MANAGER_PERIODIC_REQ_UP = "transporter_periodic_sync_up";
     private static String WORK_MANAGER_PERIODIC_REQ_DOWN = "transporter_periodic_sync_down";
-    OneTimeWorkRequest sync_down_request, sync_up_request;
+    private static String WORK_MANAGER_PERIODIC_IMAGES = "transporter_periodic_images";
+    OneTimeWorkRequest sync_down_request, sync_up_request, image_request;
     Constraints constraints;
 
     //Shared prefs of the general app to get logged-in staff id.
@@ -69,6 +72,7 @@ public class TransporterHomeActivity extends AppCompatActivity {
 
         sync_down_request = new OneTimeWorkRequest.Builder(SyncDownWorker.class).build();
         sync_up_request = new OneTimeWorkRequest.Builder(SyncUpWorker.class).build();
+        image_request = new OneTimeWorkRequest.Builder(UploadImagesWorker.class).build();
 
         binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
         binding.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
@@ -100,6 +104,7 @@ public class TransporterHomeActivity extends AppCompatActivity {
                 if (AppUtils.isConnectedToNetwork(TransporterHomeActivity.this)) {
                     syncUp();
                     syncDown();
+                    syncImages();
                 } else {
                     Snackbar.make(binding.constraintLayout2, "No Network Connection", Snackbar.LENGTH_LONG).show();
                 }
@@ -121,6 +126,7 @@ public class TransporterHomeActivity extends AppCompatActivity {
         syncUp();
         setUpRecurringSyncUp();
         setUpRecurringSyncDown();
+        setUpRecurringImageSync();
     }
 
     public void syncDown() {
@@ -133,6 +139,12 @@ public class TransporterHomeActivity extends AppCompatActivity {
         WorkManager
                 .getInstance(TransporterHomeActivity.this)
                 .enqueueUniqueWork(WORK_MANAGER_SINGLE_REQ_UP, ExistingWorkPolicy.REPLACE, sync_up_request);
+    }
+
+    public void syncImages() {
+        WorkManager
+                .getInstance(TransporterHomeActivity.this)
+                .enqueueUniqueWork(WORK_MANAGER_SINGLE_IMAGE_REQ, ExistingWorkPolicy.APPEND, image_request);
     }
 
     public void setUpRecurringSyncUp() {
@@ -153,6 +165,16 @@ public class TransporterHomeActivity extends AppCompatActivity {
         WorkManager
                 .getInstance(TransporterHomeActivity.this)
                 .enqueueUniquePeriodicWork(WORK_MANAGER_PERIODIC_REQ_DOWN, ExistingPeriodicWorkPolicy.REPLACE, periodic_down);
+    }
+
+    public void setUpRecurringImageSync() {
+        PeriodicWorkRequest periodic_images = new PeriodicWorkRequest.Builder(UploadImagesWorker.class, 1, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager
+                .getInstance(TransporterHomeActivity.this)
+                .enqueueUniquePeriodicWork(WORK_MANAGER_PERIODIC_IMAGES, ExistingPeriodicWorkPolicy.REPLACE, periodic_images);
     }
 
     public void confirmTransporterPhoneDate() {

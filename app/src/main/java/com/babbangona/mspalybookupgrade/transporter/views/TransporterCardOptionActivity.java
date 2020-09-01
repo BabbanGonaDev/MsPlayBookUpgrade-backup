@@ -217,7 +217,11 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
                 if (dir_file.isFile()) {
                     String file_name = dir_file.getName();
                     if (file_name.equals(img_name)) {
-                        return true;
+                        //Compress image and add to shared prefs before returning.
+                        if (AppUtils.compressImage(img_name, AppUtils.bg_cards_location)) {
+                            session.SET_TRANSPORTER_CARDS(img_name);
+                            return true;
+                        }
                     }
                 }
             }

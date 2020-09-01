@@ -1,11 +1,17 @@
 package com.babbangona.mspalybookupgrade.transporter.helpers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
 
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -62,6 +68,37 @@ public class AppUtils {
         }
 
         return isConnected;
+    }
+
+    public static boolean compressImage(String file_name, String file_location) {
+        String storage_state = Environment.getExternalStorageState();
+
+        if (storage_state.equals(Environment.MEDIA_MOUNTED)) {
+            File img_dir = new File(Environment.getExternalStorageDirectory().getPath(), file_location);
+            if (!img_dir.exists() && !img_dir.mkdirs()) {
+                //Unable to create directory.
+            } else {
+                Bitmap new_bitmap = BitmapFactory.decodeFile(img_dir.getPath() + File.separator + file_name);
+
+                if (new_bitmap != null) {
+                    FileOutputStream compressed;
+                    try {
+                        compressed = new FileOutputStream(img_dir.getPath() + File.separator + file_name);
+                        new_bitmap.compress(Bitmap.CompressFormat.JPEG, 70, compressed);
+                        return true;
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        //Not fully sure if this is needed.
+                        return false;
+                    }
+                } else {
+
+                    return false;
+                }
+            }
+        }
+
+        return false;
     }
 
 }

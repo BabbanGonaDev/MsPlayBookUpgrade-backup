@@ -24,6 +24,11 @@ public class TSessionManager {
     public static final String KEY_LAST_SYNC_CC = "last_sync_cc_table";
     public static final String KEY_LAST_SYNC_OPERATING_AREAS = "last_sync_operating_areas_table";
 
+    /**
+     * List of image names to be used for syncing.
+     */
+    public static final String KEY_TRANSPORTER_CARDS = "TRANSPORTER_CARDS";
+    public static final String KEY_TRANSPORTER_FACES = "TRANSPORTER_FACES";
 
     private static final String PREF_NAME = "Transporter Preferences";
     SharedPreferences prefs;
@@ -88,6 +93,23 @@ public class TSessionManager {
         editor.putString(KEY_LAST_SYNC_OPERATING_AREAS, value).commit();
     }
 
+    public void SET_TRANSPORTER_CARDS(String value) {
+        String cards_list = prefs.getString(KEY_TRANSPORTER_CARDS, "");
+        if (cards_list.isEmpty()) {
+            editor.putString(KEY_TRANSPORTER_CARDS, value).commit();
+        } else {
+            editor.putString(KEY_TRANSPORTER_CARDS, cards_list + "," + value).commit();
+        }
+    }
+
+    public void SET_TRANSPORTER_FACES(String value) {
+        String faces_list = prefs.getString(KEY_TRANSPORTER_FACES, "");
+        if (faces_list.isEmpty()) {
+            editor.putString(KEY_TRANSPORTER_FACES, value).commit();
+        } else {
+            editor.putString(KEY_TRANSPORTER_FACES, faces_list + "," + value).commit();
+        }
+    }
 
     /**
      * =========================================================================
@@ -139,6 +161,24 @@ public class TSessionManager {
         return prefs.getString(KEY_LAST_SYNC_OPERATING_AREAS, "2020-08-26 00:00:00");
     }
 
+    public String[] GET_TRANSPORTER_CARDS() {
+        String cards_list = prefs.getString(KEY_TRANSPORTER_CARDS, "");
+        if (cards_list.isEmpty()) {
+            return new String[1];
+        } else {
+            return cards_list.split(",");
+        }
+    }
+
+    public String[] GET_TRANSPORTER_FACES() {
+        String faces_list = prefs.getString(KEY_TRANSPORTER_FACES, "");
+        if (faces_list.isEmpty()) {
+            return new String[1];
+        } else {
+            return faces_list.split(",");
+        }
+    }
+
     /**
      * =========================================================================
      * KEEP ALL SESSION CLEARING BELOW THIS LINE
@@ -153,5 +193,27 @@ public class TSessionManager {
                 .remove(KEY_REG_VEHICLE_TYPE)
                 .remove(KEY_REG_COLLECTION_CENTERS)
                 .commit();
+    }
+
+    public void REMOVE_TRANSPORTER_FACE_FROM_LIST(String img_name) {
+        String faces_list = prefs.getString(KEY_TRANSPORTER_FACES, "");
+        if (faces_list.equals("")) {
+            return;
+        } else {
+            faces_list = faces_list.replaceAll(img_name, "");
+            faces_list = faces_list.replaceAll(",,", ",");
+            editor.putString(KEY_TRANSPORTER_FACES, faces_list).commit();
+        }
+    }
+
+    public void REMOVE_TRANSPORTER_CARDS_FROM_LIST(String img_name) {
+        String cards_list = prefs.getString(KEY_TRANSPORTER_CARDS, "");
+        if (cards_list.equals("")) {
+            return;
+        } else {
+            cards_list = cards_list.replaceAll(img_name, "");
+            cards_list = cards_list.replaceAll(",,", ",");
+            editor.putString(KEY_TRANSPORTER_CARDS, cards_list).commit();
+        }
     }
 }
