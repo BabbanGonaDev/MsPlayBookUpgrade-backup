@@ -2,6 +2,7 @@ package com.babbangona.mspalybookupgrade.transporter.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -24,8 +25,13 @@ import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
 import com.babbangona.mspalybookupgrade.transporter.services.SyncDownWorker;
 import com.babbangona.mspalybookupgrade.transporter.services.SyncUpWorker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class TransporterHomeActivity extends AppCompatActivity {
@@ -67,6 +73,8 @@ public class TransporterHomeActivity extends AppCompatActivity {
         binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
         binding.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
 
+        confirmTransporterPhoneDate();
+
         binding.btnNextActivity.setOnClickListener(v -> {
             session.CLEAR_REG_SESSION();
             startActivity(new Intent(this, TransporterPhoneNumberActivity.class));
@@ -99,6 +107,12 @@ public class TransporterHomeActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        confirmTransporterPhoneDate();
     }
 
     @Override
@@ -139,5 +153,32 @@ public class TransporterHomeActivity extends AppCompatActivity {
         WorkManager
                 .getInstance(TransporterHomeActivity.this)
                 .enqueueUniquePeriodicWork(WORK_MANAGER_PERIODIC_REQ_DOWN, ExistingPeriodicWorkPolicy.REPLACE, periodic_down);
+    }
+
+    public void confirmTransporterPhoneDate() {
+        String last_sync_transporter = session.GET_LAST_SYNC_TRANSPORTER();
+        String default_date = "2020-08-30 00:00:00";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        Date last_sync = null;
+        Date def_date = null;
+        try {
+            last_sync = sdf.parse(last_sync_transporter);
+            def_date = sdf.parse(default_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (new Date().before(def_date) || new Date().before(last_sync)) {
+            //Current Date is behind default date or last sync date, redirect
+            new MaterialAlertDialogBuilder(TransporterHomeActivity.this)
+                    .setIcon(getResources().getDrawable(R.drawable.ic_wrong_calendar))
+                    .setTitle("Incorrect Date")
+                    .setMessage("Kindly correct phone date/time to use the Transporter Module")
+                    .setCancelable(false)
+                    .setPositiveButton("Okay", (dialogInterface, i) -> {
+                        startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
+                    }).setCancelable(false).show();
+        }
     }
 }
