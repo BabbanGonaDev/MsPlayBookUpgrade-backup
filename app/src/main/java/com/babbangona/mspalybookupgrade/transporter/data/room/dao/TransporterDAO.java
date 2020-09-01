@@ -24,7 +24,10 @@ public interface TransporterDAO {
     void updateTransporter(TransporterTable transporter);
 
     @Query("SELECT * FROM transporter_table WHERE phone_number = :phone_no")
-    TransporterTable getTransporterDetails(String phone_no);
+    TransporterTable getTransporterDetailsByPhoneNo(String phone_no);
+
+    @Query("SELECT * FROM transporter_table WHERE account_number = :acc_no AND bank_name = :bank_name")
+    TransporterTable getTransporterDetailsByBank(String acc_no, String bank_name);
 
     @Query("SELECT * FROM transporter_table ORDER BY reg_date DESC")
     LiveData<List<TransporterTable>> getAllTransporters();

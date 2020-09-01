@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.Menu;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -81,6 +83,17 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     public void setPhoneNoFilter() {
         InputFilter filter = (source, start, end, dest, dStart, dEnd) -> {
             for (int i = start; i < end; i++) {
@@ -104,7 +117,7 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
     }
 
     public boolean isPhoneNumberVerified(String number) {
-        TransporterTable trans = db.getTransporterDao().getTransporterDetails(number);
+        TransporterTable trans = db.getTransporterDao().getTransporterDetailsByPhoneNo(number);
         if (trans != null) {
             return false;
         }

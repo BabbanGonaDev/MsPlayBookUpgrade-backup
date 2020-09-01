@@ -2,7 +2,9 @@ package com.babbangona.mspalybookupgrade.transporter.views;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
@@ -62,6 +64,17 @@ public class ViewRegisteredTransporters extends AppCompatActivity implements Sea
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.empty_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

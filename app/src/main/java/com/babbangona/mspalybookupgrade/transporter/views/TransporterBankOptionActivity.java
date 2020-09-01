@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -79,6 +81,18 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
                         }).setCancelable(false).show();
                 valid_no_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
 
+            } else if (isBankDetailsDuplicate()) {
+
+                AlertDialog duplicate_acc_check = new MaterialAlertDialogBuilder(TransporterBankOptionActivity.this)
+                        .setTitle("Account Error")
+                        .setMessage("This bank details already exist")
+                        .setIcon(R.drawable.ic_sad_face)
+                        .setPositiveButton("Okay", (dialog, which) -> {
+                            dialog.dismiss();
+                            binding.editAccountNumber.requestFocus();
+                        }).setCancelable(false).show();
+                duplicate_acc_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+
             } else if (!isAccNameMatching()) {
 
                 AlertDialog bank_mismatch_check = new MaterialAlertDialogBuilder(TransporterBankOptionActivity.this)
@@ -111,6 +125,16 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     public void initBankNameAdapter() {
         ArrayAdapter<String> bank_adapter =
@@ -133,9 +157,20 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
     }
 
     public boolean isAccNameMatching() {
-        String entered_name = binding.editAccountName.getText().toString().toLowerCase();
+        String entered_name = binding.editAccountName.getText().toString().trim().toLowerCase();
         return entered_name.contains(session.GET_REG_FIRST_NAME().toLowerCase())
                 && entered_name.contains(session.GET_REG_LAST_NAME().toLowerCase());
+    }
+
+    public boolean isBankDetailsDuplicate() {
+        String account_no = binding.editAccountNumber.getText().toString().trim();
+        String bank_name = binding.atvBank.getText().toString().trim();
+
+        TransporterTable trans = db.getTransporterDao().getTransporterDetailsByBank(account_no, bank_name);
+        if (trans == null) {
+            return false;
+        }
+        return true;
     }
 
     public void displayConfirmationDialog() {
