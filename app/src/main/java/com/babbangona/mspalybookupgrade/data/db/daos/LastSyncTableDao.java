@@ -133,6 +133,12 @@ public interface LastSyncTableDao {
     @Query("UPDATE last_sync SET last_sync_down_pc_pws_activities_flag =:last_sync_down_pc_pws_activities_flag WHERE staff_id = :staff_id")
     void updateLastSyncDownPCPWSActivitiesFlag(String staff_id, String last_sync_down_pc_pws_activities_flag);
 
+    @Query("SELECT last_sync_pws_activities_controller FROM last_sync WHERE staff_id = :staff_id")
+    String getLastSyncPWSActivitiesController(String staff_id);
+
+    @Query("UPDATE last_sync SET last_sync_pws_activities_controller =:last_sync_pws_activities_controller WHERE staff_id = :staff_id")
+    void updateLastSyncPWSActivitiesController(String staff_id, String last_sync_pws_activities_controller);
+
     /**
      * Insert the object in database
      * @param lastSyncTable, object to be inserted

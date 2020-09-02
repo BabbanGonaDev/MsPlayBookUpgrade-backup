@@ -22,6 +22,7 @@ import com.babbangona.mspalybookupgrade.data.db.daos.MembersDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.NormalActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.PCPWSActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.PWSActivitiesFlagDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.PWSActivityControllerDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.PWSCategoryListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.PictureSyncDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.RFActivitiesFlagDao;
@@ -41,6 +42,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.PCPWSActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.PWSActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.PWSActivityController;
 import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.babbangona.mspalybookupgrade.data.db.entities.PictureSync;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFActivitiesFlag;
@@ -53,7 +55,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
         Members.class, HGActivitiesFlag.class, HGList.class, Logs.class, LastSyncTable.class, Category.class,
         SyncSummary.class, HarvestLocationsTable.class, AppVariables.class, RFActivitiesFlag.class,
         RFList.class, PictureSync.class, PWSActivitiesFlag.class, PWSCategoryList.class,
-        PCPWSActivitiesFlag.class},
+        PCPWSActivitiesFlag.class, PWSActivityController.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -79,6 +81,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PWSActivitiesFlagDao pwsActivitiesFlagDao();
     public abstract PWSCategoryListDao pwsCategoryListDao();
     public abstract PCPWSActivitiesFlagDao pcpwsActivitiesFlagDao();
+    public abstract PWSActivityControllerDao pwsActivityControllerDao();
 
     /**
      * Return instance of database creation
@@ -314,6 +317,19 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_8_9 = new Migration(8, 9) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS pws_activity_controller (" +
+                    "role TEXT PRIMARY KEY NOT NULL," +
+                    "category TEXT)");
+
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_pws_activities_controller' TEXT DEFAULT '2019-01-01 00:00:00'");
+        }
+    };
+
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
                 context,
@@ -321,7 +337,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 DatabaseStringConstants.MS_PLAYBOOK_DATABASE_NAME)
                 .allowMainThreadQueries()
                 .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,
-                        MIGRATION_6_7,MIGRATION_7_8)
+                        MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9)
                 .build();
 //                .fallbackToDestructiveMigration()
     }

@@ -73,8 +73,8 @@ public class PCStaffPWSAdapter extends PagedListAdapter<PCStaffPWSRecyclerModel,
         @BindView(R.id.tv_total_claims)
         TextView tv_total_claims;
 
-        @BindView(R.id.btn_phone_call)
-        MaterialButton btn_phone_call;
+        /*@BindView(R.id.btn_phone_call)
+        MaterialButton btn_phone_call;*/
 
         ViewHolder(View itemView){
             super(itemView);
@@ -84,7 +84,7 @@ public class PCStaffPWSAdapter extends PagedListAdapter<PCStaffPWSRecyclerModel,
 
         void nowBind(PCStaffPWSRecyclerModel pcStaffPWSRecyclerModel){
             String staff_id = pcStaffPWSRecyclerModel.getStaff_id();
-            String staffName = context.getResources().getString(R.string.staff_name) +" "+ pcStaffPWSRecyclerModel.getStaff_name();
+            String staffName = context.getResources().getString(R.string.staff_name) +" "+ getStaffName(pcStaffPWSRecyclerModel.getStaff_name());
             String unreviewedClaims = context.getResources().getString(R.string.no_unreviewed_claims) +" "+(pcStaffPWSRecyclerModel.getNumber_of_claims() - pcStaffPWSRecyclerModel.getNumber_reviewed_claims()) ;
             String totalClaims = context.getResources().getString(R.string.no_total_claims) +" "+ pcStaffPWSRecyclerModel.getNumber_of_claims();
             tv_staff_id.setText(staff_id);
@@ -99,6 +99,13 @@ public class PCStaffPWSAdapter extends PagedListAdapter<PCStaffPWSRecyclerModel,
             sharedPrefs.setKeyPcPwsHomeStaffId(pcStaffPWSRecyclerModel.getStaff_id());
             context.startActivity(new Intent(context, PCPWSHomePage.class));
             //start PCPSWHomePage
+        }
+
+        String getStaffName(String staff_name){
+            if (staff_name == null){
+                return "";
+            }
+            return staff_name;
         }
     }
 

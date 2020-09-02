@@ -97,7 +97,6 @@ public class SetPortfolioMethods {
         return getPixelsFromDPs( context, widthInDP);
     }
 
-
     // Method for converting DP/DIP value to pixels
     private int getPixelsFromDPs(Context activity, int dps){
         /*
@@ -110,8 +109,6 @@ public class SetPortfolioMethods {
         return (int) (TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, dps, r.getDisplayMetrics()));
     }
-
-
 
     public String getCategory(Context context){
         AppDatabase appDatabase = AppDatabase.getInstance(context);
@@ -127,5 +124,17 @@ public class SetPortfolioMethods {
             category = "subd";
         }
         return category;
+    }
+
+    private double returnRightDoubleValue(String inputValue){
+        if (inputValue == null || inputValue.equalsIgnoreCase("")){
+            return 0;
+        }else{
+            return Double.parseDouble(inputValue);
+        }
+    }
+
+    public double getLocationAverage(String value1, String value2){
+        return (returnRightDoubleValue(value1)+returnRightDoubleValue(value2))/2;
     }
 }

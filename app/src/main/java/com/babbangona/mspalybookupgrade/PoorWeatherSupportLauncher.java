@@ -26,7 +26,7 @@ public class PoorWeatherSupportLauncher extends AppCompatActivity {
     }
 
     void selectRouteActivity(){
-        if (!getCategory().contains("subd")){
+        if (!getCategory().contains("1")){
             startPCPoorWeatherSupport();
         }else{
             startGridDetailsClass();
@@ -42,20 +42,20 @@ public class PoorWeatherSupportLauncher extends AppCompatActivity {
     void startPCPoorWeatherSupport(){
         finish();
         //this goes to select mik.
-        startActivity(new Intent(this, PCPWSHomePage.class));
+        startActivity(new Intent(this, PCStaffPSWPage.class));
 
     }
 
     String getCategory(){
         String category;
         try {
-            category = appDatabase.categoryDao().getRoleCategory(sharedPrefs.getStaffRole());
+            category = appDatabase.pwsActivityControllerDao().getRoleCategory(sharedPrefs.getStaffRole());
         } catch (Exception e) {
             e.printStackTrace();
-            category = "subd";
+            category = "1";
         }
         if (category == null || category.equalsIgnoreCase("")){
-            category = "subd";
+            category = "1";
         }
         return category;
     }

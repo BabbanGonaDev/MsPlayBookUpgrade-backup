@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 8;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 9;
 
     /**
      * Names of tables
@@ -23,6 +23,7 @@ public class DatabaseStringConstants {
     public static final String LOGS_TABLE                               = "logs";
     public static final String LAST_SYNC_TABLE                          = "last_sync";
     public static final String CATEGORY_TABLE                           = "category";
+    public static final String PWS_ACTIVITY_CONTROLLER_TABLE            = "pws_activity_controller";
     public static final String SYNC_SUMMARY_TABLE                       = "sync_summary";
     public static final String HARVEST_LOCATION_TABLE                   = "harvest_location";
     public static final String APP_VARIABLES                            = "app_variables";
@@ -151,6 +152,7 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_DOWN_PWS_ACTIVITY_FLAGS_TABLE      = "last_sync_down_pws_activities_flag";
     public static final String LAST_SYNC_UP_PC_PWS_ACTIVITY_FLAGS_TABLE     = "last_sync_up_pc_pws_activities_flag";
     public static final String LAST_SYNC_DOWN_PC_PWS_ACTIVITY_FLAGS_TABLE   = "last_sync_down_pc_pws_activities_flag";
+    public static final String LAST_SYNC_PWS_ACTIVITIES_CONTROLLER_TABLE    = "last_sync_pws_activities_controller";
 
     /**
      * category column names

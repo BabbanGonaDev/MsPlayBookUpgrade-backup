@@ -39,6 +39,8 @@ public class SharedPrefs {
     //add additional string below this comment
     public static final String KEY_APP_LANGUAGE                     = "app_language";
     public static final String KEY_FIRST_TIME_DATA_FLAG             = "first_time_data_flag";
+    public static final String KEY_FIRST_UPDATE_FLAG                = "first_time_update_flag";
+    public static final String KEY_SECOND_UPDATE_FLAG               = "second_time_update_flag";
     public static final String KEY_PORTFOLIO_LIST                   = "portfolio_list";
     public static final String KEY_ADDED_PORTFOLIO_LIST             = "added_portfolio_list";
     public static final String KEY_ADAPTER_OFFSET                   = "adapter_offset";
@@ -83,6 +85,14 @@ public class SharedPrefs {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeySecondUpdateFlag(String second_time_update_flag){
+
+        editor.putString(KEY_SECOND_UPDATE_FLAG, second_time_update_flag);
+
+        // commit changes
+        editor.commit();
     }
 
     public void setKeyPcPwsHomeStaffId(String pc_pws_home_staff_id){
@@ -277,6 +287,11 @@ public class SharedPrefs {
         editor.commit();
     }
 
+    public void setKeyFirstUpdateFlag(String first_time_update_flag){
+        editor.putString(KEY_FIRST_UPDATE_FLAG, first_time_update_flag);
+        editor.commit();
+    }
+
     public void setKeyAppLanguage(String app_language){
         editor.putString(KEY_APP_LANGUAGE, app_language);
         editor.commit();
@@ -335,6 +350,10 @@ public class SharedPrefs {
 
     public String getKeyFirstTimeDataFlag(){
         return pref.getString(KEY_FIRST_TIME_DATA_FLAG ,"0");
+    }
+
+    public String getKeyFirstUpdateFlag(){
+        return pref.getString(KEY_FIRST_UPDATE_FLAG ,"0");
     }
 
     public Set<String > getKeyPortfolioList(){
@@ -464,6 +483,11 @@ public class SharedPrefs {
 
     public String getKeyPcPwsHomeStaffId() {
         return pref.getString(KEY_PC_PWS_HOME_STAFF_ID,"nada");
+
+    }
+
+    public String getKeySecondUpdateFlag() {
+        return pref.getString(KEY_SECOND_UPDATE_FLAG,"0");
 
     }
 }

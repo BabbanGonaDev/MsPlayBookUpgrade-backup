@@ -175,7 +175,7 @@
     <string name="saveDet">Yes, save details</string>
     <string name="farFromStart">You are far from the starting point.</string>
     <string name="farNorth">Field is too far North and cannot be mapped.</string>
-    <string name="notEnoughPoints">You have not gotten enough points to map an area. Please, Restart mapping session</string>
+    <string name="notEnoughPoints">You need a minimum of 5 points and 0.01HA to proceed.</string>
     <string name="error_message_pws_description">Please enter weather support description</string>
     <string name="pws_pending">Pending</string>
     <string name="pws_reviewed">Reviewed</string>

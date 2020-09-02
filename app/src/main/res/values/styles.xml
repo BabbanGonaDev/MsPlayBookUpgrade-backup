@@ -67,8 +67,15 @@
     <style name="Widget.MsPlaybook.Toolbar" parent="Widget.MaterialComponents.Toolbar">
         <item name="android:background">?attr/colorAccent</item>
         <item name="android:theme">@style/Theme.MsPlaybook</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="titleTextAppearance">@style/TextAppearance.MsPlaybook.Toolbar</item>
+        <item name="android:actionMenuTextColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="Widget.MsPlaybook.Toolbar1" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Toolbar.Primary</item>
     </style>
 
     <style name="TextAppearance.MsPlaybook.Toolbar" parent="TextAppearance.MaterialComponents.Headline1">

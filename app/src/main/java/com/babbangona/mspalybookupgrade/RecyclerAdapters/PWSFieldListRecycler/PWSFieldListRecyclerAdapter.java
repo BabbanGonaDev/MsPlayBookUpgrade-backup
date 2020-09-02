@@ -157,8 +157,8 @@ public class PWSFieldListRecyclerAdapter extends PagedListAdapter<PWSFieldListRe
             String village = context.getResources().getString(R.string.member_village) +" "+ pwsFieldListRecyclerModel.getVillage_name();
             String crop_type = context.getResources().getString(R.string.member_crop_type) +" "+ pwsFieldListRecyclerModel.getCrop_type();
             String member_r_id = context.getResources().getString(R.string.member_r_id) +" "+ pwsFieldListRecyclerModel.getField_r_id();
-            String latitude = "Lat.: " + (Double.parseDouble(pwsFieldListRecyclerModel.getMin_lat())+Double.parseDouble(pwsFieldListRecyclerModel.getMax_lat()))/2;
-            String longitude = "Long.: " + (Double.parseDouble(pwsFieldListRecyclerModel.getMin_lng())+Double.parseDouble(pwsFieldListRecyclerModel.getMax_lng()))/2;
+            String latitude = "Lat.: " + setPortfolioMethods.getLocationAverage(pwsFieldListRecyclerModel.getMin_lat(),pwsFieldListRecyclerModel.getMax_lat());
+            String longitude = "Long.: " + setPortfolioMethods.getLocationAverage(pwsFieldListRecyclerModel.getMin_lng(),pwsFieldListRecyclerModel.getMax_lng());
             tv_field_r_id.setText(field_r_id);
             tv_ik_number.setText(ik_number);
             tv_member_name.setText(member_name);

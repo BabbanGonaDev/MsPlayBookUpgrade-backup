@@ -79,7 +79,7 @@ public abstract class PWSActivitiesFlagDao {
 
     @Query("SELECT a.staff_id, b.staff_name, COUNT(a.pws_id) as number_of_claims, COUNT(c.pws_id) as number_reviewed_claims " +
             "FROM pws_activities_flag a " +
-            "LEFT OUTER JOIN staff b on a.staff_id = b.staff_id " +
+            "LEFT OUTER JOIN staff b on b.staff_id = a.staff_id " +
             "LEFT OUTER JOIN pc_pws_activities_flag c on a.pws_id = c.pws_id " +
             "LEFT OUTER JOIN fields d on a.unique_field_id = d.unique_field_id " +
             "WHERE d.deactivate = '0' AND a.deactivate = '0' AND a.solve = '0' AND LOWER(d.staff_id || d.mss) LIKE :staff_id " +

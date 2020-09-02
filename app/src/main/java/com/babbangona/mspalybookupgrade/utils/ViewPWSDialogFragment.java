@@ -135,7 +135,7 @@ public class ViewPWSDialogFragment extends DialogFragment {
         pwsDetails = new PWSFieldListRecyclerModel.PWSDetails();
         pwsFieldListRecyclerModel = sharedPrefs.getKeyPWSFieldModel();
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar_hg_fragment);
-        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("View PWS Details");
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("PWS Claim Details");
         GPSController.initialiseLocationListener(getActivity());
         sharedPrefs.setKeyImageCaptureFlag("0");
 

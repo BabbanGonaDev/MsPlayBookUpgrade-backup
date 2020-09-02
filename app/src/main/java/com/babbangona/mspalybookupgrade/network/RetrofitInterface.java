@@ -17,6 +17,7 @@ import com.babbangona.mspalybookupgrade.network.object.PCPWSActivitiesFlagDownlo
 import com.babbangona.mspalybookupgrade.network.object.PCPWSActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.PWSActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.PWSActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.PWSActivityControllerDownload;
 import com.babbangona.mspalybookupgrade.network.object.PWSCategoryListDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesUpload;
@@ -74,6 +75,9 @@ public interface RetrofitInterface {
 
     @GET("downloadCategory")
     Call<CategoryDownload> downloadCategory(@Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadPWSActivityController")
+    Call<PWSActivityControllerDownload> downloadPWSActivityController(@Query("last_synced_time") String last_synced_time);
 
     @GET("downloadHarvestLocation")
     Call<HarvestLocationDownload> downloadHarvestLocation(@Query("last_synced_time") String last_synced_time);

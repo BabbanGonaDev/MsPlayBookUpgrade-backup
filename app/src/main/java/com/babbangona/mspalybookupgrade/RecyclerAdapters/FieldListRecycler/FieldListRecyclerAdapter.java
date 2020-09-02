@@ -38,6 +38,7 @@ import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.CustomDialogFragment;
 import com.babbangona.mspalybookupgrade.utils.CustomDialogFragmentFertilizer;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
+import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -56,12 +57,14 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
     private GPSController gpsController;
     private GPSController.LocationGetter locationGetter;
     private String imei;
+    private SetPortfolioMethods setPortfolioMethods;
 
     public FieldListRecyclerAdapter(Context context) {
         super(USER_DIFF);
         this.context = context;
         sharedPrefs = new SharedPrefs(this.context);
         appDatabase = AppDatabase.getInstance(this.context);
+        setPortfolioMethods = new SetPortfolioMethods();
     }
 
 
@@ -154,8 +157,8 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
             String village = context.getResources().getString(R.string.member_village) +" "+ fieldListRecyclerModel.getVillage_name();
             String crop_type = context.getResources().getString(R.string.member_crop_type) +" "+ fieldListRecyclerModel.getCrop_type();
             String member_r_id = context.getResources().getString(R.string.member_r_id) +" "+ fieldListRecyclerModel.getField_r_id();
-            String latitude = "Lat.: " + (Double.parseDouble(fieldListRecyclerModel.getMin_lat())+Double.parseDouble(fieldListRecyclerModel.getMax_lat()))/2;
-            String longitude = "Long.: " + (Double.parseDouble(fieldListRecyclerModel.getMin_lng())+Double.parseDouble(fieldListRecyclerModel.getMax_lng()))/2;
+            String latitude = "Lat.: " + setPortfolioMethods.getLocationAverage(fieldListRecyclerModel.getMin_lat(), fieldListRecyclerModel.getMax_lat());
+            String longitude = "Long.: " + setPortfolioMethods.getLocationAverage(fieldListRecyclerModel.getMin_lng(), fieldListRecyclerModel.getMax_lng());
             String harvest_cc = context.getResources().getString(R.string.bottom_sheet_cc_center) +" "+ getHarvestCollectionCenter(fieldListRecyclerModel.getUnique_field_id());
             tv_field_r_id.setText(field_r_id);
             tv_ik_number.setText(ik_number);
@@ -282,12 +285,29 @@ public class FieldListRecyclerAdapter extends PagedListAdapter<FieldListRecycler
 
             }else if (sharedPrefs.getKeyActivityType().equalsIgnoreCase(DatabaseStringConstants.FERT_2_ACTIVITY)){
 
+                String status;
+
+                try {
+                    status = appDatabase.normalActivitiesFlagDao().getFert1Status(fieldListRecyclerModel.getUnique_field_id());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    status = "0";
+                }
+                if (status == null || status.equalsIgnoreCase("")){
+                    status = "0";
+                }
+
                 if (activity_status.equalsIgnoreCase("1")){
                     showLogDialog(context.getResources().getString(R.string.fert_2_reset_question),
                             context,fieldListRecyclerModel,"reset",position, latitude, longitude);
                 }else if (activity_status.equalsIgnoreCase("0")){
-                    showLogDialog(context.getResources().getString(R.string.fert_2_question),
-                            context,fieldListRecyclerModel,"update",position, latitude, longitude);
+                    if (!status.equalsIgnoreCase("1")){
+                        showDialogForLocked("Please Log Fertilizer 1 first",context);
+                    }else{
+                        showLogDialog(context.getResources().getString(R.string.fert_2_question),
+                                context,fieldListRecyclerModel,"update",position, latitude, longitude);
+                    }
+
                 }
 
             }else{

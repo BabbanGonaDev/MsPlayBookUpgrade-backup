@@ -27,13 +27,18 @@ public abstract class StaffListDao {
     public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffNotAdded(String search);
 
     @Query(" SELECT DISTINCT a.staff_id, a.staff_name, a.staff_hub, null as selected FROM staff a " +
-            "JOIN fields b ON a.staff_id = b.staff_id WHERE b.deactivate = '0'")
-    public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffAdded();
+            "JOIN fields b ON a.staff_id = b.staff_id WHERE b.deactivate = '0' " +
+            "AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) ORDER BY a.staff_id ASC")
+    public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffAdded(String staff_id);
 
     @Query(" SELECT DISTINCT a.staff_id, a.staff_name, a.staff_hub, null as selected FROM staff a " +
             "JOIN fields b ON a.staff_id = b.staff_id WHERE b.deactivate = '0' AND " +
-            "LOWER(a.staff_id || ' ' || a.staff_name || ' ' || a.staff_hub) LIKE LOWER(:search) ORDER BY a.staff_id ASC")
-    public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffAdded(String search);
+            "LOWER(a.staff_id || ' ' || a.staff_name || ' ' || a.staff_hub) LIKE LOWER(:search) " +
+            "AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) ORDER BY a.staff_id ASC")
+    public abstract DataSource.Factory<Integer, SetPortfolioRecyclerModel> getAllStaffAdded(String staff_id, String search);
+
+    @Query("SELECT staff_name FROM staff WHERE staff_id = :staff_id")
+    public abstract String getStaffName(String staff_id);
 
     /**
      * Insert the object in database

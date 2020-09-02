@@ -129,15 +129,17 @@ public class MappingActivity extends AppCompatActivity implements LocationListen
     public void end(View v) {
         int length = lats.size();
 
-        if (length >= 5 && calculateArea(lats, longs) >= 0.1) {
+        if (length >= 5 && calculateArea(lats, longs) >= 0.01) {
 //        if (length >= 5 ) {
             final String x = getBoundary(lats, longs);
             if (maxlat < 12) {
                 if (distanceCheck(lats.get(2), longs.get(2), lats.get(lats.size() - 1), longs.get(longs.size() - 1)) < 50) {
 
+                    final String field_area = String.valueOf(alertArea());
+
                     new AlertDialog.Builder(this)
                             .setTitle(R.string.endMapSession)
-                            .setMessage(this.getResources().getString(R.string.theFieldA) + " " + alertArea() + " " + this.getResources().getString(R.string.theFieldA2))
+                            .setMessage(this.getResources().getString(R.string.theFieldA) + " " + field_area + " " + this.getResources().getString(R.string.theFieldA2))
                             .setPositiveButton(R.string.saveDet, (DialogInterface.OnClickListener) (dialog, id) -> {
 
                                 String[] a = x.split("-");
@@ -152,13 +154,13 @@ public class MappingActivity extends AppCompatActivity implements LocationListen
                                 startActivity(new Intent(MappingActivity.this, MappingForm.class));*/
                                 finishMapping(
                                         new PWSFieldListRecyclerModel.PWSMapModel(
-                                        String.valueOf(alertArea()),
+                                                field_area,
                                         getLatLongs(),
                                         a[0],a[1],a[2],a[3],a[4],a[5])
                                 );
                             })
                             .setNegativeButton("Cancel", (dialog, id) -> {
-                                finishMapping(new PWSFieldListRecyclerModel.PWSMapModel());
+                                dialog.dismiss();
                             })
                             .show();
                 } else {

@@ -64,13 +64,13 @@
              android:textAppearance="?attr/textAppearanceBody2"
              android:textColor="?android:attr/textColorSecondary" />
 
-         <com.google.android.material.button.MaterialButton
+         <!--<com.google.android.material.button.MaterialButton
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:id="@+id/btn_phone_call"
              android:layout_gravity="end"
              app:icon="@drawable/ic_communications"
-             style="@style/Widget.App.Button.OutlinedButton.IconOnly"/>
+             style="@style/Widget.App.Button.OutlinedButton.IconOnly"/>-->
 
         </LinearLayout>
 

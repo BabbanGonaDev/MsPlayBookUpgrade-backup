@@ -35,9 +35,9 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/view_looks1"
-                android:drawableEnd="@drawable/ic_search_black_24dp"
                 android:padding="10dp"
-                android:text="@string/search" />
+                android:text="@string/search"
+                app:drawableEndCompat="@drawable/ic_search_black_24dp" />
 
         </LinearLayout>
 

@@ -216,7 +216,7 @@ public class RevPWSDialogFragment extends DialogFragment {
         pwsMapModel = new PWSFieldListRecyclerModel.PWSMapModel();
         pwsFieldListRecyclerModel = sharedPrefs.getKeyPWSFieldModel();
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar_hg_fragment);
-        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Log PWS Activity");
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Review PWS Activity");
         GPSController.initialiseLocationListener(getActivity());
         sharedPrefs.setKeyImageCaptureFlag("0");
         actCategory.setEnabled(false);
@@ -399,21 +399,30 @@ public class RevPWSDialogFragment extends DialogFragment {
 
     @OnClick(R.id.btn_map_pws)
     void setBtn_map_pws(){
-        ProgressDialog pd1 = new ProgressDialog(getActivity());
-        pd1.setTitle("Setting up your phone for mapping");
-        pd1.setMessage("Please wait...");
-        pd1.show();
-        pd1.setCancelable(false);
-        new CountDownTimer(10000,1000){
-            @Override
-            public void onTick(long millisUntilFinished) {
+        if (locationCheck()){
+            if (actCategory.getText().toString().equalsIgnoreCase("")){
+                checkForEmptyAutocompleteFields();
+            }else{
+                checkForEmptyAutocompleteFields();
+                ProgressDialog pd1 = new ProgressDialog(getActivity());
+                pd1.setTitle("Setting up your phone for mapping");
+                pd1.setMessage("Please wait...");
+                pd1.show();
+                pd1.setCancelable(false);
+                new CountDownTimer(5000,1000){
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                    }
+                    @Override
+                    public void onFinish() {
+                        pd1.dismiss();
+                        startActivityForResult(new Intent(getActivity(), MappingActivity.class),MAPPING_ACTIVITY_REQUEST);
+                    }
+                }.start();
             }
-            @Override
-            public void onFinish() {
-                pd1.dismiss();
-                startActivityForResult(new Intent(getActivity(), MappingActivity.class),MAPPING_ACTIVITY_REQUEST);
-            }
-        }.start();
+        }else{
+            showLocationError();
+        }
     }
 
     @Override
@@ -722,13 +731,17 @@ public class RevPWSDialogFragment extends DialogFragment {
         String result2 = saveToSdCard(photo2, pws_id + "_pc_" + IMAGE_CAPTURE_2);
         String result3 = saveToSdCard(photo3, pws_id + "_pc_" + IMAGE_CAPTURE_3);
         String result4 = saveToSdCard(photo4, pws_id + "_pc_" + IMAGE_CAPTURE_4);
-        if (result1.equalsIgnoreCase("success") &&
-                result2.equalsIgnoreCase("success") &&
-                result3.equalsIgnoreCase("success") &&
-                result4.equalsIgnoreCase("success")){
-            updateActivity(pwsFieldListRecyclerModel, pws_id, pwsMapModel, category, description);
-            Toast.makeText(getActivity(), "Picture Saved For Review", Toast.LENGTH_SHORT).show();
-        }else{
+        if (result1 != null && result2 != null && result3 != null && result4 != null) {
+            if (result1.equalsIgnoreCase("success") &&
+                    result2.equalsIgnoreCase("success") &&
+                    result3.equalsIgnoreCase("success") &&
+                    result4.equalsIgnoreCase("success")){
+                updateActivity(pwsFieldListRecyclerModel, pws_id, pwsMapModel, category, description);
+                Toast.makeText(getActivity(), "Picture Saved For Review", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getActivity(), "Picture Not Saved", Toast.LENGTH_SHORT).show();
+            }
+        } else {
             Toast.makeText(getActivity(), "Picture Not Saved", Toast.LENGTH_SHORT).show();
         }
 
@@ -914,13 +927,13 @@ public class RevPWSDialogFragment extends DialogFragment {
             Toast.makeText(getActivity(), "Parameter change requires image recapture.", Toast.LENGTH_SHORT).show();
             get_added_capture.clear();
             sharedPrefs.setKeyPWSCaptureList(get_added_capture);
-            resetAllImageName();
         }
         photo1 = null;
         photo2 = null;
         photo3 = null;
         photo4 = null;
         pwsMapModel = new PWSFieldListRecyclerModel.PWSMapModel();
+        resetAllImageName();
         showAllCapture();
     }
 
@@ -929,13 +942,13 @@ public class RevPWSDialogFragment extends DialogFragment {
         if (!get_added_capture.isEmpty()){
             get_added_capture.clear();
             sharedPrefs.setKeyPWSCaptureList(get_added_capture);
-            resetAllImageName();
         }
         photo1 = null;
         photo2 = null;
         photo3 = null;
         photo4 = null;
         pwsMapModel = new PWSFieldListRecyclerModel.PWSMapModel();
+        resetAllImageName();
         showAllCapture();
     }
 

@@ -25,6 +25,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.PCPWSActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.PWSActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.PWSActivityController;
 import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.babbangona.mspalybookupgrade.data.db.entities.PictureSync;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFActivitiesFlag;
@@ -48,6 +49,7 @@ import com.babbangona.mspalybookupgrade.network.object.PCPWSActivitiesFlagDownlo
 import com.babbangona.mspalybookupgrade.network.object.PCPWSActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.PWSActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.PWSActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.PWSActivityControllerDownload;
 import com.babbangona.mspalybookupgrade.network.object.PWSCategoryListDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesUpload;
@@ -109,6 +111,7 @@ public class ActivityListDownloadService extends IntentService {
         getPWSActivitiesFlagDownload();
         getPCPWSActivitiesFlagDownload();
         getCategoryDownload();
+        getPWSActivitiesControllerDownload();
         getHarvestLocationDownload();
         getAppVariablesDownload();
 
@@ -2326,15 +2329,15 @@ public class ActivityListDownloadService extends IntentService {
 
     private void syncUpPWSActivities() {
         List<PWSActivitiesFlag> pwsActivitiesFlags = appDatabase.pwsActivitiesFlagDao().getUnSyncedPWSActivities();
-        String composed_json = new Gson().toJson(pwsActivitiesFlags);
-        Log.d("composed_json",composed_json);
+        String composed_json_pws = new Gson().toJson(pwsActivitiesFlags);
+        //Log.d("composed_json_pws",composed_json_pws);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
-        Call<List<PWSActivitiesUpload>> call = retrofitInterface.uploadPWSActivitiesRecord(composed_json, sharedPrefs.getStaffID());
+        Call<List<PWSActivitiesUpload>> call = retrofitInterface.uploadPWSActivitiesRecord(composed_json_pws, sharedPrefs.getStaffID());
         sharedPrefs.setKeyProgressDialogStatus(0);
         call.enqueue(new Callback<List<PWSActivitiesUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<PWSActivitiesUpload>> call, @NonNull Response<List<PWSActivitiesUpload>> response) {
-                //Log.d("RETROFIT_TFM_DATA", "onResponse: " + response.body());
+                //Log.d("RETROFIT_PWS_DATA", "onResponse: " + response.body());
                 if (response.isSuccessful()) {
 
                     List<PWSActivitiesUpload> pwsActivitiesUploadList = response.body();
@@ -2778,6 +2781,127 @@ public class ActivityListDownloadService extends IntentService {
         }
     }
 
+    public void getPWSActivitiesControllerDownload() {
+
+        String last_synced = getLastSyncPWSActivitiesController();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<PWSActivityControllerDownload> call = retrofitInterface.downloadPWSActivityController(last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<PWSActivityControllerDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<PWSActivityControllerDownload> call,
+                                   @NonNull Response<PWSActivityControllerDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    PWSActivityControllerDownload pwsActivityControllerDownload = response.body();
+
+                    if (pwsActivityControllerDownload != null) {
+                        List<PWSActivityController> pwsActivityControllerList = pwsActivityControllerDownload.getDownload_list();
+                        if (pwsActivityControllerList.size() > 0){
+                            saveToPWSActivityControllerTable(pwsActivityControllerList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncPWSActivitiesController(sharedPrefs.getStaffID(),pwsActivityControllerDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_pws_activities_controller(pwsActivityControllerDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_CONTROLLER_TABLE,
+                                "PWS Activity Controller List Download",
+                                "1",
+                                returnRemark(pwsActivityControllerList.size()),
+                                pwsActivityControllerDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_CONTROLLER_TABLE,
+                                "PWS Activity Controller List Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode Category:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_CONTROLLER_TABLE,
+                            "PWS Activity Controller List Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<PWSActivityControllerDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_staff_list", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_CONTROLLER_TABLE,
+                        "PWS Activity Controller List Download",
+                        "0",
+                        "Download empty",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToPWSActivityControllerTable(List<PWSActivityController> pwsActivityControllerList){
+        SavePWSActivityControllerTable savePWSActivityControllerTable = new SavePWSActivityControllerTable();
+        savePWSActivityControllerTable.execute(pwsActivityControllerList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SavePWSActivityControllerTable extends AsyncTask<List<PWSActivityController>, Void, Void> {
+
+
+        private final String TAG = SaveCategoryTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<PWSActivityController>... params) {
+
+            List<PWSActivityController> pwsActivityControllerList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.pwsActivityControllerDao().insert(pwsActivityControllerList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
     String getLastSyncTimeStaffList(){
         String last_sync_time;
         try {
@@ -2975,6 +3099,20 @@ public class ActivityListDownloadService extends IntentService {
         String last_sync_time;
         try {
             last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownPCPWSActivitiesFlag(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncPWSActivitiesController(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncPWSActivitiesController(sharedPrefs.getStaffID());
         } catch (Exception e) {
             e.printStackTrace();
             last_sync_time = "2019-01-01 00:00:00";

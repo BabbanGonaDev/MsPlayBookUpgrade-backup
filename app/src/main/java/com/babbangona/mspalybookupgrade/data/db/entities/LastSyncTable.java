@@ -80,6 +80,9 @@ public class LastSyncTable {
     @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_PC_PWS_ACTIVITY_FLAGS_TABLE)
     private String last_sync_down_pc_pws_activities_flag;
 
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_PWS_ACTIVITIES_CONTROLLER_TABLE)
+    private String last_sync_pws_activities_controller;
+
     public LastSyncTable() {
     }
 
@@ -93,7 +96,7 @@ public class LastSyncTable {
                          String last_sync_up_rf_activities_flag, String last_sync_down_rf_activities_flag,
                          String last_sync_pws_category_list, String last_sync_up_pws_activities_flag,
                          String last_sync_down_pws_activities_flag, String last_sync_up_pc_pws_activities_flag,
-                         String last_sync_down_pc_pws_activities_flag) {
+                         String last_sync_down_pc_pws_activities_flag, String last_sync_pws_activities_controller) {
         this.staff_id = staff_id;
         this.last_sync_activity_list = last_sync_activity_list;
         this.last_sync_up_normal_activities_flag = last_sync_up_normal_activities_flag;
@@ -116,6 +119,7 @@ public class LastSyncTable {
         this.last_sync_down_pws_activities_flag = last_sync_down_pws_activities_flag;
         this.last_sync_up_pc_pws_activities_flag = last_sync_up_pc_pws_activities_flag;
         this.last_sync_down_pc_pws_activities_flag = last_sync_down_pc_pws_activities_flag;
+        this.last_sync_pws_activities_controller = last_sync_pws_activities_controller;
     }
 
     @NonNull
@@ -293,5 +297,13 @@ public class LastSyncTable {
 
     public void setLast_sync_down_pc_pws_activities_flag(String last_sync_down_pc_pws_activities_flag) {
         this.last_sync_down_pc_pws_activities_flag = last_sync_down_pc_pws_activities_flag;
+    }
+
+    public String getLast_sync_pws_activities_controller() {
+        return last_sync_pws_activities_controller;
+    }
+
+    public void setLast_sync_pws_activities_controller(String last_sync_pws_activities_controller) {
+        this.last_sync_pws_activities_controller = last_sync_pws_activities_controller;
     }
 }

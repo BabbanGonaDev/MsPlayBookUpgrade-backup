@@ -1,13 +1,16 @@
 package com.babbangona.mspalybookupgrade.network.object;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class PCPWSActivitiesUpload {
 
     @SerializedName("pws_id")
+    @Expose
     private String pws_id;
 
     @SerializedName("last_synced")
+    @Expose
     private String last_synced;
 
     public PCPWSActivitiesUpload(String pws_id, String last_synced) {

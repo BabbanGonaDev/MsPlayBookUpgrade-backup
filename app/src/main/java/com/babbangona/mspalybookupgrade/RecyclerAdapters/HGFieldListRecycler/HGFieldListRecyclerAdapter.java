@@ -166,8 +166,8 @@ public class HGFieldListRecyclerAdapter extends PagedListAdapter<HGFieldListRecy
             String village = context.getResources().getString(R.string.member_village) +" "+ hgFieldListRecyclerModel.getVillage_name();
             String crop_type = context.getResources().getString(R.string.member_crop_type) +" "+ hgFieldListRecyclerModel.getCrop_type();
             String member_r_id = context.getResources().getString(R.string.member_r_id) +" "+ hgFieldListRecyclerModel.getField_r_id();
-            String latitude = "Lat.: " + (Double.parseDouble(hgFieldListRecyclerModel.getMin_lat())+Double.parseDouble(hgFieldListRecyclerModel.getMax_lat()))/2;
-            String longitude = "Long.: " + (Double.parseDouble(hgFieldListRecyclerModel.getMin_lng())+Double.parseDouble(hgFieldListRecyclerModel.getMax_lng()))/2;
+            String latitude = "Lat.: " + setPortfolioMethods.getLocationAverage(hgFieldListRecyclerModel.getMin_lat(),hgFieldListRecyclerModel.getMax_lat());
+            String longitude = "Long.: " + setPortfolioMethods.getLocationAverage(hgFieldListRecyclerModel.getMin_lng(),hgFieldListRecyclerModel.getMax_lng());
             tv_field_r_id.setText(field_r_id);
             tv_ik_number.setText(ik_number);
             tv_member_name.setText(member_name);

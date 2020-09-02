@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.babbangona.mspalybookupgrade.data.db.entities.PWSActivityController;
 import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.uxcam.UXCam;
 
@@ -85,6 +86,31 @@ public class MainActivity extends AppCompatActivity {
 
     void addDataToDatabase(){
         AsyncTask.execute(()->{
+            if (sharedPrefs.getKeyFirstUpdateFlag().equalsIgnoreCase("0")){
+                List<Category> categoryList = new ArrayList<>();
+                categoryList.add(new Category("MIK","subd"));
+                categoryList.add(new Category("LA","subd"));
+                categoryList.add(new Category("MSB","subd"));
+                categoryList.add(new Category("MSS","supr"));
+                categoryList.add(new Category("LMIK","supr"));
+                categoryList.add(new Category("PC","supr"));
+                appDatabase.categoryDao().insert(categoryList);
+                sharedPrefs.setKeyFirstUpdateFlag("1");
+            }
+
+            if (sharedPrefs.getKeySecondUpdateFlag().equalsIgnoreCase("0")){
+                List<PWSActivityController> pwsActivityControllerList = new ArrayList<>();
+                pwsActivityControllerList.add(new PWSActivityController("MIK","1"));
+                pwsActivityControllerList.add(new PWSActivityController("LA","1"));
+                pwsActivityControllerList.add(new PWSActivityController("MSB","1"));
+                pwsActivityControllerList.add(new PWSActivityController("MSS","2"));
+                pwsActivityControllerList.add(new PWSActivityController("LMIK","1"));
+                pwsActivityControllerList.add(new PWSActivityController("BGT","2"));
+                pwsActivityControllerList.add(new PWSActivityController("PC","2"));
+                appDatabase.pwsActivityControllerDao().insert(pwsActivityControllerList);
+                sharedPrefs.setKeySecondUpdateFlag("1");
+            }
+
             if (sharedPrefs.getKeyFirstTimeDataFlag().equalsIgnoreCase("0")){
                 List<ActivityList> activityLists = new ArrayList<>();
                 activityLists.add(new ActivityList("4","en",
@@ -97,13 +123,6 @@ public class MainActivity extends AppCompatActivity {
                         "Set Portfolio", "com.babbangona.mspalybookupgrade.SetPortfolio",
                         "1","PC","0"));
                 appDatabase.activityListDao().insert(activityLists);
-                List<Category> categoryList = new ArrayList<>();
-                categoryList.add(new Category("MIK","subd"));
-                categoryList.add(new Category("MSB","subd"));
-                categoryList.add(new Category("MSS","supr"));
-                categoryList.add(new Category("LMIK","supr"));
-                categoryList.add(new Category("PC","supr"));
-                appDatabase.categoryDao().insert(categoryList);
 
                 List<PWSCategoryList> pwsCategoryLists = new ArrayList<>();
                 pwsCategoryLists.add(new PWSCategoryList("Flood","MSB","0"));

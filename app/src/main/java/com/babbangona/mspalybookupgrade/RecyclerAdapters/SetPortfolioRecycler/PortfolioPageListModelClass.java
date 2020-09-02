@@ -11,6 +11,7 @@ import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
 import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
+import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 
 public class PortfolioPageListModelClass extends ViewModel {
     private StaffListDao staffListDao;
@@ -24,6 +25,9 @@ public class PortfolioPageListModelClass extends ViewModel {
     public PortfolioPageListModelClass(StaffListDao staffListDao, Context context) {
         this.staffListDao = staffListDao;
         this.context = context;
+        SharedPrefs sharedPrefs = new SharedPrefs(this.context);
+
+        String staff_id = "%"+sharedPrefs.getStaffID()+"%";
 
         setPortfolioRecyclerModelList = Transformations.switchMap(filterTextAll, input -> {
             if (input == null || input.equals("") || input.equals("%%") ||input.equals("% %")) {
@@ -46,12 +50,12 @@ public class PortfolioPageListModelClass extends ViewModel {
                 //check if the current value is empty load all data else search
                 Log.i("PagedListAdded", "ReportedModelClass: inside not blank ");
                 return new LivePagedListBuilder<>(
-                        this.staffListDao.getAllStaffAdded(),5)
+                        this.staffListDao.getAllStaffAdded(staff_id),5)
                         .build();
             } else {
                 Log.i("PagedListAdded", "ReportedModelClass: inside blank ");
                 return new LivePagedListBuilder<>(
-                        this.staffListDao.getAllStaffAdded(filterTextAllAnother.getValue()),5)
+                        this.staffListDao.getAllStaffAdded(staff_id,filterTextAllAnother.getValue()),5)
                         .build();
             }
 
