@@ -66,18 +66,14 @@ public class SelectCcAdapter extends RecyclerView.Adapter<SelectCcAdapter.ViewHo
 
                     if (cc.getIs_selected()) {
                         //It has already been selected, now let's deselect it.
-                        binding.mtvCcName.setTextColor(mCtx.getResources().getColor(R.color.colorPrimary));
-                        binding.mcvLayout.setCardBackgroundColor(Color.WHITE);
-                        binding.executePendingBindings();
                         cc.setIs_selected(false);
+                        notifyDataSetChanged();
 
                         listener.deSelectCc(cc);
                     } else {
                         //Select it.
-                        binding.mtvCcName.setTextColor(Color.WHITE);
-                        binding.mcvLayout.setCardBackgroundColor(mCtx.getResources().getColor(R.color.colorPrimary));
-                        binding.executePendingBindings();
                         cc.setIs_selected(true);
+                        notifyDataSetChanged();
 
                         listener.selectCc(cc);
                     }
@@ -87,6 +83,13 @@ public class SelectCcAdapter extends RecyclerView.Adapter<SelectCcAdapter.ViewHo
 
         public void bind(CcModel collection_center) {
             binding.mtvCcName.setText(collection_center.getCc_name());
+            if (collection_center.getIs_selected()) {
+                binding.mtvCcName.setTextColor(Color.WHITE);
+                binding.mcvLayout.setCardBackgroundColor(mCtx.getResources().getColor(R.color.colorPrimary));
+            } else {
+                binding.mtvCcName.setTextColor(mCtx.getResources().getColor(R.color.colorPrimary));
+                binding.mcvLayout.setCardBackgroundColor(Color.WHITE);
+            }
             binding.executePendingBindings();
         }
     }
