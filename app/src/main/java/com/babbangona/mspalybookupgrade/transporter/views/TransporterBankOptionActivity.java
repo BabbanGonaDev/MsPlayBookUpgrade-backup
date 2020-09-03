@@ -73,11 +73,11 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
 
                 AlertDialog valid_no_check = new MaterialAlertDialogBuilder(this)
                         .setTitle("Invalid Entry")
-                        .setMessage("Kindly enter a valid account number of 10 digits")
+                        .setMessage("Kindly check the account number again")
                         .setIcon(R.drawable.ic_sad_face)
                         .setPositiveButton("Okay", (dialog, which) -> {
                             dialog.dismiss();
-                            binding.editAccountNumber.requestFocus();
+                            //binding.editAccountNumber.requestFocus();
                         }).setCancelable(false).show();
                 valid_no_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
 
@@ -149,11 +149,19 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
             return true;
         } else if (binding.editAccountNumber.getText().toString().trim().isEmpty()) {
             return true;
-        } else return binding.atvBank.getText().toString().trim().isEmpty();
+        } else if (binding.editConfirmAccountNumber.getText().toString().trim().isEmpty()) {
+            return true;
+        } else {
+            return binding.atvBank.getText().toString().trim().isEmpty();
+        }
     }
 
     public boolean isAccNumberValid() {
-        return binding.editAccountNumber.getText().toString().length() == 10;
+        if (binding.editAccountNumber.getText().toString().trim().equals(binding.editConfirmAccountNumber.getText().toString().trim())) {
+            return binding.editAccountNumber.getText().toString().length() == 10;
+        } else {
+            return false;
+        }
     }
 
     public boolean isAccNameMatching() {
@@ -253,5 +261,6 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
             return null;
         };
         binding.editAccountNumber.setFilters(new InputFilter[]{filter_1});
+        binding.editConfirmAccountNumber.setFilters(new InputFilter[]{filter_1});
     }
 }
