@@ -3,6 +3,7 @@ package com.babbangona.mspalybookupgrade.transporter.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -58,23 +59,28 @@ public class SelectCcAdapter extends RecyclerView.Adapter<SelectCcAdapter.ViewHo
             super(binding.getRoot());
             this.binding = binding;
 
-            binding.getRoot().setOnClickListener(v -> {
-                CcModel cc = cc_list.get(getLayoutPosition());
+            binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CcModel cc = cc_list.get(getLayoutPosition());
 
-                if (cc.getIs_selected()) {
-                    //It has already been selected, now let's deselect it.
-                    binding.mtvCcName.setTextColor(mCtx.getResources().getColor(R.color.colorPrimary));
-                    binding.mcvLayout.setCardBackgroundColor(Color.WHITE);
-                    cc.setIs_selected(false);
+                    if (cc.getIs_selected()) {
+                        //It has already been selected, now let's deselect it.
+                        binding.mtvCcName.setTextColor(mCtx.getResources().getColor(R.color.colorPrimary));
+                        binding.mcvLayout.setCardBackgroundColor(Color.WHITE);
+                        binding.executePendingBindings();
+                        cc.setIs_selected(false);
 
-                    listener.deSelectCc(cc);
-                } else {
-                    //Select it.
-                    binding.mtvCcName.setTextColor(Color.WHITE);
-                    binding.mcvLayout.setCardBackgroundColor(mCtx.getResources().getColor(R.color.colorPrimary));
-                    cc.setIs_selected(true);
+                        listener.deSelectCc(cc);
+                    } else {
+                        //Select it.
+                        binding.mtvCcName.setTextColor(Color.WHITE);
+                        binding.mcvLayout.setCardBackgroundColor(mCtx.getResources().getColor(R.color.colorPrimary));
+                        binding.executePendingBindings();
+                        cc.setIs_selected(true);
 
-                    listener.selectCc(cc);
+                        listener.selectCc(cc);
+                    }
                 }
             });
         }
