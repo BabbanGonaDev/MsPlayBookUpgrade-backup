@@ -79,7 +79,7 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.empty_menu, menu);
+        getMenuInflater().inflate(R.menu.dummy_menu, menu);
         return true;
     }
 
