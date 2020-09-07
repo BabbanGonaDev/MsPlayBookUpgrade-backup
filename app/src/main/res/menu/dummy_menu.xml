@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--The main purpose of this item is as requested by the Project Manager,
+    to simulate the options menu icon without actually doing anything.-->
+
+    <item
+        android:id="@+id/dummy_item"
+        android:icon="@drawable/ic_options_menu_icon_v2"
+        android:title="Does Nothing"
+        app:showAsAction="always" />
+</menu>
