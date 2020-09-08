@@ -19,12 +19,14 @@ import java.util.List;
 public abstract class PWSActivitiesFlagDao {
 
     @Query(" SELECT COUNT(DISTINCT a.unique_field_id) FROM pws_activities_flag a JOIN fields b " +
-            "ON a.unique_field_id = b.unique_field_id WHERE a.solve = '0' AND a.deactivate = '0' " +
+            "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
+            "WHERE a.solve = '0' AND a.deactivate = '0' " +
             "AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND b.deactivate = '0' ")
     public abstract int getPWSCount(String staff_id);
 
     @Query(" SELECT COUNT(DISTINCT a.unique_field_id) FROM pws_activities_flag a JOIN fields b " +
-            "ON a.unique_field_id = b.unique_field_id WHERE a.solve = '0' AND a.deactivate = '0' " +
+            "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
+            "WHERE a.solve = '0' AND a.deactivate = '0' " +
             "AND ((b.min_lat+b.max_lat)/2) > :min_lat AND ((b.min_lat+b.max_lat)/2) <= :max_lat AND ((b.min_lng+b.max_lng)/2) > :min_lng " +
             "AND ((b.min_lng+b.max_lng)/2) <= :max_lng AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND b.deactivate = '0' ")
     public abstract int fieldPortionCountForPWS(String staff_id, double min_lat, double max_lat, double min_lng, double max_lng);
@@ -35,7 +37,7 @@ public abstract class PWSActivitiesFlagDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE a.unique_field_id = :unique_field_id " +
             "AND a.deactivate = '0' ")
     public abstract PWSFieldListRecyclerModel getFieldDetails(String unique_field_id);

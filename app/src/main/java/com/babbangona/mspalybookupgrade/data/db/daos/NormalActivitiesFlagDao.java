@@ -15,29 +15,34 @@ import java.util.List;
 public abstract class NormalActivitiesFlagDao {
 
     @Query(" SELECT COUNT(a.unique_field_id) FROM normal_activities_flag a JOIN fields b " +
-            "ON a.unique_field_id = b.unique_field_id WHERE a.fertilizer_1_status = '1' " +
+            "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
+            "WHERE a.fertilizer_1_status = '1' " +
             "AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND b.deactivate = '0' ")
     public abstract int getFertilizer1Count(String staff_id);
 
     @Query(" SELECT COUNT(a.unique_field_id) FROM normal_activities_flag a JOIN fields b " +
-            "on a.unique_field_id = b.unique_field_id WHERE a.fertilizer_2_status = '1' " +
+            "on a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
+            "WHERE a.fertilizer_2_status = '1' " +
             "AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND b.deactivate = '0' ")
     public abstract int getFertilizer2Count(String staff_id);
 
-    @Query(" SELECT COUNT(unique_field_id) FROM fields WHERE ((min_lat+max_lat)/2) > :min_lat " +
-            "AND ((min_lat+max_lat)/2) <= :max_lat AND ((min_lng+max_lng)/2) > :min_lng " +
-            "AND ((min_lng+max_lng)/2) <= :max_lng AND LOWER(staff_id || mss) LIKE LOWER(:staff_id)" +
+    @Query(" SELECT COUNT(a.unique_field_id) FROM fields a  JOIN members c on a.unique_member_id = c.unique_member_id " +
+            "WHERE ((a.min_lat+a.max_lat)/2) > :min_lat " +
+            "AND ((a.min_lat+a.max_lat)/2) <= :max_lat AND ((a.min_lng+a.max_lng)/2) > :min_lng " +
+            "AND ((a.min_lng+a.max_lng)/2) <= :max_lng AND LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id)" +
             " AND deactivate = '0' ")
     public abstract int fieldPortionCount(String staff_id, double min_lat, double max_lat, double min_lng, double max_lng);
 
     @Query(" SELECT COUNT(a.unique_field_id) FROM normal_activities_flag a JOIN fields b " +
-            "ON a.unique_field_id = b.unique_field_id WHERE a.fertilizer_1_status = '1' " +
+            "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
+            "WHERE a.fertilizer_1_status = '1' " +
             "AND ((b.min_lat+b.max_lat)/2) > :min_lat AND ((b.min_lat+b.max_lat)/2) <= :max_lat AND ((b.min_lng+b.max_lng)/2) > :min_lng " +
             "AND ((b.min_lng+b.max_lng)/2) <= :max_lng AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND b.deactivate = '0' ")
     public abstract int fieldPortionCountForFertilizer1(String staff_id, double min_lat, double max_lat, double min_lng, double max_lng);
 
     @Query(" SELECT COUNT(a.unique_field_id) FROM normal_activities_flag a JOIN fields b " +
-            "ON a.unique_field_id = b.unique_field_id WHERE a.fertilizer_2_status = '1' " +
+            "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
+            "WHERE a.fertilizer_2_status = '1' " +
             "AND ((b.min_lat+b.max_lat)/2) > :min_lat AND ((b.min_lat+b.max_lat)/2) <= :max_lat AND ((b.min_lng+b.max_lng)/2) > :min_lng " +
             "AND ((b.min_lng+b.max_lng)/2) <= :max_lng AND LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND b.deactivate = '0' ")
     public abstract int fieldPortionCountForFertilizer2(String staff_id, double min_lat, double max_lat, double min_lng, double max_lng);

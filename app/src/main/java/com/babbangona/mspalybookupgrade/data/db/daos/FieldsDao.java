@@ -20,25 +20,27 @@ import java.util.List;
 @Dao
 public abstract class FieldsDao {
 
-    @Query(" SELECT COUNT(unique_field_id) FROM fields WHERE deactivate = '0' " +
-            "AND LOWER(staff_id || mss) LIKE LOWER(:staff_id) ")
+    @Query(" SELECT COUNT(a.unique_field_id) FROM fields a JOIN members c on a.unique_member_id = c.unique_member_id " +
+            "WHERE a.deactivate = '0' " +
+            "AND LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) ")
     public abstract int getTotalFieldsCount(String staff_id);
 
     @Query(" SELECT unique_member_id FROM fields WHERE unique_field_id = :unique_field_id ")
     public abstract String getUniqueMemberID(String unique_field_id);
 
-    @Query(" SELECT ((MAX(max_lat*1.0)+MAX(min_lat*1.0))/2) as max_lat, " +
-            "((MIN(max_lat*1.0)+MIN(min_lat*1.0))/2) as min_lat, " +
-            "((MAX(max_lng*1.0)+MAX(min_lng*1.0))/2) as max_lng, " +
-            "((MIN(max_lng*1.0)+MIN(min_lng*1.0))/2) as min_lng " +
-            "FROM fields WHERE LOWER(staff_id || mss) LIKE LOWER(:staff_id) AND deactivate = '0'")
+    @Query(" SELECT ((MAX(a.max_lat*1.0)+MAX(a.min_lat*1.0))/2) as max_lat, " +
+            "((MIN(a.max_lat*1.0)+MIN(a.min_lat*1.0))/2) as min_lat, " +
+            "((MAX(a.max_lng*1.0)+MAX(a.min_lng*1.0))/2) as max_lng, " +
+            "((MIN(a.max_lng*1.0)+MIN(a.min_lng*1.0))/2) as min_lng " +
+            "FROM fields a JOIN members c on a.unique_member_id = c.unique_member_id " +
+            "WHERE LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) AND a.deactivate = '0'")
     public abstract LiveData<GridDetailsRecyclerModel.InitialGridDetailsModel> viewLongLatRange(String staff_id);
 
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, c.fertilizer_1_status, " +
             "c.fertilizer_2_status, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "LEFT OUTER JOIN normal_activities_flag c ON a.unique_field_id = c.unique_field_id " +
             "WHERE ((a.min_lat+a.max_lat)/2) > :min_lat AND ((a.min_lat+a.max_lat)/2) <= :max_lat " +
             "AND ((a.min_lng+a.max_lng)/2) > :min_lng AND ((a.min_lng+a.max_lng)/2) <= :max_lng " +
@@ -53,7 +55,7 @@ public abstract class FieldsDao {
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, c.fertilizer_1_status, " +
             "c.fertilizer_2_status, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "LEFT OUTER JOIN normal_activities_flag c ON a.unique_field_id = c.unique_field_id " +
             "WHERE ((a.min_lat+a.max_lat)/2) > :min_lat AND ((a.min_lat+a.max_lat)/2) <= :max_lat " +
             "AND ((a.min_lng+a.max_lng)/2) > :min_lng AND ((a.min_lng+a.max_lng)/2) <= :max_lng " +
@@ -72,7 +74,7 @@ public abstract class FieldsDao {
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, c.fertilizer_1_status, " +
             "c.fertilizer_2_status, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "LEFT OUTER JOIN normal_activities_flag c ON a.unique_field_id = c.unique_field_id " +
             "WHERE a.unique_field_id = :unique_field_id AND LOWER(b.ik_number) LIKE LOWER(:ik_number) " +
             "AND LOWER('R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:member_id) " +
@@ -93,7 +95,7 @@ public abstract class FieldsDao {
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, c.fertilizer_1_status, " +
             "c.fertilizer_2_status, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "LEFT OUTER JOIN normal_activities_flag c ON a.unique_field_id = c.unique_field_id " +
             "WHERE a.unique_field_id = :unique_field_id AND LOWER(b.ik_number) LIKE LOWER(:ik_number) " +
             "AND LOWER('R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:member_id) " +
@@ -110,7 +112,7 @@ public abstract class FieldsDao {
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, c.fertilizer_1_status, " +
             "c.fertilizer_2_status, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "LEFT OUTER JOIN normal_activities_flag c ON a.unique_field_id = c.unique_field_id " +
             "WHERE LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) AND a.deactivate = '0' ")
     public abstract DataSource.Factory<Integer, FieldListRecyclerModel> getFieldListByStaffID(String staff_id);
@@ -119,7 +121,7 @@ public abstract class FieldsDao {
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, c.fertilizer_1_status, " +
             "c.fertilizer_2_status, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "LEFT OUTER JOIN normal_activities_flag c ON a.unique_field_id = c.unique_field_id " +
             "WHERE LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) AND LOWER(b.first_name || ' ' || " +
             "b.last_name || b.phone_number || b.village_name || 'R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:search) AND a.deactivate = '0' ")
@@ -130,14 +132,14 @@ public abstract class FieldsDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) AND a.deactivate = '0' ")
     public abstract DataSource.Factory<Integer, HGFieldListRecyclerModel> getFieldListByStaffIDHG(String staff_id);
 
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) AND LOWER(b.first_name || ' ' || " +
             "b.last_name || b.phone_number || b.village_name || 'R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:search) AND a.deactivate = '0' ")
     public abstract DataSource.Factory<Integer, HGFieldListRecyclerModel> getFieldListBySearchHG(String staff_id, String search);
@@ -145,7 +147,7 @@ public abstract class FieldsDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE ((a.min_lat+a.max_lat)/2) > :min_lat AND ((a.min_lat+a.max_lat)/2) <= :max_lat " +
             "AND ((a.min_lng+a.max_lng)/2) > :min_lng AND ((a.min_lng+a.max_lng)/2) <= :max_lng " +
             "AND LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) AND a.deactivate = '0' ")
@@ -158,7 +160,7 @@ public abstract class FieldsDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE ((a.min_lat+a.max_lat)/2) > :min_lat AND ((a.min_lat+a.max_lat)/2) <= :max_lat " +
             "AND ((a.min_lng+a.max_lng)/2) > :min_lng AND ((a.min_lng+a.max_lng)/2) <= :max_lng " +
             "AND LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) " +
@@ -175,7 +177,7 @@ public abstract class FieldsDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE a.unique_field_id = :unique_field_id AND LOWER(b.ik_number) LIKE LOWER(:ik_number) " +
             "AND LOWER('R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:member_id) " +
             "AND LOWER(b.first_name || ' ' || b.last_name) LIKE LOWER(:member_name) " +
@@ -194,7 +196,7 @@ public abstract class FieldsDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE a.unique_field_id = :unique_field_id AND LOWER(b.ik_number) LIKE LOWER(:ik_number) " +
             "AND LOWER('R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:member_id) " +
             "AND LOWER(b.first_name || ' ' || b.last_name) LIKE LOWER(:member_name) " +
@@ -211,14 +213,14 @@ public abstract class FieldsDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) AND a.deactivate = '0' ")
     public abstract DataSource.Factory<Integer, PWSFieldListRecyclerModel> getFieldListByStaffIDPWS(String staff_id);
 
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) AND LOWER(b.first_name || ' ' || " +
             "b.last_name || b.phone_number || b.village_name || 'R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:search) AND a.deactivate = '0' ")
     public abstract DataSource.Factory<Integer, PWSFieldListRecyclerModel> getFieldListBySearchPWS(String staff_id, String search);
@@ -226,7 +228,7 @@ public abstract class FieldsDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE ((a.min_lat+a.max_lat)/2) > :min_lat AND ((a.min_lat+a.max_lat)/2) <= :max_lat " +
             "AND ((a.min_lng+a.max_lng)/2) > :min_lng AND ((a.min_lng+a.max_lng)/2) <= :max_lng " +
             "AND LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) AND a.deactivate = '0' ")
@@ -239,7 +241,7 @@ public abstract class FieldsDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE ((a.min_lat+a.max_lat)/2) > :min_lat AND ((a.min_lat+a.max_lat)/2) <= :max_lat " +
             "AND ((a.min_lng+a.max_lng)/2) > :min_lng AND ((a.min_lng+a.max_lng)/2) <= :max_lng " +
             "AND LOWER(a.staff_id || a.mss) LIKE LOWER(:staff_id) " +
@@ -256,7 +258,7 @@ public abstract class FieldsDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE a.unique_field_id = :unique_field_id AND LOWER(b.ik_number) LIKE LOWER(:ik_number) " +
             "AND LOWER('R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:member_id) " +
             "AND LOWER(b.first_name || ' ' || b.last_name) LIKE LOWER(:member_name) " +
@@ -275,7 +277,7 @@ public abstract class FieldsDao {
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, b.ik_number, a.crop_type " +
-            "FROM fields a LEFT OUTER JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE a.unique_field_id = :unique_field_id AND LOWER(b.ik_number) LIKE LOWER(:ik_number) " +
             "AND LOWER('R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:member_id) " +
             "AND LOWER(b.first_name || ' ' || b.last_name) LIKE LOWER(:member_name) " +
