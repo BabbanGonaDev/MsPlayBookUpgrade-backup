@@ -103,6 +103,7 @@ public class TransporterTemplateCaptureActivity extends CustomLuxandActivity {
     public void saveImageAndTemplate(String passed_template, Bitmap passed_image) {
         TSessionManager session = new TSessionManager(getApplicationContext());
         session.SET_REG_FACE_TEMPLATE(passed_template);
+        session.SET_REG_FACE_TEMPLATE_FLAG(1);
 
         new SaveBitmapImage().execute(passed_image);
     }

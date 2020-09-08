@@ -12,6 +12,7 @@ public class TSessionManager {
     public static final String KEY_REG_FIRST_NAME = "reg_first_name";
     public static final String KEY_REG_LAST_NAME = "reg_last_name";
     public static final String KEY_REG_FACE_TEMPLATE = "reg_face_template";
+    public static final String KEY_REG_FACE_TEMPLATE_FLAG = "reg_face_template_flag";
     public static final String KEY_REG_VEHICLE_TYPE = "reg_vehicle_type";
     public static final String KEY_REG_COLLECTION_CENTERS = "reg_collection_centers";
 
@@ -63,6 +64,10 @@ public class TSessionManager {
 
     public void SET_REG_FACE_TEMPLATE(String value) {
         editor.putString(KEY_REG_FACE_TEMPLATE, value).commit();
+    }
+
+    public void SET_REG_FACE_TEMPLATE_FLAG(Integer value) {
+        editor.putInt(KEY_REG_FACE_TEMPLATE_FLAG, value).commit();
     }
 
     public void SET_REG_VEHICLE_TYPE(String value) {
@@ -133,6 +138,10 @@ public class TSessionManager {
         return prefs.getString(KEY_REG_FACE_TEMPLATE, "");
     }
 
+    public Integer GET_REG_FACE_TEMPLATE_FLAG() {
+        return prefs.getInt(KEY_REG_FACE_TEMPLATE_FLAG, 99);
+    }
+
     public String GET_REG_VEHICLE_TYPE() {
         return prefs.getString(KEY_REG_VEHICLE_TYPE, "");
     }
@@ -190,6 +199,7 @@ public class TSessionManager {
                 .remove(KEY_REG_FIRST_NAME)
                 .remove(KEY_REG_LAST_NAME)
                 .remove(KEY_REG_FACE_TEMPLATE)
+                .remove(KEY_REG_FACE_TEMPLATE_FLAG)
                 .remove(KEY_REG_VEHICLE_TYPE)
                 .remove(KEY_REG_COLLECTION_CENTERS)
                 .commit();

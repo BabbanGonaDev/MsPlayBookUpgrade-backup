@@ -69,6 +69,7 @@ public class TransporterNamesActivity extends AppCompatActivity {
                         .setNegativeButton("No", (dialog, which) -> {
                             //Move to next activity
                             session.SET_REG_FACE_TEMPLATE("N/A");
+                            session.SET_REG_FACE_TEMPLATE_FLAG(0);
                             startActivity(new Intent(this, TransporterVehicleActivity.class));
                         }).setCancelable(true).show();
                 facial_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);

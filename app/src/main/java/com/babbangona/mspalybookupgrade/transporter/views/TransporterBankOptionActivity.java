@@ -232,6 +232,7 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
                 name_mismatch_flag,
                 binding.atvBank.getText().toString(),
                 session.GET_REG_FACE_TEMPLATE(),
+                session.GET_REG_FACE_TEMPLATE_FLAG(),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 0);

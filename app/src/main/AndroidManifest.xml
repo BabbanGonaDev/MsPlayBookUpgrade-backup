@@ -66,7 +66,6 @@
             android:name=".PCTabbedView"
             android:label="@string/title_activity_p_c_tabbed_view"
             android:theme="@style/AppTheme.NoActionBar" />
-        tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".PoorWeatherSupportLauncher" />
         <activity android:name=".utils.MappingActivity" />
         <activity

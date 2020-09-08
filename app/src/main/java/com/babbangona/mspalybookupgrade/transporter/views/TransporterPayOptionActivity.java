@@ -139,6 +139,7 @@ public class TransporterPayOptionActivity extends AppCompatActivity {
                 0,
                 "N/A",
                 session.GET_REG_FACE_TEMPLATE(),
+                session.GET_REG_FACE_TEMPLATE_FLAG(),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 0);
