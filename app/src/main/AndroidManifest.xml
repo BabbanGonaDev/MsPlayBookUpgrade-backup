@@ -23,12 +23,49 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_book"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@drawable/ic_book"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:icon,android:roundIcon">
+        <activity
+            android:name=".transporter.views.ViewRegisteredTransporters"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".transporter.views.TransporterTemplateCaptureActivity" />
+        <activity
+            android:name=".transporter.views.TransporterBankOptionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterCardOptionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterPayOptionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterCcActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterLocationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterVehicleActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterNamesActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterPhoneNumberActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.TransporterHomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PCTabbedView"
+            android:label="@string/title_activity_p_c_tabbed_view"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".PoorWeatherSupportLauncher" />
         <activity android:name=".utils.MappingActivity" />
         <activity
@@ -58,6 +95,15 @@
             android:name=".utils.FieldsContentProvider"
             android:authorities="com.babbangona.mspalybookupgrade"
             android:exported="true" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
         <activity
             android:name=".PWSFieldListPage"

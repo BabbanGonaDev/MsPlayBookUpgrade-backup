@@ -1,16 +1,6 @@
 package com.babbangona.mspalybookupgrade;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +16,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListAdapter;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -125,6 +124,8 @@ public class Homepage extends AppCompatActivity {
         pd = new ProgressDialog(Homepage.this);
         sharedPrefs.setKeyProgressDialogStatus(1);
         startRepeatingTask();
+
+        /*startActivity(new Intent(this, TransporterHomeActivity.class));*/
     }
 
     @Override
@@ -408,7 +409,7 @@ public class Homepage extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //TODO
+        //TODOa
         if (doubleBackToExitPressedOnce) {
             finish();
             Intent homeScreenIntent = new Intent(Intent.ACTION_MAIN);
