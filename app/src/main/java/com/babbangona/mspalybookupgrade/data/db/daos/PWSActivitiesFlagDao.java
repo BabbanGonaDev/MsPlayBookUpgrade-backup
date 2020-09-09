@@ -84,6 +84,7 @@ public abstract class PWSActivitiesFlagDao {
             "LEFT OUTER JOIN staff b on b.staff_id = a.staff_id " +
             "LEFT OUTER JOIN pc_pws_activities_flag c on a.pws_id = c.pws_id " +
             "LEFT OUTER JOIN fields d on a.unique_field_id = d.unique_field_id " +
+            "JOIN members e ON d.unique_member_id = e.unique_member_id " +
             "WHERE d.deactivate = '0' AND a.deactivate = '0' AND a.solve = '0' AND LOWER(d.staff_id || d.mss) LIKE :staff_id " +
             "GROUP BY a.staff_id ORDER BY ( COUNT(a.pws_id) - COUNT(c.pws_id) ) DESC ")
     public abstract DataSource.Factory<Integer, PCStaffPWSRecyclerModel> getPWSStaffList(String staff_id);
@@ -93,6 +94,7 @@ public abstract class PWSActivitiesFlagDao {
             "LEFT OUTER JOIN staff b on a.staff_id = b.staff_id " +
             "LEFT OUTER JOIN pc_pws_activities_flag c on a.pws_id = c.pws_id " +
             "LEFT OUTER JOIN fields d on a.unique_field_id = d.unique_field_id " +
+            "JOIN members e ON d.unique_member_id = e.unique_member_id " +
             "WHERE d.deactivate = '0' AND a.deactivate = '0' AND a.solve = '0' AND LOWER(d.staff_id || d.mss) LIKE LOWER(:staff_id) " +
             "AND LOWER(a.staff_id || b.staff_name) LIKE LOWER(:search) " +
             "GROUP BY a.staff_id ")
