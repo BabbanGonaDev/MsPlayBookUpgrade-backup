@@ -51,14 +51,14 @@ public abstract class PCPWSActivitiesFlagDao {
             "FROM pws_activities_flag a LEFT OUTER JOIN fields b ON a.unique_field_id = b.unique_field_id " +
             "JOIN members c ON b.unique_member_id = c.unique_member_id " +
             "LEFT OUTER JOIN pc_pws_activities_flag d ON d.pws_id = a.pws_id " +
-            "WHERE LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND a.deactivate = '0' AND d.pws_id IS NULL ")
+            "WHERE LOWER(a.staff_id) LIKE LOWER(:staff_id) AND a.deactivate = '0' AND d.pws_id IS NULL ")
     public abstract DataSource.Factory<Integer, PCPWSRecyclerModel> getPendingClaims(String staff_id);
 
     @Query(" SELECT COUNT(DISTINCT a.pws_id) " +
             "FROM pws_activities_flag a LEFT OUTER JOIN fields b ON a.unique_field_id = b.unique_field_id " +
             "JOIN members c ON b.unique_member_id = c.unique_member_id " +
             "LEFT OUTER JOIN pc_pws_activities_flag d ON d.pws_id = a.pws_id " +
-            "WHERE LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND a.deactivate = '0' AND d.pws_id IS NULL ")
+            "WHERE LOWER(a.staff_id) LIKE LOWER(:staff_id) AND a.deactivate = '0' AND d.pws_id IS NULL ")
     public abstract int getPendingClaimsCount(String staff_id);
 
     @Query(" SELECT a.pws_id, a.unique_field_id, a.category, a.date_logged, " +
@@ -67,7 +67,7 @@ public abstract class PCPWSActivitiesFlagDao {
             "FROM pws_activities_flag a LEFT OUTER JOIN fields b ON a.unique_field_id = b.unique_field_id " +
             "JOIN members c ON b.unique_member_id = c.unique_member_id " +
             "LEFT OUTER JOIN pc_pws_activities_flag d ON d.pws_id = a.pws_id " +
-            "WHERE LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND " +
+            "WHERE LOWER(a.staff_id) LIKE LOWER(:staff_id) AND " +
             "LOWER(a.unique_field_id || a.category || a.date_logged || c.first_name || ' ' || c.last_name || 'R20-' || c.ik_number || '-' || c.member_id) LIKE LOWER(:search) " +
             "AND a.deactivate = '0' AND d.pws_id IS NULL ")
     public abstract DataSource.Factory<Integer, PCPWSRecyclerModel> getPendingClaims(String staff_id, String search);
@@ -78,14 +78,14 @@ public abstract class PCPWSActivitiesFlagDao {
             "FROM pc_pws_activities_flag a LEFT OUTER JOIN fields b ON a.unique_field_id = b.unique_field_id " +
             "JOIN members c ON b.unique_member_id = c.unique_member_id " +
             "LEFT OUTER JOIN pws_activities_flag d ON d.pws_id = a.pws_id " +
-            "WHERE LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND a.deactivate = '0' ORDER BY a.date_logged DESC ")
+            "WHERE LOWER(d.staff_id) LIKE LOWER(:staff_id) AND a.deactivate = '0' ORDER BY a.date_logged DESC ")
     public abstract DataSource.Factory<Integer, PCPWSRecyclerModel> getReviewedClaims(String staff_id);
 
     @Query(" SELECT COUNT(DISTINCT a.pws_id) " +
             "FROM pc_pws_activities_flag a LEFT OUTER JOIN fields b ON a.unique_field_id = b.unique_field_id " +
             "JOIN members c ON b.unique_member_id = c.unique_member_id " +
             "LEFT OUTER JOIN pws_activities_flag d ON d.pws_id = a.pws_id " +
-            "WHERE LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND a.deactivate = '0' ")
+            "WHERE LOWER(d.staff_id) LIKE LOWER(:staff_id) AND a.deactivate = '0' ")
     public abstract int getReviewedClaimsCount(String staff_id);
 
     @Query(" SELECT a.pws_id, a.unique_field_id, a.category, a.date_logged, " +
@@ -94,7 +94,7 @@ public abstract class PCPWSActivitiesFlagDao {
             "FROM pc_pws_activities_flag a LEFT OUTER JOIN fields b ON a.unique_field_id = b.unique_field_id " +
             "JOIN members c ON b.unique_member_id = c.unique_member_id " +
             "LEFT OUTER JOIN pws_activities_flag d ON d.pws_id = a.pws_id " +
-            "WHERE LOWER(b.staff_id || b.mss) LIKE LOWER(:staff_id) AND " +
+            "WHERE LOWER(d.staff_id) LIKE LOWER(:staff_id) AND " +
             "LOWER(a.unique_field_id || a.category || a.date_logged || c.first_name || ' ' || c.last_name || 'R20-' || c.ik_number || '-' || c.member_id) LIKE LOWER(:search) " +
             "AND a.deactivate = '0' ORDER BY a.date_logged DESC ")
     public abstract DataSource.Factory<Integer, PCPWSRecyclerModel> getReviewedClaims(String staff_id, String search);
