@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.transporter.views;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.databinding.ActivityTransporterCardOptionBinding;
 import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppExecutors;
@@ -40,6 +42,7 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
     TransporterDatabase db;
     TSessionManager session;
     StringBuilder card_number;
+    ProgressDialog d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,11 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle("MS Playbook v" + BuildConfig.VERSION_NAME);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        d = new ProgressDialog(TransporterCardOptionActivity.this);
+        d.setTitle("Please wait...");
+        d.setMessage("Verifying card information");
+        d.setCancelable(false);
 
         db = TransporterDatabase.getInstance(this);
         session = new TSessionManager(this);
@@ -61,25 +69,27 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
         binding.pinViewRightTop.setPinViewEventListener((pinview, fromUser) -> binding.pinViewBottom.requestPinEntryFocus());
 
         binding.btnCaptureCard.setOnClickListener(v -> {
+            String card_number = extractCardNumber();
+
             if (!isCardNumberEntered()) {
                 Toast.makeText(TransporterCardOptionActivity.this, "Kindly enter complete card number", Toast.LENGTH_LONG).show();
+            } else if (!isCardNumberValid(card_number)) {
+                Toast.makeText(TransporterCardOptionActivity.this, "Invalid card number, try again", Toast.LENGTH_LONG).show();
             } else {
                 captureCardImage();
             }
         });
 
         binding.btnContinue.setOnClickListener(v -> {
+            String card_no = extractCardNumber();
+
             if (!isCardNumberEntered()) {
                 Toast.makeText(TransporterCardOptionActivity.this, "Kindly enter complete card number", Toast.LENGTH_LONG).show();
+            } else if (!isCardNumberValid(card_no)) {
+                Toast.makeText(TransporterCardOptionActivity.this, "Invalid card number, try again", Toast.LENGTH_LONG).show();
             } else if (!picExists()) {
                 Toast.makeText(TransporterCardOptionActivity.this, "Kindly capture picture of transporter with card", Toast.LENGTH_LONG).show();
             } else {
-                card_number = new StringBuilder();
-                card_number.append(binding.pinViewLeftTop.getValue())
-                        .append("/")
-                        .append(binding.pinViewRightTop.getValue())
-                        .append(binding.pinViewBottom.getValue());
-
                 //Save details.
                 displayConfirmationDialog();
             }
@@ -110,6 +120,28 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
             return false;
         } else return binding.pinViewBottom.getValue().length() == 5;
 
+    }
+
+    public String extractCardNumber() {
+        if (isCardNumberEntered()) {
+            card_number = new StringBuilder();
+            card_number.append(binding.pinViewLeftTop.getValue())
+                    .append("/")
+                    .append(binding.pinViewRightTop.getValue())
+                    .append(binding.pinViewBottom.getValue());
+
+            return card_number.toString();
+        }
+
+        return "Empty";
+    }
+
+    public boolean isCardNumberValid(String card_no) {
+        d.show();
+
+        CardsTable card = db.getCardsDao().getSingleCard(card_no);
+        d.dismiss();
+        return card != null;
     }
 
     public void displayConfirmationDialog() {
@@ -149,13 +181,14 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
     }
 
     public TransporterTable getTransporterInfo() {
+        String card_no = extractCardNumber();
 
         return new TransporterTable(session.GET_REG_PHONE_NUMBER(),
                 session.GET_REG_FIRST_NAME(),
                 session.GET_REG_LAST_NAME(),
                 session.GET_REG_VEHICLE_TYPE(),
                 "BG Card",
-                card_number.toString(),
+                card_no,
                 "N/A",
                 "N/A",
                 0,

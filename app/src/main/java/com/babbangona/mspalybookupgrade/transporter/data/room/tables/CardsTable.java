@@ -51,4 +51,18 @@ public class CardsTable {
     public String getCard_number() {
         return card_number;
     }
+
+    /*
+     * Tuple for sync down
+     */
+
+    public static class Download {
+        public String id;
+        public String account_number;
+        public String card_name;
+        public String product_code;
+        public String branch_number;
+        public String card_number;
+        public String last_sync;
+    }
 }

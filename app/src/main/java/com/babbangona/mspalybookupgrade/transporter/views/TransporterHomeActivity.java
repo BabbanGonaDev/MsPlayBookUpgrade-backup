@@ -279,6 +279,8 @@ public class TransporterHomeActivity extends AppCompatActivity {
             while ((line = reader.readLine()) != null) {
                 content = line.split(",");
 
+                //TODO: Header escape didn't work.
+                //TODO: Also fix space in csv document.
                 //To escape out the header row
                 if (content[0].equals("S/N")) {
                     //Do Nothing
