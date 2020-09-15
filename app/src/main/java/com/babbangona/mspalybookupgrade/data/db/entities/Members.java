@@ -33,8 +33,12 @@ public class Members {
     @ColumnInfo(name = DatabaseStringConstants.COL_VILLAGE_NAME)
     private String village_name;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_TEMPLATE)
+    private String template;
+
     public Members(@NonNull String unique_member_id, String ik_number, String member_id,
-                   String first_name, String last_name, String phone_number, String village_name) {
+                   String first_name, String last_name, String phone_number, String village_name,
+                   String template) {
         this.unique_member_id = unique_member_id;
         this.ik_number = ik_number;
         this.member_id = member_id;
@@ -42,6 +46,7 @@ public class Members {
         this.last_name = last_name;
         this.phone_number = phone_number;
         this.village_name = village_name;
+        this.template = template;
     }
 
     @NonNull
@@ -99,5 +104,13 @@ public class Members {
 
     public void setVillage_name(String village_name) {
         this.village_name = village_name;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
     }
 }

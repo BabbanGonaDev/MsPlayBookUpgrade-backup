@@ -18,6 +18,9 @@ public interface MembersDao {
             "AND staff_id = :staff_id ")
     int getTotalFieldsCount(String staff_id);
 
+    @Query(" SELECT template FROM members WHERE unique_member_id = :unique_member_id ")
+    String getMemberTemplate(String unique_member_id);
+
     /**
      * Insert the object in database
      * @param members, object to be inserted

@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 9;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 10;
 
     /**
      * Names of tables
@@ -91,6 +91,7 @@ public class DatabaseStringConstants {
     public static final String COL_LAST_NAME                            = "last_name";
     public static final String COL_PHONE_NUMBER                         = "phone_number";
     public static final String COL_VILLAGE_NAME                         = "village_name";
+    public static final String COL_TEMPLATE                             = "template";
 
     /**
      * hg_activities column names
@@ -215,11 +216,15 @@ public class DatabaseStringConstants {
     public static final String NORMAL_ACTIVITY_PICTURE_LOCATION         = "MsPlaybookPictures/Normal_Activities";
     public static final String PWS_ACTIVITY_PICTURE_LOCATION            = "MsPlaybookPictures/PWS_Activities";
     public static final String MS_PLAYBOOK_PICTURE_LOCATION             = "MsPlaybookPictures";
+    public static final String MS_PLAYBOOK_INPUT_PICTURE_LOCATION       = "MsPlaybookInputPictures";
     public static final String FERT_1_ACTIVITY                          = "1";
     public static final String FERT_2_ACTIVITY                          = "2";
     public static final String LOG_HG_ACTIVITY                          = "3";
     public static final String SET_PORTFOLIO_ACTIVITY                   = "4";
     public static final String POOR_WEATHER_SUPPORT_ACTIVITY            = "5";
+    public static final String SCHEDULE_THRESHING                       = "1";
+    public static final String UPDATE_THRESHING                         = "2";
+    public static final String CONFIRM_THRESHING                        = "3";
 
     /**
      * picture_sync column names

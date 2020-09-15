@@ -64,6 +64,28 @@
         </item>
     </style>
 
+    <style name="Theme.Threshing" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:textColorPrimary">@color/colorWhite</item>
+        <item name="android:actionMenuTextColor">@color/colorWhite</item>
+    </style>
+
+    <style name="Widget.Threshing.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">?attr/colorAccent</item>
+        <item name="android:theme">@style/Theme.Threshing</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Threshing.Toolbar</item>
+        <item name="android:actionMenuTextColor">@color/colorWhite</item>
+    </style>
+
+    <style name="TextAppearance.Threshing.Toolbar" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="Widget.MsPlaybook.Toolbar" parent="Widget.MaterialComponents.Toolbar">
         <item name="android:background">?attr/colorAccent</item>
         <item name="android:theme">@style/Theme.MsPlaybook</item>

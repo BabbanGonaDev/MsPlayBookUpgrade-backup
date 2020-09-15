@@ -80,11 +80,30 @@ public class SharedPrefs {
     public static final String KEY_PWS_VIEW_ROLE                    = "pws_view_role";
     public static final String KEY_PC_PWS_HOME_STAFF_ID             = "pc_pws_home_staff_id";
 
+    public static final String KEY_THRESHING_UNIQUE_MEMBER_ID       = "threshing_unique_member_id";
+    public static final String KEY_THRESHING_ACTIVITY_ROUTE         = "threshing_activity_route";
+
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyThreshingActivityRoute(String threshing_activity_route){
+
+        editor.putString(KEY_THRESHING_ACTIVITY_ROUTE, threshing_activity_route);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeyThreshingUniqueMemberId(String threshing_unique_member_id){
+
+        editor.putString(KEY_THRESHING_UNIQUE_MEMBER_ID, threshing_unique_member_id);
+
+        // commit changes
+        editor.commit();
     }
 
     public void setKeySecondUpdateFlag(String second_time_update_flag){
@@ -488,6 +507,16 @@ public class SharedPrefs {
 
     public String getKeySecondUpdateFlag() {
         return pref.getString(KEY_SECOND_UPDATE_FLAG,"0");
+
+    }
+
+    public String getKeyThreshingUniqueMemberId() {
+        return pref.getString(KEY_THRESHING_UNIQUE_MEMBER_ID,"0");
+
+    }
+
+    public String getKeyThreshingActivityRoute() {
+        return pref.getString(KEY_THRESHING_ACTIVITY_ROUTE,"0");
 
     }
 }

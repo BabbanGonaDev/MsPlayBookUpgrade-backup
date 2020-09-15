@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardElevation="2dp"
+    app:cardPreventCornerOverlap="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/card_container"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/leader_image"
+            android:layout_width="@dimen/dimen_130dp"
+            android:layout_height="@dimen/dimen_130dp"
+            android:background="?attr/colorPrimaryDark"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/linear_layout_container"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/tv_member_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/member_name"
+                    android:textAlignment="textStart"
+                    android:textAppearance="?attr/textAppearanceSubtitle2" />
+
+                <TextView
+                    android:id="@+id/tv_member_r_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/member_r_id"
+                    android:textAlignment="textStart"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:layout_marginEnd="@dimen/default_gap"/>
+
+                <TextView
+                    android:id="@+id/tv_role"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/member_role"
+                    android:textAlignment="textStart"
+                    android:textAppearance="?attr/textAppearanceBody2" />
+
+                <TextView
+                    android:id="@+id/tv_village"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/member_village"
+                    android:textAlignment="textStart"
+                    android:maxLines="2"
+                    android:maxLength="12"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:layout_marginEnd="@dimen/default_gap"/>
+
+                <TextView
+                    android:id="@+id/tv_ik_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ik_number"
+                    android:textAlignment="textStart"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:layout_marginEnd="@dimen/default_gap"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/dimen_40dp"
+                android:layout_height="@dimen/dimen_40dp"
+                android:id="@+id/assignment_flag"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/assignment_red"
+                android:layout_alignBottom="@id/linear_layout_container"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
