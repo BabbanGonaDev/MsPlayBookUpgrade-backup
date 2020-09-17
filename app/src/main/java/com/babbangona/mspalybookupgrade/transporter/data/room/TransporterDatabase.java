@@ -9,14 +9,16 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.babbangona.mspalybookupgrade.transporter.data.room.dao.CardsDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.CollectionCenterDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.OperatingAreasDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.TransporterDAO;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionCenterTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 
-@Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class}, version = 2, exportSchema = false)
+@Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class, CardsTable.class}, version = 3, exportSchema = false)
 public abstract class TransporterDatabase extends RoomDatabase {
     private static TransporterDatabase INSTANCE;
 
@@ -53,6 +55,20 @@ public abstract class TransporterDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            //Create Cards table
+            db.execSQL("CREATE TABLE cards_table (id TEXT, " +
+                    "account_number TEXT NOT NULL, " +
+                    "card_name TEXT NOT NULL, " +
+                    "product_code TEXT, " +
+                    "branch_number TEXT, " +
+                    "card_number TEXT NOT NULL, " +
+                    "PRIMARY KEY(account_number, card_name, card_number))");
+        }
+    };
+
     //Init of instance.
     public static TransporterDatabase getInstance(Context context) {
         if (INSTANCE == null) {
@@ -60,7 +76,7 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     TransporterDatabase.class,
                     "transporter-db.db")
                     //.createFromAsset("database/transporter.db")
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .allowMainThreadQueries()
                     .build();
         }
@@ -77,4 +93,6 @@ public abstract class TransporterDatabase extends RoomDatabase {
     public abstract CollectionCenterDAO getCcDao();
 
     public abstract OperatingAreasDAO getOpAreaDao();
+
+    public abstract CardsDAO getCardsDao();
 }

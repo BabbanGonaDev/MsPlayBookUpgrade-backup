@@ -17,6 +17,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.retrofit.RetrofitApiCalls;
 import com.babbangona.mspalybookupgrade.transporter.data.retrofit.RetrofitClient;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionCenterTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
@@ -42,8 +43,9 @@ public class SyncDownWorker extends Worker {
     /**
      * This would be used to sync down the following tables:
      * - Transporter table
-     * - Collection center table &
-     * - Operating areas table.
+     * - Collection center table
+     * - Operating areas table &
+     * - Cards table.
      */
 
 
@@ -64,6 +66,7 @@ public class SyncDownWorker extends Worker {
         syncDownTransporterTable();
         syncDownOperatingAreas();
         syncDownCCTable();
+        syncDownCards();
         return Result.success();
     }
 
@@ -155,6 +158,40 @@ public class SyncDownWorker extends Worker {
         });
     }
 
+    public void syncDownCards() {
+        RetrofitApiCalls service = RetrofitClient.getRetrofitInstance().create(RetrofitApiCalls.class);
+        Call<List<CardsTable.Download>> call = service.syncDownCards(session.GET_LAST_SYNC_CARDS());
+        call.enqueue(new Callback<List<CardsTable.Download>>() {
+            @Override
+            public void onResponse(Call<List<CardsTable.Download>> call, Response<List<CardsTable.Download>> response) {
+                if (response.isSuccessful()) {
+                    List<CardsTable.Download> res = response.body();
+
+                    if (res != null) {
+                        AppExecutors.getInstance().diskIO().execute(() -> {
+                            for (CardsTable.Download d : res) {
+                                db.getCardsDao().insertSingleCard(new CardsTable(d.id,
+                                        d.account_number,
+                                        d.card_name,
+                                        d.product_code,
+                                        d.branch_number,
+                                        d.card_number));
+                                session.SET_LAST_SYNC_CARDS(d.last_sync);
+                            }
+                        });
+                    }
+
+                    sendNotification(1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CardsTable.Download>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Sync down Cards Table " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -181,12 +218,12 @@ public class SyncDownWorker extends Worker {
     private void sendNotification(int value) {
         CURRENT += value;
 
-        if (CURRENT == 3) {
+        if (CURRENT == 4) {
             builder.setProgress(0, 0, false)
                     .setSmallIcon(R.drawable.ic_outline_cloud_done_24)
                     .setContentText("Transporter Download Complete");
         } else {
-            builder.setProgress(3, CURRENT, false);
+            builder.setProgress(4, CURRENT, false);
         }
 
         mNotifyManager.notify(NOTIFICATION_ID, builder.build());

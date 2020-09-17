@@ -1,8 +1,13 @@
 package com.babbangona.mspalybookupgrade.transporter.views;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,6 +27,9 @@ import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.databinding.ActivityTransporterHomeBinding;
 import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
+import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
+import com.babbangona.mspalybookupgrade.transporter.helpers.AppExecutors;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
 import com.babbangona.mspalybookupgrade.transporter.services.SyncDownWorker;
 import com.babbangona.mspalybookupgrade.transporter.services.SyncUpWorker;
@@ -29,15 +37,22 @@ import com.babbangona.mspalybookupgrade.transporter.services.UploadImagesWorker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class TransporterHomeActivity extends AppCompatActivity {
     ActivityTransporterHomeBinding binding;
     TSessionManager session;
+    TransporterDatabase db;
     private static String WORK_MANAGER_SINGLE_REQ_UP = "transporter_single_sync_up";
     private static String WORK_MANAGER_SINGLE_REQ_DOWN = "transporter_single_sync_down";
     private static String WORK_MANAGER_SINGLE_IMAGE_REQ = "transporter_single_image_sync";
@@ -46,6 +61,7 @@ public class TransporterHomeActivity extends AppCompatActivity {
     private static String WORK_MANAGER_PERIODIC_IMAGES = "transporter_periodic_images";
     OneTimeWorkRequest sync_down_request, sync_up_request, image_request;
     Constraints constraints;
+    ProgressDialog dialog;
 
     //Shared prefs of the general app to get logged-in staff id.
     SharedPrefs shared;
@@ -59,8 +75,14 @@ public class TransporterHomeActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("MS Playbook v" + BuildConfig.VERSION_NAME);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        db = TransporterDatabase.getInstance(this);
         session = new TSessionManager(this);
         shared = new SharedPrefs(this);
+
+        dialog = new ProgressDialog(this);
+        dialog.setTitle("Please wait...");
+        dialog.setMessage("Checking cards table");
+        dialog.setCancelable(false);
 
         //Set constraints for work manager periodic syncing.
         constraints = new Constraints.Builder()
@@ -78,6 +100,8 @@ public class TransporterHomeActivity extends AppCompatActivity {
         binding.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
 
         confirmTransporterPhoneDate();
+
+        preloadCardsTable();
 
         binding.btnNextActivity.setOnClickListener(v -> {
             session.CLEAR_REG_SESSION();
@@ -177,7 +201,7 @@ public class TransporterHomeActivity extends AppCompatActivity {
                 .enqueueUniquePeriodicWork(WORK_MANAGER_PERIODIC_IMAGES, ExistingPeriodicWorkPolicy.REPLACE, periodic_images);
     }
 
-    public void confirmTransporterPhoneDate() {
+    public Boolean confirmTransporterPhoneDate() {
         String last_sync_transporter = session.GET_LAST_SYNC_TRANSPORTER();
         String default_date = "2020-08-30 00:00:00";
 
@@ -201,6 +225,96 @@ public class TransporterHomeActivity extends AppCompatActivity {
                     .setPositiveButton("Okay", (dialogInterface, i) -> {
                         startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
                     }).setCancelable(false).show();
+        } else {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void preloadCardsTable() {
+        dialog.show();
+        Log.d("CHECK", "Inside preloadCardsTable function");
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Integer count = db.getCardsDao().getCardsTableCount();
+                if (count < 500) {
+                    new insertPreloadedCards(TransporterHomeActivity.this) {
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                            dialog.setMessage("Inserting cards list");
+                            Log.d("CHECK", "Inserting cards list");
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            //Dismiss dialog.
+                            dialog.dismiss();
+                        }
+                    }.execute(compileCardsCSV());
+                } else {
+                    //Dismiss dialog
+                    dialog.dismiss();
+                }
+            }
+        });
+
+    }
+
+    public List<CardsTable> compileCardsCSV() {
+        Log.d("CHECK", "Compiling Cards list");
+
+        dialog.setMessage("Compiling Cards");
+        List<CardsTable> list = new ArrayList<>();
+        String[] content;
+        try {
+            InputStream input = getAssets().open("cards.csv");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            String line = "";
+
+            while ((line = reader.readLine()) != null) {
+                content = line.split(",");
+
+                //TODO: Header escape didn't work.
+                //TODO: Also fix space in csv document.
+                //To escape out the header row
+                if (content[0].equals("S/N")) {
+                    //Do Nothing
+                } else {
+                    list.add(new CardsTable(content[0],
+                            content[1],
+                            content[2],
+                            content[3],
+                            content[4],
+                            content[5]));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public static class insertPreloadedCards extends AsyncTask<List<CardsTable>, Void, Void> {
+
+        @SuppressLint("StaticFieldLeak")
+        Context context;
+
+        public insertPreloadedCards(Context mCtx) {
+            super();
+            this.context = mCtx;
+        }
+
+        @Override
+        protected Void doInBackground(List<CardsTable>... lists) {
+            TransporterDatabase db = TransporterDatabase.getInstance(context);
+            db.getCardsDao().insertCardsList(lists[0]);
+            return null;
         }
     }
 }
