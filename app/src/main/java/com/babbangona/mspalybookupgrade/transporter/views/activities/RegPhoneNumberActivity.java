@@ -1,4 +1,4 @@
-package com.babbangona.mspalybookupgrade.transporter.views;
+package com.babbangona.mspalybookupgrade.transporter.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +22,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Arrays;
 
-public class TransporterPhoneNumberActivity extends AppCompatActivity {
+public class RegPhoneNumberActivity extends AppCompatActivity {
     ActivityTransporterPhoneNumberBinding binding;
     TransporterDatabase db;
     TSessionManager session;
@@ -72,7 +72,7 @@ public class TransporterPhoneNumberActivity extends AppCompatActivity {
             } else {
                 //--- GO to next page.
                 session.SET_REG_PHONE_NUMBER(phone_no);
-                startActivity(new Intent(this, TransporterNamesActivity.class));
+                startActivity(new Intent(this, RegNamesActivity.class));
             }
         });
     }

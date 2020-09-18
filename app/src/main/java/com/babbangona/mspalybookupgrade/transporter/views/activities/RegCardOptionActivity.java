@@ -1,4 +1,4 @@
-package com.babbangona.mspalybookupgrade.transporter.views;
+package com.babbangona.mspalybookupgrade.transporter.views.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -29,6 +29,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAr
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppExecutors;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
+import com.babbangona.mspalybookupgrade.transporter.views.TransporterHomeActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
@@ -40,7 +41,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class TransporterCardOptionActivity extends AppCompatActivity {
+public class RegCardOptionActivity extends AppCompatActivity {
     ActivityTransporterCardOptionBinding binding;
     TransporterDatabase db;
     TSessionManager session;
@@ -58,7 +59,7 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("MS Playbook v" + BuildConfig.VERSION_NAME);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        d = new ProgressDialog(TransporterCardOptionActivity.this);
+        d = new ProgressDialog(RegCardOptionActivity.this);
         d.setTitle("Please wait...");
         d.setMessage("Verifying card information");
         d.setCancelable(false);
@@ -80,7 +81,7 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
             //String card_number = extractCardNumber();
 
             if (!isCardNumberEntered()) {
-                Toast.makeText(TransporterCardOptionActivity.this, "Kindly enter complete card number", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegCardOptionActivity.this, "Kindly enter complete card number", Toast.LENGTH_LONG).show();
             } else {
                 captureCardImage();
             }
@@ -90,12 +91,12 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
             String card_no = extractCardNumber();
 
             if (!isCardNumberEntered()) {
-                Toast.makeText(TransporterCardOptionActivity.this, "Kindly enter complete card number", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegCardOptionActivity.this, "Kindly enter complete card number", Toast.LENGTH_LONG).show();
             } else if (!isCardNumberValid(card_no) && !allowWrongCard) {
-                Toast.makeText(TransporterCardOptionActivity.this, "Invalid card number", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegCardOptionActivity.this, "Invalid card number", Toast.LENGTH_LONG).show();
                 cardNumberDialog(card_no);
             } else if (!picExists()) {
-                Toast.makeText(TransporterCardOptionActivity.this, "Kindly capture picture of transporter with card", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegCardOptionActivity.this, "Kindly capture picture of transporter with card", Toast.LENGTH_LONG).show();
             } else {
                 //Save details.
                 displayConfirmationDialog();
@@ -171,7 +172,7 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
             db.getOpAreaDao().insertOpAreasList(getOperatingAreasInfo());
 
             runOnUiThread(() -> {
-                AlertDialog congrats = new MaterialAlertDialogBuilder(TransporterCardOptionActivity.this)
+                AlertDialog congrats = new MaterialAlertDialogBuilder(RegCardOptionActivity.this)
                         .setIcon(R.drawable.ic_smiley_face)
                         .setTitle("Congratulations")
                         .setMessage("Transporter successfully registered")
@@ -234,7 +235,7 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
                 if (!storage_dir.exists() && !storage_dir.mkdirs()) {
                     //Unable to create.
                 } else {
-                    Uri photo_uri = FileProvider.getUriForFile(TransporterCardOptionActivity.this,
+                    Uri photo_uri = FileProvider.getUriForFile(RegCardOptionActivity.this,
                             BuildConfig.APPLICATION_ID + ".provider",
                             new File(storage_dir.getPath() + File.separator + img_name));
                     capture_intent.putExtra(MediaStore.EXTRA_OUTPUT, photo_uri);
@@ -277,7 +278,7 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
 
     public void cardNumberDialog(String prev_card_no) {
         DialogTransporterCardNumberBinding binding_dialog =
-                DataBindingUtil.inflate(LayoutInflater.from(TransporterCardOptionActivity.this), R.layout.dialog_transporter_card_number, null, false);
+                DataBindingUtil.inflate(LayoutInflater.from(RegCardOptionActivity.this), R.layout.dialog_transporter_card_number, null, false);
 
         Dialog dialog = new Dialog(this, R.style.Theme_MaterialComponents_Light_Dialog_Alert);
         dialog.setContentView(binding_dialog.getRoot());

@@ -220,4 +220,6 @@
     <string name="re_verify">RE-VERIFY</string>
     <string name="cant_go_back">You cannot go back</string>
     <string name="recapture">RECAPTURE</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

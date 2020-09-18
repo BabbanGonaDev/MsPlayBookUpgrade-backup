@@ -1,4 +1,4 @@
-package com.babbangona.mspalybookupgrade.transporter.views;
+package com.babbangona.mspalybookupgrade.transporter.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-public class TransporterVehicleActivity extends AppCompatActivity {
+public class RegVehicleActivity extends AppCompatActivity {
     ActivityTransporterVehicleBinding binding;
     TSessionManager session;
     TransporterDatabase db;
@@ -56,7 +56,7 @@ public class TransporterVehicleActivity extends AppCompatActivity {
                 session.SET_REG_VEHICLE_TYPE(selected_vehicles);
                 Toast.makeText(this, selected_vehicles, Toast.LENGTH_LONG).show();
 
-                startActivity(new Intent(this, TransporterLocationActivity.class));
+                startActivity(new Intent(this, RegLocationActivity.class));
             }
         });
     }
@@ -109,11 +109,11 @@ public class TransporterVehicleActivity extends AppCompatActivity {
         List<Vehicle> vehicles = createVehicleData();
 
         if (!vehicles.isEmpty()) {
-            adapter = new VehicleTypeAdapter(TransporterVehicleActivity.this, vehicles, vehicle -> {
+            adapter = new VehicleTypeAdapter(RegVehicleActivity.this, vehicles, vehicle -> {
                 //Add to shared prefs.
                 session.SET_REG_VEHICLE_TYPE(vehicle.getVehicle_type());
                 binding.btnContinue.setEnabled(true);
-                Toast.makeText(TransporterVehicleActivity.this, "'" + vehicle.getVehicle_type() + "' selected", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegVehicleActivity.this, "'" + vehicle.getVehicle_type() + "' selected", Toast.LENGTH_LONG).show();
             });
 
             binding.recyclerViewVehicle.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

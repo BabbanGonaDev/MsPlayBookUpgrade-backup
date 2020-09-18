@@ -34,6 +34,9 @@ import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
 import com.babbangona.mspalybookupgrade.transporter.services.SyncDownWorker;
 import com.babbangona.mspalybookupgrade.transporter.services.SyncUpWorker;
 import com.babbangona.mspalybookupgrade.transporter.services.UploadImagesWorker;
+import com.babbangona.mspalybookupgrade.transporter.views.activities.BookingActivity;
+import com.babbangona.mspalybookupgrade.transporter.views.activities.RegPhoneNumberActivity;
+import com.babbangona.mspalybookupgrade.transporter.views.activities.ViewRegisteredTransporters;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -71,7 +74,7 @@ public class TransporterHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_transporter_home);
 
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding.header.toolbar);
         getSupportActionBar().setTitle("MS Playbook v" + BuildConfig.VERSION_NAME);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -96,8 +99,8 @@ public class TransporterHomeActivity extends AppCompatActivity {
         sync_up_request = new OneTimeWorkRequest.Builder(SyncUpWorker.class).build();
         image_request = new OneTimeWorkRequest.Builder(UploadImagesWorker.class).build();
 
-        binding.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
-        binding.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
+        binding.footer.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
+        binding.footer.tvLastSyncTime.setText(session.GET_LAST_SYNC_TRANSPORTER());
 
         confirmTransporterPhoneDate();
 
@@ -105,7 +108,11 @@ public class TransporterHomeActivity extends AppCompatActivity {
 
         binding.btnNextActivity.setOnClickListener(v -> {
             session.CLEAR_REG_SESSION();
-            startActivity(new Intent(this, TransporterPhoneNumberActivity.class));
+            startActivity(new Intent(this, RegPhoneNumberActivity.class));
+        });
+
+        binding.btnConfirmTransporter.setOnClickListener(v -> {
+            startActivity(new Intent(TransporterHomeActivity.this, BookingActivity.class));
         });
 
         binding.btnViewRegTransporters.setOnClickListener(v -> {

@@ -1,4 +1,4 @@
-package com.babbangona.mspalybookupgrade.transporter.views;
+package com.babbangona.mspalybookupgrade.transporter.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAr
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppExecutors;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
+import com.babbangona.mspalybookupgrade.transporter.views.TransporterHomeActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
@@ -30,7 +31,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class TransporterBankOptionActivity extends AppCompatActivity {
+public class RegBankOptionActivity extends AppCompatActivity {
     ActivityTransporterBankOptionBinding binding;
     TransporterDatabase db;
     TSessionManager session;
@@ -83,7 +84,7 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
 
             } else if (isBankDetailsDuplicate()) {
 
-                AlertDialog duplicate_acc_check = new MaterialAlertDialogBuilder(TransporterBankOptionActivity.this)
+                AlertDialog duplicate_acc_check = new MaterialAlertDialogBuilder(RegBankOptionActivity.this)
                         .setTitle("Account Error")
                         .setMessage("This bank details already exist")
                         .setIcon(R.drawable.ic_sad_face)
@@ -95,7 +96,7 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
 
             } else if (!isAccNameMatching()) {
 
-                AlertDialog bank_mismatch_check = new MaterialAlertDialogBuilder(TransporterBankOptionActivity.this)
+                AlertDialog bank_mismatch_check = new MaterialAlertDialogBuilder(RegBankOptionActivity.this)
                         .setTitle("Are you sure ?")
                         .setMessage("Account name doesn't match Transporter's name")
                         .setIcon(R.drawable.ic_sad_face)
@@ -203,7 +204,7 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
 
             runOnUiThread(() -> {
 
-                AlertDialog congrats = new MaterialAlertDialogBuilder(TransporterBankOptionActivity.this)
+                AlertDialog congrats = new MaterialAlertDialogBuilder(RegBankOptionActivity.this)
                         .setIcon(R.drawable.ic_smiley_face)
                         .setTitle("Congratulations")
                         .setMessage("Transporter successfully registered")

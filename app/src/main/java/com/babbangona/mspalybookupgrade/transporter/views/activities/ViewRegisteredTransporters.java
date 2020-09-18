@@ -1,4 +1,4 @@
-package com.babbangona.mspalybookupgrade.transporter.views;
+package com.babbangona.mspalybookupgrade.transporter.views.activities;
 
 import android.os.Bundle;
 import android.view.Menu;

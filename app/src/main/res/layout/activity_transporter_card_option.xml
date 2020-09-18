@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".transporter.views.TransporterCardOptionActivity">
+        tools:context=".transporter.views.activities.RegCardOptionActivity">
 
 
         <com.google.android.material.appbar.MaterialToolbar

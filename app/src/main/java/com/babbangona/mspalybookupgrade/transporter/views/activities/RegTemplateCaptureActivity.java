@@ -1,4 +1,4 @@
-package com.babbangona.mspalybookupgrade.transporter.views;
+package com.babbangona.mspalybookupgrade.transporter.views.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-public class TransporterTemplateCaptureActivity extends CustomLuxandActivity {
+public class RegTemplateCaptureActivity extends CustomLuxandActivity {
 
 
     @Override
@@ -140,13 +140,13 @@ public class TransporterTemplateCaptureActivity extends CustomLuxandActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(TransporterTemplateCaptureActivity.this)
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(RegTemplateCaptureActivity.this)
                     .setIcon(R.drawable.ic_smiley_face)
                     .setTitle("Success")
                     .setMessage("Template successfully captured")
                     .setPositiveButton("Okay", (dialog, which) -> {
                         finish();
-                        startActivity(new Intent(getApplicationContext(), TransporterVehicleActivity.class));
+                        startActivity(new Intent(getApplicationContext(), RegVehicleActivity.class));
                     }).setCancelable(false);
 
             if (!isFinishing()) builder.show();

@@ -16,7 +16,16 @@
             app:layout_anchor="@+id/constraintLayout2"
             app:layout_anchorGravity="center">
 
-            <androidx.appcompat.widget.Toolbar
+            <include
+                android:id="@+id/header"
+                layout="@layout/layout_transporter_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!--<androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -25,7 +34,24 @@
                 android:theme="?attr/actionBarTheme"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />-->
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_confirm_transporter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:text="Confirm Transporter Details"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:cornerRadius="4dp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_next_activity"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header"
+                app:layout_constraintVertical_chainStyle="packed" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_next_activity"
@@ -33,16 +59,31 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="10dp"
                 android:text="Transporter Recruit"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:cornerRadius="4dp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_confirm_threshing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_confirm_transporter" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_confirm_threshing"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:text="Confirm Threshing"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 app:cornerRadius="4dp"
                 app:layout_constraintBottom_toTopOf="@+id/btn_view_reg_transporters"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:layout_constraintVertical_chainStyle="spread" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_next_activity" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_view_reg_transporters"
@@ -52,13 +93,21 @@
                 android:layout_marginEnd="16dp"
                 android:text="View Registered Transporters"
                 android:textAllCaps="false"
-                app:layout_constraintBottom_toTopOf="@+id/tv_last_sync_time"
+                app:layout_constraintBottom_toTopOf="@+id/footer"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_next_activity" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_confirm_threshing" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <include
+                android:id="@+id/footer"
+                layout="@layout/layout_transporter_footer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <!--<com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_last_sync_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -84,7 +133,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/tv_last_sync_time"
-                app:layout_constraintTop_toTopOf="@+id/tv_last_sync_time" />
+                app:layout_constraintTop_toTopOf="@+id/tv_last_sync_time" />-->
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

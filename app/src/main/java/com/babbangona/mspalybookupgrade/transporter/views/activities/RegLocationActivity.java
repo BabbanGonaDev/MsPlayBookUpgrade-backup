@@ -1,4 +1,4 @@
-package com.babbangona.mspalybookupgrade.transporter.views;
+package com.babbangona.mspalybookupgrade.transporter.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import com.babbangona.mspalybookupgrade.databinding.ActivityTransporterLocationB
 import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
 
-public class TransporterLocationActivity extends AppCompatActivity {
+public class RegLocationActivity extends AppCompatActivity {
     ActivityTransporterLocationBinding binding;
     TransporterDatabase db;
     TSessionManager session;
@@ -41,7 +41,7 @@ public class TransporterLocationActivity extends AppCompatActivity {
 
         binding.autocompleteLocationState.setOnItemClickListener((parent, view, position, id) -> {
             binding.autocompleteLocationLga.setText("");
-            TransporterLocationActivity.this.initLgaAdapter(binding.autocompleteLocationState.getText().toString().trim());
+            RegLocationActivity.this.initLgaAdapter(binding.autocompleteLocationState.getText().toString().trim());
         });
 
         binding.btnContinue.setOnClickListener(v -> nextActivity());
@@ -90,7 +90,7 @@ public class TransporterLocationActivity extends AppCompatActivity {
             String state = binding.autocompleteLocationState.getText().toString().trim();
             String lga = binding.autocompleteLocationLga.getText().toString().trim();
 
-            startActivity(new Intent(this, TransporterCcActivity.class)
+            startActivity(new Intent(this, RegCcActivity.class)
                     .putExtra("state", state)
                     .putExtra("lga", lga));
         } else {
