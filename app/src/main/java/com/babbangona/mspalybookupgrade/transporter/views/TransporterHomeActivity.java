@@ -282,15 +282,15 @@ public class TransporterHomeActivity extends AppCompatActivity {
                 //TODO: Header escape didn't work.
                 //TODO: Also fix space in csv document.
                 //To escape out the header row
-                if (content[0].equals("S/N")) {
+                if (content[0].trim().equals("S/N")) {
                     //Do Nothing
                 } else {
-                    list.add(new CardsTable(content[0],
-                            content[1],
-                            content[2],
-                            content[3],
-                            content[4],
-                            content[5]));
+                    list.add(new CardsTable(content[0].trim(),
+                            content[1].trim(),
+                            content[2].trim(),
+                            content[3].trim(),
+                            content[4].trim(),
+                            content[5].trim()));
                 }
             }
         } catch (IOException e) {

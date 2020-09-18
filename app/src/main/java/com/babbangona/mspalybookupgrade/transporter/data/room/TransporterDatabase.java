@@ -82,6 +82,7 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     "vehicle_type TEXT, " +
                     "payment_option TEXT, " +
                     "bg_card TEXT, " +
+                    "invalid_card_flag INTEGER, " +
                     "account_number TEXT, " +
                     "account_name TEXT, " +
                     "account_mismatch_flag INTEGER, " +

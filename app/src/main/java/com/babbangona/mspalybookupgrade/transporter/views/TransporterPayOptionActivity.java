@@ -134,6 +134,7 @@ public class TransporterPayOptionActivity extends AppCompatActivity {
                 session.GET_REG_VEHICLE_TYPE(),
                 "Cash",
                 "N/A",
+                0,
                 "N/A",
                 "N/A",
                 0,

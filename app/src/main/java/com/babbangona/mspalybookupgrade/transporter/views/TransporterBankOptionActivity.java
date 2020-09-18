@@ -227,6 +227,7 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
                 session.GET_REG_VEHICLE_TYPE(),
                 "Bank Account",
                 "N/A",
+                0,
                 binding.editAccountNumber.getText().toString(),
                 binding.editAccountName.getText().toString(),
                 name_mismatch_flag,
