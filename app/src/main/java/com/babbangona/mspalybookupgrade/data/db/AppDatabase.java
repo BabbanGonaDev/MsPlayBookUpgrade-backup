@@ -11,12 +11,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.daos.ActivityListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.AppVariablesDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.BGTCoachesDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.CategoryDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HarvestLocationsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.LastSyncTableDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.LocationDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.LogsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.MembersDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.NormalActivitiesFlagDao;
@@ -27,16 +29,20 @@ import com.babbangona.mspalybookupgrade.data.db.daos.PWSCategoryListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.PictureSyncDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.RFActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.RFListDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.ScheduleThreshingActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.SyncSummaryDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.ThreshingLocation;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
+import com.babbangona.mspalybookupgrade.data.db.entities.BGTCoaches;
 import com.babbangona.mspalybookupgrade.data.db.entities.Category;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
 import com.babbangona.mspalybookupgrade.data.db.entities.HarvestLocationsTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.LastSyncTable;
+import com.babbangona.mspalybookupgrade.data.db.entities.LocationEntity;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
@@ -47,15 +53,18 @@ import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.babbangona.mspalybookupgrade.data.db.entities.PictureSync;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
+import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
+import com.babbangona.mspalybookupgrade.data.db.daos.ThreshingLocationDao;
 
 
 @Database(entities = {ActivityList.class, NormalActivitiesFlag.class, Fields.class, StaffList.class,
         Members.class, HGActivitiesFlag.class, HGList.class, Logs.class, LastSyncTable.class, Category.class,
         SyncSummary.class, HarvestLocationsTable.class, AppVariables.class, RFActivitiesFlag.class,
         RFList.class, PictureSync.class, PWSActivitiesFlag.class, PWSCategoryList.class,
-        PCPWSActivitiesFlag.class, PWSActivityController.class},
+        PCPWSActivitiesFlag.class, PWSActivityController.class, ScheduledThreshingActivitiesFlag.class,
+        LocationEntity.class, ThreshingLocation.class, BGTCoaches.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -82,6 +91,10 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PWSCategoryListDao pwsCategoryListDao();
     public abstract PCPWSActivitiesFlagDao pcpwsActivitiesFlagDao();
     public abstract PWSActivityControllerDao pwsActivityControllerDao();
+    public abstract ScheduleThreshingActivitiesFlagDao scheduleThreshingActivitiesFlagDao();
+    public abstract LocationDao locationDao();
+    public abstract ThreshingLocationDao threshingLocationDao();
+    public abstract BGTCoachesDao bgtCoachesDao();
 
     /**
      * Return instance of database creation
@@ -335,6 +348,26 @@ public abstract class AppDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
 
             database.execSQL("ALTER TABLE members ADD COLUMN 'template' TEXT");
+            database.execSQL("ALTER TABLE members ADD COLUMN 'role' TEXT");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'fields_travel_time' TEXT");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'average_transition_time' TEXT");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'time_per_ha' TEXT");
+
+            /*public static final String COL_UNIQUE_FIELD_ID_SCHEDULE             = "unique_field_id";
+            public static final String COL_THRESHER_SCHEDULE                    = "thresher";
+            public static final String COL_FACE_SCAN_FLAG_SCHEDULE              = "face_scan_flag";
+            public static final String COL_TEMPLATE_SCHEDULE                    = "template";
+            public static final String COL_SCHEDULE_DATE                        = "schedule_date";
+            public static final String COL_COLLECTION_CENTER                    = "collection_center";
+            public static final String COL_PHONE_NUMBER_SCHEDULE                = "phone_number";
+            public static final String COL_IMEI_SCHEDULE                        = "imei";
+            public static final String COL_APP_VERSION_SCHEDULE                 = "app_version";
+            public static final String COL_LATITUDE_SCHEDULE                    = "latitude";
+            public static final String COL_LONGITUDE_SCHEDULE                   = "longitude";
+            public static final String COL_STAFF_ID_SCHEDULE                    = "staff_id";
+            public static final String COL_DATE_LOGGED_SCHEDULE                 = "date_logged";
+            public static final String COL_SYNC_FLAG_SCHEDULE                   = "sync_flag";
+            public static final String COL_RESCHEDULE_REASON                    = "reschedule_reason";*/
         }
     };
 

@@ -31,9 +31,30 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
-        <activity android:name=".ThreshingViews.FieldList"></activity>
-        <activity android:name=".ThreshingViews.MemberList" />
-        <activity android:name=".ThreshingViews.ThreshingActivity" />
+        <activity
+            android:name=".ThreshingViews.MemberLocation"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".utils.CaptureActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".utils.VerifyActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".utils.ReVerifyActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ThreshingViews.RescheduleThreshingDateSelectionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ThreshingViews.ThreshingDateSelectionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ThreshingViews.FieldList"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ThreshingViews.MemberList"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ThreshingViews.ThreshingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".transporter.views.ViewRegisteredTransporters"
             android:theme="@style/AppTheme.NoActionBar" />

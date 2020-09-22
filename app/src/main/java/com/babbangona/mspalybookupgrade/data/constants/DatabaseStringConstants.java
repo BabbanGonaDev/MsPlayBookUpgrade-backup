@@ -11,26 +11,31 @@ public class DatabaseStringConstants {
     /**
      * Names of tables
      */
-    public static final String ACTIVITY_LIST_TABLE                      = "activity_list";
-    public static final String FIELDS_TABLE                             = "fields";
-    public static final String STAFF_TABLE                              = "staff";
-    public static final String MEMBERS_TABLE                            = "members";
-    public static final String HG_LIST_TABLE                            = "hg_list";
-    public static final String RF_LIST_TABLE                            = "rf_list";
-    public static final String NORMAL_ACTIVITY_FLAGS_TABLE              = "normal_activities_flag";
-    public static final String HG_ACTIVITY_FLAGS_TABLE                  = "hg_activities_flag";
-    public static final String RF_ACTIVITY_FLAGS_TABLE                  = "rf_activities_flag";
-    public static final String LOGS_TABLE                               = "logs";
-    public static final String LAST_SYNC_TABLE                          = "last_sync";
-    public static final String CATEGORY_TABLE                           = "category";
-    public static final String PWS_ACTIVITY_CONTROLLER_TABLE            = "pws_activity_controller";
-    public static final String SYNC_SUMMARY_TABLE                       = "sync_summary";
-    public static final String HARVEST_LOCATION_TABLE                   = "harvest_location";
-    public static final String APP_VARIABLES                            = "app_variables";
-    public static final String TABLE_PICTURE_SYNC                       = "picture_sync";
-    public static final String PWS_ACTIVITY_FLAGS_TABLE                 = "pws_activities_flag";
-    public static final String PC_PWS_ACTIVITY_FLAGS_TABLE              = "pc_pws_activities_flag";
-    public static final String PWS_CATEGORY_LIST_TABLE                  = "pws_category_list";
+    public static final String ACTIVITY_LIST_TABLE                          = "activity_list";
+    public static final String FIELDS_TABLE                                 = "fields";
+    public static final String STAFF_TABLE                                  = "staff";
+    public static final String MEMBERS_TABLE                                = "members";
+    public static final String HG_LIST_TABLE                                = "hg_list";
+    public static final String RF_LIST_TABLE                                = "rf_list";
+    public static final String NORMAL_ACTIVITY_FLAGS_TABLE                  = "normal_activities_flag";
+    public static final String HG_ACTIVITY_FLAGS_TABLE                      = "hg_activities_flag";
+    public static final String RF_ACTIVITY_FLAGS_TABLE                      = "rf_activities_flag";
+    public static final String LOGS_TABLE                                   = "logs";
+    public static final String LAST_SYNC_TABLE                              = "last_sync";
+    public static final String CATEGORY_TABLE                               = "category";
+    public static final String PWS_ACTIVITY_CONTROLLER_TABLE                = "pws_activity_controller";
+    public static final String SYNC_SUMMARY_TABLE                           = "sync_summary";
+    public static final String HARVEST_LOCATION_TABLE                       = "harvest_location";
+    public static final String APP_VARIABLES                                = "app_variables";
+    public static final String TABLE_PICTURE_SYNC                           = "picture_sync";
+    public static final String PWS_ACTIVITY_FLAGS_TABLE                     = "pws_activities_flag";
+    public static final String PC_PWS_ACTIVITY_FLAGS_TABLE                  = "pc_pws_activities_flag";
+    public static final String PWS_CATEGORY_LIST_TABLE                      = "pws_category_list";
+    public static final String SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE     = "schedule_threshing_activities_flag";
+    public static final String CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE      = "confirm_threshing_activities_flag";
+    public static final String LOCATIONS_TABLE                              = "locations_table";
+    public static final String THRESHING_LOCATION                           = "threshing_location";
+    public static final String BGT_COACHES_TABLE                            = "bgt_coaches";
 
     /**
      * activity_list column names
@@ -92,6 +97,7 @@ public class DatabaseStringConstants {
     public static final String COL_PHONE_NUMBER                         = "phone_number";
     public static final String COL_VILLAGE_NAME                         = "village_name";
     public static final String COL_TEMPLATE                             = "template";
+    public static final String COL_ROLE_MEMBERS                         = "role";
 
     /**
      * hg_activities column names
@@ -187,6 +193,9 @@ public class DatabaseStringConstants {
     public static final String EDIT_HARVEST_LOCATION_FLAG                   = "edit_harvest_location_flag";
     public static final String MINIMUM_LOG_DATE_FLAG                        = "minimum_log_date";
     public static final String MAXIMUM_LOG_DATE_FLAG                        = "maximum_log_date";
+    public static final String FIELDS_TRAVEL_TIME                           = "fields_travel_time";
+    public static final String AVERAGE_TRANSITION_TIME                      = "average_transition_time";
+    public static final String TIME_PER_HA                                  = "time_per_ha";
 
     /**
      * rf_list column names
@@ -222,9 +231,11 @@ public class DatabaseStringConstants {
     public static final String LOG_HG_ACTIVITY                          = "3";
     public static final String SET_PORTFOLIO_ACTIVITY                   = "4";
     public static final String POOR_WEATHER_SUPPORT_ACTIVITY            = "5";
+    public static final String BGT_THRESHING_ACTIVITY                   = "7";
     public static final String SCHEDULE_THRESHING                       = "1";
     public static final String UPDATE_THRESHING                         = "2";
     public static final String CONFIRM_THRESHING                        = "3";
+    public static final String MARK_HG_AT_RISK                          = "4";
 
     /**
      * picture_sync column names
@@ -262,5 +273,54 @@ public class DatabaseStringConstants {
     public static final String COL_PWS_CATEGORY                         = "pws_category";
     public static final String COL_PWS_CATEGORY_DEACTIVATED_STATUS      = "deactivated_status";
     public static final String COL_USER_CATEGORY_PWS                    = "user_category";
+
+    /**
+     * schedule_threshing_activities_flag column names
+     */
+    public static final String COL_UNIQUE_FIELD_ID_SCHEDULE             = "unique_field_id";
+    public static final String COL_THRESHER_SCHEDULE                    = "thresher";
+    public static final String COL_FACE_SCAN_FLAG_SCHEDULE              = "face_scan_flag";
+    public static final String COL_TEMPLATE_SCHEDULE                    = "template";
+    public static final String COL_SCHEDULE_DATE                        = "schedule_date";
+    public static final String COL_COLLECTION_CENTER                    = "collection_center";
+    public static final String COL_PHONE_NUMBER_SCHEDULE                = "phone_number";
+    public static final String COL_IMEI_SCHEDULE                        = "imei";
+    public static final String COL_APP_VERSION_SCHEDULE                 = "app_version";
+    public static final String COL_LATITUDE_SCHEDULE                    = "latitude";
+    public static final String COL_LONGITUDE_SCHEDULE                   = "longitude";
+    public static final String COL_STAFF_ID_SCHEDULE                    = "staff_id";
+    public static final String COL_DATE_LOGGED_SCHEDULE                 = "date_logged";
+    public static final String COL_SYNC_FLAG_SCHEDULE                   = "sync_flag";
+    public static final String COL_RESCHEDULE_REASON                    = "reschedule_reason";
+
+
+    /**
+     * locations_table Column Names
+     */
+    public static final String COL_STATE_LOC                            = "state";
+    public static final String COL_LGA_LOC                              = "lga";
+    public static final String COL_WARD_LOC                             = "ward";
+    public static final String COL_LOCATION_ID                          = "location_id";
+
+    /**
+     * locations_table Column Names
+     */
+    public static final String COL_UNIQUE_MEMBER_ID_L                   = "unique_member_id";
+    public static final String COL_LOCATION_ID_L                        = "location_id";
+    public static final String COL_VILLAGE_NAME_L                       = "village_name";
+    public static final String COL_STAFF_ID_L                           = "staff_id";
+    public static final String COL_LATITUDE_L                           = "latitude";
+    public static final String COL_LONGITUDE_L                          = "longitude";
+    public static final String COL_SYNC_FLAG_L                          = "sync_flag";
+    public static final String COL_STATE_L                              = "state";
+    public static final String COL_LGA_L                                = "lga";
+    public static final String COL_WARD_L                               = "ward";
+    public static final String COL_APP_VERSION                          = "app_version";
+
+    /**
+     * locations_table Column Names
+     */
+    public static final String COL_BGT_ID                               = "bgt_id";
+    public static final String COL_COACH_ID                             = "coach_id";
 
 }

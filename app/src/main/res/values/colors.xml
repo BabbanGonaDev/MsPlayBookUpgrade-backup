@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">     #050150</color>
-    <color name="colorPrimaryDark"> #050150</color>
+    <color name="colorPrimary">     #003296</color>
+    <color name="colorPrimaryDark"> #003296</color>
     <color name="colorAccent">      #D81B60</color>
     <color name="colorWhite">       #fff</color>
     <color name="text_color_black"> #202020</color>
@@ -16,7 +16,8 @@
     <color name="view_orange">      #FF5C00</color>
     <color name="show_hide">        #03205B</color>
     <color name="recycler_back">    #f8f9f9</color>
-    <color name="off_white">#D4D4E3</color>
+    <color name="off_white">        #f8f9f9</color>
+    <!--<color name="off_white">#D4D4E3</color>-->
     <color name="text_color_blue">  #050150</color>
     <color name="displayBar">       #003296</color>
 </resources>

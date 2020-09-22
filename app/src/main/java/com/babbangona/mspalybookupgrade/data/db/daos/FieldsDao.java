@@ -13,6 +13,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.Field
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.GridDetailsRecycler.GridDetailsRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.HGFieldListRecycler.HGFieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.PWSFieldListRecycler.PWSFieldListRecyclerModel;
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.ThreshingFieldListRecycler.ThreshingFieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 
 import java.util.List;
@@ -288,6 +289,14 @@ public abstract class FieldsDao {
                                                                                                          String member_id,
                                                                                                          String member_name,
                                                                                                          String village);
+
+    @Query(" SELECT a.unique_field_id, b.village_name, a.field_size FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "WHERE a.deactivate = '0' AND a.unique_member_id = :unique_member_id ")
+    public abstract LiveData<List<ThreshingFieldListRecyclerModel>> getThreshingMemberFields(String unique_member_id);
+
+    @Query(" SELECT a.unique_field_id, b.village_name, a.field_size FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "WHERE a.deactivate = '0' AND a.unique_member_id = :unique_member_id ")
+    public abstract List<ThreshingFieldListRecyclerModel> getThreshingMemberFieldsList(String unique_member_id);
 
     @Query("DELETE FROM fields WHERE staff_id = :staff_id")
     public abstract void deleteRecords(String staff_id);

@@ -81,13 +81,30 @@ public class SharedPrefs {
     public static final String KEY_PC_PWS_HOME_STAFF_ID             = "pc_pws_home_staff_id";
 
     public static final String KEY_THRESHING_UNIQUE_MEMBER_ID       = "threshing_unique_member_id";
+    public static final String KEY_THRESHING_UNIQUE_FIELD_ID        = "threshing_unique_field_id";
     public static final String KEY_THRESHING_ACTIVITY_ROUTE         = "threshing_activity_route";
+    public static final String KEY_MEMBER_VILLAGE_LATITUDE          = "member_village_latitude";
+    public static final String KEY_MEMBER_VILLAGE_LONGITUDE         = "member_village_longitude";
 
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyVillageLocation(String latitude, String longitude){
+        editor.putString(KEY_MEMBER_VILLAGE_LATITUDE, latitude)
+                .putString(KEY_MEMBER_VILLAGE_LONGITUDE, longitude)
+                .commit();
+    }
+
+    public void setKeyThreshingUniqueFieldId(String threshing_unique_field_id){
+
+        editor.putString(KEY_THRESHING_UNIQUE_FIELD_ID, threshing_unique_field_id);
+
+        // commit changes
+        editor.commit();
     }
 
     public void setKeyThreshingActivityRoute(String threshing_activity_route){
@@ -518,5 +535,18 @@ public class SharedPrefs {
     public String getKeyThreshingActivityRoute() {
         return pref.getString(KEY_THRESHING_ACTIVITY_ROUTE,"0");
 
+    }
+
+    public String getKeyThreshingUniqueFieldId() {
+        return pref.getString(KEY_THRESHING_UNIQUE_FIELD_ID,"0");
+
+    }
+
+    public String getKeyMemberVillageLatitude() {
+        return pref.getString(KEY_MEMBER_VILLAGE_LATITUDE, "0.00");
+    }
+
+    public String getKeyMemberVillageLongitude() {
+        return pref.getString(KEY_MEMBER_VILLAGE_LONGITUDE, "0.00");
     }
 }
