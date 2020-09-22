@@ -1,6 +1,7 @@
 package com.babbangona.mspalybookupgrade.transporter.data.retrofit;
 
 import com.babbangona.mspalybookupgrade.transporter.data.models.ImageResponse;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionCenterTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
@@ -28,6 +29,9 @@ public interface RetrofitApiCalls {
 
     @GET("downloadCollectionCenters")
     Call<List<CollectionCenterTable>> syncDownCC(@Query("last_sync_time") String last_sync_time);
+
+    @GET("downloadTransporterCards")
+    Call<List<CardsTable.Download>> syncDownCards(@Query("last_sync_time") String last_sync_time);
 
     @FormUrlEncoded
     @POST("uploadTransporterTable")

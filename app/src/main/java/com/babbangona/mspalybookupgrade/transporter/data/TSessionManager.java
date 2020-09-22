@@ -24,6 +24,7 @@ public class TSessionManager {
     public static final String KEY_LAST_SYNC_TRANSPORTER = "last_sync_transporter_table";
     public static final String KEY_LAST_SYNC_CC = "last_sync_cc_table";
     public static final String KEY_LAST_SYNC_OPERATING_AREAS = "last_sync_operating_areas_table";
+    public static final String KEY_LAST_SYNC_CARDS = "last_sync_cards_table";
 
     /**
      * List of image names to be used for syncing.
@@ -98,6 +99,10 @@ public class TSessionManager {
         editor.putString(KEY_LAST_SYNC_OPERATING_AREAS, value).commit();
     }
 
+    public void SET_LAST_SYNC_CARDS(String value) {
+        editor.putString(KEY_LAST_SYNC_CARDS, value).commit();
+    }
+
     public void SET_TRANSPORTER_CARDS(String value) {
         String cards_list = prefs.getString(KEY_TRANSPORTER_CARDS, "");
         if (cards_list.isEmpty()) {
@@ -168,6 +173,10 @@ public class TSessionManager {
 
     public String GET_LAST_SYNC_OPERATING_AREAS() {
         return prefs.getString(KEY_LAST_SYNC_OPERATING_AREAS, "2020-08-26 00:00:00");
+    }
+
+    public String GET_LAST_SYNC_CARDS() {
+        return prefs.getString(KEY_LAST_SYNC_CARDS, "2020-08-26 00:00:00");
     }
 
     public String[] GET_TRANSPORTER_CARDS() {
