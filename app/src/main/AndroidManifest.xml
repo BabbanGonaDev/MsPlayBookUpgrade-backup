@@ -32,6 +32,9 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
         <activity
+            android:name=".transporter.views.activities.ViewMemberFields"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".transporter.views.activities.BookingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ThreshingViews.FieldList" />

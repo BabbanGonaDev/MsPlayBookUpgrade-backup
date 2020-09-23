@@ -311,11 +311,20 @@ public abstract class FieldsDao {
 
     /**
      * delete the object from database
+     *
      * @param fields, object to be deleted
      */
     @Delete
     public abstract void delete(Fields fields);
 
 
+    /**
+     * =============================================
+     * Functions below this line are used in the Transporter application module.
+     * =============================================
+     */
+
+    @Query("SELECT unique_member_id AS uniqueMemberId, unique_field_id AS uniqueFieldId, field_size AS fieldSize FROM fields WHERE deactivate = '0' AND unique_member_id = :unique")
+    public abstract LiveData<List<com.babbangona.mspalybookupgrade.transporter.data.models.Fields>> getMemberFields(String unique);
 
 }
