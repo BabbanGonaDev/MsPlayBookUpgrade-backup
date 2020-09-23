@@ -10,16 +10,24 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.CardsDAO;
+import com.babbangona.mspalybookupgrade.transporter.data.room.dao.CoachLogsDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.CollectionCenterDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.OperatingAreasDAO;
+import com.babbangona.mspalybookupgrade.transporter.data.room.dao.TempTransporterDAO;
+import com.babbangona.mspalybookupgrade.transporter.data.room.dao.TpoLogsDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.TransporterDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CoachLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionCenterTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TempTransporterTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TpoLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 
-@Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class, CardsTable.class}, version = 4, exportSchema = false)
+@Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class,
+        CardsTable.class, CoachLogsTable.class, TpoLogsTable.class, TempTransporterTable.class}, version = 5, exportSchema = false)
 public abstract class TransporterDatabase extends RoomDatabase {
+
     private static TransporterDatabase INSTANCE;
 
     private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -104,6 +112,45 @@ public abstract class TransporterDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            //Create Coach Logs.
+            db.execSQL("CREATE TABLE coach_logs_table (member_id TEXT NOT NULL, " +
+                    "quantity INTEGER NOT NULL, " +
+                    "transported_by TEXT, " +
+                    "transporter_id TEXT NOT NULL, " +
+                    "voucher_id TEXT, " +
+                    "voucher_id_flag INTEGER, " +
+                    "cc_id TEXT, " +
+                    "instant_payment_flag INTEGER, " +
+                    "date_logged TEXT NOT NULL, " +
+                    "sync_flag TEXT, " +
+                    "PRIMARY KEY(member_id, quantity, transporter_id, date_logged))");
+
+            //Create Tpo Logs.
+            db.execSQL("CREATE TABLE tpo_logs_table (member_id TEXT NOT NULL, " +
+                    "quantity INTEGER NOT NULL, " +
+                    "transported_by TEXT, " +
+                    "transporter_id TEXT NOT NULL, " +
+                    "voucher_id TEXT, " +
+                    "voucher_id_flag INTEGER, " +
+                    "cc_id TEXT, " +
+                    "instant_payment_flag INTEGER, " +
+                    "date_logged TEXT NOT NULL, " +
+                    "sync_flag TEXT, " +
+                    "PRIMARY KEY(member_id, quantity, transporter_id, date_logged))");
+
+            //Create Temp Transporter Logs
+            db.execSQL("CREATE TABLE temp_transporter_table (temp_transporter_id TEXT NOT NULL, " +
+                    "first_name TEXT, " +
+                    "last_name TEXT, " +
+                    "date_updated TEXT, " +
+                    "sync_flag INTEGER, " +
+                    "PRIMARY KEY(temp_transporter_id))");
+        }
+    };
+
     //Init of instance.
     public static TransporterDatabase getInstance(Context context) {
         if (INSTANCE == null) {
@@ -111,7 +158,7 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     TransporterDatabase.class,
                     "transporter-db.db")
                     //.createFromAsset("database/transporter.db")
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .allowMainThreadQueries()
                     .build();
         }
@@ -130,4 +177,10 @@ public abstract class TransporterDatabase extends RoomDatabase {
     public abstract OperatingAreasDAO getOpAreaDao();
 
     public abstract CardsDAO getCardsDao();
+
+    public abstract TpoLogsDAO getTpoLogsDao();
+
+    public abstract CoachLogsDAO getCoachLogsDao();
+
+    public abstract TempTransporterDAO getTempTransporterDao();
 }
