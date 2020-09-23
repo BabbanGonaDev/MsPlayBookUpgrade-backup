@@ -12,8 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textView6"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -24,19 +23,36 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchViewMembers"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/rounded_corners"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView6"
+                app:queryHint="Search members by name or ik number" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcvMembers"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                app:layout_constraintTop_toBottomOf="@+id/searchViewMembers" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>

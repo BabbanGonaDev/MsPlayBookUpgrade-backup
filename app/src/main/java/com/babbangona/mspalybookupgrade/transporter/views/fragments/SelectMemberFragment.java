@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -37,7 +38,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class SelectMemberFragment extends Fragment {
+public class SelectMemberFragment extends Fragment implements SearchView.OnQueryTextListener {
     ViewMembersAdapter adapter;
     private MembersViewModel model;
     private TSessionManager session;
@@ -99,6 +100,10 @@ public class SelectMemberFragment extends Fragment {
             //Put adapter here
             adapter.submitList(members);
         });
+
+        binding.searchViewMembers.setOnQueryTextListener(this);
+
+        binding.searchViewMembers.setOnClickListener(v -> binding.searchViewMembers.setIconified(false));
     }
 
     public void requestTransportedBy(Members mem) {
@@ -221,5 +226,16 @@ public class SelectMemberFragment extends Fragment {
                 confirmTransportedByMember();
             }
         }.execute();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        model.setSearchText("%" + newText.toLowerCase() + "%");
+        return false;
     }
 }
