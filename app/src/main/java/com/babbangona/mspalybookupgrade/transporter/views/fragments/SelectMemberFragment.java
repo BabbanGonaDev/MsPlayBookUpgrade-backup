@@ -31,6 +31,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.models.Members;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CoachLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.viewmodels.MembersViewModel;
+import com.babbangona.mspalybookupgrade.transporter.views.activities.AssigningActivity;
 import com.babbangona.mspalybookupgrade.transporter.views.activities.ViewMemberFields;
 
 import java.text.SimpleDateFormat;
@@ -83,6 +84,7 @@ public class SelectMemberFragment extends Fragment implements SearchView.OnQuery
             @Override
             public void assignTransporter(Members member) {
                 //Begin Transporter assign process
+                session.SET_UNIQUE_MEMBER_ID(member.getUniqueMemberId());
                 requestTransportedBy(member);
 
             }
@@ -120,11 +122,14 @@ public class SelectMemberFragment extends Fragment implements SearchView.OnQuery
         binding.btnRight.setOnClickListener(v -> {
             //BG Transported
             dialog.dismiss();
+            session.SET_TRANSPORTED_BY("BG");
+            startActivity(new Intent(getActivity(), AssigningActivity.class));
         });
 
         binding.btnLeft.setOnClickListener(v -> {
             //Member Transported
             dialog.dismiss();
+            session.SET_TRANSPORTED_BY("Member");
             requestNoOfBagsTransported(mem);
         });
 

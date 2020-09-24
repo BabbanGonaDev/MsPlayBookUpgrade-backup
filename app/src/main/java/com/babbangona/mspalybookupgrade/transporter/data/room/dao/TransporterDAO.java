@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.babbangona.mspalybookupgrade.transporter.data.models.CustomTransporter;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 
 import java.util.List;
@@ -37,4 +38,11 @@ public interface TransporterDAO {
 
     @Query("UPDATE transporter_table SET sync_flag = :flag WHERE phone_number = :phone_number")
     void updateSyncResponse(String phone_number, Integer flag);
+
+    @Query("SELECT a.first_name, a.last_name, a.phone_number, group_concat(DISTINCT c.cc_name) AS areas, " +
+            "a.invalid_card_flag AS bags_transported FROM transporter_table AS a " +
+            "INNER JOIN operating_areas_table AS b ON (a.phone_number = b.phone_number) " +
+            "LEFT JOIN collection_center_table AS c ON (b.cc_id = c.cc_id) " +
+            "GROUP BY a.phone_number")
+    LiveData<List<CustomTransporter>> getTransporterForBooking();
 }

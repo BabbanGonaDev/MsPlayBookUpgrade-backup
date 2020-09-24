@@ -43,4 +43,10 @@ public class CollectionCenterTable {
     public String getDate_updated() {
         return date_updated;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return cc_name;
+    }
 }

@@ -27,6 +27,15 @@ public class TSessionManager {
     public static final String KEY_LAST_SYNC_CARDS = "last_sync_cards_table";
 
     /**
+     * These keys are used to store details for Transporter booking and assignment
+     */
+    public static final String KEY_TRANSPORTED_BY = "transported_by";
+    public static final String KEY_UNIQUE_MEMBER_ID = "unique_member_id";
+    public static final String KEY_SELECTED_TRANSPORTER = "selected_transporter";
+    public static final String KEY_SELECTED_CC_ID = "selected_cc_id";
+    public static final String KEY_QTY_TRANSPORTED = "quantity_transported";
+
+    /**
      * List of image names to be used for syncing.
      */
     public static final String KEY_TRANSPORTER_CARDS = "TRANSPORTER_CARDS";
@@ -121,6 +130,26 @@ public class TSessionManager {
         }
     }
 
+    public void SET_TRANSPORTED_BY(String value) {
+        editor.putString(KEY_TRANSPORTED_BY, value).commit();
+    }
+
+    public void SET_UNIQUE_MEMBER_ID(String value) {
+        editor.putString(KEY_UNIQUE_MEMBER_ID, value).commit();
+    }
+
+    public void SET_SELECTED_TRANSPORTER(String value) {
+        editor.putString(KEY_SELECTED_TRANSPORTER, value).commit();
+    }
+
+    public void SET_SELECTED_CC_ID(String value) {
+        editor.putString(KEY_SELECTED_CC_ID, value).commit();
+    }
+
+    public void SET_QTY_TRANSPORTED(Integer value) {
+        editor.putInt(KEY_QTY_TRANSPORTED, value).commit();
+    }
+
     /**
      * =========================================================================
      * KEEP ALL SESSION GETTERS BELOW THIS LINE
@@ -197,6 +226,26 @@ public class TSessionManager {
         }
     }
 
+    public String GET_TRANSPORTED_BY() {
+        return prefs.getString(KEY_TRANSPORTED_BY, "");
+    }
+
+    public String GET_UNIQUE_MEMBER_ID() {
+        return prefs.getString(KEY_UNIQUE_MEMBER_ID, "");
+    }
+
+    public String GET_SELECTED_TRANSPORTER() {
+        return prefs.getString(KEY_SELECTED_TRANSPORTER, "");
+    }
+
+    public String GET_SELECTED_CC_ID() {
+        return prefs.getString(KEY_SELECTED_CC_ID, "");
+    }
+
+    public Integer GET_QTY_TRANSPORTED() {
+        return prefs.getInt(KEY_QTY_TRANSPORTED, 0);
+    }
+
     /**
      * =========================================================================
      * KEEP ALL SESSION CLEARING BELOW THIS LINE
@@ -234,5 +283,11 @@ public class TSessionManager {
             cards_list = cards_list.replaceAll(",,", ",");
             editor.putString(KEY_TRANSPORTER_CARDS, cards_list).commit();
         }
+    }
+
+    public void CLEAR_BOOKING_SESSION() {
+        editor.remove(KEY_TRANSPORTED_BY)
+                .remove(KEY_UNIQUE_MEMBER_ID)
+                .commit();
     }
 }

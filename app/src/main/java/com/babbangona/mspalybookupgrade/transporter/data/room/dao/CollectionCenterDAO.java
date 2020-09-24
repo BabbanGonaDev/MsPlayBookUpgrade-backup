@@ -31,4 +31,7 @@ public interface CollectionCenterDAO {
 
     @Query("SELECT * FROM collection_center_table WHERE state = :state AND lga = :lga")
     LiveData<List<CollectionCenterTable>> getCollectionCenters(String state, String lga);
+
+    @Query("SELECT * FROM collection_center_table ORDER BY cc_name ASC")
+    LiveData<List<CollectionCenterTable>> getAllCollectionCenters();
 }
