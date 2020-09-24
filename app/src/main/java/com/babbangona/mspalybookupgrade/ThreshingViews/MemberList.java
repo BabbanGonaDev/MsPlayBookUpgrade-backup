@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.ThreshingViews;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModel;
@@ -13,6 +14,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -20,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.FieldListPage;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListPageListModelClass;
@@ -77,6 +81,8 @@ public class MemberList extends AppCompatActivity {
         appDatabase = AppDatabase.getInstance(MemberList.this);
         showView(toolbar_linear_layout);
         hideView(search_linear_layout);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         memberPageListModelClass = new ViewModelProvider(this, new MyViewModelFactory(appDatabase.membersDao(), this)).get(MemberPageListModelClass.class);
         memberPageListModelClass.filterTextAll.setValue("");
@@ -213,5 +219,21 @@ public class MemberList extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.threshing_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.schedule) {
+            startActivity(new Intent(MemberList.this, ComingSoon.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

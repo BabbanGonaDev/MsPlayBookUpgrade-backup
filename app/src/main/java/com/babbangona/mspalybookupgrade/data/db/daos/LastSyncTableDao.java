@@ -139,6 +139,30 @@ public interface LastSyncTableDao {
     @Query("UPDATE last_sync SET last_sync_pws_activities_controller =:last_sync_pws_activities_controller WHERE staff_id = :staff_id")
     void updateLastSyncPWSActivitiesController(String staff_id, String last_sync_pws_activities_controller);
 
+    @Query("SELECT last_sync_down_scheduled_activities_flag FROM last_sync WHERE staff_id = :staff_id")
+    String getLastSyncDownScheduledThreshingActivitiesFlag(String staff_id);
+
+    @Query("UPDATE last_sync SET last_sync_down_scheduled_activities_flag =:last_sync_down_scheduled_activities_flag WHERE staff_id = :staff_id")
+    void updateLastSyncDownScheduledThreshingActivitiesFlag(String staff_id, String last_sync_down_scheduled_activities_flag);
+
+    @Query("SELECT last_sync_down_confirm_activities_flag FROM last_sync WHERE staff_id = :staff_id")
+    String getLastSyncDownConfirmThreshingActivitiesFlag(String staff_id);
+
+    @Query("UPDATE last_sync SET last_sync_down_confirm_activities_flag =:last_sync_down_confirm_activities_flag WHERE staff_id = :staff_id")
+    void updateLastSyncDownConfirmThreshingActivitiesFlag(String staff_id, String last_sync_down_confirm_activities_flag);
+
+    @Query("SELECT last_sync_bgt_coaches FROM last_sync WHERE staff_id = :staff_id")
+    String getLastSyncBGTCoaches(String staff_id);
+
+    @Query("UPDATE last_sync SET last_sync_bgt_coaches =:last_sync_bgt_coaches WHERE staff_id = :staff_id")
+    void updateLastSyncBGTCoaches(String staff_id, String last_sync_bgt_coaches);
+
+    @Query("UPDATE last_sync SET last_sync_up_scheduled_activities_flag =:last_sync_up_scheduled_activities_flag WHERE staff_id = :staff_id")
+    void updateLastSyncUpScheduleActivitiesFlag(String staff_id, String last_sync_up_scheduled_activities_flag);
+
+    @Query("UPDATE last_sync SET last_sync_up_confirm_activities_flag =:last_sync_up_confirm_activities_flag WHERE staff_id = :staff_id")
+    void updateLastSyncUpConfirmActivitiesFlag(String staff_id, String last_sync_up_confirm_activities_flag);
+
     /**
      * Insert the object in database
      * @param lastSyncTable, object to be inserted

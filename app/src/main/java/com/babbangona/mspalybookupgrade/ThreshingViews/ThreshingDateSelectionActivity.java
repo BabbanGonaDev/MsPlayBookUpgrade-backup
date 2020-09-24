@@ -2,6 +2,7 @@ package com.babbangona.mspalybookupgrade.ThreshingViews;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -25,6 +26,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -33,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.babbangona.mspalybookupgrade.BuildConfig;
+import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -98,6 +102,9 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
     @BindView(R.id.edlConfirmPhoneNumber)
     TextInputLayout edlConfirmPhoneNumber;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     AppDatabase appDatabase;
 
     SharedPrefs sharedPrefs;
@@ -151,6 +158,8 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         ButterKnife.bind(ThreshingDateSelectionActivity.this);
         appDatabase = AppDatabase.getInstance(ThreshingDateSelectionActivity.this);
         sharedPrefs = new SharedPrefs(ThreshingDateSelectionActivity.this);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> goToHomePage());
 
 
         fillCollectionCenterSpinner(actCollectionCenter, ThreshingDateSelectionActivity.this);
@@ -209,6 +218,22 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 goToHomeLocationCapture();
             }
         };
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.threshing_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.schedule) {
+            startActivity(new Intent(ThreshingDateSelectionActivity.this, ComingSoon.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     void addBehaviourToBottomSheet(BottomSheetBehavior sheetBehavior){
@@ -1001,7 +1026,8 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 sharedPrefs.getStaffID(),
                 getDate("spread"),
                 "0",
-                "XXX"
+                "XXX",
+                sharedPrefs.getKeyThreshingIkNumber()
                 )
         );
 

@@ -1,13 +1,18 @@
 package com.babbangona.mspalybookupgrade.ThreshingViews;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.Homepage;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListAdapter;
@@ -40,6 +45,8 @@ public class FieldList extends AppCompatActivity {
         appDatabase = AppDatabase.getInstance(FieldList.this);
         sharedPrefs = new SharedPrefs(FieldList.this);
         initActivitiesRecycler();
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
     public void initActivitiesRecycler(){
@@ -58,5 +65,27 @@ public class FieldList extends AppCompatActivity {
                     threshingFieldListAdapter.notifyDataSetChanged();
                 });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(FieldList.this, ThreshingActivity.class));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.threshing_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.schedule) {
+            startActivity(new Intent(FieldList.this, ComingSoon.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

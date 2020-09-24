@@ -1,11 +1,16 @@
 package com.babbangona.mspalybookupgrade.ThreshingViews;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.Homepage;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
@@ -34,6 +39,9 @@ public class ThreshingActivity extends AppCompatActivity {
     @BindView(R.id.btnMarkHG)
     MaterialButton btnMarkHG;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     SharedPrefs sharedPrefs;
 
     AppDatabase appDatabase;
@@ -45,12 +53,16 @@ public class ThreshingActivity extends AppCompatActivity {
         ButterKnife.bind(ThreshingActivity.this);
         sharedPrefs = new SharedPrefs(ThreshingActivity.this);
         appDatabase = AppDatabase.getInstance(ThreshingActivity.this);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
     @OnClick(R.id.btnScheduleThreshing)
     public void setBtnScheduleThreshing(){
         sharedPrefs.setKeyThreshingActivityRoute(DatabaseStringConstants.SCHEDULE_THRESHING);
-        appDatabase.membersDao().updateCoach();
+        if (sharedPrefs.getStaffID().equalsIgnoreCase("T-10000000000000BB")){
+            appDatabase.membersDao().updateCoach();
+        }
         startActivity(new Intent(ThreshingActivity.this,MemberList.class));
     }
 
@@ -68,7 +80,7 @@ public class ThreshingActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSummary)
     public void setBtnSummary(){
-
+        startActivity(new Intent(ThreshingActivity.this, ComingSoon.class));
     }
 
     @OnClick(R.id.btnMarkHG)
@@ -84,5 +96,21 @@ public class ThreshingActivity extends AppCompatActivity {
 
     public void loadPreviousActivity() {
         startActivity(new Intent(ThreshingActivity.this, Homepage.class));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.threshing_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.schedule) {
+            startActivity(new Intent(ThreshingActivity.this, ComingSoon.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -9,13 +9,18 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
@@ -60,6 +65,9 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
     @BindView(R.id.edtRescheduleReason)
     TextInputEditText edtRescheduleReason;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     AppDatabase appDatabase;
 
     SharedPrefs sharedPrefs;
@@ -80,6 +88,8 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 "IK Number: " + sharedPrefs.getKeyThreshingIkNumber() + "\n" +
                 "Old Scheduled Date: " + old_thresh_date;
         tv_old_thresh_date.setText(text);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
     }
 
@@ -564,5 +574,21 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         finish();
         Intent intent = new Intent(RescheduleThreshingDateSelectionActivity.this, ThreshingActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.threshing_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.schedule) {
+            startActivity(new Intent(RescheduleThreshingDateSelectionActivity.this, ComingSoon.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

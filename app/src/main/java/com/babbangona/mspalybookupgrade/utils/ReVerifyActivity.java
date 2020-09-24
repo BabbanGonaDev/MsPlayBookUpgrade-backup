@@ -109,6 +109,7 @@ public class ReVerifyActivity extends AppCompatActivity {
     @OnClick(R.id.btnScanSuccessful)
     public void setBtnScanSuccessful() {
         //go to fields activity
+        finish();
         startActivity(new Intent(ReVerifyActivity.this, FieldList.class));
     }
 

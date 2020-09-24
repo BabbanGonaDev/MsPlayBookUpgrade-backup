@@ -83,20 +83,37 @@ public class LastSyncTable {
     @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_PWS_ACTIVITIES_CONTROLLER_TABLE)
     private String last_sync_pws_activities_controller;
 
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_UP_SCHEDULED_ACTIVITY_FLAGS_TABLE)
+    private String last_sync_up_scheduled_activities_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_SCHEDULED_ACTIVITY_FLAGS_TABLE)
+    private String last_sync_down_scheduled_activities_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_UP_CONFIRM_ACTIVITY_FLAGS_TABLE)
+    private String last_sync_up_confirm_activities_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_CONFIRM_ACTIVITY_FLAGS_TABLE)
+    private String last_sync_down_confirm_activities_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_BGT_COACHES_TABLE)
+    private String last_sync_bgt_coaches;
+
     public LastSyncTable() {
     }
 
     public LastSyncTable(@NonNull String staff_id, String last_sync_activity_list,
-                         String last_sync_up_normal_activities_flag,
-                         String last_sync_down_normal_activities_flag, String last_sync_fields,
-                         String last_sync_staff, String last_sync_members,
+                         String last_sync_up_normal_activities_flag, String last_sync_down_normal_activities_flag,
+                         String last_sync_fields, String last_sync_staff, String last_sync_members,
                          String last_sync_up_hg_activities_flag, String last_sync_down_hg_activities_flag,
                          String last_sync_hg_list, String last_sync_up_logs, String last_sync_down_logs,
                          String last_sync_category, String last_sync_harvest_location, String last_sync_rf_list,
                          String last_sync_up_rf_activities_flag, String last_sync_down_rf_activities_flag,
                          String last_sync_pws_category_list, String last_sync_up_pws_activities_flag,
                          String last_sync_down_pws_activities_flag, String last_sync_up_pc_pws_activities_flag,
-                         String last_sync_down_pc_pws_activities_flag, String last_sync_pws_activities_controller) {
+                         String last_sync_down_pc_pws_activities_flag, String last_sync_pws_activities_controller,
+                         String last_sync_up_scheduled_activities_flag, String last_sync_down_scheduled_activities_flag,
+                         String last_sync_up_confirm_activities_flag, String last_sync_down_confirm_activities_flag,
+                         String last_sync_bgt_coaches) {
         this.staff_id = staff_id;
         this.last_sync_activity_list = last_sync_activity_list;
         this.last_sync_up_normal_activities_flag = last_sync_up_normal_activities_flag;
@@ -120,6 +137,11 @@ public class LastSyncTable {
         this.last_sync_up_pc_pws_activities_flag = last_sync_up_pc_pws_activities_flag;
         this.last_sync_down_pc_pws_activities_flag = last_sync_down_pc_pws_activities_flag;
         this.last_sync_pws_activities_controller = last_sync_pws_activities_controller;
+        this.last_sync_up_scheduled_activities_flag = last_sync_up_scheduled_activities_flag;
+        this.last_sync_down_scheduled_activities_flag = last_sync_down_scheduled_activities_flag;
+        this.last_sync_up_confirm_activities_flag = last_sync_up_confirm_activities_flag;
+        this.last_sync_down_confirm_activities_flag = last_sync_down_confirm_activities_flag;
+        this.last_sync_bgt_coaches = last_sync_bgt_coaches;
     }
 
     @NonNull
@@ -305,5 +327,45 @@ public class LastSyncTable {
 
     public void setLast_sync_pws_activities_controller(String last_sync_pws_activities_controller) {
         this.last_sync_pws_activities_controller = last_sync_pws_activities_controller;
+    }
+
+    public String getLast_sync_up_scheduled_activities_flag() {
+        return last_sync_up_scheduled_activities_flag;
+    }
+
+    public void setLast_sync_up_scheduled_activities_flag(String last_sync_up_scheduled_activities_flag) {
+        this.last_sync_up_scheduled_activities_flag = last_sync_up_scheduled_activities_flag;
+    }
+
+    public String getLast_sync_down_scheduled_activities_flag() {
+        return last_sync_down_scheduled_activities_flag;
+    }
+
+    public void setLast_sync_down_scheduled_activities_flag(String last_sync_down_scheduled_activities_flag) {
+        this.last_sync_down_scheduled_activities_flag = last_sync_down_scheduled_activities_flag;
+    }
+
+    public String getLast_sync_up_confirm_activities_flag() {
+        return last_sync_up_confirm_activities_flag;
+    }
+
+    public void setLast_sync_up_confirm_activities_flag(String last_sync_up_confirm_activities_flag) {
+        this.last_sync_up_confirm_activities_flag = last_sync_up_confirm_activities_flag;
+    }
+
+    public String getLast_sync_down_confirm_activities_flag() {
+        return last_sync_down_confirm_activities_flag;
+    }
+
+    public void setLast_sync_down_confirm_activities_flag(String last_sync_down_confirm_activities_flag) {
+        this.last_sync_down_confirm_activities_flag = last_sync_down_confirm_activities_flag;
+    }
+
+    public String getLast_sync_bgt_coaches() {
+        return last_sync_bgt_coaches;
+    }
+
+    public void setLast_sync_bgt_coaches(String last_sync_bgt_coaches) {
+        this.last_sync_bgt_coaches = last_sync_bgt_coaches;
     }
 }

@@ -164,6 +164,11 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_UP_PC_PWS_ACTIVITY_FLAGS_TABLE     = "last_sync_up_pc_pws_activities_flag";
     public static final String LAST_SYNC_DOWN_PC_PWS_ACTIVITY_FLAGS_TABLE   = "last_sync_down_pc_pws_activities_flag";
     public static final String LAST_SYNC_PWS_ACTIVITIES_CONTROLLER_TABLE    = "last_sync_pws_activities_controller";
+    public static final String LAST_SYNC_UP_SCHEDULED_ACTIVITY_FLAGS_TABLE  = "last_sync_up_scheduled_activities_flag";
+    public static final String LAST_SYNC_DOWN_SCHEDULED_ACTIVITY_FLAGS_TABLE= "last_sync_down_scheduled_activities_flag";
+    public static final String LAST_SYNC_UP_CONFIRM_ACTIVITY_FLAGS_TABLE    = "last_sync_up_confirm_activities_flag";
+    public static final String LAST_SYNC_DOWN_CONFIRM_ACTIVITY_FLAGS_TABLE  = "last_sync_down_confirm_activities_flag";
+    public static final String LAST_SYNC_BGT_COACHES_TABLE                  = "last_sync_bgt_coaches";
 
     /**
      * category column names

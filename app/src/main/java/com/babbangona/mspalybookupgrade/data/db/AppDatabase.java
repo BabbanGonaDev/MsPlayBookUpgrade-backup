@@ -355,6 +355,53 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE app_variables ADD COLUMN 'maximum_schedule_date' TEXT");
             database.execSQL("ALTER TABLE hg_activities_flag ADD COLUMN 'description' TEXT");
 
+            database.execSQL("CREATE TABLE IF NOT EXISTS schedule_threshing_activities_flag (" +
+                    "unique_field_id TEXT  NOT NULL," +
+                    "thresher TEXT," +
+                    "face_scan_flag TEXT," +
+                    "template TEXT," +
+                    "schedule_date TEXT," +
+                    "collection_center TEXT," +
+                    "phone_number TEXT," +
+                    "imei TEXT," +
+                    "app_version TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "date_logged TEXT," +
+                    "staff_id TEXT," +
+                    "sync_flag TEXT," +
+                    "reschedule_reason TEXT," +
+                    "ik_number TEXT," +
+                    "PRIMARY KEY(unique_field_id))"
+            );
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS confirm_threshing_activities_flag (" +
+                    "unique_field_id TEXT  NOT NULL," +
+                    "confirm_flag TEXT," +
+                    "confirm_date TEXT," +
+                    "imei TEXT," +
+                    "app_version TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "staff_id TEXT," +
+                    "used_code TEXT," +
+                    "sync_flag TEXT," +
+                    "ik_number TEXT," +
+                    "PRIMARY KEY(unique_field_id))"
+            );
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS bgt_coaches (" +
+                    "bgt_id TEXT  NOT NULL," +
+                    "coach_id TEXT," +
+                    "PRIMARY KEY(bgt_id))"
+            );
+
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_up_scheduled_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_scheduled_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_up_confirm_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_confirm_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_bgt_coaches' TEXT DEFAULT '2019-01-01 00:00:00'");
+
         }
     };
 
