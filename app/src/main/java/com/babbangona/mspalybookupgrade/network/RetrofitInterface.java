@@ -3,7 +3,10 @@ package com.babbangona.mspalybookupgrade.network;
 import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
 import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
+import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
+import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesFlagDownload;
+import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
@@ -22,6 +25,8 @@ import com.babbangona.mspalybookupgrade.network.object.PWSCategoryListDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.RFListDownload;
+import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivitiesFlagDownload;
+import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.ServerResponse;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 
@@ -79,6 +84,9 @@ public interface RetrofitInterface {
     @GET("downloadPWSActivityController")
     Call<PWSActivityControllerDownload> downloadPWSActivityController(@Query("last_synced_time") String last_synced_time);
 
+    @GET("downloadBGTCoaches")
+    Call<BGTCoachesDownload> downloadBGTCoaches(@Query("last_synced_time") String last_synced_time);
+
     @GET("downloadHarvestLocation")
     Call<HarvestLocationDownload> downloadHarvestLocation(@Query("last_synced_time") String last_synced_time);
 
@@ -133,6 +141,24 @@ public interface RetrofitInterface {
     Call<PCPWSActivitiesFlagDownload> downloadPCPWSActivityFlag(@Query("staff_id") String staff_id,
                                                               @Query("portfolio_list") String portfolio_list,
                                                               @Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadScheduledThreshingActivityFlag")
+    Call<ScheduledThreshingActivitiesFlagDownload> downloadScheduledThreshingActivityFlag(@Query("staff_id") String staff_id,
+                                                                                          @Query("portfolio_list") String portfolio_list,
+                                                                                          @Query("last_synced_time") String last_synced_time);
+
+    @FormUrlEncoded
+    @POST("uploadScheduledThreshingActivitiesRecord")
+    Call<List<ScheduledThreshingActivitiesUpload>> uploadScheduledThreshingActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
+
+    @GET("downloadConfirmThreshingActivityFlag")
+    Call<ConfirmThreshingActivitiesFlagDownload> downloadConfirmThreshingActivityFlag(@Query("staff_id") String staff_id,
+                                                                                        @Query("portfolio_list") String portfolio_list,
+                                                                                        @Query("last_synced_time") String last_synced_time);
+
+    @FormUrlEncoded
+    @POST("uploadConfirmThreshingActivitiesRecord")
+    Call<List<ConfirmThreshingActivitiesUpload>> uploadConfirmThreshingActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
 
     @FormUrlEncoded
     @POST("yourPHPName.php")

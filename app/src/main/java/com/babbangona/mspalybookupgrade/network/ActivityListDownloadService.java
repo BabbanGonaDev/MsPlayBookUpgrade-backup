@@ -2,7 +2,10 @@ package com.babbangona.mspalybookupgrade.network;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -14,7 +17,9 @@ import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
+import com.babbangona.mspalybookupgrade.data.db.entities.BGTCoaches;
 import com.babbangona.mspalybookupgrade.data.db.entities.Category;
+import com.babbangona.mspalybookupgrade.data.db.entities.ConfirmThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
@@ -30,12 +35,16 @@ import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.babbangona.mspalybookupgrade.data.db.entities.PictureSync;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
+import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
 import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
+import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
+import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesFlagDownload;
+import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
@@ -54,6 +63,8 @@ import com.babbangona.mspalybookupgrade.network.object.PWSCategoryListDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.RFActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.RFListDownload;
+import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivitiesFlagDownload;
+import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.ServerResponse;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
@@ -62,7 +73,13 @@ import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -113,6 +130,9 @@ public class ActivityListDownloadService extends IntentService {
         getCategoryDownload();
         getPWSActivitiesControllerDownload();
         getHarvestLocationDownload();
+        getScheduledThreshingActivitiesFlagDownload();
+        getConfirmThreshingActivitiesFlagDownload();
+        getBGTCoachesDownload();
         getAppVariablesDownload();
 
         File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_PICTURE_LOCATION);
@@ -134,6 +154,12 @@ public class ActivityListDownloadService extends IntentService {
         }
         if (appDatabase.pcpwsActivitiesFlagDao().getUnSyncedPCPWSActivitiesCount() > 0){
             syncUpPCPWSActivities();
+        }
+        if (appDatabase.scheduleThreshingActivitiesFlagDao().getUnSyncedScheduleThreshingActivitiesCount() > 0){
+            syncUpScheduledThreshingActivities();
+        }
+        if (appDatabase.confirmThreshingActivitiesFlagDao().getUnSyncedConfirmThreshingActivitiesCount() > 0){
+            syncUpConfirmThreshingActivities();
         }
 
         getStaffList();
@@ -421,7 +447,15 @@ public class ActivityListDownloadService extends IntentService {
                         }
                         if (membersList.size() > 0){
                             saveToMembersTable(membersList);
-                            saveToFieldsTable(fieldsList);if (getStaffCountLastSync() > 0){
+                            saveToFieldsTable(fieldsList);
+                            List<String> member_list = new ArrayList<>();
+                            for (Members members: membersList){
+                                downloadPictures(members.getUnique_member_id());
+                                sharedPrefs.setKeyProgressDialogStatus(0);
+                            }
+
+
+                            if (getStaffCountLastSync() > 0){
                                 appDatabase.lastSyncTableDao().updateLastSyncMembers(sharedPrefs.getStaffID(),msPlaybookInputDownload.getLast_sync_time());
                             }else{
                                 LastSyncTable lastSyncTable = new LastSyncTable();
@@ -519,6 +553,14 @@ public class ActivityListDownloadService extends IntentService {
 
     }
 
+    void downloadPictures(String member){
+        if(ImageStorage.checkIfImageExists(member, DatabaseStringConstants.MS_PLAYBOOK_INPUT_PICTURE_LOCATION,ActivityListDownloadService.this)) {
+            GetImages getImages = new GetImages(RetrofitClient.BASE_URL_FOR_PICTURES + "images/small_tfm_face/" + member + "_thumb.jpg",
+                    member, DatabaseStringConstants.MS_PLAYBOOK_INPUT_PICTURE_LOCATION, ActivityListDownloadService.this);
+            getImages.execute();
+        }
+    }
+
     void saveToFieldsTable(List<Fields> fieldsList){
         SaveFieldsTable saveFieldsTable = new SaveFieldsTable();
         saveFieldsTable.execute(fieldsList);
@@ -586,6 +628,198 @@ public class ActivityListDownloadService extends IntentService {
             }
 
             return null;
+        }
+    }
+
+
+
+    /**
+     * This class handles the download of pictures of Trust group Leaders.
+     */
+    @SuppressLint("StaticFieldLeak")
+    private static class GetImages extends AsyncTask<Object, Object, Object> {
+        private String requestUrl, imageName, folder_name;
+        //private ImageView view;
+        private Bitmap bitmap ;
+        private FileOutputStream fos;
+        Context mCtx;
+
+        private GetImages(String requestUrl, String image_name, String folder_name, Context context) {
+            this.requestUrl = requestUrl;
+            //this.view = view;
+            this.imageName = image_name ;
+            this.folder_name = folder_name ;
+            this.mCtx = context;
+        }
+
+        @Override
+        protected Object doInBackground(Object... objects) {
+            try {
+
+                Log.d("logger","getting_here|");
+
+                HttpURLConnection connection = null;
+                InputStream is = null;
+                ByteArrayOutputStream out = null;
+                try {
+                    connection = (HttpURLConnection) new URL(requestUrl).openConnection();
+                    is = connection.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                } catch (Throwable e) {
+                    if (!this.isCancelled()) {
+                        //error = new ImageError(e).setErrorCode(ImageError.ERROR_GENERAL_EXCEPTION);
+                        this.cancel(true);
+                    }
+                } finally {
+                    try {
+                        if (connection != null)
+                            connection.disconnect();
+                        if (out != null) {
+                            out.flush();
+                            out.close();
+                        }
+                        if (is != null)
+                            is.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            if(ImageStorage.checkIfImageExists(imageName,folder_name,mCtx)) {
+                //view.setImageBitmap(bitmap);
+
+                String result = ImageStorage.saveToSdCard(bitmap, imageName,folder_name,mCtx);
+                Log.d("storeResult",result+"");
+                if (result == null){
+                    Log.d("image_store","Null result");
+                }else if (result.equalsIgnoreCase("fileExists")){
+                    Log.d("image_store","Image did not save");
+                }else if (result.equalsIgnoreCase("success")){
+                    Log.d("image_store","Image saved");
+                }
+            }
+        }
+    }
+
+    public static class ImageStorage {
+
+        @SuppressWarnings("ResultOfMethodCallIgnored")
+        static String saveToSdCard(Bitmap bitmap, String filename, String folder_name, Context context) {
+
+            String stored = null;
+
+            File ChkImgDirectory;
+            String storageState = Environment.getExternalStorageState();
+            if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+                ChkImgDirectory = new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), folder_name);
+
+                File file, file3;
+                File file1 = new File(ChkImgDirectory.getAbsoluteFile(), filename + "_thumb.jpg");
+                File file2 = new File(ChkImgDirectory.getAbsoluteFile(), ".nomedia");
+                if (!ChkImgDirectory.exists() && !ChkImgDirectory.mkdirs()) {
+                    ChkImgDirectory.mkdir();
+                    file = file1;
+                    file3 = file2;
+                    if (!file3.exists()){
+                        try {
+                            FileOutputStream outNoMedia = new FileOutputStream(file3);
+                            outNoMedia.flush();
+                            outNoMedia.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (file.exists()){
+                        stored = "fileExists";
+                    }else{
+                        try {
+                            FileOutputStream out = new FileOutputStream(file);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                            out.flush();
+                            out.close();
+                            stored = "success";
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                } else {
+                    file = file1;
+                    file3 = file2;
+                    if (!file3.exists()){
+                        try {
+                            FileOutputStream outNoMedia = new FileOutputStream(file3);
+                            outNoMedia.flush();
+                            outNoMedia.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (file.exists()){
+                        stored = "fileExists";
+                    }else{
+                        try {
+                            FileOutputStream out = new FileOutputStream(file);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                            out.flush();
+                            out.close();
+                            stored = "success";
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            return stored;
+        }
+
+        static File getImage(String imageName, String folder_name, Context context) {
+
+            File mediaImage = null;
+            try {
+                String root;
+                root = Environment.getExternalStorageDirectory().getAbsoluteFile().toString();
+                File myDir = new File(root);
+                if (!myDir.exists())
+                    return null;
+
+                mediaImage = new File(myDir.getPath() + folder_name + imageName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return mediaImage;
+        }
+
+        static boolean checkIfImageExists(String imageName, String folder_name, Context context) {
+            Bitmap b = null;
+            File file = null;
+            try {
+                file = ImageStorage.getImage("/"+imageName+"_thumb.jpg","/"+folder_name,context);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                String path = null;
+                if (file != null) {
+                    path = file.getAbsolutePath();
+                }
+                if (path != null){
+                    b = BitmapFactory.decodeFile(path);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return b == null;
         }
     }
 
@@ -2226,7 +2460,7 @@ public class ActivityListDownloadService extends IntentService {
                         if (pwsCategoryLists.size() > 0){
                             saveToPWSCategoryListTable(pwsCategoryLists);
                             if (getStaffCountLastSync() > 0){
-                                appDatabase.lastSyncTableDao().updateLastSyncRFList(sharedPrefs.getStaffID(),pwsCategoryListDownload.getLast_sync_time());
+                                appDatabase.lastSyncTableDao().updateLastSyncPWSCategoryList(sharedPrefs.getStaffID(),pwsCategoryListDownload.getLast_sync_time());
                             }else{
                                 LastSyncTable lastSyncTable = new LastSyncTable();
                                 lastSyncTable.setLast_sync_rf_list(pwsCategoryListDownload.getLast_sync_time());
@@ -2902,6 +3136,573 @@ public class ActivityListDownloadService extends IntentService {
         }
     }
 
+    public void getScheduledThreshingActivitiesFlagDownload() {
+
+        String last_synced = getLastSyncScheduledThreshingActivities();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<ScheduledThreshingActivitiesFlagDownload> call = retrofitInterface.downloadScheduledThreshingActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<ScheduledThreshingActivitiesFlagDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<ScheduledThreshingActivitiesFlagDownload> call,
+                                   @NonNull Response<ScheduledThreshingActivitiesFlagDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    ScheduledThreshingActivitiesFlagDownload scheduledThreshingActivitiesFlagDownload = response.body();
+
+                    if (scheduledThreshingActivitiesFlagDownload != null) {
+                        List<ScheduledThreshingActivitiesFlag> scheduledThreshingActivitiesFlagList = scheduledThreshingActivitiesFlagDownload.getDownload_list();
+                        if (scheduledThreshingActivitiesFlagList.size() > 0){
+                            saveToScheduledThreshingActivitiesTable(scheduledThreshingActivitiesFlagList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncDownScheduledThreshingActivitiesFlag(sharedPrefs.getStaffID(),scheduledThreshingActivitiesFlagDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_scheduled_activities_flag(scheduledThreshingActivitiesFlagDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
+                                "Scheduled Activities Download",
+                                "1",
+                                returnRemark(scheduledThreshingActivitiesFlagList.size()),
+                                scheduledThreshingActivitiesFlagDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
+                                "Scheduled Activities Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
+                            "Scheduled Activities Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ScheduledThreshingActivitiesFlagDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_scheduled_download", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
+                        "Scheduled Activities Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToScheduledThreshingActivitiesTable(List<ScheduledThreshingActivitiesFlag> scheduledThreshingActivitiesFlagList){
+        SaveScheduledThreshingActivitiesFlagTable saveScheduledThreshingActivitiesFlagTable = new SaveScheduledThreshingActivitiesFlagTable();
+        saveScheduledThreshingActivitiesFlagTable.execute(scheduledThreshingActivitiesFlagList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveScheduledThreshingActivitiesFlagTable extends AsyncTask<List<ScheduledThreshingActivitiesFlag>, Void, Void> {
+
+
+        private final String TAG = SaveScheduledThreshingActivitiesFlagTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<ScheduledThreshingActivitiesFlag>... params) {
+
+            List<ScheduledThreshingActivitiesFlag> scheduledThreshingActivitiesFlagList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.scheduleThreshingActivitiesFlagDao().insert(scheduledThreshingActivitiesFlagList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    public void getConfirmThreshingActivitiesFlagDownload() {
+
+        String last_synced = getLastSyncConfirmThreshingActivities();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<ConfirmThreshingActivitiesFlagDownload> call = retrofitInterface.downloadConfirmThreshingActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<ConfirmThreshingActivitiesFlagDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<ConfirmThreshingActivitiesFlagDownload> call,
+                                   @NonNull Response<ConfirmThreshingActivitiesFlagDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    ConfirmThreshingActivitiesFlagDownload confirmThreshingActivitiesFlagDownload = response.body();
+
+                    if (confirmThreshingActivitiesFlagDownload != null) {
+                        List<ConfirmThreshingActivitiesFlag> confirmThreshingActivitiesFlagList = confirmThreshingActivitiesFlagDownload.getDownload_list();
+                        if (confirmThreshingActivitiesFlagList.size() > 0){
+                            saveToConfirmThreshingActivitiesTable(confirmThreshingActivitiesFlagList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncDownConfirmThreshingActivitiesFlag(sharedPrefs.getStaffID(),confirmThreshingActivitiesFlagDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_confirm_activities_flag(confirmThreshingActivitiesFlagDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
+                                "Confirm Activities Download",
+                                "1",
+                                returnRemark(confirmThreshingActivitiesFlagList.size()),
+                                confirmThreshingActivitiesFlagDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
+                                "Confirm Activities Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
+                            "Confirm Activities Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ConfirmThreshingActivitiesFlagDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_confirm_download", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
+                        "Confirm Activities Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToConfirmThreshingActivitiesTable(List<ConfirmThreshingActivitiesFlag> confirmThreshingActivitiesFlagList){
+        SaveConfirmThreshingActivitiesFlagTable saveConfirmThreshingActivitiesFlagTable = new SaveConfirmThreshingActivitiesFlagTable();
+        saveConfirmThreshingActivitiesFlagTable.execute(confirmThreshingActivitiesFlagList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveConfirmThreshingActivitiesFlagTable extends AsyncTask<List<ConfirmThreshingActivitiesFlag>, Void, Void> {
+
+
+        private final String TAG = SaveConfirmThreshingActivitiesFlagTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<ConfirmThreshingActivitiesFlag>... params) {
+
+            List<ConfirmThreshingActivitiesFlag> confirmThreshingActivitiesFlagList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.confirmThreshingActivitiesFlagDao().insert(confirmThreshingActivitiesFlagList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    public void getBGTCoachesDownload() {
+
+        String last_synced = getLastSyncBGTCoaches();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<BGTCoachesDownload> call = retrofitInterface.downloadBGTCoaches(last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<BGTCoachesDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<BGTCoachesDownload> call,
+                                   @NonNull Response<BGTCoachesDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    BGTCoachesDownload bgtCoachesDownload = response.body();
+
+                    if (bgtCoachesDownload != null) {
+                        List<BGTCoaches> bgtCoachesList = bgtCoachesDownload.getDownload_list();
+                        if (bgtCoachesList.size() > 0){
+                            saveToBGTCoachesTable(bgtCoachesList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncBGTCoaches(sharedPrefs.getStaffID(),bgtCoachesDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_bgt_coaches(bgtCoachesDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.BGT_COACHES_TABLE+"_download",
+                                "BGT Coaches Download",
+                                "1",
+                                returnRemark(bgtCoachesList.size()),
+                                bgtCoachesDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.BGT_COACHES_TABLE+"_download",
+                                "BGT Coaches Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.BGT_COACHES_TABLE+"_download",
+                            "BGT Coaches Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<BGTCoachesDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_bgt_coaches_download", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.BGT_COACHES_TABLE+"_download",
+                        "BGT Coaches Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToBGTCoachesTable(List<BGTCoaches> bgtCoachesList){
+        SaveBGTCoachesTable saveBGTCoachesTable = new SaveBGTCoachesTable();
+        saveBGTCoachesTable.execute(bgtCoachesList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveBGTCoachesTable extends AsyncTask<List<BGTCoaches>, Void, Void> {
+
+
+        private final String TAG = SaveBGTCoachesTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<BGTCoaches>... params) {
+
+            List<BGTCoaches> bgtCoachesList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.bgtCoachesDao().insert(bgtCoachesList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    private void syncUpScheduledThreshingActivities() {
+        List<ScheduledThreshingActivitiesFlag> scheduledThreshingActivitiesFlagList = appDatabase.scheduleThreshingActivitiesFlagDao().getUnSyncedScheduleThreshingActivities();
+        String composed_json = new Gson().toJson(scheduledThreshingActivitiesFlagList);
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<List<ScheduledThreshingActivitiesUpload>> call = retrofitInterface.uploadScheduledThreshingActivitiesRecord(composed_json, sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<List<ScheduledThreshingActivitiesUpload>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<ScheduledThreshingActivitiesUpload>> call, @NonNull Response<List<ScheduledThreshingActivitiesUpload>> response) {
+                if (response.isSuccessful()) {
+
+                    List<ScheduledThreshingActivitiesUpload> scheduledThreshingActivitiesUploadList = response.body();
+                    if (scheduledThreshingActivitiesUploadList == null){
+                        Log.d("result", "null");
+                        saveToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
+                                "Scheduled Activities Upload",
+                                "0",
+                                "Upload null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else if(scheduledThreshingActivitiesUploadList.size() == 0){
+                        Log.d("result", "0");
+                        saveToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
+                                "Scheduled Activities Upload",
+                                "0",
+                                "Upload empty",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else {
+                        AsyncTask.execute(()->{
+                            for (int i = 0; i < scheduledThreshingActivitiesUploadList.size(); i++) {
+                                ScheduledThreshingActivitiesUpload scheduledThreshingActivitiesUpload = scheduledThreshingActivitiesUploadList.get(i);
+                                appDatabase.scheduleThreshingActivitiesFlagDao().updateScheduledThreshingActivitiesSyncFlag(scheduledThreshingActivitiesUpload.getUnique_field_id());
+                                insetToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
+                                        "Scheduled Activities Upload",
+                                        "1",
+                                        returnRemark(scheduledThreshingActivitiesUploadList.size()),
+                                        scheduledThreshingActivitiesUploadList.get(0).getLast_synced()
+
+                                );
+                            }
+                        });
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncUpScheduleActivitiesFlag(sharedPrefs.getStaffID(),scheduledThreshingActivitiesUploadList.get(0).getLast_synced());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_up_scheduled_activities_flag(scheduledThreshingActivitiesUploadList.get(0).getLast_synced());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                        }
+
+                    }
+                } else {
+                    Log.i("tobi_schedule", "onResponse ERROR: " + response.body());
+                    int sc = response.code();
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            break;
+                        case 401:
+                            Log.e("Error 401", "Bad Request");
+                            break;
+                        case 403:
+                            Log.e("Error 403", "Bad Request");
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            break;
+                        case 500:
+                            Log.e("Error 500", "Bad Request");
+                            break;
+                        case 501:
+                            Log.e("Error 501", "Bad Request");
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error " + response.code());
+                            break;
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
+                            "Scheduled Activities Upload",
+                            "0",
+                            "Upload error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ScheduledThreshingActivitiesUpload>> call, @NonNull Throwable t) {
+                Log.d("TobiNewScheduleActivities", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
+                        "Scheduled Activities Upload",
+                        "0",
+                        "Upload failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+    }
+
+    private void syncUpConfirmThreshingActivities() {
+        List<ConfirmThreshingActivitiesFlag> confirmThreshingActivitiesFlagList = appDatabase.confirmThreshingActivitiesFlagDao().getUnSyncedConfirmThreshingActivities();
+        String composed_json = new Gson().toJson(confirmThreshingActivitiesFlagList);
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<List<ConfirmThreshingActivitiesUpload>> call = retrofitInterface.uploadConfirmThreshingActivitiesRecord(composed_json, sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<List<ConfirmThreshingActivitiesUpload>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<ConfirmThreshingActivitiesUpload>> call, @NonNull Response<List<ConfirmThreshingActivitiesUpload>> response) {
+                if (response.isSuccessful()) {
+
+                    List<ConfirmThreshingActivitiesUpload> confirmThreshingActivitiesUploadList = response.body();
+                    if (confirmThreshingActivitiesUploadList == null){
+                        Log.d("result", "null");
+                        saveToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
+                                "Confirm Activities Upload",
+                                "0",
+                                "Upload null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else if(confirmThreshingActivitiesUploadList.size() == 0){
+                        Log.d("result", "0");
+                        saveToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
+                                "Confirm Activities Upload",
+                                "0",
+                                "Upload empty",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else {
+                        AsyncTask.execute(()->{
+                            for (int i = 0; i < confirmThreshingActivitiesUploadList.size(); i++) {
+                                ConfirmThreshingActivitiesUpload confirmThreshingActivitiesUpload = confirmThreshingActivitiesUploadList.get(i);
+                                appDatabase.confirmThreshingActivitiesFlagDao().updateConfirmThreshingActivitiesSyncFlag(confirmThreshingActivitiesUpload.getUnique_field_id());
+                                insetToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
+                                        "Confirm Activities Upload",
+                                        "1",
+                                        returnRemark(confirmThreshingActivitiesUploadList.size()),
+                                        confirmThreshingActivitiesUploadList.get(0).getLast_synced()
+
+                                );
+                            }
+                        });
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncUpScheduleActivitiesFlag(sharedPrefs.getStaffID(),confirmThreshingActivitiesUploadList.get(0).getLast_synced());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_up_confirm_activities_flag(confirmThreshingActivitiesUploadList.get(0).getLast_synced());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                        }
+
+                    }
+                } else {
+                    Log.i("tobi_confirm", "onResponse ERROR: " + response.body());
+                    int sc = response.code();
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            break;
+                        case 401:
+                            Log.e("Error 401", "Bad Request");
+                            break;
+                        case 403:
+                            Log.e("Error 403", "Bad Request");
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            break;
+                        case 500:
+                            Log.e("Error 500", "Bad Request");
+                            break;
+                        case 501:
+                            Log.e("Error 501", "Bad Request");
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error " + response.code());
+                            break;
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
+                            "Confirm Activities Upload",
+                            "0",
+                            "Upload error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ConfirmThreshingActivitiesUpload>> call, @NonNull Throwable t) {
+                Log.d("TobiNewScheduleActivities", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
+                        "Confirm Activities Upload",
+                        "0",
+                        "Upload failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+    }
+
     String getLastSyncTimeStaffList(){
         String last_sync_time;
         try {
@@ -3113,6 +3914,48 @@ public class ActivityListDownloadService extends IntentService {
         String last_sync_time;
         try {
             last_sync_time = appDatabase.lastSyncTableDao().getLastSyncPWSActivitiesController(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncScheduledThreshingActivities(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownScheduledThreshingActivitiesFlag(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncConfirmThreshingActivities(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownConfirmThreshingActivitiesFlag(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncBGTCoaches(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncBGTCoaches(sharedPrefs.getStaffID());
         } catch (Exception e) {
             e.printStackTrace();
             last_sync_time = "2019-01-01 00:00:00";

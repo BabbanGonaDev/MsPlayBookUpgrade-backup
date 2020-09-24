@@ -13,18 +13,24 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
+import com.babbangona.mspalybookupgrade.ThreshingViews.FieldList;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
-import com.babbangona.mspalybookupgrade.utils.VerifyActivity;
+import com.babbangona.mspalybookupgrade.utils.ReVerifyActivity;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,15 +96,8 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
             setTextController(tv_village, memberListRecyclerModel.getVillage());
             setTextController(tv_ik_number, memberListRecyclerModel.getIk_number());
             setLeader_image(leader_image,memberListRecyclerModel.getUnique_member_id(),mCtx);
+            setAssignment_flag(memberListRecyclerModel.getStaff_id(), mCtx);
             card_container.setOnClickListener((view)->submit(memberListRecyclerModel));
-
-        }
-
-        void submit(MemberListRecyclerModel memberListRecyclerModel){
-
-            Intent intent = new Intent (mCtx, VerifyActivity.class);
-            sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
-            mCtx.startActivity(intent);
 
         }
 
@@ -123,6 +122,109 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 iv_picture.setImageResource(R.drawable.bg_logo);
             }
         }
+
+        void setAssignment_flag(String staff_id, Context context){
+            if (staff_id != null) {
+                if (staff_id.equalsIgnoreCase(sharedPrefs.getStaffID())){
+                    assignment_flag.setBackground(ContextCompat.getDrawable(context,R.drawable.assignment_green));
+                }else{
+                    assignment_flag.setBackground(ContextCompat.getDrawable(context,R.drawable.assignment_red));
+                }
+            }
+        }
+    }
+
+    private void showDialogForExit(Context context, MemberListRecyclerModel memberListRecyclerModel) {
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showDialogForExitBody(builder, context, memberListRecyclerModel);
+    }
+
+    private void showDialogForExitBody(MaterialAlertDialogBuilder builder, Context context, MemberListRecyclerModel memberListRecyclerModel) {
+
+        builder.setTitle(context.getResources().getString(R.string.thresher_title))
+                .setIcon(context.getResources().getDrawable(R.drawable.ic_smiley_face))
+                .setMessage(context.getResources().getString(R.string.thresher_question))
+                .setPositiveButton(context.getResources().getString(R.string.thresher_bg), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                    sharedPrefs.setKeyThresher("BG");
+                    Intent intent = new Intent (mCtx, ReVerifyActivity.class);
+                    sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
+                    mCtx.startActivity(intent);
+                })
+                .setNeutralButton(context.getResources().getString(R.string.thresher_self), (dialog, which) -> {
+                    dialog.dismiss();
+                    sharedPrefs.setKeyThresher("Self");
+                    Intent intent = new Intent (mCtx, ReVerifyActivity.class);
+                    sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
+                    mCtx.startActivity(intent);
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    void submit(MemberListRecyclerModel memberListRecyclerModel){
+
+        if (memberListRecyclerModel.getStaff_id() != null) {
+            if (memberListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())){
+                String route = sharedPrefs.getKeyThreshingActivityRoute();
+                switch (route){
+                    case "1":
+                        showDialogForExit(mCtx,memberListRecyclerModel);
+                        break;
+                    case "2":
+                    case "3":
+                    case "4":
+                        sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
+                        mCtx.startActivity(new Intent (mCtx, FieldList.class));
+                        break;
+                    default:
+                        sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
+                        mCtx.startActivity(new Intent (mCtx, ComingSoon.class));
+                        break;
+                }
+            }else{
+                //You cannot schedule for this guy
+                showScheduleProblemStart(mCtx.getResources().getString(R.string.wrong_member_schedule),mCtx);
+            }
+        } else {
+            String route = sharedPrefs.getKeyThreshingActivityRoute();
+            showScheduleProblemStart(mCtx.getResources().getString(R.string.wrong_member_schedule),mCtx);
+            switch (route){
+                case "1":
+                    showDialogForExit(mCtx,memberListRecyclerModel);
+                    break;
+                case "2":
+                case "3":
+                case "4":
+                    sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
+                    mCtx.startActivity(new Intent (mCtx, FieldList.class));
+                    break;
+                default:
+                    sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
+                    mCtx.startActivity(new Intent (mCtx, ComingSoon.class));
+                    break;
+            }
+        }
+    }
+
+    private void showScheduleProblemStart(String message, Context context){
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showScheduleProblemBody(builder, message, context);
+    }
+
+    private void showScheduleProblemBody(MaterialAlertDialogBuilder builder, String message,
+                                     Context context) {
+
+        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_crying))
+                .setTitle(context.getResources().getString(R.string.oops))
+                .setMessage(message)
+                .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
     }
 
     private static DiffUtil.ItemCallback<MemberListRecyclerModel> USER_DIFF =

@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.utils;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import com.babbangona.bgfr.BGFRMode;
@@ -9,6 +10,8 @@ import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.ThreshingViews.FieldList;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+
+import org.jetbrains.annotations.NotNull;
 
 public class VerifyActivity extends CustomLuxandActivity {
 
@@ -20,9 +23,8 @@ public class VerifyActivity extends CustomLuxandActivity {
     @Override
     public Boolean setDetectFakeFaces() {
         //SET TO TRUE WHEN WE ARE READY TO DETECT FAKE FACES
-        return false;
+        return true;
     }
-
 
     @Override
     public Long setTimer() {
@@ -46,16 +48,12 @@ public class VerifyActivity extends CustomLuxandActivity {
                 break;
             case ErrorCodes.KEY_NO_FACE_FOUND:
                 showErrorAndClose(this.getResources().getString(R.string.no_face_found));
-//                myDialog(this.getResources().getString(R.string.no_face_found));
                 break;
             case ErrorCodes.KEY_BLINK_NOT_FOUND:
                 showErrorAndClose(this.getResources().getString(R.string.blink_not_found));
-//                myDialog(this.getResources().getString(R.string.blink_not_found));
                 break;
             case ErrorCodes.KEY_FACE_NOT_MATCHED:
-                /*Intent i = new Intent(getApplicationContext(), ReverifyActivity.class);
-                startActivity(i);*/
-                finish();
+                showErrorAndClose(this.getResources().getString(R.string.no_face_matched));
                 break;
         }
 
@@ -76,9 +74,10 @@ public class VerifyActivity extends CustomLuxandActivity {
     @Override
     public void Authenticated() {
         StopTimer();
-
-        startActivity(new Intent(getApplicationContext(), FieldList.class));
-        finish();
+        Intent intentMessage = new Intent();
+        intentMessage.putExtra("RESULT",1);
+        this.setResult(Activity.RESULT_OK,intentMessage);
+        this.finish();
     }
 
     @Override
@@ -86,15 +85,13 @@ public class VerifyActivity extends CustomLuxandActivity {
 
     }
 
-//    public void save(String template, String pile) {
-//
-//    }
-
+    @NotNull
     @Override
     public String buttonText() {
         return getString(R.string.start_verify);
     }
 
+    @NotNull
     @Override
     public String headerText() {
         return getString(R.string.verify);

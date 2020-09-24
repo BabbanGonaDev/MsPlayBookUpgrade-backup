@@ -122,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
                 activityLists.add(new ActivityList("4","en",
                         "Set Portfolio", "com.babbangona.mspalybookupgrade.SetPortfolio",
                         "1","PC","0"));
+                activityLists.add(new ActivityList("7","en",
+                        "Threshing Activity", "com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingActivity",
+                        "1","BGT","0"));
                 appDatabase.activityListDao().insert(activityLists);
 
                 List<PWSCategoryList> pwsCategoryLists = new ArrayList<>();

@@ -52,12 +52,15 @@ public class Fields {
     @ColumnInfo(name = DatabaseStringConstants.COL_CROP_TYPE_FIELDS)
     private String crop_type;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_CODE)
+    private String field_code;
+
     public Fields() {
     }
 
     public Fields(@NonNull String unique_field_id, String unique_member_id, String field_size,
                   String staff_id, String middle, String min_lat, String max_lat, String min_lng,
-                  String max_lng, String deactivate, String mss, String crop_type) {
+                  String max_lng, String deactivate, String mss, String crop_type, String field_code) {
         this.unique_field_id = unique_field_id;
         this.unique_member_id = unique_member_id;
         this.field_size = field_size;
@@ -70,6 +73,7 @@ public class Fields {
         this.deactivate = deactivate;
         this.mss = mss;
         this.crop_type = crop_type;
+        this.field_code = field_code;
     }
 
     @NotNull
@@ -167,6 +171,14 @@ public class Fields {
 
     public void setCrop_type(String crop_type) {
         this.crop_type = crop_type;
+    }
+
+    public String getField_code() {
+        return field_code;
+    }
+
+    public void setField_code(String field_code) {
+        this.field_code = field_code;
     }
 
     public static Fields fromContentValues(ContentValues contentValues) {

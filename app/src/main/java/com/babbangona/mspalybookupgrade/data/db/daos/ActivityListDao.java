@@ -15,7 +15,6 @@ import java.util.List;
 @Dao
 public interface ActivityListDao {
 
-
     @Query(" SELECT * FROM activity_list WHERE deactivated = '0' AND LOWER(user_category) = :user_category " +
             "AND language_id = :language_id ORDER BY activity_id ASC ")
     LiveData<List<ActivityList>> getAllActivityList(String language_id, String user_category);

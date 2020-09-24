@@ -3,6 +3,7 @@
     <item>
         <shape>
             <solid android:color="@color/view_green"/>
+            <corners android:radius="@dimen/dimen_5dp"/>
         </shape>
     </item>
 

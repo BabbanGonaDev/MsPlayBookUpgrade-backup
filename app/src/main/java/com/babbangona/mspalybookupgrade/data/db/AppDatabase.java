@@ -11,7 +11,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.daos.ActivityListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.AppVariablesDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.BGTCoachesDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.CategoryDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.ConfirmThreshingActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGListDao;
@@ -27,11 +29,14 @@ import com.babbangona.mspalybookupgrade.data.db.daos.PWSCategoryListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.PictureSyncDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.RFActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.RFListDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.ScheduleThreshingActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.SyncSummaryDao;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
+import com.babbangona.mspalybookupgrade.data.db.entities.BGTCoaches;
 import com.babbangona.mspalybookupgrade.data.db.entities.Category;
+import com.babbangona.mspalybookupgrade.data.db.entities.ConfirmThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
@@ -47,6 +52,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.babbangona.mspalybookupgrade.data.db.entities.PictureSync;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
+import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
 
@@ -55,7 +61,8 @@ import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
         Members.class, HGActivitiesFlag.class, HGList.class, Logs.class, LastSyncTable.class, Category.class,
         SyncSummary.class, HarvestLocationsTable.class, AppVariables.class, RFActivitiesFlag.class,
         RFList.class, PictureSync.class, PWSActivitiesFlag.class, PWSCategoryList.class,
-        PCPWSActivitiesFlag.class, PWSActivityController.class},
+        PCPWSActivitiesFlag.class, PWSActivityController.class,
+        ScheduledThreshingActivitiesFlag.class, BGTCoaches.class, ConfirmThreshingActivitiesFlag.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -82,6 +89,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PWSCategoryListDao pwsCategoryListDao();
     public abstract PCPWSActivitiesFlagDao pcpwsActivitiesFlagDao();
     public abstract PWSActivityControllerDao pwsActivityControllerDao();
+    public abstract ScheduleThreshingActivitiesFlagDao scheduleThreshingActivitiesFlagDao();
+    public abstract BGTCoachesDao bgtCoachesDao();
+    public abstract ConfirmThreshingActivitiesFlagDao confirmThreshingActivitiesFlagDao();
 
     /**
      * Return instance of database creation
@@ -335,6 +345,63 @@ public abstract class AppDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
 
             database.execSQL("ALTER TABLE members ADD COLUMN 'template' TEXT");
+            database.execSQL("ALTER TABLE members ADD COLUMN 'role' TEXT");
+            database.execSQL("ALTER TABLE members ADD COLUMN 'bgt_id' TEXT DEFAULT 'T-10000000000000BB'");
+            database.execSQL("ALTER TABLE members ADD COLUMN 'coach_id' TEXT DEFAULT 'T-10000000000000AA'");
+            database.execSQL("ALTER TABLE fields ADD COLUMN 'field_code' TEXT ");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'fields_travel_time' TEXT");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'average_transition_time' TEXT");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'time_per_ha' TEXT");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'maximum_schedule_date' TEXT");
+            database.execSQL("ALTER TABLE hg_activities_flag ADD COLUMN 'description' TEXT");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS schedule_threshing_activities_flag (" +
+                    "unique_field_id TEXT  NOT NULL," +
+                    "thresher TEXT," +
+                    "face_scan_flag TEXT," +
+                    "template TEXT," +
+                    "schedule_date TEXT," +
+                    "collection_center TEXT," +
+                    "phone_number TEXT," +
+                    "imei TEXT," +
+                    "app_version TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "date_logged TEXT," +
+                    "staff_id TEXT," +
+                    "sync_flag TEXT," +
+                    "reschedule_reason TEXT," +
+                    "ik_number TEXT," +
+                    "PRIMARY KEY(unique_field_id))"
+            );
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS confirm_threshing_activities_flag (" +
+                    "unique_field_id TEXT  NOT NULL," +
+                    "confirm_flag TEXT," +
+                    "confirm_date TEXT," +
+                    "imei TEXT," +
+                    "app_version TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "staff_id TEXT," +
+                    "used_code TEXT," +
+                    "sync_flag TEXT," +
+                    "ik_number TEXT," +
+                    "PRIMARY KEY(unique_field_id))"
+            );
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS bgt_coaches (" +
+                    "bgt_id TEXT  NOT NULL," +
+                    "coach_id TEXT," +
+                    "PRIMARY KEY(bgt_id))"
+            );
+
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_up_scheduled_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_scheduled_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_up_confirm_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_confirm_activities_flag' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_bgt_coaches' TEXT DEFAULT '2019-01-01 00:00:00'");
+
         }
     };
 

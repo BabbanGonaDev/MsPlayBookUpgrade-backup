@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 class RetrofitClient {
 
     private static final String BASE_URL = "https://apps.babbangona.com/mkt_app/mkt_slim/public/api/v1/";
+    static final String BASE_URL_FOR_PICTURES = "https://apps.babbangona.com/mkt_app/mkt_slim/public/";
 //    private static final String BASE_URL = "http://192.168.8.101:8012/project/src/public/api/v1/";
     private static Retrofit retrofit = null;
 
