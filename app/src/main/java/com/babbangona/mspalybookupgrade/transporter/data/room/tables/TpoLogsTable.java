@@ -19,9 +19,9 @@ public class TpoLogsTable {
     private Integer instant_payment_flag;
     @NonNull
     private String date_logged;
-    private String sync_flag;
+    private Integer sync_flag;
 
-    public TpoLogsTable(@NonNull String member_id, @NonNull Integer quantity, String transported_by, @NonNull String transporter_id, String voucher_id, Integer voucher_id_flag, String cc_id, Integer instant_payment_flag, @NonNull String date_logged, String sync_flag) {
+    public TpoLogsTable(@NonNull String member_id, @NonNull Integer quantity, String transported_by, @NonNull String transporter_id, String voucher_id, Integer voucher_id_flag, String cc_id, Integer instant_payment_flag, @NonNull String date_logged, Integer sync_flag) {
         this.member_id = member_id;
         this.quantity = quantity;
         this.transported_by = transported_by;
@@ -74,7 +74,7 @@ public class TpoLogsTable {
         return date_logged;
     }
 
-    public String getSync_flag() {
+    public Integer getSync_flag() {
         return sync_flag;
     }
 }

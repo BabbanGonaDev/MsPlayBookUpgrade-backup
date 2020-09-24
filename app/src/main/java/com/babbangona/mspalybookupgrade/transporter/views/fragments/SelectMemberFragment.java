@@ -216,7 +216,7 @@ public class SelectMemberFragment extends Fragment implements SearchView.OnQuery
                 "N/A",
                 0,
                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).format(new Date()),
-                "0");
+                0);
 
         new AsyncTask<Void, Void, Void>() {
             @Override

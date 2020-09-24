@@ -112,6 +112,7 @@ public class TransporterHomeActivity extends AppCompatActivity {
         });
 
         binding.btnConfirmTransporter.setOnClickListener(v -> {
+            session.CLEAR_BOOKING_SESSION();
             startActivity(new Intent(TransporterHomeActivity.this, BookingActivity.class));
         });
 

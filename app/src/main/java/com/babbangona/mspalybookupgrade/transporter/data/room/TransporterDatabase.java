@@ -125,7 +125,7 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     "cc_id TEXT, " +
                     "instant_payment_flag INTEGER, " +
                     "date_logged TEXT NOT NULL, " +
-                    "sync_flag TEXT, " +
+                    "sync_flag INTEGER, " +
                     "PRIMARY KEY(member_id, quantity, transporter_id, date_logged))");
 
             //Create Tpo Logs.
@@ -138,7 +138,7 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     "cc_id TEXT, " +
                     "instant_payment_flag INTEGER, " +
                     "date_logged TEXT NOT NULL, " +
-                    "sync_flag TEXT, " +
+                    "sync_flag INTEGER, " +
                     "PRIMARY KEY(member_id, quantity, transporter_id, date_logged))");
 
             //Create Temp Transporter Logs
@@ -148,8 +148,16 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     "date_updated TEXT, " +
                     "sync_flag INTEGER, " +
                     "PRIMARY KEY(temp_transporter_id))");
+
+            //Create Favourites table
+            db.execSQL("CREATE TABLE favourites_table (staff_id TEXT NOT NULL, " +
+                    "phone_number TEXT NOT NULL, " +
+                    "active_flag INTEGER, " +
+                    "sync_flag INTEGER, " +
+                    "PRIMARY KEY(staff_id, phone_number))");
         }
     };
+
 
     //Init of instance.
     public static TransporterDatabase getInstance(Context context) {

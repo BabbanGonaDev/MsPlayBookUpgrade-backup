@@ -169,7 +169,7 @@ public class DestinationActivity extends AppCompatActivity {
                 session.GET_SELECTED_CC_ID(),
                 0,
                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).format(new Date()),
-                "0");
+                0);
 
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -199,6 +199,7 @@ public class DestinationActivity extends AppCompatActivity {
 
         binding.btnPrimary.setOnClickListener(v -> {
             //Go Home
+            session.CLEAR_BOOKING_SESSION();
             startActivity(new Intent(DestinationActivity.this, BookingActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         });
