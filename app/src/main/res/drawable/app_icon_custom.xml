@@ -2,13 +2,12 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/view_green"/>
-            <corners android:radius="@dimen/dimen_5dp"/>
+            <solid android:color="@color/appPrimaryDark"/>
         </shape>
     </item>
 
     <item
-        android:drawable="@drawable/ic_baseline_person_outline_24"
+        android:drawable="@drawable/ic_book"
         android:gravity="center">
     </item>
 </layer-list>

@@ -474,7 +474,7 @@ public class CustomDialogFragment extends DialogFragment {
                 appDatabase.hgActivitiesFlagDao().insert(new HGActivitiesFlag(
                         hgFieldListRecyclerModel.getUnique_field_id(), hg_selected,activity_date,
                         flag, sharedPrefs.getStaffID(),"0",hgFieldListRecyclerModel.getIk_number(),
-                        hgFieldListRecyclerModel.getCrop_type(),getDate("spread")));
+                        hgFieldListRecyclerModel.getCrop_type(),getDate("spread"),""));
 
                 appDatabase.logsDao().insert(new Logs(hgFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                         initial_activity,getDate("normal"),sharedPrefs.getStaffRole(),

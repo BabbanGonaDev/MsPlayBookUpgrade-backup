@@ -127,7 +127,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/select_collection_center_title"
+                    android:text="@string/select_member_phone_number_title"
                     android:textColor="@color/text_color_black"
                     android:textSize="@dimen/dimen_20sp"
                     android:textStyle="bold"

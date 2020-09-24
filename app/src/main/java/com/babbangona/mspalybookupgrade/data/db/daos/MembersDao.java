@@ -24,19 +24,20 @@ public abstract class MembersDao {
     @Query(" SELECT template FROM members WHERE unique_member_id = :unique_member_id ")
     public abstract String getMemberTemplate(String unique_member_id);
 
+    @Query(" UPDATE members SET coach_id = 'T-10000000000000AA'")
+    public abstract void updateCoach();
+
     //String unique_member_id, String member_name, String role, String village, String ik_number, String member_r_id
 
-    @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, a.staff_id," +
+    @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, b.bgt_id as staff_id," +
             "b.village_name as village, b.ik_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
-            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
-            "WHERE a.mss = :mss AND a.deactivate = '0' ")
+            "FROM members b WHERE b.coach_id = :mss ")
     public abstract DataSource.Factory<Integer, MemberListRecyclerModel> getMemberListByCoach(String mss);
 
-    @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, " +
+    @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, b.bgt_id as staff_id," +
             "b.village_name as village, b.ik_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
-            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
-            "WHERE a.mss = :mss AND LOWER(b.first_name || ' ' || b.last_name || b.phone_number || " +
-            "b.village_name || b.ik_number || 'R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:search) AND a.deactivate = '0' ")
+            "FROM members b WHERE b.coach_id = :mss AND LOWER(b.first_name || ' ' || b.last_name || b.phone_number || " +
+            "b.village_name || b.ik_number || 'R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:search) ")
     public abstract DataSource.Factory<Integer, MemberListRecyclerModel> getMemberListBySearch(String mss, String search);
 
     /**

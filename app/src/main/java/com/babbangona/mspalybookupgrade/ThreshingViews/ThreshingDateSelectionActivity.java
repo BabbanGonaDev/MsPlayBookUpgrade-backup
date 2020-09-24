@@ -11,27 +11,35 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
+import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
+import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -39,6 +47,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -106,10 +117,10 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
     TextView bottom_sheet_phone_number;
 
     @BindView(R.id.btnCancel)
-    Button btnCancel;
+    MaterialButton btnCancel;
 
     @BindView(R.id.btnConfirm)
-    Button btnConfirm;
+    MaterialButton btnConfirm;
 
     private BottomSheetBehavior sheetBehavior;
 
@@ -130,6 +141,8 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
     ProgressDialog locationDialog;
     LocationManager locationManager;
     final long MIN_LOC_UPDATE_TIME = 500;
+
+    private GPSController.LocationGetter locationGetter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -311,22 +324,25 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             checkForEmptyFields();
             checkForEmptyTextViewFields();
             checkForEmptyTextInputFields();
-        }else if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim()) == 0 ||
-                getDateCorrelationFlag(tv_confirm_date.getText().toString().trim()) == 0){
+        }else if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim(),getMaximumScheduleDate()) == 0 ||
+                getDateCorrelationFlag(tv_confirm_date.getText().toString().trim(),getMaximumScheduleDate()) == 0){
             checkForEmptyFields();
             checkForEmptyTextViewFields();
             checkForEmptyTextInputFields();
             checkForWrongSelectedDate();
-            Toast.makeText(this, getResources().getString(R.string.error_thresh_date), Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, getResources().getString(R.string.error_thresh_date), Toast.LENGTH_LONG).show();
+            showDateProblemStart(getResources().getString(R.string.error_thresh_date),this);
         }else if (!tv_enter_date.getText().toString().trim().matches(tv_confirm_date.getText().toString().trim())){
             checkForWrongSelectedDate();
             checkForEmptyFields();
             checkForEmptyTextInputFields();
             checkForMismatchedCollectionCenter();
             checkForMismatchedDate();
-            Toast.makeText(this, getResources().getString(R.string.error_thresh_date_mismatch), Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, getResources().getString(R.string.error_thresh_date_mismatch), Toast.LENGTH_LONG).show();
+            showDateProblemStart(getResources().getString(R.string.error_thresh_date_mismatch),this);
         }else if (!checkThreshHours(tv_enter_date.getText().toString().trim(), sharedPrefs.getStaffID())){
-            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
+            showDateProblemStart(getResources().getString(R.string.thresh_date_error),this);
         }else if (!actCollectionCenter.getText().toString().trim().matches(actConfirmCollectionCenter.getText().toString().trim())){
             checkForEmptyFields();
             checkForEmptyTextViewFields();
@@ -352,6 +368,25 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             setBottomSheerTexts();
             showBottomSheet();
         }
+    }
+
+    private void showDateProblemStart(String message, Context context){
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showDateProblemBody(builder, message, context);
+    }
+
+    private void showDateProblemBody(MaterialAlertDialogBuilder builder, String message,
+                                                   Context context) {
+
+        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_crying))
+                .setTitle(context.getResources().getString(R.string.attention))
+                .setMessage(message)
+                .setPositiveButton(context.getResources().getString(R.string.go_back), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
     }
 
     public int validateFieldsInfo(MaterialTextView tv_enter_date, MaterialTextView tv_confirm_date,
@@ -415,8 +450,8 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
     }
 
     void checkForWrongSelectedDate(){
-        if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim()) == 0 ||
-                getDateCorrelationFlag(tv_confirm_date.getText().toString().trim()) == 0){
+        if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim(),getMaximumScheduleDate()) == 0 ||
+                getDateCorrelationFlag(tv_confirm_date.getText().toString().trim(),getMaximumScheduleDate()) == 0){
             setErrorOfTextView(tv_enter_date,getResources().getString(R.string.error_thresh_date));
             setErrorOfTextView(tv_confirm_date,getResources().getString(R.string.error_thresh_date));
         }else{
@@ -453,15 +488,18 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         materialTextView.setError(null);
     }
 
-    public int getDateCorrelationFlag(String selected_date){
+    public int getDateCorrelationFlag(String selected_date, String reference_maximum_date){
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy",Locale.getDefault());
             String today = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault()).format(new Date());
             Date selectedDate = sdf.parse(selected_date);
             Date todayDate = sdf.parse(today);
+            Date referenceMaximumDate = sdf.parse(parseDate(reference_maximum_date));
             // before() will return true if and only if date1 is before date2
             if (selectedDate != null) {
                 if(selectedDate.before(todayDate)){
+                    return 0;
+                }else if (selectedDate.after(referenceMaximumDate)){
                     return 0;
                 }else{
                     return 1;
@@ -543,6 +581,20 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             time_per_ha = "1.00";
         }
         return returnRightDoubleValue(time_per_ha);
+    }
+
+    String getMaximumScheduleDate(){
+        String maximum_schedule_date;
+        try {
+            maximum_schedule_date = appDatabase.appVariablesDao().getMaximumScheduleDate("1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            maximum_schedule_date = "2020-12-31";
+        }
+        if (maximum_schedule_date == null || maximum_schedule_date.equalsIgnoreCase("") ){
+            maximum_schedule_date = "2020-12-31";
+        }
+        return maximum_schedule_date;
     }
 
     public void fillCollectionCenterSpinner(AutoCompleteTextView autoCompleteTextView, Context context) {
@@ -665,7 +717,10 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
 
                 sharedPrefs.setKeyVillageLocation(user_lat,user_long);
 
-                goToHomeLocationCapture();
+                saveDetails(1,
+                        reverseParseDate(tv_enter_date.getText().toString().trim()),
+                        actCollectionCenter.getText().toString().trim(),
+                        Objects.requireNonNull(edtPhoneNumber.getText()).toString().trim());
             } else {
                 lats.add(lat);
                 longs.add(lng);
@@ -707,7 +762,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
 
     void goToHomeLocationCapture(){
         finish();
-        Intent intent = new Intent(ThreshingDateSelectionActivity.this, MemberLocation.class);
+        Intent intent = new Intent(ThreshingDateSelectionActivity.this, ThreshingActivity.class);
         startActivity(intent);
     }
 
@@ -738,7 +793,10 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 })
                 .setNeutralButton(context.getResources().getString(R.string.no), (dialog, which) -> {
                     dialog.dismiss();
-                    goToHomePage();
+                    saveDetails(0,
+                            reverseParseDate(tv_enter_date.getText().toString().trim()),
+                            actCollectionCenter.getText().toString().trim(),
+                            Objects.requireNonNull(edtPhoneNumber.getText()).toString().trim());
                 })
                 .setCancelable(false)
                 .show();
@@ -748,5 +806,235 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         finish();
         Intent intent = new Intent(ThreshingDateSelectionActivity.this, ThreshingActivity.class);
         startActivity(intent);
+    }
+
+    void saveDetails(int location_flag, String schedule_date, String collection_center, String phone_number){
+
+        locationGetter = GPSController.initialiseLocationListener(this);
+        double latitude = locationGetter.getLatitude();
+        double longitude = locationGetter.getLongitude();
+
+        if (sharedPrefs.getKeyThreshingRecaptureFlag().equalsIgnoreCase("1")){
+            savePictureAndClose(
+                    getBitmap(sharedPrefs.getKeyThreshingPicture()),
+                    sharedPrefs.getKeyThreshingUniqueMemberId(),
+                    location_flag,
+                    schedule_date,
+                    collection_center,
+                    phone_number,
+                    String.valueOf(latitude),
+                    String.valueOf(longitude)
+            );
+        }else{
+            updateActivity(
+                    sharedPrefs.getKeyThreshingUniqueFieldId(),
+                    location_flag,
+                    schedule_date,
+                    collection_center,
+                    phone_number,
+                    String.valueOf(latitude),
+                    String.valueOf(longitude),
+                    sharedPrefs.getKeyThreshingIkNumber(),
+                    sharedPrefs.getKeyThreshingCropType()
+            );
+        }
+        showSuccessStart(getResources().getString(R.string.threshing_success),this);
+    }
+
+    void savePictureAndClose(Bitmap threshing_picture, String unique_member_id, int location_flag,
+                             String schedule_date, String collection_center, String phone_number,
+                             String latitude, String longitude){
+
+        final String picture_name = unique_member_id +"_threshing";
+
+        String result1 = saveToSdCard(threshing_picture, picture_name);
+        if (result1 != null ) {
+            if (result1.equalsIgnoreCase("success") ){
+                updateActivity(
+                        sharedPrefs.getKeyThreshingUniqueFieldId(),
+                        location_flag,
+                        schedule_date,
+                        collection_center,
+                        phone_number,
+                        latitude,
+                        longitude,
+                        sharedPrefs.getKeyThreshingIkNumber(),
+                        sharedPrefs.getKeyThreshingCropType()
+                );
+                Toast.makeText(this, "Picture Saved", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, "Picture Not Saved", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Picture Not Saved", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private String getDate(String module){
+
+        SimpleDateFormat dateFormat1;
+        if (module.matches("concat")) {
+            dateFormat1 = new SimpleDateFormat("yyMMddHHmmss", Locale.getDefault());
+        }else if (module.matches("spread")) {
+            dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        }else{
+            dateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        }
+
+        Date date1 = new Date();
+        return dateFormat1.format(date1);
+    }
+
+    private String getDeviceID(){
+        String device_id;
+        TelephonyManager tm = (TelephonyManager) Objects.requireNonNull(this).getSystemService(Context.TELEPHONY_SERVICE);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission. READ_PHONE_STATE)== PackageManager.PERMISSION_GRANTED){
+            try {
+                device_id = tm.getDeviceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                device_id = "";
+            }
+            if (device_id == null){
+                device_id = "";
+            }
+        } else{
+            device_id = "";
+        }
+        return device_id;
+    }
+
+    String saveToSdCard(Bitmap bitmap, String filename) {
+        String stored = null;
+        File ChkImgDirectory;
+        String storageState = Environment.getExternalStorageState();
+        if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+            ChkImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MEMBER_PICTURE_LOCATION);
+
+            File file, file3;
+            File file1 = new File(ChkImgDirectory.getAbsoluteFile(), filename + ".png");
+            File file2 = new File(ChkImgDirectory.getAbsoluteFile(), ".nomedia");
+            if (!ChkImgDirectory.exists() && !ChkImgDirectory.mkdirs()) {
+                boolean x = ChkImgDirectory.mkdir();
+                Log.d("is_file_created", String.valueOf(x));
+                file = file1;
+                file3 = file2;
+                if (!file3.exists()) {
+                    try {
+                        FileOutputStream outNoMedia = new FileOutputStream(file3);
+                        outNoMedia.flush();
+                        outNoMedia.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (file.exists()) {
+                    stored = "fileExists";
+                } else {
+                    try {
+                        FileOutputStream out = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                        out.flush();
+                        out.close();
+                        stored = "success";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } else {
+                file = file1;
+                file3 = file2;
+                if (!file3.exists()) {
+                    try {
+                        FileOutputStream outNoMedia = new FileOutputStream(file3);
+                        outNoMedia.flush();
+                        outNoMedia.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (file.exists()) {
+                    stored = "fileExists";
+                } else {
+                    try {
+                        FileOutputStream out = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                        out.flush();
+                        out.close();
+                        stored = "success";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return stored;
+    }
+
+    private void updateActivity(String unique_field_id,int locationFlag, String schedule_date,
+                                String collection_center, String phone_number, String latitude,
+                                String longitude, String ik_number, String crop_type){
+
+        String new_latitude, new_longitude;
+        if (locationFlag <= 0){
+            new_latitude = "0.00";
+            new_longitude = "0.00";
+        }else{
+            new_latitude = latitude;
+            new_longitude = longitude;
+        }
+
+        appDatabase.scheduleThreshingActivitiesFlagDao().insert(new ScheduledThreshingActivitiesFlag(
+                unique_field_id,
+                sharedPrefs.getKeyThresher(),
+                sharedPrefs.getKeyThreshingRecaptureFlag(),
+                sharedPrefs.getKeyThreshingTemplate(),
+                schedule_date,
+                collection_center,
+                phone_number,
+                getDeviceID(),
+                BuildConfig.VERSION_NAME,
+                new_latitude,
+                new_longitude,
+                sharedPrefs.getStaffID(),
+                getDate("spread"),
+                "0",
+                "XXX"
+                )
+        );
+
+        appDatabase.logsDao().insert(new Logs(unique_field_id,sharedPrefs.getStaffID(),
+                "Schedule threshing",getDate("normal"),sharedPrefs.getStaffRole(),
+                latitude, longitude, getDeviceID(),"0",
+                ik_number, crop_type));
+    }
+
+    private Bitmap getBitmap(String member_picture_byte_array){
+        byte[] imageAsBytes = new byte[0];
+        if (member_picture_byte_array != null) {
+            imageAsBytes = Base64.decode(member_picture_byte_array.getBytes(), Base64.DEFAULT);
+        }
+        return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+    }
+
+    private void showSuccessStart(String message, Context context){
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showSuccessBody(builder, message, context);
+    }
+
+    private void showSuccessBody(MaterialAlertDialogBuilder builder, String message,
+                                     Context context) {
+
+        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_smiley_face))
+                .setMessage(message)
+                .setPositiveButton(context.getResources().getString(R.string.done), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                    goToHomePage();
+                })
+                .setCancelable(false)
+                .show();
     }
 }

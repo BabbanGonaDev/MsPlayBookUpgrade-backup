@@ -9,6 +9,7 @@ import android.view.View;
 import com.babbangona.mspalybookupgrade.Homepage;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
+import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.google.android.material.button.MaterialButton;
 
@@ -35,17 +36,21 @@ public class ThreshingActivity extends AppCompatActivity {
 
     SharedPrefs sharedPrefs;
 
+    AppDatabase appDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threshing);
         ButterKnife.bind(ThreshingActivity.this);
         sharedPrefs = new SharedPrefs(ThreshingActivity.this);
+        appDatabase = AppDatabase.getInstance(ThreshingActivity.this);
     }
 
     @OnClick(R.id.btnScheduleThreshing)
     public void setBtnScheduleThreshing(){
         sharedPrefs.setKeyThreshingActivityRoute(DatabaseStringConstants.SCHEDULE_THRESHING);
+        appDatabase.membersDao().updateCoach();
         startActivity(new Intent(ThreshingActivity.this,MemberList.class));
     }
 

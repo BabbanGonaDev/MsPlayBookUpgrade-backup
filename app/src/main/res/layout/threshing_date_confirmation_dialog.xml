@@ -105,29 +105,30 @@
         android:orientation="horizontal"
         style="?android:attr/buttonBarStyle">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
-            android:layout_width="145dp"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:backgroundTint="@color/view_red"
+            style="?attr/materialButtonOutlinedStyle"
             android:text="@string/cancel"
-            android:textColor="@color/text_color_black"
+            android:textColor="@color/displayBar"
             android:layout_marginEnd="@dimen/dimen_5dp"
+            app:cornerRadius="@dimen/dimen_10dp"
             android:textSize="16sp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnConfirm"
-            android:layout_width="145dp"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:backgroundTint="@color/view_green"
             android:baselineAligned="false"
             android:text="@string/confirm"
-            android:textColor="@color/text_color_black"
+            android:textColor="@color/text_color_white"
             android:layout_marginStart="@dimen/dimen_5dp"
+            app:cornerRadius="@dimen/dimen_10dp"
             android:textSize="16sp" />
 
 

@@ -290,13 +290,25 @@ public abstract class FieldsDao {
                                                                                                          String member_name,
                                                                                                          String village);
 
-    @Query(" SELECT a.unique_field_id, b.village_name, a.field_size FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
+    @Query(" SELECT a.unique_field_id, b.village_name as village, a.field_size, a.staff_id FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE a.deactivate = '0' AND a.unique_member_id = :unique_member_id ")
     public abstract LiveData<List<ThreshingFieldListRecyclerModel>> getThreshingMemberFields(String unique_member_id);
 
-    @Query(" SELECT a.unique_field_id, b.village_name, a.field_size FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
+    @Query(" SELECT a.unique_field_id, b.village_name as village, a.field_size, a.staff_id FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
             "WHERE a.deactivate = '0' AND a.unique_member_id = :unique_member_id ")
     public abstract List<ThreshingFieldListRecyclerModel> getThreshingMemberFieldsList(String unique_member_id);
+
+    @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
+            "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
+            "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, c.fertilizer_1_status, " +
+            "c.fertilizer_2_status, b.ik_number, a.crop_type " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "LEFT OUTER JOIN normal_activities_flag c ON a.unique_field_id = c.unique_field_id " +
+            "WHERE a.unique_field_id = :unique_field_id ")
+    public abstract FieldListRecyclerModel getFieldCompleteDetails(String unique_field_id);
+
+    @Query(" SELECT field_code FROM fields WHERE unique_field_id = :unique_field_id ")
+    public abstract String getFieldCode(String unique_field_id);
 
     @Query("DELETE FROM fields WHERE staff_id = :staff_id")
     public abstract void deleteRecords(String staff_id);

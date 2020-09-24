@@ -8,10 +8,14 @@ public class ThreshingFieldListRecyclerModel {
 
     private String field_size;
 
-    public ThreshingFieldListRecyclerModel(String unique_field_id, String village) {
+    private String staff_id;
+
+    public ThreshingFieldListRecyclerModel(String unique_field_id, String village, String field_size,
+                                           String staff_id) {
         this.unique_field_id = unique_field_id;
         this.village = village;
         this.field_size = field_size;
+        this.staff_id = staff_id;
     }
 
     public String getUnique_field_id() {
@@ -36,5 +40,13 @@ public class ThreshingFieldListRecyclerModel {
 
     public void setField_size(String field_size) {
         this.field_size = field_size;
+    }
+
+    public String getStaff_id() {
+        return staff_id;
+    }
+
+    public void setStaff_id(String staff_id) {
+        this.staff_id = staff_id;
     }
 }

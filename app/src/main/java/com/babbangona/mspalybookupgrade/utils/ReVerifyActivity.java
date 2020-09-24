@@ -94,11 +94,9 @@ public class ReVerifyActivity extends AppCompatActivity {
     public void setBtnTryAgain() {
         if (count < 2) {
             Intent i = new Intent(getApplicationContext(), VerifyActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivityForResult(i,419);
         } else {
             Intent i = new Intent(getApplicationContext(), CaptureActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivityForResult(i,519);
         }
     }
@@ -124,50 +122,53 @@ public class ReVerifyActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         int state = 0;
-        if (requestCode == 519 ) {
-            if (resultCode == Activity.RESULT_OK){
+        if (requestCode == 519) {
+            if (resultCode == Activity.RESULT_OK) {
                 templateModel = Objects.requireNonNull(data.getExtras()).getParcelable("RESULT");
                 if (templateModel != null) {
-                    Log.d("dami_wassup",templateModel.getResult());
-                    if (templateModel.getResult().equalsIgnoreCase("1")){
+                    if (templateModel.getResult().equalsIgnoreCase("1")) {
                         //move to next activity
                         //save template to shared preference
-                        setCapturedImage(scanned_image_iv,templateModel.getImage_person_large());
+                        setCapturedImage(scanned_image_iv, templateModel.getImage_person_large());
+                        sharedPrefs.setKeyThreshingRecaptureFlag("0");
+                        sharedPrefs.setKeyThreshingTemplate(templateModel.getTemplate());
+                        sharedPrefs.setKeyThreshingPicture(templateModel.getImage_person_small());
                         state = 4;
-                    }else{
+                    } else {
                         //either remain here or move away from here.
                         state = 3;
                     }
-                }else{
-                    Log.d("dami_wassup","1");
+                } else {
                     state = 3;
                 }
-            }else{
-                Log.d("dami_wassup","2");
+            } else {
                 state = 3;
             }
 
-        }else if (requestCode == 419) {
-            if (resultCode == Activity.RESULT_OK){
+        } else if (requestCode == 419) {
+            if (resultCode == Activity.RESULT_OK) {
                 if (data.getIntExtra("RESULT", 0) == 1) {
                     //member passes authentication
                     state = 2;
-                }else{
+                    sharedPrefs.setKeyThreshingRecaptureFlag("0");
+                    sharedPrefs.setKeyThreshingTemplate("XXX");
+                    sharedPrefs.setKeyThreshingPicture("XXX");
+                } else {
                     //member_fails_authentication
-                    if (count < 2){
-                        count += 1;
+                    count += 1;
+                    if (count < 2) {
                         state = 1;
-                    }else{
+                    } else {
                         state = 3;
                     }
                 }
-            }else{
-                if (count < 2){
+            } else {
+                count += 1;
+                if (count < 2) {
                     count += 1;
                     state = 1;
-                }else{
+                } else {
                     state = 3;
                 }
             }
@@ -175,6 +176,7 @@ public class ReVerifyActivity extends AppCompatActivity {
         }
 
         showLogic(state);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     void setCapturedImage(ImageView scanned_image_iv, String large_picture){
@@ -272,6 +274,9 @@ public class ReVerifyActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+        sharedPrefs.setKeyThreshingRecaptureFlag("0");
+        sharedPrefs.setKeyThreshingTemplate("XXX");
+        sharedPrefs.setKeyThreshingPicture("XXX");
         super.onBackPressed();
     }
 }

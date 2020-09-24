@@ -39,9 +39,15 @@ public class Members {
     @ColumnInfo(name = DatabaseStringConstants.COL_ROLE_MEMBERS)
     private String role;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_BGT_ID_MEMBERS)
+    private String bgt_id;
+
+    @ColumnInfo(name = DatabaseStringConstants.COL_COACH_ID_MEMBERS, defaultValue = "T-10000000000000AA")
+    private String coach_id;
+
     public Members(@NonNull String unique_member_id, String ik_number, String member_id,
                    String first_name, String last_name, String phone_number, String village_name,
-                   String template, String role) {
+                   String template, String role, String bgt_id, String coach_id) {
         this.unique_member_id = unique_member_id;
         this.ik_number = ik_number;
         this.member_id = member_id;
@@ -51,6 +57,8 @@ public class Members {
         this.village_name = village_name;
         this.template = template;
         this.role = role;
+        this.bgt_id = bgt_id;
+        this.coach_id = coach_id;
     }
 
     @NonNull
@@ -124,5 +132,21 @@ public class Members {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getBgt_id() {
+        return bgt_id;
+    }
+
+    public void setBgt_id(String bgt_id) {
+        this.bgt_id = bgt_id;
+    }
+
+    public String getCoach_id() {
+        return coach_id;
+    }
+
+    public void setCoach_id(String coach_id) {
+        this.coach_id = coach_id;
     }
 }

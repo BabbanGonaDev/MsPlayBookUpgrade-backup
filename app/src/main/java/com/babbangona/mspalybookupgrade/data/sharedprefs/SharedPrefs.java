@@ -85,12 +85,59 @@ public class SharedPrefs {
     public static final String KEY_THRESHING_ACTIVITY_ROUTE         = "threshing_activity_route";
     public static final String KEY_MEMBER_VILLAGE_LATITUDE          = "member_village_latitude";
     public static final String KEY_MEMBER_VILLAGE_LONGITUDE         = "member_village_longitude";
+    public static final String KEY_THRESHING_TEMPLATE               = "threshing_template";
+    public static final String KEY_THRESHING_PICTURE                = "threshing_picture";
+    public static final String KEY_THRESHING_RECAPTURE_FLAG         = "threshing_recapture_flag";
+    public static final String KEY_THRESHING_IK_NUMBER              = "threshing_ik_number";
+    public static final String KEY_THRESHING_CROP_TYPE              = "threshing_crop_type";
+    public static final String KEY_THRESHING_FIELD_DETAILS          = "threshing_field_details";
+    public static final String KEY_THRESHER                         = "thresher";
 
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyThresher(String thresher){
+        editor.putString(KEY_THRESHER, thresher)
+                .commit();
+    }
+
+    public void setKeyThreshingFieldDetails(FieldListRecyclerModel fieldListRecyclerModel){
+        Gson gson = new Gson();
+        String json = gson.toJson(fieldListRecyclerModel);
+        // Storing model in pref
+        editor.putString(KEY_THRESHING_FIELD_DETAILS, json);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void setKeyThreshingCropType(String threshing_crop_type){
+        editor.putString(KEY_THRESHING_CROP_TYPE, threshing_crop_type)
+                .commit();
+    }
+
+    public void setKeyThreshingIkNumber(String threshing_ik_number){
+        editor.putString(KEY_THRESHING_IK_NUMBER, threshing_ik_number)
+                .commit();
+    }
+
+    public void setKeyThreshingRecaptureFlag(String threshing_recapture_flag){
+        editor.putString(KEY_THRESHING_RECAPTURE_FLAG, threshing_recapture_flag)
+                .commit();
+    }
+
+    public void setKeyThreshingPicture(String threshing_picture){
+        editor.putString(KEY_THRESHING_PICTURE, threshing_picture)
+                .commit();
+    }
+
+    public void setKeyThreshingTemplate(String threshing_template){
+        editor.putString(KEY_THRESHING_TEMPLATE, threshing_template)
+                .commit();
     }
 
     public void setKeyVillageLocation(String latitude, String longitude){
@@ -548,5 +595,36 @@ public class SharedPrefs {
 
     public String getKeyMemberVillageLongitude() {
         return pref.getString(KEY_MEMBER_VILLAGE_LONGITUDE, "0.00");
+    }
+
+    public String getKeyThreshingTemplate() {
+        return pref.getString(KEY_THRESHING_TEMPLATE,"XXX");
+
+    }
+
+    public String getKeyThreshingPicture() {
+        return pref.getString(KEY_THRESHING_PICTURE, "XXX");
+    }
+
+    public String getKeyThreshingRecaptureFlag() {
+        return pref.getString(KEY_THRESHING_RECAPTURE_FLAG, "0");
+    }
+
+    public String getKeyThreshingIkNumber() {
+        return pref.getString(KEY_THRESHING_IK_NUMBER, "0");
+    }
+
+    public String getKeyThreshingCropType() {
+        return pref.getString(KEY_THRESHING_CROP_TYPE, "0");
+    }
+
+    public FieldListRecyclerModel getKeyThreshingFieldDetails() {
+        Gson gson = new Gson();
+        String json = pref.getString(KEY_THRESHING_FIELD_DETAILS, "");
+        return gson.fromJson(json, FieldListRecyclerModel.class);
+    }
+
+    public String getKeyThresher() {
+        return pref.getString(KEY_THRESHER, "BG");
     }
 }

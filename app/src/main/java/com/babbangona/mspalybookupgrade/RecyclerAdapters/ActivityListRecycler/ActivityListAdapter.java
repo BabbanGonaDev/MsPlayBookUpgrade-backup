@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
+import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
@@ -28,11 +29,13 @@ public class ActivityListAdapter extends RecyclerView.Adapter<ActivityListAdapte
     private List<ActivityListRecyclerModel> activityListRecyclerModelList;
     private Context context;
     private SharedPrefs sharedPrefs;
+    private AppDatabase appDatabase;
 
     public ActivityListAdapter(List<ActivityListRecyclerModel> activityListRecyclerModelList, Context context) {
         this.activityListRecyclerModelList = activityListRecyclerModelList;
         this.context = context;
-        sharedPrefs = new SharedPrefs(this.context);
+        sharedPrefs = new SharedPrefs(context);
+        appDatabase = AppDatabase.getInstance(context);
     }
 
     @NonNull

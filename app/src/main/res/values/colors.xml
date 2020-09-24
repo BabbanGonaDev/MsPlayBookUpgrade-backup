@@ -2,10 +2,12 @@
 <resources>
     <color name="colorPrimary">     #003296</color>
     <color name="colorPrimaryDark"> #003296</color>
-    <color name="colorAccent">      #D81B60</color>
+    <color name="appPrimaryDark">   #050150</color>
+    <!--<color name="colorAccent">      #D81B60</color>-->
+    <color name="colorAccent">      #003296</color>
     <color name="colorWhite">       #fff</color>
     <color name="text_color_black"> #202020</color>
-    <color name="text_color_grey">#8C8C8C</color>
+    <color name="text_color_grey">  #8C8C8C</color>
     <color name="text_color_white"> #ecf0f1</color>
     <color name="textColorPrimary"> #000000</color>
     <color name="colorRed">         #ff0000</color>

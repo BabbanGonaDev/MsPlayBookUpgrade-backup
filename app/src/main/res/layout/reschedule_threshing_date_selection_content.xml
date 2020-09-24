@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,78 +27,125 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/reschedule_title"
-        android:text="@string/select_thresh_date_title"
-        android:textColor="@color/text_color_black"
-        android:textSize="@dimen/dimen_20sp"
-        android:layout_below="@+id/appName"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:textStyle="bold"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_marginBottom="@dimen/dimen_10dp" />
+        android:layout_height="match_parent">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_5dp"
-        android:layout_below="@+id/reschedule_title"
-        android:hint="@string/thresh_date"
-        android:id="@+id/tv_enter_date"
-        android:padding="@dimen/dimen_10dp"
-        android:maxLines="1"
-        android:textSize="@dimen/dimen_20sp"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:textColor="@color/text_color_black"
-        android:background="@drawable/view_looks1"
-        android:drawableEnd="@drawable/ic_calendar"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:id="@+id/tv_confirm_date"
-        android:maxLines="1"
-        android:layout_below="@+id/tv_enter_date"
-        android:textSize="@dimen/dimen_20sp"
-        android:background="@drawable/view_looks1"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:padding="@dimen/dimen_10dp"
-        android:drawableEnd="@drawable/ic_calendar"
-        android:textColor="@color/text_color_black"
-        android:hint="@string/confirm_thresh_date"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_old_thresh_date"
+                android:text="@string/select_thresh_date_title"
+                android:textColor="@color/text_color_black"
+                android:textSize="@dimen/dimen_20sp"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/dimen_15dp"
-        android:paddingEnd="@dimen/dimen_15dp"
-        android:orientation="vertical"
-        android:background="@color/off_white">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/reschedule_title"
+                android:text="@string/enter_new_thresh_date"
+                android:textColor="@color/text_color_black"
+                android:textSize="@dimen/dimen_20sp"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp" />
 
-    </LinearLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:hint="@string/thresh_date"
+                android:id="@+id/tv_enter_date"
+                android:padding="@dimen/dimen_10dp"
+                android:maxLines="1"
+                android:textSize="@dimen/dimen_20sp"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:textColor="@color/text_color_black"
+                android:background="@drawable/view_looks1"
+                android:drawableEnd="@drawable/ic_calendar"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSubmit"
-        android:layout_marginTop="40dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dimen_40dp"
-        app:cornerRadius="@dimen/dimen_20dp"
-        android:textSize="@dimen/dimen_20sp"
-        android:textColor="@android:color/white"
-        android:paddingTop="@dimen/dimen_10dp"
-        android:paddingBottom="@dimen/dimen_10dp"
-        android:paddingEnd="@dimen/dimen_20dp"
-        android:paddingStart="@dimen/dimen_20dp"
-        android:textAllCaps="false"
-        android:text="@string/submit" />
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:id="@+id/tv_confirm_date"
+                android:maxLines="1"
+                android:textSize="@dimen/dimen_20sp"
+                android:background="@drawable/view_looks1"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:padding="@dimen/dimen_10dp"
+                android:drawableEnd="@drawable/ic_calendar"
+                android:textColor="@color/text_color_black"
+                android:hint="@string/confirm_thresh_date"/>
 
-</RelativeLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                style="@style/AppTextField"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:paddingStart="@dimen/dimen_10dp"
+                android:paddingEnd="@dimen/dimen_10dp"
+                android:id="@+id/edlRescheduleReason"
+                android:hint="@string/reschedule_reason">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtRescheduleReason"
+                    android:lines="5"
+                    android:minLines="3"
+                    android:gravity="top|start"
+                    android:maxLines="5"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:scrollbars="vertical"
+                    android:textSize="16sp"
+                    android:inputType="textMultiLine" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/dimen_15dp"
+                android:paddingEnd="@dimen/dimen_15dp"
+                android:orientation="vertical"
+                android:background="@color/off_white">
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmit"
+                android:layout_marginTop="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                app:cornerRadius="@dimen/dimen_20dp"
+                android:textSize="@dimen/dimen_20sp"
+                android:textColor="@android:color/white"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:paddingEnd="@dimen/dimen_20dp"
+                android:paddingStart="@dimen/dimen_20dp"
+                android:textAllCaps="false"
+                android:text="@string/submit" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

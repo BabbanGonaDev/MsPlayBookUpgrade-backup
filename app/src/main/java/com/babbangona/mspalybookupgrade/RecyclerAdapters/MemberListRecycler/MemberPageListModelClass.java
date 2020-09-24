@@ -51,10 +51,10 @@ public class MemberPageListModelClass extends ViewModel {
             coach_id = appDatabase.bgtCoachesDao().getCoach(staff_id);
         } catch (Exception e) {
             e.printStackTrace();
-            coach_id = "T-10000000000000BB";
+            coach_id = "T-10000000000000AA";
         }
         if (coach_id == null || coach_id.equalsIgnoreCase("") ){
-            coach_id = "T-10000000000000BB";
+            coach_id = "T-10000000000000AA";
         }
         return coach_id;
     }

@@ -23,7 +23,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_book"
+        android:icon="@drawable/app_icon_custom"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/ic_book"
@@ -31,9 +31,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
-        <activity
-            android:name=".ThreshingViews.MemberLocation"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".utils.CaptureActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -45,7 +42,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ThreshingViews.RescheduleThreshingDateSelectionActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ThreshingViews.ThreshingDateSelectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />

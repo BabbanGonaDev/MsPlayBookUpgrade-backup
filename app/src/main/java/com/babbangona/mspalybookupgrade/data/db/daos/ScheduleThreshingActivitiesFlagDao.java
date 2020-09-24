@@ -49,21 +49,24 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
     public abstract void updateScheduleDate(String unique_field_id, String schedule_date, String reschedule_reason, String staff_id, String date_logged);
 
     @Query(" SELECT COUNT(unique_field_id) FROM schedule_threshing_activities_flag WHERE sync_flag != '1' ")
-    public abstract int getUnSyncedNormalActivitiesCount();
+    public abstract int getUnSyncedScheduleThreshingActivitiesCount();
 
     @Query(" SELECT * FROM schedule_threshing_activities_flag WHERE sync_flag != '1' ")
-    public abstract List<ScheduledThreshingActivitiesFlag> getUnSyncedNormalActivities();
+    public abstract List<ScheduledThreshingActivitiesFlag> getUnSyncedScheduleThreshingActivities();
 
     @Query(" UPDATE schedule_threshing_activities_flag SET sync_flag = '1' WHERE unique_field_id = :unique_field_id ")
     public abstract void updateScheduledThreshingActivitiesSyncFlag(String unique_field_id);
 
     @Query(" SELECT COUNT(unique_field_id) FROM schedule_threshing_activities_flag WHERE unique_field_id = :unique_field_id ")
-    public abstract String getFieldScheduleStatus(String unique_field_id);
+    public abstract int getFieldScheduleStatus(String unique_field_id);
 
     @Query(" SELECT a.unique_field_id, b.field_size FROM schedule_threshing_activities_flag a " +
             "JOIN fields b ON a.unique_field_id = b.unique_field_id " +
             "WHERE a.staff_id = :staff_id AND a.schedule_date = :schedule_date AND b.deactivate = '0'")
     public abstract List<ScheduledThreshingActivitiesFlag.ScheduleCalculationModel> getAllScheduledFields(String staff_id, String schedule_date);
+
+    @Query(" SELECT schedule_date FROM schedule_threshing_activities_flag WHERE unique_field_id = :unique_field_id ")
+    public abstract String getFieldSchedule(String unique_field_id);
 
     /**
      * Insert the object in database
