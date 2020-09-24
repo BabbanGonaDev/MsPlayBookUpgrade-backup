@@ -425,7 +425,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
 
         final EditText editText = new EditText(context);
         editText.setPadding(paddingPixel, 0, 0, 0);
-        editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
         editText.setMinLines(3);
         editText.setMaxLines(5);
         editText.setHint(context.getResources().getString(R.string.reason_hg));
