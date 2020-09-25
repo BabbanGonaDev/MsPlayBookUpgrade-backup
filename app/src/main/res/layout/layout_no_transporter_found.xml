@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/baseLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -13,9 +14,7 @@
             android:background="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </FrameLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardView"
@@ -39,7 +38,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_margin="15dp"
-                android:src="@drawable/happy"
+                android:src="@drawable/ic_sad_face"
                 app:shapeAppearanceOverlay="@style/circularImageView" />
 
         </com.google.android.material.card.MaterialCardView>
@@ -53,7 +52,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="10dp"
             android:gravity="center"
-            android:text="Sample dialog text. Fill in your own words in dialog function"
+            android:text="No transporter found for this phone number. Would you like to recruit ?"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,51 +60,21 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLeft"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:id="@+id/btnRecruit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="36dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="32dp"
-            android:text="Left Button"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Recruit"
             android:textAllCaps="false"
             app:cornerRadius="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnRight"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.51"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mtvDialogText"
-            app:strokeColor="@color/colorPrimary" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
-            android:text="Right Button"
-            android:textAllCaps="false"
-            app:cornerRadius="5dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btnLeft"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btnLeft"
-            app:layout_constraintTop_toTopOf="@+id/btnLeft" />
-
-        <ImageButton
-            android:id="@+id/imgBtnCancel"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_clear_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/mtvDialogText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

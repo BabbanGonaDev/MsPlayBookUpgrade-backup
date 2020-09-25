@@ -3,6 +3,7 @@ package com.babbangona.mspalybookupgrade.transporter.views.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
@@ -46,6 +48,10 @@ public class AssigningActivity extends AppCompatActivity implements SearchView.O
         binding.searchViewTransporters.setOnClickListener(v -> binding.searchViewTransporters.setIconified(false));
 
         initRecycler();
+
+        binding.rcvEmptyState.btnRecruit.setOnClickListener(v -> {
+            //Redirect to Express Recruitment
+        });
     }
 
     @Override
@@ -89,6 +95,20 @@ public class AssigningActivity extends AppCompatActivity implements SearchView.O
             binding.rcvTransporters.setItemAnimator(new DefaultItemAnimator());
             binding.rcvTransporters.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
             binding.rcvTransporters.setAdapter(adapter);
+
+            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onChanged() {
+                    super.onChanged();
+                    if (adapter.getItemCount() == 0) {
+                        binding.rcvTransporters.setVisibility(View.GONE);
+                        binding.rcvEmptyState.baseLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.rcvEmptyState.baseLayout.setVisibility(View.GONE);
+                        binding.rcvTransporters.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
         });
     }
 

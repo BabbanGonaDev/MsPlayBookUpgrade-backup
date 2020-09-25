@@ -17,7 +17,7 @@ public interface FavouritesDAO {
      * While sync down of the table would also download all columns BUT NOT overwrite anything.
      * <p>
      * https://uniqueandrocode.com/add-to-favourites-and-display-favourites-in-recyclerview/ (Just in case)
-     * Also, NB:What's the way out since we not delete from the favourite table when unmarked, how do we reflect this delete on the backend. ?
+     * Also, NB: What's the way out since we not delete from the favourite table when unmarked, how do we reflect this delete on the backend. ?
      */
 
     @Insert
