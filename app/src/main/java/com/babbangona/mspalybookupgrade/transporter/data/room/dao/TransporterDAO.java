@@ -40,10 +40,11 @@ public interface TransporterDAO {
     void updateSyncResponse(String phone_number, Integer flag);
 
     @Query("SELECT a.first_name, a.last_name, a.phone_number, group_concat(DISTINCT c.cc_name) AS areas, " +
-            "a.invalid_card_flag AS bags_transported, COALESCE(d.active_flag, 0) AS active_favourite FROM transporter_table AS a " +
+            "COALESCE(SUM(DISTINCT e.quantity), 0) AS bags_transported, COALESCE(d.active_flag, 0) AS active_favourite FROM transporter_table AS a " +
             "INNER JOIN operating_areas_table AS b ON (a.phone_number = b.phone_number) " +
             "LEFT JOIN collection_center_table AS c ON (b.cc_id = c.cc_id) " +
             "LEFT JOIN favourites_table AS d ON (a.phone_number = d.phone_number) " +
-            "GROUP BY a.phone_number ORDER BY d.active_flag DESC, bags_transported DESC")
+            "LEFT JOIN coach_logs_table AS e ON (a.phone_number = e.transporter_id)" +
+            "GROUP BY a.phone_number ORDER BY active_favourite DESC, bags_transported DESC")
     LiveData<List<CustomTransporter>> getTransporterForBooking();
 }

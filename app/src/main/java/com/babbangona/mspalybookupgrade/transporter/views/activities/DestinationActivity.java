@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -34,6 +35,7 @@ public class DestinationActivity extends AppCompatActivity {
     ActivityTransporterDestinationBinding binding;
     TSessionManager session;
     TransporterDatabase db;
+    private static Integer VOUCHER_SCAN_REQUEST_CODE = 110;
 
 
     @Override
@@ -63,6 +65,29 @@ public class DestinationActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == VOUCHER_SCAN_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    switch (data.getStringExtra("STATUS")) {
+                        case "SUCCESS":
+                            String voucher_id = data.getStringExtra("VOUCHER_ID");
+                            saveDetailsWithVoucher(voucher_id);
+                            break;
+                        case "FAILED":
+                            Toast.makeText(this, "Kindly scan a valid Transporter Voucher", Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -126,6 +151,8 @@ public class DestinationActivity extends AppCompatActivity {
 
         binding.btnRight.setOnClickListener(v -> {
             //Navigate to scan of voucher.
+            dialog.dismiss();
+            startActivityForResult(new Intent(DestinationActivity.this, ScannerActivity.class), VOUCHER_SCAN_REQUEST_CODE);
         });
         binding.btnLeft.setOnClickListener(v -> {
             //Prompt about no instant payment.
@@ -168,6 +195,33 @@ public class DestinationActivity extends AppCompatActivity {
                 0,
                 session.GET_SELECTED_CC_ID(),
                 0,
+                new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).format(new Date()),
+                0);
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                db.getCoachLogsDao().insertSingleCoachLog(coach);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                promptMarkedAsTransported();
+            }
+        }.execute();
+    }
+
+    public void saveDetailsWithVoucher(String voucherId) {
+        CoachLogsTable coach = new CoachLogsTable(session.GET_UNIQUE_MEMBER_ID(),
+                session.GET_QTY_TRANSPORTED(),
+                session.GET_TRANSPORTED_BY(),
+                session.GET_SELECTED_TRANSPORTER(),
+                voucherId,
+                1,
+                session.GET_SELECTED_CC_ID(),
+                1,
                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).format(new Date()),
                 0);
 
