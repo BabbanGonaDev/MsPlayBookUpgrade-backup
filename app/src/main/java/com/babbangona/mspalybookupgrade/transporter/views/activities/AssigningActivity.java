@@ -19,6 +19,7 @@ import com.babbangona.mspalybookupgrade.transporter.adapters.SelectTransporterAd
 import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.models.CustomTransporter;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.FavouritesTable;
 
 public class AssigningActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     ActivityTransporterAssigningBinding binding;
@@ -72,6 +73,15 @@ public class AssigningActivity extends AppCompatActivity implements SearchView.O
                 @Override
                 public void makeFavourite(CustomTransporter trans) {
                     //Mark or Un-mark the transporter
+                    if (trans.isFavourite()) {
+                        //Un-mark as favourite
+                        db.getFavouritesDao().unMarkFavourite(trans.getPhone_number(), session.GET_LOG_IN_STAFF_ID());
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        //Mark as favourite
+                        db.getFavouritesDao().markFavourite(new FavouritesTable(session.GET_LOG_IN_STAFF_ID(), trans.getPhone_number(), 1, 0));
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             });
 

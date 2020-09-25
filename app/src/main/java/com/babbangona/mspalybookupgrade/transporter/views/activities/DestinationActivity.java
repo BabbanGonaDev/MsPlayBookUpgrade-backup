@@ -199,6 +199,7 @@ public class DestinationActivity extends AppCompatActivity {
 
         binding.btnPrimary.setOnClickListener(v -> {
             //Go Home
+            dialog.dismiss();
             session.CLEAR_BOOKING_SESSION();
             startActivity(new Intent(DestinationActivity.this, BookingActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));

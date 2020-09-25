@@ -65,9 +65,6 @@
         <activity
             android:name=".transporter.views.activities.BookingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ThreshingViews.FieldList" />
-        <activity android:name=".ThreshingViews.MemberList" />
-        <activity android:name=".ThreshingViews.ThreshingActivity" />
         <activity
             android:name=".transporter.views.activities.ViewRegisteredTransporters"
             android:theme="@style/AppTheme.NoActionBar" />

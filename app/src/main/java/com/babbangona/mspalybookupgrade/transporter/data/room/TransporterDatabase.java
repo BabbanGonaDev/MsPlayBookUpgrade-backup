@@ -12,6 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.CardsDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.CoachLogsDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.CollectionCenterDAO;
+import com.babbangona.mspalybookupgrade.transporter.data.room.dao.FavouritesDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.OperatingAreasDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.TempTransporterDAO;
 import com.babbangona.mspalybookupgrade.transporter.data.room.dao.TpoLogsDAO;
@@ -19,13 +20,14 @@ import com.babbangona.mspalybookupgrade.transporter.data.room.dao.TransporterDAO
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CoachLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionCenterTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.FavouritesTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TempTransporterTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TpoLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 
 @Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class,
-        CardsTable.class, CoachLogsTable.class, TpoLogsTable.class, TempTransporterTable.class}, version = 5, exportSchema = false)
+        CardsTable.class, CoachLogsTable.class, TpoLogsTable.class, TempTransporterTable.class, FavouritesTable.class}, version = 5, exportSchema = false)
 public abstract class TransporterDatabase extends RoomDatabase {
 
     private static TransporterDatabase INSTANCE;
@@ -191,4 +193,6 @@ public abstract class TransporterDatabase extends RoomDatabase {
     public abstract CoachLogsDAO getCoachLogsDao();
 
     public abstract TempTransporterDAO getTempTransporterDao();
+
+    public abstract FavouritesDAO getFavouritesDao();
 }

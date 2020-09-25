@@ -9,6 +9,7 @@ import android.widget.Filterable;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.databinding.ItemTransporterSelectionBinding;
 import com.babbangona.mspalybookupgrade.transporter.data.models.CustomTransporter;
 
@@ -101,7 +102,15 @@ public class SelectTransporterAdapter extends RecyclerView.Adapter<SelectTranspo
             });
 
             binding.imgBtnFavourite.setOnClickListener(v -> {
-                listener.makeFavourite(mFilteredList.get(getLayoutPosition()));
+                CustomTransporter c = mFilteredList.get(getLayoutPosition());
+                if (c.isFavourite()) {
+                    //un-favourite it.
+                    binding.imgBtnFavourite.setImageResource(R.drawable.ic_favourite_de_selected);
+                } else {
+                    //Make favourite
+                    binding.imgBtnFavourite.setImageResource(R.drawable.ic_favourite_selected);
+                }
+                listener.makeFavourite(c);
             });
         }
 
@@ -110,6 +119,11 @@ public class SelectTransporterAdapter extends RecyclerView.Adapter<SelectTranspo
             binding.mtvAreaOfOperation.setText("Areas: " + transport.getAreas());
             binding.mtvPhoneNumber.setText("Phone: " + transport.getPhone_number());
             binding.mtvBagsTransported.setText("Bags Transported: " + transport.getBags_transported());
+            if (transport.isFavourite()) {
+                binding.imgBtnFavourite.setImageResource(R.drawable.ic_favourite_selected);
+            } else {
+                binding.imgBtnFavourite.setImageResource(R.drawable.ic_favourite_de_selected);
+            }
             binding.executePendingBindings();
         }
     }

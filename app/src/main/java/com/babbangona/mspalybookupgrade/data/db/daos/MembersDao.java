@@ -8,7 +8,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 
@@ -74,11 +73,11 @@ public abstract class MembersDao {
             " a.ik_number AS ikNumber, a.member_id AS memberId, a.village_name AS villageName, SUM(b.field_size) AS fieldSize FROM members AS a" +
             " JOIN fields AS b ON a.unique_member_id = b.unique_member_id" +
             " WHERE b.deactivate = '0' GROUP BY b.unique_member_id")
-    DataSource.Factory<Integer, com.babbangona.mspalybookupgrade.transporter.data.models.Members> getAllMembers();
+    public abstract DataSource.Factory<Integer, com.babbangona.mspalybookupgrade.transporter.data.models.Members> getAllMembers();
 
     @Query("SELECT a.unique_member_id AS uniqueMemberId, a.first_name || ' ' || a.last_name AS fullName," +
             " a.ik_number AS ikNumber, a.member_id AS memberId, a.village_name AS villageName, SUM(b.field_size) AS fieldSize FROM members AS a" +
             " JOIN fields AS b ON a.unique_member_id = b.unique_member_id" +
             " WHERE b.deactivate = '0' AND (LOWER(a.ik_number) LIKE :filter OR LOWER(a.first_name) LIKE :filter OR LOWER(a.last_name) LIKE :filter) GROUP BY b.unique_member_id")
-    DataSource.Factory<Integer, com.babbangona.mspalybookupgrade.transporter.data.models.Members> getAllMembersFilter(String filter);
+    public abstract DataSource.Factory<Integer, com.babbangona.mspalybookupgrade.transporter.data.models.Members> getAllMembersFilter(String filter);
 }
