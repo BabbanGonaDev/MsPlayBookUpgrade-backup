@@ -51,6 +51,7 @@ public class AssigningActivity extends AppCompatActivity implements SearchView.O
 
         binding.rcvEmptyState.btnRecruit.setOnClickListener(v -> {
             //Redirect to Express Recruitment
+            startActivity(new Intent(this, ERegPhoneNumberActivity.class));
         });
     }
 

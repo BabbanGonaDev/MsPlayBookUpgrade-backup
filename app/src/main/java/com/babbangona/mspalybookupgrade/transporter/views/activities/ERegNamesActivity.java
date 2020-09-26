@@ -1,28 +1,31 @@
 package com.babbangona.mspalybookupgrade.transporter.views.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.databinding.ActivityTransporterNamesBinding;
+import com.babbangona.mspalybookupgrade.databinding.DialogCustomOneButtonBinding;
 import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-public class RegNamesActivity extends AppCompatActivity {
+public class ERegNamesActivity extends AppCompatActivity {
+    /**
+     * Note: This activity makes use of the same layout as RegNamesActivity
+     */
+
     ActivityTransporterNamesBinding binding;
     TransporterDatabase db;
     TSessionManager session;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,43 +49,17 @@ public class RegNamesActivity extends AppCompatActivity {
             String l_name = binding.editLastName.getText().toString().trim();
 
             if (isNamesEmpty(f_name) || isNamesEmpty(l_name)) {
-                AlertDialog empty_entry_check = new MaterialAlertDialogBuilder(RegNamesActivity.this)
-                        .setIcon(R.drawable.ic_sad_face)
-                        .setTitle("Invalid Entry")
-                        .setMessage("Kindly fill in the required details")
-                        .setPositiveButton("Okay", (dialog, which) -> {
-                            dialog.dismiss();
-                        }).setCancelable(false).show();
-                empty_entry_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
-            } else {
-                session.SET_REG_FIRST_NAME(f_name);
-                session.SET_REG_LAST_NAME(l_name);
+                promptEmptyNameFields();
 
-                AlertDialog facial_check = new MaterialAlertDialogBuilder(RegNamesActivity.this)
-                        .setIcon(R.drawable.ic_smiley_face)
-                        .setTitle("Facial Capture ?")
-                        .setMessage("Do you want to perform facial capture ?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
-                            //Navigate to facial capture page
-                            startActivity(new Intent(this, RegTemplateCaptureActivity.class));
-                        })
-                        .setNegativeButton("No", (dialog, which) -> {
-                            //Move to next activity
-                            session.SET_REG_FACE_TEMPLATE("N/A");
-                            session.SET_REG_FACE_TEMPLATE_FLAG(0);
-                            startActivity(new Intent(this, RegVehicleActivity.class));
-                        }).setCancelable(true).show();
-                facial_check.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
-                facial_check.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            } else {
+                session.SET_E_REG_FIRST_NAME(f_name);
+                session.SET_E_REG_LAST_NAME(l_name);
+
+                //Next activity
+                startActivity(new Intent(this, ERegDestinationActivity.class));
             }
         });
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.dummy_menu, menu);
-        return true;
     }
 
     @Override
@@ -95,7 +72,6 @@ public class RegNamesActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     public boolean isNamesEmpty(String name) {
         return name.isEmpty();
@@ -114,5 +90,19 @@ public class RegNamesActivity extends AppCompatActivity {
         binding.editLastName.setFilters(new InputFilter[]{filter});
     }
 
+    public void promptEmptyNameFields() {
+        DialogCustomOneButtonBinding binding = DataBindingUtil
+                .inflate(LayoutInflater.from(this), R.layout.dialog_custom_one_button, null, false);
 
+        Dialog dialog = new Dialog(this, R.style.Theme_MaterialComponents_Light_Dialog_Alert);
+        dialog.setContentView(binding.getRoot());
+        binding.imgViewAvatar.setImageResource(R.drawable.ic_sad_face);
+        binding.btnPrimary.setText("Okay");
+        binding.mtvDialogText.setText("Kindly fill in the required details");
+        binding.imgBtnCancel.setOnClickListener(v -> dialog.cancel());
+
+        binding.btnPrimary.setOnClickListener(v -> dialog.dismiss());
+        dialog.setCancelable(false);
+        dialog.show();
+    }
 }

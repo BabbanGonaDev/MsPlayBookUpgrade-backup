@@ -34,6 +34,17 @@ public class TSessionManager {
     public static final String KEY_SELECTED_TRANSPORTER = "selected_transporter";
     public static final String KEY_SELECTED_CC_ID = "selected_cc_id";
     public static final String KEY_QTY_TRANSPORTED = "quantity_transported";
+    public static final String KEY_INSTANT_PAYMENT_FLAG = "instant_payment_flag";
+    public static final String KEY_VOUCHER_ID = "voucher_id";
+    public static final String KEY_VOUCHER_ID_FLAG = "voucher_id_flag";
+
+    /**
+     * These keys are used to store details for a currently registering express-recruitment (coach side)
+     */
+    public static final String KEY_E_REG_PHONE_NUMBER = "e_reg_phone_number";
+    public static final String KEY_E_REG_FIRST_NAME = "e_reg_first_name";
+    public static final String KEY_E_REG_LAST_NAME = "e_reg_last_name";
+
 
     /**
      * List of image names to be used for syncing.
@@ -150,6 +161,30 @@ public class TSessionManager {
         editor.putInt(KEY_QTY_TRANSPORTED, value).commit();
     }
 
+    public void SET_INSTANT_PAYMENT_FLAG(Integer value) {
+        editor.putInt(KEY_INSTANT_PAYMENT_FLAG, value).commit();
+    }
+
+    public void SET_VOUCHER_ID(String value) {
+        editor.putString(KEY_VOUCHER_ID, value).commit();
+    }
+
+    public void SET_VOUCHER_ID_FLAG(Integer value) {
+        editor.putInt(KEY_VOUCHER_ID_FLAG, value).commit();
+    }
+
+    public void SET_E_REG_PHONE_NUMBER(String value) {
+        editor.putString(KEY_E_REG_PHONE_NUMBER, value).commit();
+    }
+
+    public void SET_E_REG_FIRST_NAME(String value) {
+        editor.putString(KEY_E_REG_FIRST_NAME, value).commit();
+    }
+
+    public void SET_E_REG_LAST_NAME(String value) {
+        editor.putString(KEY_E_REG_LAST_NAME, value).commit();
+    }
+
     /**
      * =========================================================================
      * KEEP ALL SESSION GETTERS BELOW THIS LINE
@@ -246,6 +281,31 @@ public class TSessionManager {
         return prefs.getInt(KEY_QTY_TRANSPORTED, 0);
     }
 
+    public Integer GET_INSTANT_PAYMENT_FLAG() {
+        return prefs.getInt(KEY_INSTANT_PAYMENT_FLAG, 0);
+    }
+
+    public String GET_VOUCHER_ID() {
+        return prefs.getString(KEY_VOUCHER_ID, "");
+    }
+
+    public Integer GET_VOUCHER_ID_FLAG() {
+        return prefs.getInt(KEY_VOUCHER_ID_FLAG, 0);
+    }
+
+    public String GET_E_REG_PHONE_NUMBER() {
+        return prefs.getString(KEY_E_REG_PHONE_NUMBER, "");
+    }
+
+    public String GET_E_REG_FIRST_NAME() {
+        return prefs.getString(KEY_E_REG_FIRST_NAME, "");
+    }
+
+    public String GET_E_REG_LAST_NAME() {
+        return prefs.getString(KEY_E_REG_LAST_NAME, "");
+    }
+
+
     /**
      * =========================================================================
      * KEEP ALL SESSION CLEARING BELOW THIS LINE
@@ -260,6 +320,13 @@ public class TSessionManager {
                 .remove(KEY_REG_FACE_TEMPLATE_FLAG)
                 .remove(KEY_REG_VEHICLE_TYPE)
                 .remove(KEY_REG_COLLECTION_CENTERS)
+                .commit();
+    }
+
+    public void CLEAR_E_REG_SESSION() {
+        editor.remove(KEY_E_REG_PHONE_NUMBER)
+                .remove(KEY_E_REG_FIRST_NAME)
+                .remove(KEY_E_REG_LAST_NAME)
                 .commit();
     }
 

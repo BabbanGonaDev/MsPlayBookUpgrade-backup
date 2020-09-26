@@ -31,7 +31,25 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
-        <activity android:name=".transporter.views.activities.ScannerActivity"></activity>
+        <activity
+            android:name=".transporter.views.activities.ERegCardOptionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.activities.ERegBankOptionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.activities.ERegPayOptionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.activities.ERegDestinationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.activities.ERegNamesActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".transporter.views.activities.ERegPhoneNumberActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".transporter.views.activities.ScannerActivity" />
         <activity
             android:name=".utils.CaptureActivity"
             android:theme="@style/AppTheme.NoActionBar" />
