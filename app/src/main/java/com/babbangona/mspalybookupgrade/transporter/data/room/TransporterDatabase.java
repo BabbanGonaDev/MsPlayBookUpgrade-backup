@@ -18,7 +18,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionC
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 
-@Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class, CardsTable.class}, version = 4, exportSchema = false)
+@Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class, CardsTable.class}, version = 5, exportSchema = false)
 public abstract class TransporterDatabase extends RoomDatabase {
     private static TransporterDatabase INSTANCE;
 
@@ -104,6 +104,43 @@ public abstract class TransporterDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            //Move current table to temp
+            db.execSQL("ALTER TABLE transporter_table RENAME TO transporter_table_temp");
+
+            //Create new table structure
+            db.execSQL("CREATE TABLE transporter_table (phone_number TEXT NOT NULL," +
+                    "first_name TEXT, " +
+                    "last_name TEXT, " +
+                    "vehicle_type TEXT, " +
+                    "payment_option TEXT, " +
+                    "bg_card TEXT, " +
+                    "invalid_card_flag INTEGER, " +
+                    "account_number TEXT, " +
+                    "account_name TEXT, " +
+                    "account_mismatch_flag INTEGER, " +
+                    "bank_name TEXT, " +
+                    "template TEXT, " +
+                    "facial_capture_flag INTEGER, " +
+                    "staff_id TEXT, " +
+                    "imei TEXT, " +
+                    "app_version TEXT, " +
+                    "reg_date TEXT, " +
+                    "date_updated TEXT, " +
+                    "sync_flag INTEGER, " +
+                    "PRIMARY KEY(phone_number))");
+
+            //Copy contents from temp table
+            db.execSQL("INSERT INTO transporter_table (phone_number, first_name, last_name, vehicle_type, payment_option, bg_card, invalid_card_flag, account_number, account_name, account_mismatch_flag, bank_name, template, facial_capture_flag, staff_id, reg_date, date_updated, sync_flag)" +
+                    "SELECT phone_number, first_name, last_name, vehicle_type, payment_option, bg_card, invalid_card_flag, account_number, account_name, account_mismatch_flag, bank_name, template, facial_capture_flag, staff_id, reg_date, date_updated, sync_flag FROM transporter_table_temp");
+
+            //Clean-up
+            db.execSQL("DROP TABLE transporter_table_temp");
+        }
+    };
+
     //Init of instance.
     public static TransporterDatabase getInstance(Context context) {
         if (INSTANCE == null) {
@@ -111,7 +148,7 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     TransporterDatabase.class,
                     "transporter-db.db")
                     //.createFromAsset("database/transporter.db")
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .allowMainThreadQueries()
                     .build();
         }
