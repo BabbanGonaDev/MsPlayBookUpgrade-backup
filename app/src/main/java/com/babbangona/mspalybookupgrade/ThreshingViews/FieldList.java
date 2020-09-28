@@ -87,7 +87,7 @@ public class FieldList extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        startActivity(new Intent(FieldList.this, ThreshingActivity.class));
+        startActivity(new Intent(FieldList.this, MemberList.class));
     }
 
     @Override

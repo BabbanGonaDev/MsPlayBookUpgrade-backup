@@ -184,13 +184,19 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         if (validateFieldsInfo(tv_enter_date,tv_confirm_date,edtRescheduleReason) == 0){
             checkForEmptyTextViewFields();
             checkForEmptyTextInputFields();
-        }else if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim(), getMaximumScheduleDate(), old_thresh_date) == 0 ||
-                getDateCorrelationFlag(tv_confirm_date.getText().toString().trim(), getMaximumScheduleDate(), old_thresh_date) == 0){
+        }else if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim(), getMaximumScheduleDate()) == 0 ||
+                getDateCorrelationFlag(tv_confirm_date.getText().toString().trim(), getMaximumScheduleDate()) == 0){
             checkForEmptyTextViewFields();
             checkForWrongSelectedDate();
             checkForEmptyTextInputFields();
 //            Toast.makeText(this, getResources().getString(R.string.error_thresh_date), Toast.LENGTH_LONG).show();
             showDateProblemStart(getResources().getString(R.string.error_re_thresh_date),this);
+        }else if (getDateCorrelationFlagSameDate(tv_enter_date.getText().toString().trim(), old_thresh_date) == 0 ){
+            checkForEmptyTextViewFields();
+            checkForWrongSelectedDate();
+            checkForEmptyTextInputFields();
+//            Toast.makeText(this, getResources().getString(R.string.error_thresh_date), Toast.LENGTH_LONG).show();
+            showDateProblemStart(getResources().getString(R.string.error_re_thresh_date_same),this);
         }else if (!tv_enter_date.getText().toString().trim().matches(tv_confirm_date.getText().toString().trim())){
             checkForWrongSelectedDate();
             checkForMismatchedDate();
@@ -248,10 +254,13 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
     }
 
     void checkForWrongSelectedDate(){
-        if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim(),getMaximumScheduleDate(), old_thresh_date) == 0 ||
-                getDateCorrelationFlag(tv_confirm_date.getText().toString().trim(),getMaximumScheduleDate(), old_thresh_date) == 0){
+        if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim(),getMaximumScheduleDate()) == 0 ||
+                getDateCorrelationFlag(tv_confirm_date.getText().toString().trim(),getMaximumScheduleDate()) == 0){
             setErrorOfTextView(tv_enter_date,getResources().getString(R.string.error_re_thresh_date));
             setErrorOfTextView(tv_confirm_date,getResources().getString(R.string.error_re_thresh_date));
+        }if (getDateCorrelationFlagSameDate(tv_enter_date.getText().toString().trim(),old_thresh_date) == 0 ){
+            setErrorOfTextView(tv_enter_date,getResources().getString(R.string.error_re_thresh_date_same));
+            setErrorOfTextView(tv_confirm_date,getResources().getString(R.string.error_re_thresh_date_same));
         }else{
             removeErrorFromText(tv_enter_date);
             removeErrorFromText(tv_confirm_date);
@@ -304,19 +313,41 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         materialTextView.setError(null);
     }
 
-    public int getDateCorrelationFlag(String selected_date, String reference_maximum_date, String former_date){
+    public int getDateCorrelationFlag(String selected_date, String reference_maximum_date){
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy",Locale.getDefault());
             String today = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault()).format(new Date());
             Date selectedDate = sdf.parse(selected_date);
             Date todayDate = sdf.parse(today);
             Date referenceMaximumDate = sdf.parse(parseDate(reference_maximum_date));
-            Date existingDate = sdf.parse(former_date);
             // before() will return true if and only if date1 is before date2
             if (selectedDate != null) {
                 if(selectedDate.before(todayDate)){
                     return 0;
                 }else if (selectedDate.after(referenceMaximumDate)){
+                    return 0;
+                }else{
+                    return 1;
+                }
+            }else{
+                return 0;
+            }
+        } catch(ParseException ex){
+            ex.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int getDateCorrelationFlagSameDate(String selected_date, String former_date){
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy",Locale.getDefault());
+            String today = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault()).format(new Date());
+            Date selectedDate = sdf.parse(selected_date);
+            Date todayDate = sdf.parse(today);
+            Date existingDate = sdf.parse(former_date);
+            // before() will return true if and only if date1 is before date2
+            if (selectedDate != null) {
+                if(selectedDate.before(todayDate)){
                     return 0;
                 }else if (selectedDate.equals(existingDate)){
                     return 0;

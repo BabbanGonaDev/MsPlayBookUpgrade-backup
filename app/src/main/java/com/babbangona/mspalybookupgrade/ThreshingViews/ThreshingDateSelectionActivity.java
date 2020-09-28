@@ -730,6 +730,12 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         }
     }
 
+    void hideBottomSheet(){
+        if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+    }
+
     @Override
     public void onLocationChanged(Location location) {
 
