@@ -5,12 +5,17 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static android.content.Context.WINDOW_SERVICE;
@@ -136,5 +141,48 @@ public class SetPortfolioMethods {
 
     public double getLocationAverage(String value1, String value2){
         return (returnRightDoubleValue(value1)+returnRightDoubleValue(value2))/2;
+    }
+
+    public void setFooter(TextView tv_last_sync_time, TextView tv_staff_id, Context context){
+        SharedPrefs sharedPrefs = new SharedPrefs(context);
+        String last_sync_time = parseDate(getLastSyncTimeStaffList(context));
+        tv_last_sync_time.setText(last_sync_time);
+        tv_staff_id.setText(sharedPrefs.getStaffID());
+    }
+
+    String getLastSyncTimeStaffList(Context context){
+        AppDatabase appDatabase = AppDatabase.getInstance(context);
+        SharedPrefs sharedPrefs = new SharedPrefs(context);
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncStaff(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2020-05-20 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2020-05-20 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    public String parseDate(String time) {
+        String inputPattern = "yyyy-MM-dd hh:mm:ss";
+        String outputPattern = "dd/MMM/yy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.getDefault());
+
+        Date date;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            if (date != null) {
+                str = outputFormat.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
     }
 }

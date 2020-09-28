@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.Homepage;
@@ -16,6 +17,7 @@ import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.android.material.button.MaterialButton;
 
 import butterknife.BindView;
@@ -46,15 +48,24 @@ public class ThreshingActivity extends AppCompatActivity {
 
     AppDatabase appDatabase;
 
+    @BindView(R.id.last_sync_date_tv)
+    TextView last_sync_date_tv;
+
+    @BindView(R.id.tv_staff_id)
+    TextView tv_staff_id;
+
+    SetPortfolioMethods setPortfolioMethods;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_threshing);
+        setContentView(R.layout.activity_threshing_top);
         ButterKnife.bind(ThreshingActivity.this);
         sharedPrefs = new SharedPrefs(ThreshingActivity.this);
         appDatabase = AppDatabase.getInstance(ThreshingActivity.this);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,ThreshingActivity.this);
     }
 
     @OnClick(R.id.btnScheduleThreshing)

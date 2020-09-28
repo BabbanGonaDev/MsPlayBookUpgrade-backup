@@ -44,6 +44,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
+import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -129,6 +130,12 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
     @BindView(R.id.btnConfirm)
     MaterialButton btnConfirm;
 
+    @BindView(R.id.last_sync_date_tv)
+    TextView last_sync_date_tv;
+
+    @BindView(R.id.tv_staff_id)
+    TextView tv_staff_id;
+
     private BottomSheetBehavior sheetBehavior;
 
     int size;
@@ -148,6 +155,8 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
     ProgressDialog locationDialog;
     LocationManager locationManager;
     final long MIN_LOC_UPDATE_TIME = 500;
+
+    SetPortfolioMethods setPortfolioMethods;
 
     private GPSController.LocationGetter locationGetter;
 
@@ -218,6 +227,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 goToHomeLocationCapture();
             }
         };
+        setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,ThreshingDateSelectionActivity.this);
     }
 
     @Override

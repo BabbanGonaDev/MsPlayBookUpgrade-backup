@@ -7,8 +7,34 @@
     android:layout_height="match_parent"
     tools:context=".ThreshingViews.MemberList"
     android:background="@color/off_white">
+    <RelativeLayout
 
-    <include layout="@layout/threshing_date_selection_content" />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <!-- MAIN PART -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/bottom_menu"
+            android:paddingBottom="5sp" >
+            <include layout="@layout/threshing_date_selection_content" />
+        </LinearLayout>
+
+
+        <!-- FOOTER -->
+        <LinearLayout
+            android:id="@+id/bottom_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true">
+            <!-- menu bar -->
+            <include layout="@layout/app_footer" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <!-- Adding bottom sheet after main content -->
     <include layout="@layout/threshing_date_confirmation_dialog" />

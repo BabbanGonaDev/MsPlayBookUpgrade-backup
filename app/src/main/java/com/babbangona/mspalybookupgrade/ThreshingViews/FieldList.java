@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.Homepage;
@@ -19,6 +20,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.Ac
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ThreshingFieldListRecycler.ThreshingFieldListAdapter;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,22 +33,32 @@ public class FieldList extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.last_sync_date_tv)
+    TextView last_sync_date_tv;
+
+    @BindView(R.id.tv_staff_id)
+    TextView tv_staff_id;
+
+    SetPortfolioMethods setPortfolioMethods;
+
     AppDatabase appDatabase;
 
     SharedPrefs sharedPrefs;
 
     ThreshingFieldListAdapter threshingFieldListAdapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_field_list);
+        setContentView(R.layout.activity_field_list_top);
         ButterKnife.bind(FieldList.this);
         appDatabase = AppDatabase.getInstance(FieldList.this);
         sharedPrefs = new SharedPrefs(FieldList.this);
         initActivitiesRecycler();
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,FieldList.this);
     }
 
     public void initActivitiesRecycler(){

@@ -34,6 +34,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecora
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.MembersDao;
+import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 
 import java.util.Objects;
 
@@ -67,6 +68,14 @@ public class MemberList extends AppCompatActivity {
     @BindView(R.id.emptyView)
     ImageView emptyView;
 
+    @BindView(R.id.last_sync_date_tv)
+    TextView last_sync_date_tv;
+
+    @BindView(R.id.tv_staff_id)
+    TextView tv_staff_id;
+
+    SetPortfolioMethods setPortfolioMethods;
+
     MemberListRecyclerViewAdapter memberListRecyclerViewAdapter;
 
     MemberPageListModelClass memberPageListModelClass;
@@ -76,7 +85,7 @@ public class MemberList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_member_list);
+        setContentView(R.layout.activity_member_list_top);
         ButterKnife.bind(MemberList.this);
         appDatabase = AppDatabase.getInstance(MemberList.this);
         showView(toolbar_linear_layout);
@@ -88,6 +97,7 @@ public class MemberList extends AppCompatActivity {
         memberPageListModelClass.filterTextAll.setValue("");
 
         setAdapter();
+        setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,MemberList.this);
     }
 
     @OnClick(R.id.et_search)

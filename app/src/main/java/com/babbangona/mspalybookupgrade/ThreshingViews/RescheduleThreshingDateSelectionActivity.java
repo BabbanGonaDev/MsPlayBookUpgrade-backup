@@ -27,6 +27,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
+import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
@@ -68,9 +69,18 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.last_sync_date_tv)
+    TextView last_sync_date_tv;
+
+    @BindView(R.id.tv_staff_id)
+    TextView tv_staff_id;
+
+
     AppDatabase appDatabase;
 
     SharedPrefs sharedPrefs;
+
+    SetPortfolioMethods setPortfolioMethods;
 
     private GPSController.LocationGetter locationGetter;
 
@@ -79,7 +89,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reschedule_threshing_date_selection_content);
+        setContentView(R.layout.reschedule_threshing_date_selection_content_top);
         ButterKnife.bind(RescheduleThreshingDateSelectionActivity.this);
         appDatabase = AppDatabase.getInstance(RescheduleThreshingDateSelectionActivity.this);
         sharedPrefs = new SharedPrefs(RescheduleThreshingDateSelectionActivity.this);
@@ -90,6 +100,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         tv_old_thresh_date.setText(text);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,RescheduleThreshingDateSelectionActivity.this);
 
     }
 
