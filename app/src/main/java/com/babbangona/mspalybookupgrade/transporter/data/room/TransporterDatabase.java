@@ -27,7 +27,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TpoLogsTabl
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 
 @Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class,
-        CardsTable.class, CoachLogsTable.class, TpoLogsTable.class, TempTransporterTable.class, FavouritesTable.class}, version = 5, exportSchema = false)
+        CardsTable.class, CoachLogsTable.class, TpoLogsTable.class, TempTransporterTable.class, FavouritesTable.class}, version = 6, exportSchema = false)
 public abstract class TransporterDatabase extends RoomDatabase {
 
     private static TransporterDatabase INSTANCE;
@@ -117,6 +117,10 @@ public abstract class TransporterDatabase extends RoomDatabase {
     private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
+            /**
+             * Added "imei" and "app_version" columns to the transporter table.
+             */
+
             //Move current table to temp
             db.execSQL("ALTER TABLE transporter_table RENAME TO transporter_table_temp");
 
@@ -151,9 +155,13 @@ public abstract class TransporterDatabase extends RoomDatabase {
         }
     };
 
-    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+    private static final Migration MIGRATION_5_6 = new Migration(5, 6) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
+            /**
+             * Added coach_logs, tpo_logs, temp_transporter & favourites tables.
+             */
+
             //Create Coach Logs.
             db.execSQL("CREATE TABLE coach_logs_table (member_id TEXT NOT NULL, " +
                     "quantity INTEGER NOT NULL, " +
@@ -180,7 +188,7 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     "sync_flag INTEGER, " +
                     "PRIMARY KEY(member_id, quantity, transporter_id, date_logged))");
 
-            //Create Temp Transporter Logs
+            //Create Temp Transporter
             db.execSQL("CREATE TABLE temp_transporter_table (temp_transporter_id TEXT NOT NULL, " +
                     "first_name TEXT, " +
                     "last_name TEXT, " +
@@ -205,7 +213,7 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     TransporterDatabase.class,
                     "transporter-db.db")
                     //.createFromAsset("database/transporter.db")
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                     .allowMainThreadQueries()
                     .build();
         }
