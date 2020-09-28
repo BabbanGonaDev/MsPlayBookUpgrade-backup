@@ -167,6 +167,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         ButterKnife.bind(ThreshingDateSelectionActivity.this);
         appDatabase = AppDatabase.getInstance(ThreshingDateSelectionActivity.this);
         sharedPrefs = new SharedPrefs(ThreshingDateSelectionActivity.this);
+        setPortfolioMethods = new SetPortfolioMethods();
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> goToHomePage());
 

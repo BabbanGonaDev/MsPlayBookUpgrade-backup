@@ -168,7 +168,7 @@ public class SetPortfolioMethods {
 
     public String parseDate(String time) {
         String inputPattern = "yyyy-MM-dd hh:mm:ss";
-        String outputPattern = "dd/MMM/yy";
+        String outputPattern = "dd/MM/yy";
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.getDefault());
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.getDefault());
 

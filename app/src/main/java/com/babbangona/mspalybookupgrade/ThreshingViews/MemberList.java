@@ -88,6 +88,7 @@ public class MemberList extends AppCompatActivity {
         setContentView(R.layout.activity_member_list_top);
         ButterKnife.bind(MemberList.this);
         appDatabase = AppDatabase.getInstance(MemberList.this);
+        setPortfolioMethods = new SetPortfolioMethods();
         showView(toolbar_linear_layout);
         hideView(search_linear_layout);
         setSupportActionBar(toolbar);

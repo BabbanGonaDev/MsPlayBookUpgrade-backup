@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.babbangona.mspalybookupgrade.ComingSoon;
@@ -65,6 +66,7 @@ public class ThreshingActivity extends AppCompatActivity {
         appDatabase = AppDatabase.getInstance(ThreshingActivity.this);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        setPortfolioMethods = new SetPortfolioMethods();
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,ThreshingActivity.this);
     }
 

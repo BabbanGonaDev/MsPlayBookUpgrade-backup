@@ -55,6 +55,7 @@ public class FieldList extends AppCompatActivity {
         ButterKnife.bind(FieldList.this);
         appDatabase = AppDatabase.getInstance(FieldList.this);
         sharedPrefs = new SharedPrefs(FieldList.this);
+        setPortfolioMethods = new SetPortfolioMethods();
         initActivitiesRecycler();
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());

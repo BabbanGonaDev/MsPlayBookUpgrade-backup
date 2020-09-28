@@ -93,6 +93,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         ButterKnife.bind(RescheduleThreshingDateSelectionActivity.this);
         appDatabase = AppDatabase.getInstance(RescheduleThreshingDateSelectionActivity.this);
         sharedPrefs = new SharedPrefs(RescheduleThreshingDateSelectionActivity.this);
+        setPortfolioMethods = new SetPortfolioMethods();
         old_thresh_date = parseDate(appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeyThreshingUniqueFieldId()));
         String text = "Field ID: " + sharedPrefs.getKeyThreshingUniqueFieldId() + "\n" +
                 "IK Number: " + sharedPrefs.getKeyThreshingIkNumber() + "\n" +
