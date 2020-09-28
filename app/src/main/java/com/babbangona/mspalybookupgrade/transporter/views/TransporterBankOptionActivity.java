@@ -1,7 +1,11 @@
 package com.babbangona.mspalybookupgrade.transporter.views;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +14,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.babbangona.mspalybookupgrade.BuildConfig;
@@ -29,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class TransporterBankOptionActivity extends AppCompatActivity {
     ActivityTransporterBankOptionBinding binding;
@@ -235,6 +241,8 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
                 session.GET_REG_FACE_TEMPLATE(),
                 session.GET_REG_FACE_TEMPLATE_FLAG(),
                 session.GET_LOG_IN_STAFF_ID(),
+                getDeviceID(),
+                BuildConfig.VERSION_NAME,
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 0);
@@ -265,5 +273,25 @@ public class TransporterBankOptionActivity extends AppCompatActivity {
         };
         binding.editAccountNumber.setFilters(new InputFilter[]{filter_1});
         binding.editConfirmAccountNumber.setFilters(new InputFilter[]{filter_1});
+    }
+
+
+    private String getDeviceID() {
+        String device_id;
+        TelephonyManager tm = (TelephonyManager) Objects.requireNonNull(this).getSystemService(Context.TELEPHONY_SERVICE);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                device_id = tm.getDeviceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                device_id = "";
+            }
+            if (device_id == null) {
+                device_id = "";
+            }
+        } else {
+            device_id = "";
+        }
+        return device_id;
     }
 }
