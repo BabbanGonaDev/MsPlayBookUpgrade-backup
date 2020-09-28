@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.Homepage;
 import com.babbangona.mspalybookupgrade.R;
@@ -21,6 +22,8 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.ThreshingFieldListRecyc
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +61,7 @@ public class FieldList extends AppCompatActivity {
         setPortfolioMethods = new SetPortfolioMethods();
         initActivitiesRecycler();
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(FieldList.this));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,FieldList.this);
     }

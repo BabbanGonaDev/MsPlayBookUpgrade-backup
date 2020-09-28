@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.Homepage;
 import com.babbangona.mspalybookupgrade.R;
@@ -20,6 +21,8 @@ import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,11 +65,14 @@ public class ThreshingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threshing_top);
         ButterKnife.bind(ThreshingActivity.this);
+        setSupportActionBar(toolbar);
+        setPortfolioMethods = new SetPortfolioMethods();
         sharedPrefs = new SharedPrefs(ThreshingActivity.this);
         appDatabase = AppDatabase.getInstance(ThreshingActivity.this);
-        setSupportActionBar(toolbar);
+
+
+        Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(ThreshingActivity.this));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        setPortfolioMethods = new SetPortfolioMethods();
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,ThreshingActivity.this);
     }
 

@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.FieldListPage;
 import com.babbangona.mspalybookupgrade.R;
@@ -87,11 +88,12 @@ public class MemberList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_list_top);
         ButterKnife.bind(MemberList.this);
+        setSupportActionBar(toolbar);
         appDatabase = AppDatabase.getInstance(MemberList.this);
         setPortfolioMethods = new SetPortfolioMethods();
         showView(toolbar_linear_layout);
         hideView(search_linear_layout);
-        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(MemberList.this));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         memberPageListModelClass = new ViewModelProvider(this, new MyViewModelFactory(appDatabase.membersDao(), this)).get(MemberPageListModelClass.class);

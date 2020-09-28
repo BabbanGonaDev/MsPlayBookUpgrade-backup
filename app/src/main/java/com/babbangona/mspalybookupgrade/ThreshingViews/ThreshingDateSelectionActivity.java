@@ -23,7 +23,9 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.RelativeSizeSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -165,10 +167,11 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threshing_date_selection);
         ButterKnife.bind(ThreshingDateSelectionActivity.this);
+        setSupportActionBar(toolbar);
+        setPortfolioMethods = new SetPortfolioMethods();
         appDatabase = AppDatabase.getInstance(ThreshingDateSelectionActivity.this);
         sharedPrefs = new SharedPrefs(ThreshingDateSelectionActivity.this);
-        setPortfolioMethods = new SetPortfolioMethods();
-        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(ThreshingDateSelectionActivity.this));
         toolbar.setNavigationOnClickListener(v -> goToHomePage());
 
 

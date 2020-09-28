@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -91,6 +92,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reschedule_threshing_date_selection_content_top);
         ButterKnife.bind(RescheduleThreshingDateSelectionActivity.this);
+        setSupportActionBar(toolbar);
         appDatabase = AppDatabase.getInstance(RescheduleThreshingDateSelectionActivity.this);
         sharedPrefs = new SharedPrefs(RescheduleThreshingDateSelectionActivity.this);
         setPortfolioMethods = new SetPortfolioMethods();
@@ -99,7 +101,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 "IK Number: " + sharedPrefs.getKeyThreshingIkNumber() + "\n" +
                 "Old Scheduled Date: " + old_thresh_date;
         tv_old_thresh_date.setText(text);
-        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(RescheduleThreshingDateSelectionActivity.this));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,RescheduleThreshingDateSelectionActivity.this);
 

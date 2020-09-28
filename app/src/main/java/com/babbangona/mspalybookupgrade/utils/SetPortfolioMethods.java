@@ -2,11 +2,15 @@ package com.babbangona.mspalybookupgrade.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
+import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 
@@ -184,5 +188,12 @@ public class SetPortfolioMethods {
             e.printStackTrace();
         }
         return str;
+    }
+
+    public SpannableString getToolbarTitle(Context context){
+        String s = context.getResources().getString(R.string.app_name) + " V" + BuildConfig.VERSION_NAME;
+        SpannableString ss1=  new SpannableString(s);
+        ss1.setSpan(new RelativeSizeSpan(1.2f), 0,10, 0);
+        return ss1;
     }
 }
