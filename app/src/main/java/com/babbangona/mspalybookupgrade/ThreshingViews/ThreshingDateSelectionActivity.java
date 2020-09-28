@@ -185,8 +185,8 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             fillCollectionCenterSpinner(actConfirmCollectionCenter, ThreshingDateSelectionActivity.this);
         });
 
-        textWatcher(edtPhoneNumber, edlPhoneNumber, getResources().getString(R.string.wrong_phone_number_format));
-        textWatcher(edtConfirmPhoneNumber, edlConfirmPhoneNumber, getResources().getString(R.string.wrong_phone_number_format));
+        textWatcher(edtPhoneNumber, edlPhoneNumber, getResources().getString(R.string.wrong_phone_number_format),"1");
+        textWatcher(edtConfirmPhoneNumber, edlConfirmPhoneNumber, getResources().getString(R.string.wrong_phone_number_format),"2");
 
         sheetBehavior = BottomSheetBehavior.from(threshing_date_confirmation_dialog);
         addBehaviourToBottomSheet(sheetBehavior);
@@ -294,14 +294,14 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
 
     @OnClick(R.id.tv_enter_date)
     void enterDate(){
-        getCalenderDate(tv_enter_date, getResources().getString(R.string.enter_thresh_date), ThreshingDateSelectionActivity.this);
+        getCalenderDate(tv_enter_date, getResources().getString(R.string.enter_thresh_date), ThreshingDateSelectionActivity.this,"1");
         tv_confirm_date.setEnabled(true);
         clearTextViewText(tv_confirm_date);
     }
 
     @OnClick(R.id.tv_confirm_date)
     void confirmDate(){
-        getCalenderDate(tv_confirm_date, getResources().getString(R.string.confirm_thresh_date), ThreshingDateSelectionActivity.this);
+        getCalenderDate(tv_confirm_date, getResources().getString(R.string.confirm_thresh_date), ThreshingDateSelectionActivity.this,"2");
     }
 
     @OnClick(R.id.btnCancel)
@@ -314,7 +314,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         showDialogForExit(ThreshingDateSelectionActivity.this);
     }
 
-    void getCalenderDate(MaterialTextView textView, String activity_string, Context context){
+    void getCalenderDate(MaterialTextView textView, String activity_string, Context context, String flag){
 
         //To show current date in the datePicker
         Calendar mCurrentDate = Calendar.getInstance();
@@ -325,6 +325,9 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         DatePickerDialog mDatePicker = new DatePickerDialog(context, (datePicker, selectedYear, selectedMonth, selectedDay) -> {
             String text = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
             textView.setText(parseDate(text));
+            if (flag.equalsIgnoreCase("2")){
+                checkForWrongSelectedDate();
+            }
         }, mYear, mMonth, mDay);
         mDatePicker.setTitle(activity_string);
         mDatePicker.show();
@@ -381,12 +384,14 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             checkForEmptyFields();
             checkForEmptyTextViewFields();
             checkForEmptyTextInputFields();
+            checkForMismatchedPhoneNumber();
         }else if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim(),getMaximumScheduleDate()) == 0 ||
                 getDateCorrelationFlag(tv_confirm_date.getText().toString().trim(),getMaximumScheduleDate()) == 0){
             checkForEmptyFields();
             checkForEmptyTextViewFields();
             checkForEmptyTextInputFields();
             checkForWrongSelectedDate();
+            checkForMismatchedPhoneNumber();
             //Toast.makeText(this, getResources().getString(R.string.error_thresh_date), Toast.LENGTH_LONG).show();
             showDateProblemStart(getResources().getString(R.string.error_thresh_date),this);
         }else if (!tv_enter_date.getText().toString().trim().matches(tv_confirm_date.getText().toString().trim())){
@@ -395,11 +400,13 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             checkForEmptyTextInputFields();
             checkForMismatchedCollectionCenter();
             checkForMismatchedDate();
+            checkForMismatchedPhoneNumber();
             //Toast.makeText(this, getResources().getString(R.string.error_thresh_date_mismatch), Toast.LENGTH_LONG).show();
             showDateProblemStart(getResources().getString(R.string.error_thresh_date_mismatch),this);
         }else if (!checkThreshHours(tv_enter_date.getText().toString().trim(), sharedPrefs.getStaffID())){
 //            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
             showDateProblemStart(getResources().getString(R.string.thresh_date_error),this);
+            checkForMismatchedPhoneNumber();
         }else if (!actCollectionCenter.getText().toString().trim().matches(actConfirmCollectionCenter.getText().toString().trim())){
             checkForEmptyFields();
             checkForEmptyTextViewFields();
@@ -407,13 +414,18 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             checkForMismatchedCollectionCenter();
             checkForMismatchedDate();
             checkForWrongSelectedDate();
-        }else if (!Objects.requireNonNull(edtPhoneNumber.getText()).toString().trim().matches(Objects.requireNonNull(edtConfirmPhoneNumber.getText()).toString().trim())){
+            checkForMismatchedPhoneNumber();
+        } else if(!validateFields(edtPhoneNumber) || !validateFields(edtConfirmPhoneNumber)) {
+            checkForWrongPhoneNumber();
+        } else if (!Objects.requireNonNull(edtPhoneNumber.getText()).toString().trim().matches(Objects.requireNonNull(edtConfirmPhoneNumber.getText()).toString().trim())){
             checkForEmptyFields();
             checkForEmptyTextViewFields();
             checkForEmptyTextInputFields();
             checkForMismatchedCollectionCenter();
             checkForMismatchedDate();
             checkForWrongSelectedDate();
+            checkForMismatchedPhoneNumber();
+            checkForMismatchedPhoneNumber();
         }else{
             checkForEmptyFields();
             checkForEmptyTextInputFields();
@@ -421,6 +433,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             checkForMismatchedCollectionCenter();
             checkForMismatchedDate();
             checkForWrongSelectedDate();
+            checkForMismatchedPhoneNumber();
             //save to shared preference and move on
             setBottomSheerTexts();
             showBottomSheet();
@@ -503,6 +516,30 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         }else{
             removeErrorFromText(tv_enter_date);
             removeErrorFromText(tv_confirm_date);
+        }
+    }
+
+    void checkForMismatchedPhoneNumber(){
+        if (!Objects.requireNonNull(edtPhoneNumber.getText()).toString().trim().matches(Objects.requireNonNull(edtConfirmPhoneNumber.getText()).toString().trim())){
+            setErrorOfTextView(edlPhoneNumber,getResources().getString(R.string.error_phone_number_mismatch));
+            setErrorOfTextView(edlConfirmPhoneNumber,getResources().getString(R.string.error_phone_number_mismatch));
+        }else{
+            removeErrorFromText(edlPhoneNumber);
+            removeErrorFromText(edlConfirmPhoneNumber);
+        }
+    }
+
+    void checkForWrongPhoneNumber(){
+        if (!validateFields(edtPhoneNumber)){
+            setErrorOfTextView(edlPhoneNumber,getResources().getString(R.string.wrong_phone_number_format));
+        }else{
+            removeErrorFromText(edlPhoneNumber);
+        }
+
+        if (!validateFields(edtConfirmPhoneNumber)){
+            setErrorOfTextView(edlConfirmPhoneNumber,getResources().getString(R.string.wrong_phone_number_format));
+        }else{
+            removeErrorFromText(edlConfirmPhoneNumber);
         }
     }
 
@@ -696,7 +733,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         autoCompleteTextView.setText("");
     }
 
-    void textWatcher(TextInputEditText textInputEditText, TextInputLayout textInputLayout, String error_message) {
+    void textWatcher(TextInputEditText textInputEditText, TextInputLayout textInputLayout, String error_message, String flag) {
         textInputEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -708,6 +745,8 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 if (Objects.requireNonNull(textInputEditText.getText()).toString().length() > 0){
                     if (!validateFields(textInputEditText)){
                         setErrorOfTextView(textInputLayout,error_message);
+                    }else if (flag.equalsIgnoreCase("2")){
+                        checkForMismatchedPhoneNumber();
                     }else {
                         removeErrorFromText(textInputLayout);
                     }
@@ -744,12 +783,6 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         } else {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-    }
-
-    void hideBottomSheet(){
-        if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
     }

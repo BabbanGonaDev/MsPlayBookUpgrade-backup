@@ -152,12 +152,15 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                     sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
                     mCtx.startActivity(intent);
                 })
-                .setNeutralButton(context.getResources().getString(R.string.thresher_self), (dialog, which) -> {
+                .setNegativeButton(context.getResources().getString(R.string.thresher_self), (dialog, which) -> {
                     dialog.dismiss();
                     sharedPrefs.setKeyThresher("Self");
                     Intent intent = new Intent (mCtx, ReVerifyActivity.class);
                     sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
                     mCtx.startActivity(intent);
+                })
+                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+                    dialog.dismiss();
                 })
                 .setCancelable(false)
                 .show();

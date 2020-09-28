@@ -27,6 +27,9 @@ public abstract class MembersDao {
     @Query(" UPDATE members SET coach_id = 'T-10000000000000AA'")
     public abstract void updateCoach();
 
+    @Query(" UPDATE members SET bgt_id = 'T-10000000000000BB'")
+    public abstract void updateMemberBgtID();
+
     //String unique_member_id, String member_name, String role, String village, String ik_number, String member_r_id
 
     @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, b.bgt_id as staff_id," +
