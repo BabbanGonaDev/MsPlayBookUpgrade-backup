@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 11;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 12;
 
     /**
      * Names of tables
@@ -206,6 +206,7 @@ public class DatabaseStringConstants {
     public static final String AVERAGE_TRANSITION_TIME                      = "average_transition_time";
     public static final String TIME_PER_HA                                  = "time_per_ha";
     public static final String MAXIMUM_SCHEDULE_DATE                        = "maximum_schedule_date";
+    public static final String LUXAND_FLAG                                  = "luxand_flag";
 
     /**
      * rf_list column names
@@ -247,6 +248,7 @@ public class DatabaseStringConstants {
     public static final String UPDATE_THRESHING                         = "2";
     public static final String CONFIRM_THRESHING                        = "3";
     public static final String MARK_HG_AT_RISK                          = "4";
+    public static final String SWAP_SCHEDULE_DATE                       = "5";
 
     /**
      * picture_sync column names

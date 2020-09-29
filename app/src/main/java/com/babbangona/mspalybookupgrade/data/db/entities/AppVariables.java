@@ -38,9 +38,13 @@ public class AppVariables {
     @ColumnInfo(name = DatabaseStringConstants.MAXIMUM_SCHEDULE_DATE)
     private String maximum_schedule_date;
 
+    @ColumnInfo(name = DatabaseStringConstants.LUXAND_FLAG)
+    private String luxand_flag;
+
     public AppVariables(@NonNull String variable_id, String edit_harvest_location_flag,
                         String minimum_log_date, String maximum_log_date, String fields_travel_time,
-                        String average_transition_time, String time_per_ha, String maximum_schedule_date) {
+                        String average_transition_time, String time_per_ha, String maximum_schedule_date,
+                        String luxand_flag) {
         this.variable_id = variable_id;
         this.edit_harvest_location_flag = edit_harvest_location_flag;
         this.minimum_log_date = minimum_log_date;
@@ -49,6 +53,7 @@ public class AppVariables {
         this.average_transition_time = average_transition_time;
         this.time_per_ha = time_per_ha;
         this.maximum_schedule_date = maximum_schedule_date;
+        this.luxand_flag = luxand_flag;
     }
 
     public String getFields_travel_time() {
@@ -114,5 +119,13 @@ public class AppVariables {
 
     public void setMaximum_schedule_date(String maximum_schedule_date) {
         this.maximum_schedule_date = maximum_schedule_date;
+    }
+
+    public String getLuxand_flag() {
+        return luxand_flag;
+    }
+
+    public void setLuxand_flag(String luxand_flag) {
+        this.luxand_flag = luxand_flag;
     }
 }

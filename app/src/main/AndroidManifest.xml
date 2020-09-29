@@ -26,11 +26,19 @@
         android:icon="@drawable/app_icon_custom"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@drawable/ic_book"
+        android:roundIcon="@drawable/app_icon_custom"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
+        <activity android:name=".ThreshingViews.ScheduleThreshingSummary"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ThreshingViews.ScheduleDate"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ThreshingViews.CalenderViewActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".utils.CaptureActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -47,11 +55,14 @@
         <activity
             android:name=".ThreshingViews.ThreshingDateSelectionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ThreshingViews.FieldList"
+        <activity
+            android:name=".ThreshingViews.FieldList"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ThreshingViews.MemberList"
+        <activity
+            android:name=".ThreshingViews.MemberList"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ThreshingViews.ThreshingActivity"
+        <activity
+            android:name=".ThreshingViews.ThreshingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".transporter.views.ViewRegisteredTransporters"

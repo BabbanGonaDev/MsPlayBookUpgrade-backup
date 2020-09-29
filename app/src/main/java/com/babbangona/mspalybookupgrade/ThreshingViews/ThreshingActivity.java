@@ -74,6 +74,7 @@ public class ThreshingActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(ThreshingActivity.this));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,ThreshingActivity.this);
+        removeScheduleAndUpdate();
     }
 
     @OnClick(R.id.btnScheduleThreshing)
@@ -100,7 +101,7 @@ public class ThreshingActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSummary)
     public void setBtnSummary(){
-        startActivity(new Intent(ThreshingActivity.this, ComingSoon.class));
+        startActivity(new Intent(ThreshingActivity.this, ScheduleThreshingSummary.class));
     }
 
     @OnClick(R.id.btnMarkHG)
@@ -128,9 +129,20 @@ public class ThreshingActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.schedule) {
-            startActivity(new Intent(ThreshingActivity.this, ComingSoon.class));
+            startActivity(new Intent(ThreshingActivity.this, CalenderViewActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    void removeScheduleAndUpdate(){
+        if (sharedPrefs.getStaffRole().equalsIgnoreCase("BGT")){
+            btnScheduleThreshing.setVisibility(View.VISIBLE);
+            btnUpdateScheduleThreshing.setVisibility(View.VISIBLE);
+        }else{
+            btnScheduleThreshing.setVisibility(View.GONE);
+            btnUpdateScheduleThreshing.setVisibility(View.GONE);
+
+        }
     }
 }

@@ -1,10 +1,21 @@
 package com.babbangona.mspalybookupgrade.data.db.entities;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 //TODO: Revamp this page following this structure to your desired entity class
 @Entity(primaryKeys = {DatabaseStringConstants.COL_UNIQUE_FIELD_ID},
@@ -242,5 +253,100 @@ public class ScheduledThreshingActivitiesFlag {
         public void setField_size(String field_size) {
             this.field_size = field_size;
         }
+    }
+
+    public static class DateCount{
+
+        private String date;
+        private int count;
+
+        public DateCount() {
+            date = "";
+            count = 0;
+        }
+
+        public String getDate() {
+            return convertToMilliseconds(date);
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        String convertToMilliseconds(String received_date){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = null;
+            long millis = 0;
+            try {
+                date = sdf.parse(received_date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (date != null) {
+                millis = date.getTime();
+            }
+            return String.valueOf(millis);
+        }
+    }
+
+    public static class CalenderCount{
+
+        private Calendar date;
+        private int count;
+
+        public CalenderCount() {
+            date = Calendar.getInstance();
+            count = 0;
+        }
+
+        public CalenderCount(Calendar date, int count) {
+            this.date = date;
+            this.count = count;
+        }
+
+        public Calendar getDate() {
+            return date;
+        }
+
+        public void setDate(Calendar date) {
+            this.date = date;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+    }
+
+    public static List<Calendar> convertToCalenderList(List<String> strings){
+
+        List<Calendar> calenderList = new ArrayList<>();
+
+        for (String dateText:strings){
+            calenderList.add(getCalendar(dateText));
+        }
+        return calenderList;
+    }
+
+    static Calendar getCalendar(String given_date){
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        try {
+            cal.setTime(Objects.requireNonNull(sdf.parse(given_date)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return cal;
     }
 }

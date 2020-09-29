@@ -244,7 +244,7 @@ public class MemberList extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.schedule) {
-            startActivity(new Intent(MemberList.this, ComingSoon.class));
+            startActivity(new Intent(MemberList.this, CalenderViewActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

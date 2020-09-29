@@ -148,7 +148,7 @@
                         android:layout_width="match_parent"
                         android:textSize="@dimen/dimen_17sp"
                         android:layout_height="wrap_content"
-                        android:inputType="phone" />
+                        android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -166,7 +166,7 @@
                         android:layout_width="match_parent"
                         android:textSize="@dimen/dimen_17sp"
                         android:layout_height="wrap_content"
-                        android:inputType="phone" />
+                        android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

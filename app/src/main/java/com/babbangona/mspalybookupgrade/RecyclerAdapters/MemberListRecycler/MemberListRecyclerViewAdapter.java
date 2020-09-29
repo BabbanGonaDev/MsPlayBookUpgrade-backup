@@ -191,8 +191,8 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 showScheduleProblemStart(mCtx.getResources().getString(R.string.wrong_member_schedule),mCtx);
             }
         } else {
-            String route = sharedPrefs.getKeyThreshingActivityRoute();
             showScheduleProblemStart(mCtx.getResources().getString(R.string.wrong_member_schedule),mCtx);
+            /*String route = sharedPrefs.getKeyThreshingActivityRoute();
             switch (route){
                 case "1":
                     showDialogForExit(mCtx,memberListRecyclerModel);
@@ -207,7 +207,7 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                     sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
                     mCtx.startActivity(new Intent (mCtx, ComingSoon.class));
                     break;
-            }
+            }*/
         }
     }
 

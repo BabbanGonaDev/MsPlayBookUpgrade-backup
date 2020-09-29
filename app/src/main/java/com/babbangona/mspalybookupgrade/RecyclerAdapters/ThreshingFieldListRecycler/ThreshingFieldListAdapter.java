@@ -116,7 +116,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
             tv_field_id.setText(threshingFieldListRecyclerModel.getUnique_field_id());
             tv_village.setText(village);
             tv_field_size.setText(field_size);
-            field_list_container.setOnClickListener((view)->navigateToSelectThreshDatePage(threshingFieldListRecyclerModel));
+            field_list_container.setOnClickListener((view)->navigateToSelectThreshDatePage(threshingFieldListRecyclerModel, getAdapterPosition()));
             getStatus(threshingFieldListRecyclerModel.getUnique_field_id(),iv_activity_signal);
         }
 
@@ -135,7 +135,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
         }
     }
 
-    void navigateToSelectThreshDatePage(ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel){
+    void navigateToSelectThreshDatePage(ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel, int position){
 
         String route = sharedPrefs.getKeyThreshingActivityRoute();
         int status = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldScheduleStatus(threshingFieldListRecyclerModel.getUnique_field_id());
@@ -182,22 +182,44 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
             }else{
                 if (status > 0){
                     if (threshingFieldListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())){
-                        showDialogForConfirmThreshing(context,threshingFieldListRecyclerModel,"0",fieldListRecyclerModel);
+                        showDialogForConfirmThreshing(context,threshingFieldListRecyclerModel,"0",fieldListRecyclerModel,position);
                     }else{
-                        showDialogForConfirmWithCode(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
+                        showDialogForConfirmWithCode(context,threshingFieldListRecyclerModel,fieldListRecyclerModel,position);
                     }
                 }else{
                     showConfirmSuccess(context.getResources().getString(R.string.error_confirm_before_schedule),context,"crying");
                 }
             }
 
-        } else if (route.equalsIgnoreCase("4")){
+        } else if (route.equalsIgnoreCase(DatabaseStringConstants.MARK_HG_AT_RISK)){
             //log HG at risk
             if (threshingFieldListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())){
                 showDialogForLogHGStart(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
             }else{
                 showConfirmSuccess(context.getResources().getString(R.string.error_hg_field_not_assigned),context,"crying");
             }
+        } else if (route.equalsIgnoreCase(DatabaseStringConstants.SWAP_SCHEDULE_DATE)){
+            //log HG at risk
+            /*if (confirm_status > 0){
+                //thresh confirmed, do you want to reset confirm?
+                showConfirmSuccess(context.getResources().getString(R.string.error_schedule_after_confirm),context,"crying");
+            }else{
+                if (status > 0){
+                    showDialogForRescheduleThreshing(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
+                }else{
+                    Intent intent = new Intent (context, ThreshingDateSelectionActivity.class);
+                    sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
+                    sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);
+                    sharedPrefs.setKeyThreshingCropType(fieldListRecyclerModel.getCrop_type());
+                    sharedPrefs.setKeyThreshingIkNumber(fieldListRecyclerModel.getIk_number());
+                    context.startActivity(intent);
+                }
+            }
+            if (threshingFieldListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())){
+                showDialogForLogHGStart(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
+            }else{
+                showConfirmSuccess(context.getResources().getString(R.string.error_hg_field_not_assigned),context,"crying");
+            }*/
         }
 
     }
@@ -233,15 +255,15 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
     }
 
     private void showDialogForConfirmThreshing(Context context, ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
-                                               String code_use_flag, FieldListRecyclerModel fieldListRecyclerModel) {
+                                               String code_use_flag, FieldListRecyclerModel fieldListRecyclerModel, int position) {
         MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
-        showDialogForConfirmThreshingBody(builder, context, threshingFieldListRecyclerModel, code_use_flag, fieldListRecyclerModel);
+        showDialogForConfirmThreshingBody(builder, context, threshingFieldListRecyclerModel, code_use_flag, fieldListRecyclerModel, position);
     }
 
     private void showDialogForConfirmThreshingBody(MaterialAlertDialogBuilder builder, Context context,
                                                    ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
                                                    String code_use_flag,
-                                                   FieldListRecyclerModel fieldListRecyclerModel) {
+                                                   FieldListRecyclerModel fieldListRecyclerModel, int position) {
 
         GPSController.LocationGetter locationGetter;
         locationGetter = GPSController.initialiseLocationListener(context);
@@ -266,6 +288,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     if (locationDistance <= allowedDistance){
                         saveConfirm(context,threshingFieldListRecyclerModel,code_use_flag,
                                 fieldListRecyclerModel,String.valueOf(latitude),String.valueOf(longitude));
+                        notifyItemChanged(position);
                     }else{
                         locationMismatchedDialog(latitude,longitude,min_lat,max_lat,min_lng,max_lng,
                                 context,fieldListRecyclerModel.getUnique_field_id(),
@@ -332,14 +355,14 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
     }
 
     private void showDialogForConfirmWithCode(Context context, ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
-                                                  FieldListRecyclerModel fieldListRecyclerModel) {
+                                                  FieldListRecyclerModel fieldListRecyclerModel, int position) {
         MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
-        showDialogForConfirmWithCodeBody(builder, context, threshingFieldListRecyclerModel, fieldListRecyclerModel);
+        showDialogForConfirmWithCodeBody(builder, context, threshingFieldListRecyclerModel, fieldListRecyclerModel, position);
     }
 
     private void showDialogForConfirmWithCodeBody(MaterialAlertDialogBuilder builder, Context context,
                                                       ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
-                                                      FieldListRecyclerModel fieldListRecyclerModel) {
+                                                      FieldListRecyclerModel fieldListRecyclerModel, int position) {
 
         String field_code = getFieldCode(threshingFieldListRecyclerModel.getUnique_field_id());
 
@@ -367,7 +390,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                         if (editText.getText().toString().trim().equalsIgnoreCase(field_code) ||
                                 editText.getText().toString().equalsIgnoreCase("4662")){
                             dialog.dismiss();
-                            showDialogForConfirmThreshing(context,threshingFieldListRecyclerModel,"1",fieldListRecyclerModel);
+                            showDialogForConfirmThreshing(context,threshingFieldListRecyclerModel,"1",fieldListRecyclerModel, position);
                         }else{
                             showConfirmSuccess(context.getResources().getString(R.string.code_wrong),context,"crying");
                         }

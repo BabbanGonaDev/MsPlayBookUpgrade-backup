@@ -298,6 +298,18 @@ public abstract class FieldsDao {
             "WHERE a.deactivate = '0' AND a.unique_member_id = :unique_member_id ")
     public abstract List<ThreshingFieldListRecyclerModel> getThreshingMemberFieldsList(String unique_member_id);
 
+    @Query(" SELECT a.unique_field_id, b.village_name as village, a.field_size, a.staff_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "JOIN schedule_threshing_activities_flag c ON a.unique_field_id = c.unique_field_id " +
+            "WHERE a.deactivate = '0' AND a.staff_id = :staff_id AND c.schedule_date = :schedule_date ")
+    public abstract LiveData<List<ThreshingFieldListRecyclerModel>> getScheduleThreshingFields(String staff_id, String schedule_date);
+
+    @Query(" SELECT a.unique_field_id, b.village_name as village, a.field_size, a.staff_id " +
+            "FROM fields a JOIN members b ON a.unique_member_id = b.unique_member_id " +
+            "JOIN schedule_threshing_activities_flag c ON a.unique_field_id = c.unique_field_id " +
+            "WHERE a.deactivate = '0' AND a.staff_id = :staff_id AND c.schedule_date = :schedule_date ")
+    public abstract List<ThreshingFieldListRecyclerModel> getScheduleThreshingFieldsList(String staff_id, String schedule_date);
+
     @Query(" SELECT a.unique_field_id, a.min_lat, a.max_lat, a.min_lng, a.max_lng, a.field_size, " +
             "b.first_name || ' ' || b.last_name as member_name, b.phone_number, b.village_name, " +
             "'R20-' || b.ik_number || '-' || b.member_id as field_r_id, c.fertilizer_1_status, " +

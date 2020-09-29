@@ -29,15 +29,24 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
             "WHERE b.mss = :mss AND b.deactivate = '0' ")
     public abstract int getCoachTotalFields(String mss);
 
-    @Query(" SELECT SUM(b.field_size) FROM schedule_threshing_activities_flag a JOIN fields b " +
+    @Query(" SELECT SUM(b.field_size) FROM confirm_threshing_activities_flag a JOIN fields b " +
             "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
+            "WHERE b.staff_id = :staff_id AND b.deactivate = '0' AND a.confirm_flag = '1' ")
+    public abstract float getAssignedScheduleThreshSum(String staff_id);
+
+    @Query(" SELECT SUM(b.field_size) FROM confirm_threshing_activities_flag a JOIN fields b " +
+            "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
+            "WHERE a.staff_id = :staff_id AND b.deactivate = '0' AND a.confirm_flag = '1' ")
+    public abstract float getScheduleThreshSum(String staff_id);
+
+    @Query(" SELECT SUM(b.field_size) FROM fields b JOIN members c on b.unique_member_id = c.unique_member_id " +
             "WHERE b.staff_id = :staff_id AND b.deactivate = '0' ")
-    public abstract double getAssignedScheduleThreshSum(String staff_id);
+    public abstract float getAssignedTotalFieldsSum(String staff_id);
 
     @Query(" SELECT SUM(b.field_size) FROM schedule_threshing_activities_flag a JOIN fields b " +
             "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
             "WHERE b.mss = :mss AND b.deactivate = '0' ")
-    public abstract double getCoachScheduleThreshSum(String mss);
+    public abstract float getCoachScheduleThreshSum(String mss);
 
     @Query(" SELECT SUM(b.field_size) FROM fields b JOIN members c on b.unique_member_id = c.unique_member_id " +
             "WHERE b.mss = :mss AND b.deactivate = '0' ")
@@ -67,6 +76,12 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
 
     @Query(" SELECT schedule_date FROM schedule_threshing_activities_flag WHERE unique_field_id = :unique_field_id ")
     public abstract String getFieldSchedule(String unique_field_id);
+
+    @Query(" SELECT DISTINCT schedule_date FROM schedule_threshing_activities_flag WHERE staff_id = :staff_id ")
+    public abstract List<String> getScheduleDateCount(String staff_id);
+
+    @Query(" SELECT COUNT(schedule_date) FROM schedule_threshing_activities_flag WHERE staff_id = :staff_id AND schedule_date = :schedule_date ")
+    public abstract int getDateCount(String staff_id, String schedule_date);
 
     /**
      * Insert the object in database

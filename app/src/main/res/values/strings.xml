@@ -236,7 +236,7 @@
     <string name="please_thresh_date">Please enter thresh date</string>
     <string name="please_confirm_thresh_date">Please confirm entered thresh date</string>
     <string name="error_thresh_date">Scheduled thresh date should be within today and 31st of December of this year</string>
-    <string name="error_re_thresh_date">Scheduled thresh date should be within today and 31st of December of this year and not former date</string>
+    <string name="error_re_thresh_date">Scheduled thresh date should be within today and 31st of December of this year</string>
     <string name="error_re_thresh_date_same">New schedule date and Old schedule date cannot be the same</string>
     <string name="error_thresh_date_mismatch">Scheduled thresh dates mismatch</string>
     <string name="error_phone_number_mismatch">Member phone numbers should match</string>
@@ -297,4 +297,13 @@
     <string name="reason_hg">Enter reason</string>
     <string name="confirm_reason_title">Field marked HG at risk for the following reason:</string>
     <string name="empty_code">Please enter a valid code</string>
+    <string name="calender_view_title">Fields Scheduled for Threshing</string>
+    <string name="continue_">Continue</string>
+    <string name="schedule_list">Scheduled Thresh Date List</string>
+    <string name="threshing_summary_title">Threshing Summary</string>
+    <string name="percentage_threshing_summary_title">Percentage of Threshing Completed</string>
+    <string name="view_details">View Details</string>
+    <string name="hide_details">Hide Details</string>
+    <string name="assigned_threshed_title">Assigned Threshed Field Size</string>
+    <string name="unassigned_threshed_title">Unassigned Threshed Field Size</string>
 </resources>

@@ -246,7 +246,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.schedule) {
-            startActivity(new Intent(ThreshingDateSelectionActivity.this, ComingSoon.class));
+            startActivity(new Intent(ThreshingDateSelectionActivity.this, CalenderViewActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -327,6 +327,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             textView.setText(parseDate(text));
             if (flag.equalsIgnoreCase("2")){
                 checkForWrongSelectedDate();
+                checkForMismatchedDate();
             }
         }, mYear, mMonth, mDay);
         mDatePicker.setTitle(activity_string);
