@@ -17,7 +17,10 @@ import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.retrofit.RetrofitApiCalls;
 import com.babbangona.mspalybookupgrade.transporter.data.retrofit.RetrofitClient;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CoachLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TempTransporterTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TpoLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppExecutors;
 import com.google.gson.Gson;
@@ -43,6 +46,11 @@ public class SyncUpWorker extends Worker {
      * This would be used to sync up the following tables:
      * - Transporter table
      * - Operating areas table.
+     * <p>
+     * - Coach logs table.
+     * - TPO logs table.
+     * - Favourites table.
+     * - Temp Transporters table.
      */
 
     public SyncUpWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -61,6 +69,9 @@ public class SyncUpWorker extends Worker {
 
         syncUpTransporterTable();
         syncUpOperatingAreas();
+        syncUpCoachLogs();
+        syncUpTpoLogs();
+        syncUpTempTransporter();
         return Result.success();
     }
 
@@ -128,6 +139,106 @@ public class SyncUpWorker extends Worker {
         });
     }
 
+    public void syncUpCoachLogs() {
+
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String unsynced = new Gson().toJson(db.getCoachLogsDao().getUnSyncedCoachLogs());
+            RetrofitApiCalls service = RetrofitClient.getRetrofitInstance().create(RetrofitApiCalls.class);
+            Call<List<CoachLogsTable.Response>> call = service.syncUpCoachLogsTable(unsynced);
+            Log.d("CHECK", "For sync up coach logs" + unsynced);
+            call.enqueue(new Callback<List<CoachLogsTable.Response>>() {
+                @Override
+                public void onResponse(Call<List<CoachLogsTable.Response>> call, Response<List<CoachLogsTable.Response>> response) {
+                    if (response.isSuccessful()) {
+                        List<CoachLogsTable.Response> res = response.body();
+
+                        AppExecutors.getInstance().diskIO().execute(() -> {
+                            for (CoachLogsTable.Response r : res) {
+                                db.getCoachLogsDao().updateSyncFlags(r.getMember_id(),
+                                        r.getQuantity(),
+                                        r.getTransporter_id(),
+                                        r.getDate_logged(),
+                                        r.getSync_flag());
+                            }
+                        });
+
+                        sendNotification(1);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<CoachLogsTable.Response>> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Sync Up Coach Logs " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+
+        });
+    }
+
+    public void syncUpTpoLogs() {
+
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String unsynced = new Gson().toJson(db.getTpoLogsDao().getUnSyncedTpoLogs());
+            RetrofitApiCalls service = RetrofitClient.getRetrofitInstance().create(RetrofitApiCalls.class);
+            Call<List<TpoLogsTable.Response>> call = service.syncUpTpoLogsTable(unsynced);
+            Log.d("CHECK", "For sync up tpo logs" + unsynced);
+            call.enqueue(new Callback<List<TpoLogsTable.Response>>() {
+                @Override
+                public void onResponse(Call<List<TpoLogsTable.Response>> call, Response<List<TpoLogsTable.Response>> response) {
+                    if (response.isSuccessful()) {
+                        List<TpoLogsTable.Response> res = response.body();
+
+                        AppExecutors.getInstance().diskIO().execute(() -> {
+                            for (TpoLogsTable.Response r : res) {
+                                db.getTpoLogsDao().updateSyncFlags(r.getMember_id(),
+                                        r.getQuantity(),
+                                        r.getTransporter_id(),
+                                        r.getDate_logged(),
+                                        r.getSync_flag());
+                            }
+                        });
+
+                        sendNotification(1);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<TpoLogsTable.Response>> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Sync Up Coach Logs " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+
+        });
+    }
+
+    public void syncUpTempTransporter() {
+        String unsynced = new Gson().toJson(db.getTempTransporterDao().getAllUnSynced());
+        RetrofitApiCalls service = RetrofitClient.getRetrofitInstance().create(RetrofitApiCalls.class);
+        Call<List<TempTransporterTable.Response>> call = service.syncUpTempTransporters(unsynced);
+        Log.d("CHECK", "For sync up temp logs " + unsynced);
+        call.enqueue(new Callback<List<TempTransporterTable.Response>>() {
+            @Override
+            public void onResponse(Call<List<TempTransporterTable.Response>> call, Response<List<TempTransporterTable.Response>> response) {
+                if (response.isSuccessful()) {
+                    List<TempTransporterTable.Response> res = response.body();
+
+                    AppExecutors.getInstance().diskIO().execute(() -> {
+                        for (TempTransporterTable.Response r : res) {
+                            db.getTempTransporterDao().updateSyncFlag(r.getTemp_transporter_id(), r.getSync_flag());
+                            ;
+                        }
+                    });
+
+                    sendNotification(1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TempTransporterTable.Response>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Sync Up Temp Transporters " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -154,12 +265,13 @@ public class SyncUpWorker extends Worker {
     private void sendNotification(int value) {
         CURRENT += value;
 
-        if (CURRENT == 2) {
+        int MAX = 5;
+        if (CURRENT == MAX) {
             builder.setProgress(0, 0, false)
                     .setSmallIcon(R.drawable.ic_outline_cloud_done_24)
                     .setContentText("Transporter Upload Complete");
         } else {
-            builder.setProgress(2, CURRENT, false);
+            builder.setProgress(MAX, CURRENT, false);
         }
 
         mNotifyManager.notify(NOTIFICATION_ID, builder.build());

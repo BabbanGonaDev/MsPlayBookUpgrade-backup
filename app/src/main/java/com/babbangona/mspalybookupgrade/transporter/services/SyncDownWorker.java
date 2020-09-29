@@ -18,8 +18,10 @@ import com.babbangona.mspalybookupgrade.transporter.data.retrofit.RetrofitApiCal
 import com.babbangona.mspalybookupgrade.transporter.data.retrofit.RetrofitClient;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CoachLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionCenterTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TpoLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppExecutors;
 
@@ -46,6 +48,10 @@ public class SyncDownWorker extends Worker {
      * - Collection center table
      * - Operating areas table &
      * - Cards table.
+     * <p>
+     * - Coach logs table.
+     * - TPO logs table.
+     * - Favourites table.
      */
 
 
@@ -67,6 +73,8 @@ public class SyncDownWorker extends Worker {
         syncDownOperatingAreas();
         syncDownCCTable();
         syncDownCards();
+        syncDownCoachLogs();
+        syncDownTpoLogs();
         return Result.success();
     }
 
@@ -192,6 +200,85 @@ public class SyncDownWorker extends Worker {
         });
     }
 
+    public void syncDownCoachLogs() {
+        RetrofitApiCalls service = RetrofitClient.getRetrofitInstance().create(RetrofitApiCalls.class);
+        Call<List<CoachLogsTable.Download>> call = service.syncDownCoachLogs(session.GET_LAST_SYNC_COACH_LOGS());
+        call.enqueue(new Callback<List<CoachLogsTable.Download>>() {
+            @Override
+            public void onResponse(Call<List<CoachLogsTable.Download>> call, Response<List<CoachLogsTable.Download>> response) {
+                if (response.isSuccessful()) {
+                    List<CoachLogsTable.Download> res = response.body();
+
+                    if (res != null) {
+                        AppExecutors.getInstance().diskIO().execute(() -> {
+                            for (CoachLogsTable.Download d : res) {
+                                db.getCoachLogsDao().insertSingleCoachLog(new CoachLogsTable(d.getMember_id(),
+                                        d.getQuantity(),
+                                        d.getTransported_by(),
+                                        d.getTransporter_id(),
+                                        d.getVoucher_id(),
+                                        d.getVoucher_id_flag(),
+                                        d.getCc_id(),
+                                        d.getInstant_payment_flag(),
+                                        d.getStaff_id(),
+                                        d.getImei(),
+                                        d.getApp_version(),
+                                        d.getDate_logged(),
+                                        d.getSync_flag()));
+                                session.SET_LAST_SYNC_COACH_LOGS(d.getLast_sync());
+                            }
+                        });
+                    }
+                    sendNotification(1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CoachLogsTable.Download>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Sync down Coach logs " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void syncDownTpoLogs() {
+        RetrofitApiCalls service = RetrofitClient.getRetrofitInstance().create(RetrofitApiCalls.class);
+        Call<List<TpoLogsTable.Download>> call = service.syncDownTpoLogs(session.GET_LAST_SYNC_TPO_LOGS());
+        call.enqueue(new Callback<List<TpoLogsTable.Download>>() {
+            @Override
+            public void onResponse(Call<List<TpoLogsTable.Download>> call, Response<List<TpoLogsTable.Download>> response) {
+                if (response.isSuccessful()) {
+                    List<TpoLogsTable.Download> res = response.body();
+
+                    if (res != null) {
+                        AppExecutors.getInstance().diskIO().execute(() -> {
+                            for (TpoLogsTable.Download d : res) {
+                                db.getTpoLogsDao().insertSingleTpoLog(new TpoLogsTable(d.getMember_id(),
+                                        d.getQuantity(),
+                                        d.getTransported_by(),
+                                        d.getTransporter_id(),
+                                        d.getVoucher_id(),
+                                        d.getVoucher_id_flag(),
+                                        d.getCc_id(),
+                                        d.getInstant_payment_flag(),
+                                        d.getStaff_id(),
+                                        d.getImei(),
+                                        d.getApp_version(),
+                                        d.getDate_logged(),
+                                        d.getSync_flag()));
+                                session.SET_LAST_SYNC_TPO_LOGS(d.getLast_sync());
+                            }
+                        });
+                    }
+                    sendNotification(1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TpoLogsTable.Download>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Sync down TPO logs " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -218,12 +305,13 @@ public class SyncDownWorker extends Worker {
     private void sendNotification(int value) {
         CURRENT += value;
 
-        if (CURRENT == 4) {
+        int MAX = 6;
+        if (CURRENT == MAX) {
             builder.setProgress(0, 0, false)
                     .setSmallIcon(R.drawable.ic_outline_cloud_done_24)
                     .setContentText("Transporter Download Complete");
         } else {
-            builder.setProgress(4, CURRENT, false);
+            builder.setProgress(MAX, CURRENT, false);
         }
 
         mNotifyManager.notify(NOTIFICATION_ID, builder.build());

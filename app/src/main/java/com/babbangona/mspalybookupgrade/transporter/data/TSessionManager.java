@@ -25,6 +25,10 @@ public class TSessionManager {
     public static final String KEY_LAST_SYNC_CC = "last_sync_cc_table";
     public static final String KEY_LAST_SYNC_OPERATING_AREAS = "last_sync_operating_areas_table";
     public static final String KEY_LAST_SYNC_CARDS = "last_sync_cards_table";
+    public static final String KEY_LAST_SYNC_COACH_LOGS = "last_sync_coach_logs_table";
+    public static final String KEY_LAST_SYNC_TPO_LOGS = "last_sync_tpo_logs_table";
+    public static final String KEY_LAST_SYNC_FAVOURITES = "last_sync_favourites_table";
+    public static final String KEY_LAST_SYNC_TEMP_TRANSPORTERS = "last_sync_temp_transporters_table";
 
     /**
      * These keys are used to store details for Transporter booking and assignment
@@ -44,7 +48,6 @@ public class TSessionManager {
     public static final String KEY_E_REG_PHONE_NUMBER = "e_reg_phone_number";
     public static final String KEY_E_REG_FIRST_NAME = "e_reg_first_name";
     public static final String KEY_E_REG_LAST_NAME = "e_reg_last_name";
-
 
     /**
      * List of image names to be used for syncing.
@@ -121,6 +124,22 @@ public class TSessionManager {
 
     public void SET_LAST_SYNC_CARDS(String value) {
         editor.putString(KEY_LAST_SYNC_CARDS, value).commit();
+    }
+
+    public void SET_LAST_SYNC_COACH_LOGS(String value) {
+        editor.putString(KEY_LAST_SYNC_COACH_LOGS, value).commit();
+    }
+
+    public void SET_LAST_SYNC_TPO_LOGS(String value) {
+        editor.putString(KEY_LAST_SYNC_TPO_LOGS, value).commit();
+    }
+
+    public void SET_LAST_SYNC_FAVOURITES(String value) {
+        editor.putString(KEY_LAST_SYNC_FAVOURITES, value).commit();
+    }
+
+    public void SET_LAST_SYNC_TEMP_TRANSPORTER(String value) {
+        editor.putString(KEY_LAST_SYNC_TEMP_TRANSPORTERS, value).commit();
     }
 
     public void SET_TRANSPORTER_CARDS(String value) {
@@ -241,6 +260,22 @@ public class TSessionManager {
 
     public String GET_LAST_SYNC_CARDS() {
         return prefs.getString(KEY_LAST_SYNC_CARDS, "2020-08-26 00:00:00");
+    }
+
+    public String GET_LAST_SYNC_COACH_LOGS() {
+        return prefs.getString(KEY_LAST_SYNC_COACH_LOGS, "2020-09-01 00:00:00");
+    }
+
+    public String GET_LAST_SYNC_TPO_LOGS() {
+        return prefs.getString(KEY_LAST_SYNC_TPO_LOGS, "2020-09-01 00:00:00");
+    }
+
+    public String GET_LAST_SYNC_FAVOURITES() {
+        return prefs.getString(KEY_LAST_SYNC_FAVOURITES, "2020-09-01 00:00:00");
+    }
+
+    public String GET_LAST_SYNC_TEMP_TRANSPORTER() {
+        return prefs.getString(KEY_LAST_SYNC_TEMP_TRANSPORTERS, "2020-09-01 00:00:00");
     }
 
     public String[] GET_TRANSPORTER_CARDS() {

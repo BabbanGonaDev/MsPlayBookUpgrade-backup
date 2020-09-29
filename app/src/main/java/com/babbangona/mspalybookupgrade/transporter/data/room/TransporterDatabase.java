@@ -171,6 +171,9 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     "voucher_id_flag INTEGER, " +
                     "cc_id TEXT, " +
                     "instant_payment_flag INTEGER, " +
+                    "staff_id TEXT, " +
+                    "imei TEXT, " +
+                    "app_version TEXT, " +
                     "date_logged TEXT NOT NULL, " +
                     "sync_flag INTEGER, " +
                     "PRIMARY KEY(member_id, quantity, transporter_id, date_logged))");
@@ -184,6 +187,9 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     "voucher_id_flag INTEGER, " +
                     "cc_id TEXT, " +
                     "instant_payment_flag INTEGER, " +
+                    "staff_id TEXT, " +
+                    "imei TEXT, " +
+                    "app_version TEXT, " +
                     "date_logged TEXT NOT NULL, " +
                     "sync_flag INTEGER, " +
                     "PRIMARY KEY(member_id, quantity, transporter_id, date_logged))");
@@ -192,7 +198,10 @@ public abstract class TransporterDatabase extends RoomDatabase {
             db.execSQL("CREATE TABLE temp_transporter_table (temp_transporter_id TEXT NOT NULL, " +
                     "first_name TEXT, " +
                     "last_name TEXT, " +
-                    "date_updated TEXT, " +
+                    "staff_id TEXT, " +
+                    "imei TEXT, " +
+                    "app_version TEXT, " +
+                    "reg_date TEXT, " +
                     "sync_flag INTEGER, " +
                     "PRIMARY KEY(temp_transporter_id))");
 

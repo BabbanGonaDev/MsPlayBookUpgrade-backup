@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.databinding.DialogCustomOneButtonBinding;
@@ -30,6 +31,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.models.Members;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CoachLogsTable;
+import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
 import com.babbangona.mspalybookupgrade.transporter.viewmodels.MembersViewModel;
 import com.babbangona.mspalybookupgrade.transporter.views.activities.AssigningActivity;
 import com.babbangona.mspalybookupgrade.transporter.views.activities.ViewMemberFields;
@@ -215,6 +217,9 @@ public class SelectMemberFragment extends Fragment implements SearchView.OnQuery
                 0,
                 "N/A",
                 0,
+                session.GET_LOG_IN_STAFF_ID(),
+                AppUtils.getDeviceID(getActivity().getApplicationContext()),
+                BuildConfig.VERSION_NAME,
                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).format(new Date()),
                 0);
 

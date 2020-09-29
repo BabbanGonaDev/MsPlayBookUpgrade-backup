@@ -21,6 +21,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabas
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CoachLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 import com.babbangona.mspalybookupgrade.transporter.helpers.AppExecutors;
+import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
 import com.babbangona.mspalybookupgrade.transporter.views.TransporterHomeActivity;
 
 import java.text.SimpleDateFormat;
@@ -174,6 +175,8 @@ public class ERegPayOptionActivity extends AppCompatActivity {
                 "N/A",
                 0,
                 session.GET_LOG_IN_STAFF_ID(),
+                AppUtils.getDeviceID(ERegPayOptionActivity.this),
+                BuildConfig.VERSION_NAME,
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 0);
@@ -189,6 +192,9 @@ public class ERegPayOptionActivity extends AppCompatActivity {
                 session.GET_VOUCHER_ID_FLAG(),
                 session.GET_SELECTED_CC_ID(),
                 session.GET_INSTANT_PAYMENT_FLAG(),
+                session.GET_LOG_IN_STAFF_ID(),
+                AppUtils.getDeviceID(ERegPayOptionActivity.this),
+                BuildConfig.VERSION_NAME,
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 0);
     }

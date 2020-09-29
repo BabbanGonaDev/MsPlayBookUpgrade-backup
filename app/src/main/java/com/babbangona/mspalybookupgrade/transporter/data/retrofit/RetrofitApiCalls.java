@@ -2,8 +2,12 @@ package com.babbangona.mspalybookupgrade.transporter.data.retrofit;
 
 import com.babbangona.mspalybookupgrade.transporter.data.models.ImageResponse;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CoachLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionCenterTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.FavouritesTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TempTransporterTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TpoLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 
 import java.util.List;
@@ -33,6 +37,15 @@ public interface RetrofitApiCalls {
     @GET("downloadTransporterCards")
     Call<List<CardsTable.Download>> syncDownCards(@Query("last_sync_time") String last_sync_time);
 
+    @GET("downloadCoachLogs")
+    Call<List<CoachLogsTable.Download>> syncDownCoachLogs(@Query("last_sync_time") String last_sync_time);
+
+    @GET("downloadTpoLogs")
+    Call<List<TpoLogsTable.Download>> syncDownTpoLogs(@Query("last_sync_time") String last_sync_time);
+
+    @GET("downloadFavourites")
+    Call<List<FavouritesTable.Download>> syncDownFavourites(@Query("last_sync_time") String last_sync_time);
+
     @FormUrlEncoded
     @POST("uploadTransporterTable")
     Call<List<TransporterTable.Response>> syncUpTransporterTable(@Field("transporter_list") String list);
@@ -40,6 +53,22 @@ public interface RetrofitApiCalls {
     @FormUrlEncoded
     @POST("uploadOperatingAreas")
     Call<List<OperatingAreasTable.Response>> syncUpOperatingAreasTable(@Field("operating_areas_list") String list);
+
+    @FormUrlEncoded
+    @POST("uploadCoachLogs")
+    Call<List<CoachLogsTable.Response>> syncUpCoachLogsTable(@Field("coach_logs_list") String list);
+
+    @FormUrlEncoded
+    @POST("uploadTpoLogs")
+    Call<List<TpoLogsTable.Response>> syncUpTpoLogsTable(@Field("tpo_logs_list") String list);
+
+    @FormUrlEncoded
+    @POST("uploadFavourites")
+    Call<List<FavouritesTable.Response>> syncUpFavourites(@Field("favourites_list") String list);
+
+    @FormUrlEncoded
+    @POST("uploadTempTransporterTable")
+    Call<List<TempTransporterTable.Response>> syncUpTempTransporters(@Field("temp_transporters_list") String list);
 
     @Multipart
     @POST("uploadImages")

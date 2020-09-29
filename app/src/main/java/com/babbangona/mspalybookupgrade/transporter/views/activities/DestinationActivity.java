@@ -26,6 +26,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CoachLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionCenterTable;
+import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -195,6 +196,9 @@ public class DestinationActivity extends AppCompatActivity {
                 0,
                 session.GET_SELECTED_CC_ID(),
                 0,
+                session.GET_LOG_IN_STAFF_ID(),
+                AppUtils.getDeviceID(DestinationActivity.this),
+                BuildConfig.VERSION_NAME,
                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).format(new Date()),
                 0);
 
@@ -222,6 +226,9 @@ public class DestinationActivity extends AppCompatActivity {
                 1,
                 session.GET_SELECTED_CC_ID(),
                 1,
+                session.GET_LOG_IN_STAFF_ID(),
+                AppUtils.getDeviceID(DestinationActivity.this),
+                BuildConfig.VERSION_NAME,
                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).format(new Date()),
                 0);
 

@@ -219,6 +219,8 @@ public class ERegCardOptionActivity extends AppCompatActivity {
                 "N/A",
                 0,
                 session.GET_LOG_IN_STAFF_ID(),
+                AppUtils.getDeviceID(ERegCardOptionActivity.this),
+                BuildConfig.VERSION_NAME,
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 0);
@@ -234,6 +236,9 @@ public class ERegCardOptionActivity extends AppCompatActivity {
                 session.GET_VOUCHER_ID_FLAG(),
                 session.GET_SELECTED_CC_ID(),
                 session.GET_INSTANT_PAYMENT_FLAG(),
+                session.GET_LOG_IN_STAFF_ID(),
+                AppUtils.getDeviceID(ERegCardOptionActivity.this),
+                BuildConfig.VERSION_NAME,
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 0);
 

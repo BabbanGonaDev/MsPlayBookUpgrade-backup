@@ -1,16 +1,12 @@
 package com.babbangona.mspalybookupgrade.transporter.views.activities;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
@@ -210,7 +205,7 @@ public class RegCardOptionActivity extends AppCompatActivity {
                 session.GET_REG_FACE_TEMPLATE(),
                 session.GET_REG_FACE_TEMPLATE_FLAG(),
                 session.GET_LOG_IN_STAFF_ID(),
-                getDeviceID(),
+                AppUtils.getDeviceID(RegCardOptionActivity.this),
                 BuildConfig.VERSION_NAME,
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
@@ -313,24 +308,5 @@ public class RegCardOptionActivity extends AppCompatActivity {
         });
         dialog.setCancelable(false);
         dialog.show();
-    }
-
-    private String getDeviceID() {
-        String device_id;
-        TelephonyManager tm = (TelephonyManager) Objects.requireNonNull(this).getSystemService(Context.TELEPHONY_SERVICE);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                device_id = tm.getDeviceId();
-            } catch (Exception e) {
-                e.printStackTrace();
-                device_id = "";
-            }
-            if (device_id == null) {
-                device_id = "";
-            }
-        } else {
-            device_id = "";
-        }
-        return device_id;
     }
 }

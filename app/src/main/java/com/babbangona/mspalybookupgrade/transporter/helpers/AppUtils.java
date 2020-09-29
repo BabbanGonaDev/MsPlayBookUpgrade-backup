@@ -1,11 +1,16 @@
 package com.babbangona.mspalybookupgrade.transporter.helpers;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
+
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -14,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 
 public class AppUtils {
 
@@ -101,4 +107,22 @@ public class AppUtils {
         return false;
     }
 
+    public static String getDeviceID(Context mCtx) {
+        String device_id;
+        TelephonyManager tm = (TelephonyManager) Objects.requireNonNull(mCtx).getSystemService(Context.TELEPHONY_SERVICE);
+        if (ContextCompat.checkSelfPermission(mCtx, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                device_id = tm.getDeviceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                device_id = "";
+            }
+            if (device_id == null) {
+                device_id = "";
+            }
+        } else {
+            device_id = "";
+        }
+        return device_id;
+    }
 }
