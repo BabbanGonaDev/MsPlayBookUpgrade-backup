@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,6 +73,8 @@ public class SyncUpWorker extends Worker {
         syncUpCoachLogs();
         syncUpTpoLogs();
         syncUpTempTransporter();
+        syncUpFavourites();
+
         return Result.success();
     }
 
@@ -240,6 +243,29 @@ public class SyncUpWorker extends Worker {
         });
     }
 
+    public void syncUpFavourites() {
+
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String favourites = new Gson().toJson(db.getFavouritesDao().getAllUsersFavourites(session.GET_LOG_IN_STAFF_ID()));
+            RetrofitApiCalls service = RetrofitClient.getRetrofitInstance().create(RetrofitApiCalls.class);
+            Call<ResponseBody> call = service.syncUpFavourites(favourites);
+            Log.d("CHECK", "For favourites: " + favourites);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        sendNotification(1);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Sync Up Favourites " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        });
+    }
+
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel upload_channel = new NotificationChannel(CHANNEL_ID,
@@ -265,7 +291,7 @@ public class SyncUpWorker extends Worker {
     private void sendNotification(int value) {
         CURRENT += value;
 
-        int MAX = 5;
+        int MAX = 6;
         if (CURRENT == MAX) {
             builder.setProgress(0, 0, false)
                     .setSmallIcon(R.drawable.ic_outline_cloud_done_24)

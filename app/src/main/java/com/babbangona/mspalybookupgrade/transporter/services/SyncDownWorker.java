@@ -20,6 +20,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabas
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CoachLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionCenterTable;
+import com.babbangona.mspalybookupgrade.transporter.data.room.tables.FavouritesTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TpoLogsTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
@@ -75,6 +76,7 @@ public class SyncDownWorker extends Worker {
         syncDownCards();
         syncDownCoachLogs();
         syncDownTpoLogs();
+        syncDownFavourites();
         return Result.success();
     }
 
@@ -280,6 +282,39 @@ public class SyncDownWorker extends Worker {
         });
     }
 
+    public void syncDownFavourites() {
+        RetrofitApiCalls service = RetrofitClient.getRetrofitInstance().create(RetrofitApiCalls.class);
+        Call<List<FavouritesTable.Download>> call = service.syncDownFavourites(session.GET_LAST_SYNC_FAVOURITES(), session.GET_LOG_IN_STAFF_ID());
+        call.enqueue(new Callback<List<FavouritesTable.Download>>() {
+            @Override
+            public void onResponse(Call<List<FavouritesTable.Download>> call, Response<List<FavouritesTable.Download>> response) {
+                if (response.isSuccessful()) {
+                    List<FavouritesTable.Download> res = response.body();
+
+                    if (res != null) {
+                        AppExecutors.getInstance().diskIO().execute(() -> {
+                            db.getFavouritesDao().emptyFavouritesTable();
+
+                            for (FavouritesTable.Download d : res) {
+                                db.getFavouritesDao().markFavourite(new FavouritesTable(d.getStaff_id(),
+                                        d.getPhone_number(),
+                                        d.getActive_flag(),
+                                        d.getSync_flag()));
+                                session.SET_LAST_SYNC_FAVOURITES(d.getLast_sync());
+                            }
+                        });
+                    }
+                    sendNotification(1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<FavouritesTable.Download>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Sync down Favourites: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel upload_channel = new NotificationChannel(CHANNEL_ID,
@@ -304,8 +339,9 @@ public class SyncDownWorker extends Worker {
 
     private void sendNotification(int value) {
         CURRENT += value;
+        //Log.d("CHECK", "Current: " + CURRENT);
 
-        int MAX = 6;
+        int MAX = 7;
         if (CURRENT == MAX) {
             builder.setProgress(0, 0, false)
                     .setSmallIcon(R.drawable.ic_outline_cloud_done_24)

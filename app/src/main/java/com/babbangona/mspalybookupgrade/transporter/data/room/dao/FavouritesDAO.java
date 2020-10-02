@@ -13,11 +13,15 @@ import java.util.List;
 public interface FavouritesDAO {
 
     /**
-     * Sync up of the table should upload all columns (including status).
      * While sync down of the table would also download all columns BUT NOT overwrite anything.
+     *
      * <p>
      * https://uniqueandrocode.com/add-to-favourites-and-display-favourites-in-recyclerview/ (Just in case)
      * Also, NB: What's the way out since we not delete from the favourite table when unmarked, how do we reflect this delete on the backend. ?
+     * </p>
+     * <p>
+     * The sync up method for favourites table: Select ALL favourites from the db, using the staff_id and then upload them. Then on the backend, delete all favourites
+     * for that staff-Id and then re-insert the ones from the phone.
      */
 
     @Insert
@@ -31,4 +35,10 @@ public interface FavouritesDAO {
 
     @Query("DELETE FROM favourites_table WHERE phone_number = :phone_number AND staff_id = :staff_id")
     void unMarkFavourite(String phone_number, String staff_id);
+
+    @Query("SELECT * FROM favourites_table WHERE staff_id = :staffId")
+    List<FavouritesTable> getAllUsersFavourites(String staffId);
+
+    @Query("DELETE FROM favourites_table")
+    void emptyFavouritesTable();
 }

@@ -14,6 +14,7 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -44,7 +45,7 @@ public interface RetrofitApiCalls {
     Call<List<TpoLogsTable.Download>> syncDownTpoLogs(@Query("last_sync_time") String last_sync_time);
 
     @GET("downloadFavourites")
-    Call<List<FavouritesTable.Download>> syncDownFavourites(@Query("last_sync_time") String last_sync_time);
+    Call<List<FavouritesTable.Download>> syncDownFavourites(@Query("last_sync_time") String last_sync_time, @Query("staff_id") String staff_id);
 
     @FormUrlEncoded
     @POST("uploadTransporterTable")
@@ -64,7 +65,7 @@ public interface RetrofitApiCalls {
 
     @FormUrlEncoded
     @POST("uploadFavourites")
-    Call<List<FavouritesTable.Response>> syncUpFavourites(@Field("favourites_list") String list);
+    Call<ResponseBody> syncUpFavourites(@Field("favourites_list") String list);
 
     @FormUrlEncoded
     @POST("uploadTempTransporterTable")
