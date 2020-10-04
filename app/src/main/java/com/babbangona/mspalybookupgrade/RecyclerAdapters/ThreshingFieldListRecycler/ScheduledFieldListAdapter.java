@@ -99,12 +99,15 @@ public class ScheduledFieldListAdapter extends RecyclerView.Adapter<ScheduledFie
 
         void getStatus(String unique_field_id, ImageView iv_activity_signal){
             int status = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldScheduleStatus(unique_field_id);
+            int urgent_status = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldUrgentScheduleStatus(unique_field_id);
             int confirm_status = appDatabase.confirmThreshingActivitiesFlagDao().getFieldConfirmStatus(unique_field_id);
             if (confirm_status > 0){
-                iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.colorGreen));
+                iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.view_green));
             }else{
                 if (status > 0){
-                    iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.text_color_blue));
+                    iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.light_green));
+                }else if(urgent_status > 0){
+                    iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.amber));
                 }else{
                     iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.colorRed));
                 }

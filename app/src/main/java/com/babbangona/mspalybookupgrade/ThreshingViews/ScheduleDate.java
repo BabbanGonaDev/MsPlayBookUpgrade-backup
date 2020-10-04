@@ -73,6 +73,9 @@ public class ScheduleDate extends AppCompatActivity {
 
         fillScheduledDatesSpinner(actScheduledDates, ScheduleDate.this);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        date_selected = "%%";
+
+        initActivitiesRecycler(date_selected);
 
         actScheduledDates.setOnItemClickListener((parent, view, position, id) -> {
             date_selected = (String)parent.getItemAtPosition(position);
@@ -115,12 +118,14 @@ public class ScheduleDate extends AppCompatActivity {
 
     public void initActivitiesRecycler(String schedule_date){
 
+        String schedule_date_new = "%"+schedule_date+"%";
+
         appDatabase
                 .fieldsDao()
-                .getScheduleThreshingFields(sharedPrefs.getStaffID(),schedule_date)
+                .getScheduleThreshingFields(sharedPrefs.getStaffID())
                 .observe(this,activityLists -> {
                     scheduledFieldListAdapter = new ScheduledFieldListAdapter(
-                            appDatabase.fieldsDao().getScheduleThreshingFieldsList(sharedPrefs.getStaffID(),schedule_date),
+                            appDatabase.fieldsDao().getScheduleThreshingFieldsList(sharedPrefs.getStaffID(),schedule_date_new),
                             ScheduleDate.this);
                     RecyclerView.LayoutManager aLayoutManager = new LinearLayoutManager(ScheduleDate.this);
                     recycler_view.setLayoutManager(aLayoutManager);
