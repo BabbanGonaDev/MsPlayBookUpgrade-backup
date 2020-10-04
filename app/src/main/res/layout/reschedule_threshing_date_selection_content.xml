@@ -36,113 +36,132 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_old_thresh_date"
-                android:text="@string/select_thresh_date_title"
-                android:textColor="@color/text_color_black"
-                android:textSize="@dimen/dimen_20sp"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:layout_marginEnd="@dimen/dimen_15dp"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_marginBottom="@dimen/dimen_10dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/reschedule_title"
-                android:text="@string/enter_new_thresh_date"
-                android:textColor="@color/text_color_black"
-                android:textSize="@dimen/dimen_20sp"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:layout_marginEnd="@dimen/dimen_15dp"
-                android:textStyle="bold"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_marginBottom="@dimen/dimen_10dp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:hint="@string/thresh_date"
-                android:id="@+id/tv_enter_date"
-                android:padding="@dimen/dimen_10dp"
-                android:maxLines="1"
-                android:textSize="@dimen/dimen_20sp"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:layout_marginEnd="@dimen/dimen_15dp"
-                android:textColor="@color/text_color_black"
-                android:background="@drawable/view_looks1"
-                android:drawableEnd="@drawable/ic_calendar"/>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:id="@+id/tv_confirm_date"
-                android:maxLines="1"
-                android:textSize="@dimen/dimen_20sp"
-                android:background="@drawable/view_looks1"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:layout_marginEnd="@dimen/dimen_15dp"
-                android:padding="@dimen/dimen_10dp"
-                android:drawableEnd="@drawable/ic_calendar"
-                android:textColor="@color/text_color_black"
-                android:hint="@string/confirm_thresh_date"/>
-
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                style="@style/AppTextField"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:layout_marginEnd="@dimen/dimen_15dp"
+                style="@style/ExposedDropdownMenu"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:id="@+id/edlSwap"
                 android:paddingStart="@dimen/dimen_10dp"
                 android:paddingEnd="@dimen/dimen_10dp"
-                android:id="@+id/edlRescheduleReason"
-                android:hint="@string/reschedule_reason">
+                android:hint="@string/swap_question">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtRescheduleReason"
-                    android:lines="5"
-                    android:minLines="3"
-                    android:gravity="top|start"
-                    android:maxLines="5"
-                    android:layout_height="wrap_content"
+                <AutoCompleteTextView
                     android:layout_width="match_parent"
-                    android:scrollbars="vertical"
-                    android:textSize="16sp"
-                    android:inputType="textMultiLine" />
+                    android:layout_height="match_parent"
+                    android:id="@+id/actSwap"
+                    android:editable="false" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/dimen_15dp"
-                android:paddingEnd="@dimen/dimen_15dp"
                 android:orientation="vertical"
+                android:id="@+id/layout_reason"
                 android:background="@color/off_white">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_old_thresh_date"
+                    android:text="@string/re_select_thresh_date_title"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/dimen_20sp"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/reschedule_title"
+                    android:text="@string/enter_new_thresh_date"
+                    android:textColor="@color/text_color_black"
+                    android:textSize="@dimen/dimen_20sp"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:hint="@string/thresh_date"
+                    android:id="@+id/tv_enter_date"
+                    android:padding="@dimen/dimen_10dp"
+                    android:maxLines="1"
+                    android:textSize="@dimen/dimen_20sp"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:textColor="@color/text_color_black"
+                    android:background="@drawable/view_looks1"
+                    android:drawableEnd="@drawable/ic_calendar"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:id="@+id/tv_confirm_date"
+                    android:maxLines="1"
+                    android:textSize="@dimen/dimen_20sp"
+                    android:background="@drawable/view_looks1"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:padding="@dimen/dimen_10dp"
+                    android:drawableEnd="@drawable/ic_calendar"
+                    android:textColor="@color/text_color_black"
+                    android:hint="@string/confirm_thresh_date"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    style="@style/AppTextField"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingEnd="@dimen/dimen_10dp"
+                    android:id="@+id/edlRescheduleReason"
+                    android:hint="@string/reschedule_reason">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtRescheduleReason"
+                        android:lines="5"
+                        android:minLines="3"
+                        android:gravity="top|start"
+                        android:maxLines="5"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:scrollbars="vertical"
+                        android:textSize="16sp"
+                        android:inputType="textMultiLine" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSubmit"
+                    android:layout_marginTop="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    app:cornerRadius="@dimen/dimen_20dp"
+                    android:textSize="@dimen/dimen_20sp"
+                    android:textColor="@android:color/white"
+                    android:paddingTop="@dimen/dimen_10dp"
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:paddingEnd="@dimen/dimen_20dp"
+                    android:paddingStart="@dimen/dimen_20dp"
+                    android:textAllCaps="false"
+                    android:text="@string/submit" />
 
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSubmit"
-                android:layout_marginTop="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                app:cornerRadius="@dimen/dimen_20dp"
-                android:textSize="@dimen/dimen_20sp"
-                android:textColor="@android:color/white"
-                android:paddingTop="@dimen/dimen_10dp"
-                android:paddingBottom="@dimen/dimen_10dp"
-                android:paddingEnd="@dimen/dimen_20dp"
-                android:paddingStart="@dimen/dimen_20dp"
-                android:textAllCaps="false"
-                android:text="@string/submit" />
+
 
         </LinearLayout>
 

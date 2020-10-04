@@ -45,6 +45,9 @@ public class ThreshingActivity extends AppCompatActivity {
     @BindView(R.id.btnMarkHG)
     MaterialButton btnMarkHG;
 
+    @BindView(R.id.btnThreshingSchedules)
+    MaterialButton btnThreshingSchedules;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -69,6 +72,7 @@ public class ThreshingActivity extends AppCompatActivity {
         setPortfolioMethods = new SetPortfolioMethods();
         sharedPrefs = new SharedPrefs(ThreshingActivity.this);
         appDatabase = AppDatabase.getInstance(ThreshingActivity.this);
+        sharedPrefs.setKeyRescheduleStateFlag("0");
 
 
         Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(ThreshingActivity.this));
@@ -108,6 +112,11 @@ public class ThreshingActivity extends AppCompatActivity {
     public void setBtnMarkHG(){
         sharedPrefs.setKeyThreshingActivityRoute(DatabaseStringConstants.MARK_HG_AT_RISK);
         startActivity(new Intent(ThreshingActivity.this,MemberList.class));
+    }
+
+    @OnClick(R.id.btnMarkHG)
+    public void setBtnThreshingSchedules(){
+//        startActivity(new Intent(ThreshingActivity.this,MemberList.class));
     }
 
     @Override

@@ -92,12 +92,24 @@ public class SharedPrefs {
     public static final String KEY_THRESHING_CROP_TYPE              = "threshing_crop_type";
     public static final String KEY_THRESHING_FIELD_DETAILS          = "threshing_field_details";
     public static final String KEY_THRESHER                         = "thresher";
+    public static final String KEY_SWAP_FIELD_ID                    = "swap_field_id";
+    public static final String KEY_RESCHEDULE_STATE_FLAG            = "reschedule_state_flag";
 
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyRescheduleStateFlag(String reschedule_state_flag){
+        editor.putString(KEY_RESCHEDULE_STATE_FLAG, reschedule_state_flag)
+                .commit();
+    }
+
+    public void setKeySwapFieldId(String swap_field_id){
+        editor.putString(KEY_SWAP_FIELD_ID, swap_field_id)
+                .commit();
     }
 
     public void setKeyThresher(String thresher){
@@ -626,5 +638,13 @@ public class SharedPrefs {
 
     public String getKeyThresher() {
         return pref.getString(KEY_THRESHER, "BG");
+    }
+
+    public String getKeySwapFieldId() {
+        return pref.getString(KEY_SWAP_FIELD_ID, "");
+    }
+
+    public String getKeyRescheduleStateFlag() {
+        return pref.getString(KEY_RESCHEDULE_STATE_FLAG, "0");
     }
 }

@@ -421,6 +421,17 @@ public abstract class AppDatabase extends RoomDatabase {
 
         }
     };
+
+    private static final Migration MIGRATION_12_13 = new Migration(12, 13) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+            database.execSQL("ALTER TABLE schedule_threshing_activities_flag ADD COLUMN 'reschedule_flag' TEXT DEFAULT '0'");
+            database.execSQL("ALTER TABLE schedule_threshing_activities_flag ADD COLUMN 'schedule_flag' TEXT DEFAULT '0'");
+            database.execSQL("ALTER TABLE schedule_threshing_activities_flag ADD COLUMN 'urgent_flag' TEXT DEFAULT '0'");
+
+        }
+    };
     
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
@@ -429,7 +440,8 @@ public abstract class AppDatabase extends RoomDatabase {
                 DatabaseStringConstants.MS_PLAYBOOK_DATABASE_NAME)
                 .allowMainThreadQueries()
                 .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,
-                        MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,MIGRATION_11_12)
+                        MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,
+                        MIGRATION_11_12,MIGRATION_12_13)
                 .build();
 //                .fallbackToDestructiveMigration()
     }

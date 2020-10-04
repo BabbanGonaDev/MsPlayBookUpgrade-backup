@@ -229,9 +229,11 @@
     <string name="scan_this_face">SCAN THIS FACE</string>
     <string name="face_capture_success"> <u>Capture successful, click to continue.</u> </string>
     <string name="select_thresh_date_title">Enter Threshing Date</string>
+    <string name="re_select_thresh_date_title">Reschedule Threshing Date</string>
     <string name="thresh_date">Threshing date</string>
     <string name="confirm_thresh_date">Confirm threshing date</string>
     <string name="enter_thresh_date">Enter threshing date</string>
+    <string name="enter_confirm_thresh_date">Enter confirm threshing date</string>
     <string name="submit">Submit</string>
     <string name="please_thresh_date">Please enter thresh date</string>
     <string name="please_confirm_thresh_date">Please confirm entered thresh date</string>
@@ -306,4 +308,19 @@
     <string name="hide_details">Hide Details</string>
     <string name="assigned_threshed_title">Assigned Threshed Field Size</string>
     <string name="unassigned_threshed_title">Unassigned Threshed Field Size</string>
+    <string name="swap_question">Do you want to swap thresh date?</string>
+    <string name="swap_dialog_title">Threshing Date Swapping</string>
+    <string name="swap_dialog_body">You are about to select a field for thresh date swapping, the schedule date of the field you are to select would be the former thresh date of the rescheduling field, do you want to continue?</string>
+    <string name="swap_dialog_error">You cannot swap thresh date if former thresh date is today.</string>
+    <string name="error_swap_not_scheduled">You cannot swap thresh date if field not scheduled before.</string>
+    <string name="error_swap_same_field">You cannot swap thresh date with the same field.</string>
+    <string name="swap_thresh_date_error">The former threshing date has a scheduled work of 8 hours or more, swapping is not possible.</string>
+    <string name="view_threshing_schedules">View Threshing Schedules</string>
+    <string name="select_threshing_type">Select type of threshing</string>
+    <string name="scheduled">Scheduled</string>
+    <string name="urgent">Urgent</string>
+    <string name="error_confirm_date_abnormal">Please date should be within 15th of May and 31th of December</string>
+    <string name="scheduled_list_title">List of Scheduled Fields</string>
+    <string name="all_schedules">All Schedules</string>
+    <string name="urgent_schedules">Urgent Schedules</string>
 </resources>

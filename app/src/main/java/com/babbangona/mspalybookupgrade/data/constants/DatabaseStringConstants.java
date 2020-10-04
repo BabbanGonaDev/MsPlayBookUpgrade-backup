@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 12;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 13;
 
     /**
      * Names of tables
@@ -306,6 +306,9 @@ public class DatabaseStringConstants {
     public static final String COL_SYNC_FLAG_SCHEDULE                   = "sync_flag";
     public static final String COL_RESCHEDULE_REASON                    = "reschedule_reason";
     public static final String COL_IK_NUMBER_SCHEDULE                   = "ik_number";
+    public static final String COL_RESCHEDULE_FLAG                      = "reschedule_flag";
+    public static final String COL_SCHEDULE_FLAG                        = "schedule_flag";
+    public static final String COL_URGENT_FLAG                          = "urgent_flag";
 
     /**
      * confirm_threshing_activities_flag column names

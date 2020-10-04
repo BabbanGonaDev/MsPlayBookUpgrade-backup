@@ -112,6 +112,20 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/dimen_20sp" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnThreshingSchedules"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/displayBar"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/view_threshing_schedules"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/dimen_20sp" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

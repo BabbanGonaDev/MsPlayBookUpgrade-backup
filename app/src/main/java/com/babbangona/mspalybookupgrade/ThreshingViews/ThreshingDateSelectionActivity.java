@@ -24,9 +24,7 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.style.RelativeSizeSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -40,7 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.babbangona.mspalybookupgrade.BuildConfig;
-import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -176,7 +173,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(ThreshingDateSelectionActivity.this));
         toolbar.setNavigationOnClickListener(v -> goToHomePage());
 
-
+        showUrgentStart(getResources().getString(R.string.select_threshing_type),ThreshingDateSelectionActivity.this);
         fillCollectionCenterSpinner(actCollectionCenter, ThreshingDateSelectionActivity.this);
 
         actCollectionCenter.setOnItemClickListener((parent, view, position, id) -> {
@@ -1099,7 +1096,10 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 getDate("spread"),
                 "0",
                 "XXX",
-                sharedPrefs.getKeyThreshingIkNumber()
+                sharedPrefs.getKeyThreshingIkNumber(),
+                "0",
+                "1",
+                "0"
                 )
         );
 
@@ -1134,5 +1134,71 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 })
                 .setCancelable(false)
                 .show();
+    }
+
+    private void showUrgentStart(String message, Context context){
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showUrgentStartBody(builder, message, context);
+    }
+
+    private void showUrgentStartBody(MaterialAlertDialogBuilder builder, String message,
+                                 Context context) {
+
+        builder.setMessage(message)
+                .setPositiveButton(context.getResources().getString(R.string.scheduled), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                })
+                .setNegativeButton(context.getResources().getString(R.string.urgent), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                    saveUrgentThreshing();
+                })
+                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                    goToHomePage();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    void saveUrgentThreshing(){
+
+        locationGetter = GPSController.initialiseLocationListener(this);
+        double latitude = locationGetter.getLatitude();
+        double longitude = locationGetter.getLongitude();
+
+
+        appDatabase.scheduleThreshingActivitiesFlagDao().insert(new ScheduledThreshingActivitiesFlag(
+                sharedPrefs.getKeyThreshingUniqueFieldId(),
+                sharedPrefs.getKeyThresher(),
+                sharedPrefs.getKeyThreshingRecaptureFlag(),
+                sharedPrefs.getKeyThreshingTemplate(),
+                "0000-00-00",
+                "None",
+                "None",
+                getDeviceID(),
+                BuildConfig.VERSION_NAME,
+                String.valueOf(latitude),
+                String.valueOf(longitude),
+                sharedPrefs.getStaffID(),
+                getDate("spread"),
+                "0",
+                "XXX",
+                sharedPrefs.getKeyThreshingIkNumber(),
+                "0",
+                "0",
+                "1"
+                )
+        );
+
+        appDatabase.logsDao().insert(new Logs(sharedPrefs.getKeyThreshingUniqueFieldId(),sharedPrefs.getStaffID(),
+                "Schedule urgent threshing",getDate("normal"),sharedPrefs.getStaffRole(),
+                String.valueOf(latitude), String.valueOf(longitude), getDeviceID(),"0",
+                sharedPrefs.getKeyThreshingIkNumber(),
+                sharedPrefs.getKeyThreshingCropType()));
+
+        showSuccessStart(getResources().getString(R.string.threshing_success),this);
     }
 }

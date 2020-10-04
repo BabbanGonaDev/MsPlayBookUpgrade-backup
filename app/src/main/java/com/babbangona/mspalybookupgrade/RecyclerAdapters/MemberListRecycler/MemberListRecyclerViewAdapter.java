@@ -25,6 +25,7 @@ import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.ThreshingViews.FieldList;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
+import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.ReVerifyActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -39,11 +40,13 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
 
     private Context mCtx;
     SharedPrefs sharedPrefs;
+    AppDatabase appDatabase;
 
     public MemberListRecyclerViewAdapter(Context context){
         super(USER_DIFF);
         this.mCtx = context;
         sharedPrefs = new SharedPrefs(mCtx);
+        appDatabase = AppDatabase.getInstance(context);
     }
 
     @NonNull
@@ -134,12 +137,12 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
         }
     }
 
-    private void showDialogForExit(Context context, MemberListRecyclerModel memberListRecyclerModel) {
+    private void showDialogForThresher(Context context, MemberListRecyclerModel memberListRecyclerModel) {
         MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
-        showDialogForExitBody(builder, context, memberListRecyclerModel);
+        showDialogForThresherBody(builder, context, memberListRecyclerModel);
     }
 
-    private void showDialogForExitBody(MaterialAlertDialogBuilder builder, Context context, MemberListRecyclerModel memberListRecyclerModel) {
+    private void showDialogForThresherBody(MaterialAlertDialogBuilder builder, Context context, MemberListRecyclerModel memberListRecyclerModel) {
 
         builder.setTitle(context.getResources().getString(R.string.thresher_title))
                 .setIcon(context.getResources().getDrawable(R.drawable.ic_smiley_face))
@@ -148,16 +151,25 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                     //this is to dismiss the dialog
                     dialog.dismiss();
                     sharedPrefs.setKeyThresher("BG");
-                    Intent intent = new Intent (mCtx, ReVerifyActivity.class);
                     sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
-                    mCtx.startActivity(intent);
+                    if (getLuxandFlag().equalsIgnoreCase("0")){
+                        Intent intent = new Intent (mCtx, ReVerifyActivity.class);
+                        mCtx.startActivity(intent);
+                    }else{
+                        mCtx.startActivity(new Intent(mCtx, FieldList.class));
+                    }
                 })
                 .setNegativeButton(context.getResources().getString(R.string.thresher_self), (dialog, which) -> {
                     dialog.dismiss();
                     sharedPrefs.setKeyThresher("Self");
-                    Intent intent = new Intent (mCtx, ReVerifyActivity.class);
                     sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
-                    mCtx.startActivity(intent);
+                    if (getLuxandFlag().equalsIgnoreCase("0")){
+                        Intent intent = new Intent (mCtx, ReVerifyActivity.class);
+                        mCtx.startActivity(intent);
+                    }else{
+                        mCtx.startActivity(new Intent(mCtx, FieldList.class));
+                    }
+
                 })
                 .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
                     dialog.dismiss();
@@ -173,12 +185,17 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 String route = sharedPrefs.getKeyThreshingActivityRoute();
                 switch (route){
                     case "1":
-                        showDialogForExit(mCtx,memberListRecyclerModel);
+                        showDialogForThresher(mCtx,memberListRecyclerModel);
                         break;
                     case "2":
                     case "3":
                     case "4":
                         sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
+                        mCtx.startActivity(new Intent (mCtx, FieldList.class));
+                        break;
+                    case "5":
+                        sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
+                        ((Activity)mCtx).finish();
                         mCtx.startActivity(new Intent (mCtx, FieldList.class));
                         break;
                     default:
@@ -228,6 +245,20 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 })
                 .setCancelable(false)
                 .show();
+    }
+
+    String getLuxandFlag(){
+        String luxand_flag;
+        try {
+            luxand_flag = appDatabase.appVariablesDao().getLuxandFlag("1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            luxand_flag = "0";
+        }
+        if (luxand_flag == null || luxand_flag.equalsIgnoreCase("") ){
+            luxand_flag = "0";
+        }
+        return luxand_flag;
     }
 
     private static DiffUtil.ItemCallback<MemberListRecyclerModel> USER_DIFF =

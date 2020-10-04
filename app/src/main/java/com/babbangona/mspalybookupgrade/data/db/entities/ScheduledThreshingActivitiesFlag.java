@@ -1,7 +1,5 @@
 package com.babbangona.mspalybookupgrade.data.db.entities;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -17,7 +15,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-//TODO: Revamp this page following this structure to your desired entity class
 @Entity(primaryKeys = {DatabaseStringConstants.COL_UNIQUE_FIELD_ID},
         tableName = DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE)
 public class ScheduledThreshingActivitiesFlag {
@@ -71,11 +68,21 @@ public class ScheduledThreshingActivitiesFlag {
     @ColumnInfo(name = DatabaseStringConstants.COL_IK_NUMBER_SCHEDULE)
     private String ik_number;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_RESCHEDULE_FLAG)
+    private String reschedule_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.COL_SCHEDULE_FLAG)
+    private String schedule_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.COL_URGENT_FLAG)
+    private String urgent_flag;
+
     public ScheduledThreshingActivitiesFlag(@NonNull String unique_field_id, String thresher, String face_scan_flag,
                                             String template, String schedule_date, String collection_center,
                                             String phone_number, String imei, String app_version,
                                             String latitude, String longitude, String staff_id, String date_logged,
-                                            String sync_flag, String reschedule_reason, String ik_number) {
+                                            String sync_flag, String reschedule_reason, String ik_number,
+                                            String reschedule_flag, String schedule_flag, String urgent_flag) {
         this.unique_field_id = unique_field_id;
         this.thresher = thresher;
         this.face_scan_flag = face_scan_flag;
@@ -92,6 +99,9 @@ public class ScheduledThreshingActivitiesFlag {
         this.sync_flag = sync_flag;
         this.reschedule_reason = reschedule_reason;
         this.ik_number = ik_number;
+        this.reschedule_flag = reschedule_flag;
+        this.schedule_flag = schedule_flag;
+        this.urgent_flag = urgent_flag;
     }
 
     @NonNull
@@ -221,6 +231,30 @@ public class ScheduledThreshingActivitiesFlag {
 
     public void setIk_number(String ik_number) {
         this.ik_number = ik_number;
+    }
+
+    public String getReschedule_flag() {
+        return reschedule_flag;
+    }
+
+    public void setReschedule_flag(String reschedule_flag) {
+        this.reschedule_flag = reschedule_flag;
+    }
+
+    public String getSchedule_flag() {
+        return schedule_flag;
+    }
+
+    public void setSchedule_flag(String schedule_flag) {
+        this.schedule_flag = schedule_flag;
+    }
+
+    public String getUrgent_flag() {
+        return urgent_flag;
+    }
+
+    public void setUrgent_flag(String urgent_flag) {
+        this.urgent_flag = urgent_flag;
     }
 
     public static class ScheduleCalculationModel{

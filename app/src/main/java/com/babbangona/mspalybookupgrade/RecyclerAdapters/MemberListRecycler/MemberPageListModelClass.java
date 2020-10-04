@@ -46,6 +46,7 @@ public class MemberPageListModelClass extends ViewModel {
 
     String getCoach(String staff_id, Context context){
         AppDatabase appDatabase = AppDatabase.getInstance(context);
+        SharedPrefs sharedPrefs = new SharedPrefs(context);
         String coach_id;
         try {
             coach_id = appDatabase.bgtCoachesDao().getCoach(staff_id);
@@ -56,6 +57,10 @@ public class MemberPageListModelClass extends ViewModel {
         if (coach_id == null || coach_id.equalsIgnoreCase("") ){
             coach_id = "T-10000000000000AA";
         }
-        return coach_id;
+        if (sharedPrefs.getStaffRole().equalsIgnoreCase("BGT")){
+            return coach_id;
+        }else{
+            return sharedPrefs.getStaffID();
+        }
     }
 }

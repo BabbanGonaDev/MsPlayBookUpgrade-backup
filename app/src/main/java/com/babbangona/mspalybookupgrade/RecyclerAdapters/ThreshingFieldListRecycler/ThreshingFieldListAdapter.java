@@ -1,6 +1,8 @@
 package com.babbangona.mspalybookupgrade.RecyclerAdapters.ThreshingFieldListRecycler;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,10 +37,15 @@ import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
+import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textview.MaterialTextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -52,12 +60,14 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
     private Context context;
     private SharedPrefs sharedPrefs;
     AppDatabase appDatabase;
+    SetPortfolioMethods setPortfolioMethods;
 
     public ThreshingFieldListAdapter(List<ThreshingFieldListRecyclerModel> threshingFieldListRecyclerModelList, Context context) {
         this.threshingFieldListRecyclerModelList = threshingFieldListRecyclerModelList;
         this.context = context;
         sharedPrefs = new SharedPrefs(this.context);
         appDatabase = AppDatabase.getInstance(context);
+        setPortfolioMethods = new SetPortfolioMethods();
     }
 
     @NonNull
@@ -122,12 +132,15 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
 
         void getStatus(String unique_field_id, ImageView iv_activity_signal){
             int status = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldScheduleStatus(unique_field_id);
+            int urgent_status = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldUrgentScheduleStatus(unique_field_id);
             int confirm_status = appDatabase.confirmThreshingActivitiesFlagDao().getFieldConfirmStatus(unique_field_id);
             if (confirm_status > 0){
-                iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.colorGreen));
+                iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.view_green));
             }else{
                 if (status > 0){
-                    iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.text_color_blue));
+                    iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.light_green));
+                }else if(urgent_status > 0){
+                    iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.amber));
                 }else{
                     iv_activity_signal.setBackgroundColor(context.getResources().getColor(R.color.colorRed));
                 }
@@ -139,6 +152,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
 
         String route = sharedPrefs.getKeyThreshingActivityRoute();
         int status = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldScheduleStatus(threshingFieldListRecyclerModel.getUnique_field_id());
+        int urgent_status = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldUrgentScheduleStatus(threshingFieldListRecyclerModel.getUnique_field_id());
         int confirm_status = appDatabase.confirmThreshingActivitiesFlagDao().getFieldConfirmStatus(threshingFieldListRecyclerModel.getUnique_field_id());
         FieldListRecyclerModel fieldListRecyclerModel = appDatabase.fieldsDao().getFieldCompleteDetails(threshingFieldListRecyclerModel.getUnique_field_id());
         if (route.equalsIgnoreCase(DatabaseStringConstants.SCHEDULE_THRESHING)){
@@ -180,7 +194,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                 //thresh confirmed, do you want to reset confirm?
                 showConfirmSuccess(context.getResources().getString(R.string.confirm_thresh),context,"");
             }else{
-                if (status > 0){
+                if (status > 0 || urgent_status > 0){
                     if (threshingFieldListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())){
                         showDialogForConfirmThreshing(context,threshingFieldListRecyclerModel,"0",fieldListRecyclerModel,position);
                     }else{
@@ -199,29 +213,26 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                 showConfirmSuccess(context.getResources().getString(R.string.error_hg_field_not_assigned),context,"crying");
             }
         } else if (route.equalsIgnoreCase(DatabaseStringConstants.SWAP_SCHEDULE_DATE)){
-            //log HG at risk
-            /*if (confirm_status > 0){
+            //select field ID to swap
+            if (confirm_status > 0){
                 //thresh confirmed, do you want to reset confirm?
                 showConfirmSuccess(context.getResources().getString(R.string.error_schedule_after_confirm),context,"crying");
             }else{
+                //go to reschedule class.
                 if (status > 0){
-                    showDialogForRescheduleThreshing(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
+                    if (sharedPrefs.getKeyThreshingUniqueFieldId().equalsIgnoreCase(threshingFieldListRecyclerModel.getUnique_field_id())){
+                        showConfirmSuccess(context.getResources().getString(R.string.error_swap_same_field),context,"crying");
+                    }else{
+                        sharedPrefs.setKeySwapFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
+                        sharedPrefs.setKeyRescheduleStateFlag("1");
+                        ((Activity)context).finish();
+                        context.startActivity(new Intent(context,RescheduleThreshingDateSelectionActivity.class));
+                    }
                 }else{
-                    Intent intent = new Intent (context, ThreshingDateSelectionActivity.class);
-                    sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
-                    sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);
-                    sharedPrefs.setKeyThreshingCropType(fieldListRecyclerModel.getCrop_type());
-                    sharedPrefs.setKeyThreshingIkNumber(fieldListRecyclerModel.getIk_number());
-                    context.startActivity(intent);
+                    showConfirmSuccess(context.getResources().getString(R.string.error_swap_not_scheduled),context,"crying");
                 }
             }
-            if (threshingFieldListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())){
-                showDialogForLogHGStart(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
-            }else{
-                showConfirmSuccess(context.getResources().getString(R.string.error_hg_field_not_assigned),context,"crying");
-            }*/
         }
-
     }
 
     private void showDialogForRescheduleThreshing(Context context, ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
@@ -256,11 +267,11 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
 
     private void showDialogForConfirmThreshing(Context context, ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
                                                String code_use_flag, FieldListRecyclerModel fieldListRecyclerModel, int position) {
-        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        AlertDialog.Builder builder = (new AlertDialog.Builder(context));
         showDialogForConfirmThreshingBody(builder, context, threshingFieldListRecyclerModel, code_use_flag, fieldListRecyclerModel, position);
     }
 
-    private void showDialogForConfirmThreshingBody(MaterialAlertDialogBuilder builder, Context context,
+    private void showDialogForConfirmThreshingBody(AlertDialog.Builder builder, Context context,
                                                    ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
                                                    String code_use_flag,
                                                    FieldListRecyclerModel fieldListRecyclerModel, int position) {
@@ -270,12 +281,41 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
         double latitude = locationGetter.getLatitude();
         double longitude = locationGetter.getLongitude();
 
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        int paddingDp = 20;
+        float density = context.getResources().getDisplayMetrics().density;
+        int paddingPixel = (int)(paddingDp * density);
+
+        final MaterialTextView tv_date = new MaterialTextView(context);
+        tv_date.setHint("Please Enter Date");
+        tv_date.setPadding(paddingPixel, 0, 0, 0);
+        tv_date.setTypeface(null, Typeface.ITALIC);
+        layout.addView(tv_date);
+
+        tv_date.setOnClickListener(v -> {
+            getCalenderDate(tv_date,context.getResources().getString(R.string.enter_confirm_thresh_date),context);
+        });
+
         builder.setTitle(context.getResources().getString(R.string.attention))
                 .setMessage(context.getResources().getString(R.string.confirm_thresh_question))
                 .setPositiveButton(context.getResources().getString(R.string.yes), (dialog, which) -> {
                     //this is to dismiss the dialog
-                    dialog.dismiss();
-                    double min_lat = Double.parseDouble(fieldListRecyclerModel.getMin_lat());
+                    if (tv_date.getText().toString().equalsIgnoreCase("")){
+                        showConfirmSuccess(context.getResources().getString(R.string.error_message_enter_date),context,"crying");
+                    }else if(getDateCorrelationFlag(tv_date.getText().toString(),
+                            setPortfolioMethods.parseDateCustom(getMaximumScheduleDate()),
+                            setPortfolioMethods.parseDateCustom(getMinimumLogDate())) == 0){
+                        showConfirmSuccess(context.getResources().getString(R.string.error_confirm_date_abnormal),context,"crying");
+                    }else{
+                        dialog.dismiss();
+                        saveConfirm(context,threshingFieldListRecyclerModel,code_use_flag,
+                                fieldListRecyclerModel,String.valueOf(latitude),String.valueOf(longitude));
+                        notifyItemChanged(position);
+                    }
+
+                    /*double min_lat = Double.parseDouble(fieldListRecyclerModel.getMin_lat());
                     double max_lat = Double.parseDouble(fieldListRecyclerModel.getMax_lat());
                     double min_lng = Double.parseDouble(fieldListRecyclerModel.getMin_lng());
                     double max_lng = Double.parseDouble(fieldListRecyclerModel.getMax_lng());
@@ -286,19 +326,18 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     double locationDistance = locationDistanceToFieldCentre(latitude,longitude,mid_lat,mid_lng);
 
                     if (locationDistance <= allowedDistance){
-                        saveConfirm(context,threshingFieldListRecyclerModel,code_use_flag,
-                                fieldListRecyclerModel,String.valueOf(latitude),String.valueOf(longitude));
-                        notifyItemChanged(position);
+
                     }else{
                         locationMismatchedDialog(latitude,longitude,min_lat,max_lat,min_lng,max_lng,
                                 context,fieldListRecyclerModel.getUnique_field_id(),
                                 context.getResources().getString(R.string.wrong_location));
-                    }
+                    }*/
                 })
                 .setNeutralButton(context.getResources().getString(R.string.no), (dialog, which) -> {
                     dialog.dismiss();
                 })
                 .setCancelable(false)
+                .setView(layout)
                 .show();
     }
 
@@ -657,5 +696,73 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
             field_code = "1995";
         }
         return field_code;
+    }
+
+    void getCalenderDate(MaterialTextView textView, String activity_string, Context context){
+
+        //To show current date in the datePicker
+        Calendar mCurrentDate = Calendar.getInstance();
+        int mYear = mCurrentDate.get(Calendar.YEAR);
+        int mMonth = mCurrentDate.get(Calendar.MONTH);
+        int mDay = mCurrentDate.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog mDatePicker = new DatePickerDialog(context, (datePicker, selectedYear, selectedMonth, selectedDay) -> {
+            String text = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
+            textView.setText(setPortfolioMethods.parseDateCustom(text));
+        }, mYear, mMonth, mDay);
+        mDatePicker.setTitle(activity_string);
+        mDatePicker.show();
+    }
+
+    public int getDateCorrelationFlag(String selected_date, String reference_maximum_date, String minimum_date){
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy",Locale.getDefault());
+            Date selectedDate = sdf.parse(selected_date);
+            Date todayDate = sdf.parse(minimum_date);
+            Date referenceMaximumDate = sdf.parse(reference_maximum_date);
+            // before() will return true if and only if date1 is before date2
+            if (selectedDate != null) {
+                if(selectedDate.before(todayDate)){
+                    return 0;
+                }else if (selectedDate.after(referenceMaximumDate)){
+                    return 0;
+                }else{
+                    return 1;
+                }
+            }else{
+                return 0;
+            }
+        } catch(ParseException ex){
+            ex.printStackTrace();
+            return 0;
+        }
+    }
+
+    String getMinimumLogDate(){
+        String minimum_log_date;
+        try {
+            minimum_log_date = appDatabase.appVariablesDao().getMinimumLogDate("1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            minimum_log_date = "2020-05-15";
+        }
+        if (minimum_log_date == null || minimum_log_date.equalsIgnoreCase("") ){
+            minimum_log_date = "2020-05-15";
+        }
+        return minimum_log_date;
+    }
+
+    String getMaximumScheduleDate(){
+        String maximum_schedule_date;
+        try {
+            maximum_schedule_date = appDatabase.appVariablesDao().getMaximumScheduleDate("1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            maximum_schedule_date = "2020-12-31";
+        }
+        if (maximum_schedule_date == null || maximum_schedule_date.equalsIgnoreCase("") ){
+            maximum_schedule_date = "2020-12-31";
+        }
+        return maximum_schedule_date;
     }
 }

@@ -53,9 +53,16 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
     public abstract double getCoachTotalFieldsSum(String mss);
 
     @Query("UPDATE schedule_threshing_activities_flag SET schedule_date = :schedule_date, reschedule_reason = :reschedule_reason," +
-            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged " +
+            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged, reschedule_flag = '1', urgent_flag = '0' " +
             "WHERE unique_field_id = :unique_field_id")
-    public abstract void updateScheduleDate(String unique_field_id, String schedule_date, String reschedule_reason, String staff_id, String date_logged);
+    public abstract void updateScheduleDate(String unique_field_id, String schedule_date,
+                                            String reschedule_reason, String staff_id, String date_logged);
+
+    @Query("UPDATE schedule_threshing_activities_flag SET schedule_date = :schedule_date, reschedule_reason = :reschedule_reason," +
+            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged, schedule_flag = '0', urgent_flag = '1' " +
+            "WHERE unique_field_id = :unique_field_id")
+    public abstract void updateUrgentScheduleDate(String unique_field_id, String schedule_date,
+                                            String reschedule_reason, String staff_id, String date_logged);
 
     @Query(" SELECT COUNT(unique_field_id) FROM schedule_threshing_activities_flag WHERE sync_flag != '1' ")
     public abstract int getUnSyncedScheduleThreshingActivitiesCount();
@@ -66,8 +73,11 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
     @Query(" UPDATE schedule_threshing_activities_flag SET sync_flag = '1' WHERE unique_field_id = :unique_field_id ")
     public abstract void updateScheduledThreshingActivitiesSyncFlag(String unique_field_id);
 
-    @Query(" SELECT COUNT(unique_field_id) FROM schedule_threshing_activities_flag WHERE unique_field_id = :unique_field_id ")
+    @Query(" SELECT COUNT(unique_field_id) FROM schedule_threshing_activities_flag WHERE unique_field_id = :unique_field_id AND schedule_flag = '1' ")
     public abstract int getFieldScheduleStatus(String unique_field_id);
+
+    @Query(" SELECT COUNT(unique_field_id) FROM schedule_threshing_activities_flag WHERE unique_field_id = :unique_field_id AND urgent_flag = '1'  ")
+    public abstract int getFieldUrgentScheduleStatus(String unique_field_id);
 
     @Query(" SELECT a.unique_field_id, b.field_size FROM schedule_threshing_activities_flag a " +
             "JOIN fields b ON a.unique_field_id = b.unique_field_id " +
@@ -77,7 +87,7 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
     @Query(" SELECT schedule_date FROM schedule_threshing_activities_flag WHERE unique_field_id = :unique_field_id ")
     public abstract String getFieldSchedule(String unique_field_id);
 
-    @Query(" SELECT DISTINCT schedule_date FROM schedule_threshing_activities_flag WHERE staff_id = :staff_id ")
+    @Query(" SELECT DISTINCT schedule_date FROM schedule_threshing_activities_flag WHERE staff_id = :staff_id AND schedule_flag = '1' ")
     public abstract List<String> getScheduleDateCount(String staff_id);
 
     @Query(" SELECT COUNT(schedule_date) FROM schedule_threshing_activities_flag WHERE staff_id = :staff_id AND schedule_date = :schedule_date ")
