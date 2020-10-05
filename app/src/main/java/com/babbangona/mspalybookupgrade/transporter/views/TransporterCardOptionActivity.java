@@ -223,6 +223,9 @@ public class TransporterCardOptionActivity extends AppCompatActivity {
         for (String x : ops_areas) {
             areas_list.add(new OperatingAreasTable(session.GET_REG_PHONE_NUMBER(),
                     x,
+                    session.GET_LOG_IN_STAFF_ID(),
+                    getDeviceID(),
+                    BuildConfig.VERSION_NAME,
                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                     0));
         }
