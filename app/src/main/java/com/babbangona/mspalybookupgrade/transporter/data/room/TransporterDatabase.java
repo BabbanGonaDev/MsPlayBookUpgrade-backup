@@ -18,7 +18,7 @@ import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CollectionC
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.OperatingAreasTable;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.TransporterTable;
 
-@Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class, CardsTable.class}, version = 5, exportSchema = false)
+@Database(entities = {TransporterTable.class, CollectionCenterTable.class, OperatingAreasTable.class, CardsTable.class}, version = 6, exportSchema = false)
 public abstract class TransporterDatabase extends RoomDatabase {
     private static TransporterDatabase INSTANCE;
 
@@ -141,6 +141,35 @@ public abstract class TransporterDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            /**
+             * Adding imei, staff_id and app_version to operating_areas_table.
+             */
+
+            //Move current table to temp
+            db.execSQL("ALTER TABLE operating_areas_table RENAME TO operating_areas_table_temp");
+
+            //Create new structure
+            db.execSQL("CREATE TABLE operating_areas_table (phone_number TEXT NOT NULL, " +
+                    "cc_id TEXT NOT NULL, " +
+                    "staff_id TEXT, " +
+                    "imei TEXT, " +
+                    "app_version TEXT, " +
+                    "date_updated TEXT, " +
+                    "sync_flag INTEGER, " +
+                    "PRIMARY KEY(phone_number, cc_id))");
+
+            //Copy contents from temp table
+            db.execSQL("INSERT INTO operating_areas_table (phone_number, cc_id, date_updated, sync_flag)" +
+                    "SELECT phone_number, cc_id, date_updated, sync_flag FROM operating_areas_table_temp");
+
+            //Clean-up
+            db.execSQL("DROP TABLE operating_areas_table_temp");
+        }
+    };
+
     //Init of instance.
     public static TransporterDatabase getInstance(Context context) {
         if (INSTANCE == null) {
@@ -148,7 +177,7 @@ public abstract class TransporterDatabase extends RoomDatabase {
                     TransporterDatabase.class,
                     "transporter-db.db")
                     //.createFromAsset("database/transporter.db")
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                     .allowMainThreadQueries()
                     .build();
         }
