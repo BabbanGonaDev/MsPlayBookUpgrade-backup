@@ -214,6 +214,7 @@ public abstract class TransporterDatabase extends RoomDatabase {
         }
     };
 
+    //TODO: ==> Add changes from imei_fix branch into this branch.
 
     //Init of instance.
     public static TransporterDatabase getInstance(Context context) {
