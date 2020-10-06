@@ -3264,6 +3264,7 @@ public class ActivityListDownloadService extends IntentService {
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<ConfirmThreshingActivitiesFlagDownload> call = retrofitInterface.downloadConfirmThreshingActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
         sharedPrefs.setKeyProgressDialogStatus(0);
+        Log.d("CHECK", "download confirm threshing: " + sharedPrefs.getStaffID() + " == " + portfolioToGson(sharedPrefs.getKeyPortfolioList()) + " == " + last_synced);
         call.enqueue(new Callback<ConfirmThreshingActivitiesFlagDownload>() {
             @Override
             public void onResponse(@NonNull Call<ConfirmThreshingActivitiesFlagDownload> call,
@@ -3502,6 +3503,7 @@ public class ActivityListDownloadService extends IntentService {
     private void syncUpScheduledThreshingActivities() {
         List<ScheduledThreshingActivitiesFlag> scheduledThreshingActivitiesFlagList = appDatabase.scheduleThreshingActivitiesFlagDao().getUnSyncedScheduleThreshingActivities();
         String composed_json = new Gson().toJson(scheduledThreshingActivitiesFlagList);
+        Log.d("CHECK", "ScheduledThreshingActivities: " + composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<ScheduledThreshingActivitiesUpload>> call = retrofitInterface.uploadScheduledThreshingActivitiesRecord(composed_json, sharedPrefs.getStaffID());
         sharedPrefs.setKeyProgressDialogStatus(0);
@@ -3604,6 +3606,7 @@ public class ActivityListDownloadService extends IntentService {
     private void syncUpConfirmThreshingActivities() {
         List<ConfirmThreshingActivitiesFlag> confirmThreshingActivitiesFlagList = appDatabase.confirmThreshingActivitiesFlagDao().getUnSyncedConfirmThreshingActivities();
         String composed_json = new Gson().toJson(confirmThreshingActivitiesFlagList);
+        Log.d("CHECK", "ConfirmedThreshingActivities: " + composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<ConfirmThreshingActivitiesUpload>> call = retrofitInterface.uploadConfirmThreshingActivitiesRecord(composed_json, sharedPrefs.getStaffID());
         sharedPrefs.setKeyProgressDialogStatus(0);
