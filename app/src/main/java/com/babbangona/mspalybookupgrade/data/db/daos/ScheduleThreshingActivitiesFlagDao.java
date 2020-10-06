@@ -96,13 +96,13 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
     public abstract int getDateCount(String staff_id, String schedule_date);
 
 
-    @Query(" SELECT c.first_name||' '||c.last_name as member_name, c.phone_number as phone_number, c.village_name as location,  a.unique_field_id as field_id,  a.date_logged as threshing_date, b.field_size as field_size FROM schedule_threshing_activities_flag a " +
+    @Query(" SELECT  c.first_name||' '||c.last_name as member_name, a.phone_number as phone_number, c.village_name as location,  a.unique_field_id as field_id,  a.schedule_date as threshing_date, b.field_size as field_size  FROM schedule_threshing_activities_flag a " +
             "JOIN fields b ON a.unique_field_id = b.unique_field_id  JOIN members c on b.unique_member_id = c.unique_member_id " +
             "WHERE  a.staff_id = :staff_id  AND b.deactivate = '0'")
     public abstract List<ViewScheduleRecyclerModel> viewAllScheduledFields(String staff_id);
 
 
-    @Query(" SELECT c.first_name||' '||c.last_name as member_name, c.phone_number as phone_number, c.village_name as location,  a.unique_field_id as field_id,  a.date_logged as threshing_date, b.field_size as field_size FROM schedule_threshing_activities_flag a " +
+    @Query(" SELECT c.first_name||' '||c.last_name as member_name, a.phone_number as phone_number, c.village_name as location,  a.unique_field_id as field_id,  a.schedule_date as threshing_date, b.field_size as field_size FROM schedule_threshing_activities_flag a " +
             "JOIN fields b ON a.unique_field_id = b.unique_field_id  JOIN members c on b.unique_member_id = c.unique_member_id " +
             "WHERE  a.staff_id = :staff_id  AND b.deactivate = '0' and a.urgent_flag = '1' ")
     public abstract List<ViewScheduleRecyclerModel> viewAllUrgentScheduledFields(String staff_id);

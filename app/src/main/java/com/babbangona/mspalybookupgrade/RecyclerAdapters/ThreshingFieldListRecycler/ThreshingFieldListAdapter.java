@@ -275,6 +275,9 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
         showDialogForConfirmThreshingBody(builder, context, threshingFieldListRecyclerModel, code_use_flag, fieldListRecyclerModel, position);
     }
 
+
+    //TODO Rehoboth  HTA-172 this is the function to prevent future date
+
     private void showDialogForConfirmThreshingBody(AlertDialog.Builder builder, Context context,
                                                    ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
                                                    String code_use_flag,
@@ -702,6 +705,8 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
         return field_code;
     }
 
+
+    //TODO Rehoboth this is the date function
     void getCalenderDate(MaterialTextView textView, String activity_string, Context context){
 
         //To show current date in the datePicker
@@ -714,6 +719,8 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
             String text = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
             textView.setText(setPortfolioMethods.parseDateCustom(text));
         }, mYear, mMonth, mDay);
+
+
         mDatePicker.setTitle(activity_string);
         mDatePicker.show();
     }
