@@ -40,7 +40,6 @@ import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.text.ParseException;
@@ -718,9 +717,22 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
         DatePickerDialog mDatePicker = new DatePickerDialog(context, (datePicker, selectedYear, selectedMonth, selectedDay) -> {
             String text = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
             textView.setText(setPortfolioMethods.parseDateCustom(text));
+
+            //If it still doesn't work, use this method.
+            /*Calendar selected = Calendar.getInstance();
+            selected.set(year, monthOfYear, dayOfMonth);
+
+            long selectedMilli = selected.getTimeInMillis();
+
+            Date datePickerDate = new Date(selectedMilli);
+            if (datePickerDate.after(new Date())) {
+                datePickerDob.updateDate(cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH));
+            }*/
         }, mYear, mMonth, mDay);
 
-
+        mDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
         mDatePicker.setTitle(activity_string);
         mDatePicker.show();
     }

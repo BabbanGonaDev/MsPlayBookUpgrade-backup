@@ -1,19 +1,13 @@
 package com.babbangona.mspalybookupgrade.ThreshingViews;
 
-import androidx.annotation.NonNull;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.babbangona.mspalybookupgrade.BuildConfig;
-import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.Homepage;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
@@ -120,7 +114,7 @@ public class ThreshingActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         loadPreviousActivity();
     }
 
@@ -128,7 +122,8 @@ public class ThreshingActivity extends AppCompatActivity {
         startActivity(new Intent(ThreshingActivity.this, Homepage.class));
     }
 
-    @Override
+    //Remove the calendar icon from homepage.
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.threshing_menu, menu);
         return true;
@@ -142,7 +137,7 @@ public class ThreshingActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     void removeScheduleAndUpdate(){
         if (sharedPrefs.getStaffRole().equalsIgnoreCase("BGT")){
