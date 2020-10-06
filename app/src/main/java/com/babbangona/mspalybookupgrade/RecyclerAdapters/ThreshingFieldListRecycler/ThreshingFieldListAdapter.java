@@ -119,6 +119,10 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
 
         }
 
+
+
+        //TODO: Bayo check issue on switching status
+
         void nowBind(ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel){
             String village = context.getResources().getString(R.string.member_village)+ " " + threshingFieldListRecyclerModel.getVillage();
             String field_size = context.getResources().getString(R.string.field_size)+ " " + threshingFieldListRecyclerModel.getField_size();

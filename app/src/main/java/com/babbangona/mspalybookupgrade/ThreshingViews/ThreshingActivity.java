@@ -114,9 +114,9 @@ public class ThreshingActivity extends AppCompatActivity {
         startActivity(new Intent(ThreshingActivity.this,MemberList.class));
     }
 
-    @OnClick(R.id.btnMarkHG)
+    @OnClick(R.id.btnThreshingSchedules)
     public void setBtnThreshingSchedules(){
-//        startActivity(new Intent(ThreshingActivity.this,MemberList.class));
+        startActivity(new Intent(ThreshingActivity.this,ScheduledThreshingView.class));
     }
 
     @Override

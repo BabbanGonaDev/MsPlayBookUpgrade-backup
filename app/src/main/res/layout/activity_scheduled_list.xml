@@ -77,13 +77,13 @@
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <LinearLayout
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingEnd="@dimen/dimen_15dp"
-        android:paddingStart="@dimen/dimen_15dp">
+        android:id="@+id/radioGroup1"
+        android:orientation="horizontal">
+
+
 
         <RadioButton
             android:layout_width="match_parent"
@@ -101,8 +101,8 @@
             android:text="@string/urgent_schedules"
             android:layout_weight="1"/>
 
-    </LinearLayout>
 
+</RadioGroup>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.data.db.daos;
 
+import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -7,6 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.ThreshingFieldListRecycler.ViewScheduleRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 
@@ -92,6 +94,19 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
 
     @Query(" SELECT COUNT(schedule_date) FROM schedule_threshing_activities_flag WHERE staff_id = :staff_id AND schedule_date = :schedule_date ")
     public abstract int getDateCount(String staff_id, String schedule_date);
+
+
+    @Query(" SELECT c.first_name||' '||c.last_name as member_name, c.phone_number as phone_number, c.village_name as location,  a.unique_field_id as field_id,  a.date_logged as threshing_date, b.field_size as field_size FROM schedule_threshing_activities_flag a " +
+            "JOIN fields b ON a.unique_field_id = b.unique_field_id  JOIN members c on b.unique_member_id = c.unique_member_id " +
+            "WHERE  a.staff_id = :staff_id  AND b.deactivate = '0'")
+    public abstract List<ViewScheduleRecyclerModel> viewAllScheduledFields(String staff_id);
+
+
+    @Query(" SELECT c.first_name||' '||c.last_name as member_name, c.phone_number as phone_number, c.village_name as location,  a.unique_field_id as field_id,  a.date_logged as threshing_date, b.field_size as field_size FROM schedule_threshing_activities_flag a " +
+            "JOIN fields b ON a.unique_field_id = b.unique_field_id  JOIN members c on b.unique_member_id = c.unique_member_id " +
+            "WHERE  a.staff_id = :staff_id  AND b.deactivate = '0' and a.urgent_flag = '1' ")
+    public abstract List<ViewScheduleRecyclerModel> viewAllUrgentScheduledFields(String staff_id);
+
 
     /**
      * Insert the object in database
