@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="5dp"
+    android:translationZ="5dp"
+    app:cardCornerRadius="@dimen/dimen_10dp"
+    app:cardPreventCornerOverlap="true"
+    android:id="@+id/pws_list_container"
+    android:clickable="true"
+    android:focusable="true"
+    android:checkable="true"
+    app:cardElevation="@dimen/dimen_10dp"
+    android:padding="5dp"
+    android:layout_margin="@dimen/dimen_10dp"
+    android:background="@drawable/rounded_corners">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_linear"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="600dp"
+            android:layout_height="1dp"/>
+        <TextView
+            android:id="@+id/tvMemberName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/member_name"
+            android:textSize="18dp"
+            android:textAlignment="textStart"
+            android:textAppearance="?attr/textAppearanceSubtitle2" />
+        <TextView
+            android:id="@+id/tvPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_number"
+            android:textSize="18dp"
+            android:textAlignment="textStart"
+            android:textAppearance="?attr/textAppearanceSubtitle2" />
+        <TextView
+            android:id="@+id/tvFieldID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/static_field_id"
+            android:textSize="18dp"
+            android:textAlignment="textStart"
+            android:textAppearance="?attr/textAppearanceSubtitle2" />
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="@string/location"
+            android:textAlignment="textStart"
+            android:textAppearance="?attr/textAppearanceSubtitle2" />
+
+
+        <TextView
+            android:id="@+id/tvThreshingDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/thresh_date"
+            android:textSize="18dp"
+            android:textAlignment="textStart"
+            android:textAppearance="?attr/textAppearanceSubtitle2" />
+
+
+        <TextView
+            android:id="@+id/tvFieldSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/field_size"
+            android:textSize="18dp"
+            android:textAlignment="textStart"
+            android:textAppearance="?attr/textAppearanceSubtitle2" />
+
+
+
+
+    </LinearLayout>
+        <ImageView
+            android:layout_width="@dimen/dimen_40dp"
+            android:layout_height="@dimen/dimen_40dp"
+            android:id="@+id/assignment_flag"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/assignment_red"
+            android:layout_alignBottom="@id/layout_linear"/>
+
+    </RelativeLayout>
+</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

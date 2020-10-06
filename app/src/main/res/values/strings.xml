@@ -320,7 +320,8 @@
     <string name="scheduled">Scheduled</string>
     <string name="urgent">Urgent</string>
     <string name="error_confirm_date_abnormal">Please date should be within 15th of May and 31th of December</string>
-    <string name="scheduled_list_title">List of Scheduled Fields</string>
+    <string name="scheduled_list_title">List of Fields</string>
     <string name="all_schedules">All Schedules</string>
     <string name="urgent_schedules">Urgent Schedules</string>
+    <string name="location">Location</string>
 </resources>

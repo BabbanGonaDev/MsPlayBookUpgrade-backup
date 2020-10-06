@@ -163,10 +163,16 @@
             android:name=".ComingSoon"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".ThreshingViews.ScheduledThreshingView"
+            android:theme="@style/AppTheme.NoActionBar" >
+
+        </activity>
+        <activity
             android:name=".Homepage"
             android:exported="true"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -176,6 +182,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

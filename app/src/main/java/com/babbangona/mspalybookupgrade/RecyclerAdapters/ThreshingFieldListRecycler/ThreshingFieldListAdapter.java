@@ -119,6 +119,10 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
 
         }
 
+
+
+        //TODO: Bayo check issue on switching status
+
         void nowBind(ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel){
             String village = context.getResources().getString(R.string.member_village)+ " " + threshingFieldListRecyclerModel.getVillage();
             String field_size = context.getResources().getString(R.string.field_size)+ " " + threshingFieldListRecyclerModel.getField_size();
@@ -270,6 +274,9 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
         AlertDialog.Builder builder = (new AlertDialog.Builder(context));
         showDialogForConfirmThreshingBody(builder, context, threshingFieldListRecyclerModel, code_use_flag, fieldListRecyclerModel, position);
     }
+
+
+    //TODO Rehoboth  HTA-172 this is the function to prevent future date
 
     private void showDialogForConfirmThreshingBody(AlertDialog.Builder builder, Context context,
                                                    ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
@@ -698,6 +705,8 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
         return field_code;
     }
 
+
+    //TODO Rehoboth this is the date function
     void getCalenderDate(MaterialTextView textView, String activity_string, Context context){
 
         //To show current date in the datePicker
@@ -710,6 +719,8 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
             String text = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
             textView.setText(setPortfolioMethods.parseDateCustom(text));
         }, mYear, mMonth, mDay);
+
+
         mDatePicker.setTitle(activity_string);
         mDatePicker.show();
     }
