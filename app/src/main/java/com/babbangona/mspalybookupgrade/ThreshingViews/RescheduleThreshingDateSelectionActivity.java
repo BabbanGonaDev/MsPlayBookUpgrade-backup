@@ -732,8 +732,8 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                     //this is to dismiss the dialog
                     dialog.dismiss();
                     updateActivity(sharedPrefs.getKeyThreshingUniqueFieldId(),
-                            reverseParseDate(tv_enter_date.getText().toString()),
-                            Objects.requireNonNull(edtRescheduleReason.getText()).toString(),
+                            reverseParseDate(new_schedule_date),
+                            reason,
                             String.valueOf(latitude),
                             String.valueOf(longitude),
                             sharedPrefs.getKeyThreshingIkNumber(),
