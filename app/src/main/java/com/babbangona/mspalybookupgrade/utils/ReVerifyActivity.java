@@ -267,7 +267,7 @@ public class ReVerifyActivity extends AppCompatActivity {
         }else{
             this.runOnUiThread(()->{
                 //TODO: HTA-XXX
-                scanned_image_iv.setImageResource(R.drawable.bg_logo);
+                scanned_image_iv.setImageResource(R.drawable.ic_face_scan);
             });
         }
 
