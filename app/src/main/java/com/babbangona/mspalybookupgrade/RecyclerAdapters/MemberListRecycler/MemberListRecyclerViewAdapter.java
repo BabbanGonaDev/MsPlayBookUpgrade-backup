@@ -20,11 +20,13 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.ThreshingViews.FieldList;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
+import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.ReVerifyActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -164,13 +166,18 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 .setNegativeButton(context.getResources().getString(R.string.thresher_self), (dialog, which) -> {
                     dialog.dismiss();
                     sharedPrefs.setKeyThresher("Self");
+
+
+                    mCtx.startActivity(new Intent(mCtx, FieldList.class));
+
+                    /*
                     sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
                     if (getLuxandFlag().equalsIgnoreCase("0")){
                         Intent intent = new Intent (mCtx, ReVerifyActivity.class);
                         mCtx.startActivity(intent);
                     }else{
                         mCtx.startActivity(new Intent(mCtx, FieldList.class));
-                    }
+                    }*/
 
                 })
                 .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
