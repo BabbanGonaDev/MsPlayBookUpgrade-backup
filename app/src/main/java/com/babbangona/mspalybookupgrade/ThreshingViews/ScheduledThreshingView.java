@@ -5,41 +5,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.babbangona.mspalybookupgrade.PCStaffPSWPage;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.PCPWSHomePageRecycler.PCPWSPageListModelClass;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.PCPWSHomePageRecycler.PCPWSPendingAdapter;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.PCPWSHomePageRecycler.PCPWSReviewedAdapter;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ThreshingFieldListRecycler.ViewScheduleRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ThreshingFieldListRecycler.ViewSchedulesAdapter;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
-import com.babbangona.mspalybookupgrade.data.db.daos.PCPWSActivitiesFlagDao;
-import com.babbangona.mspalybookupgrade.data.db.daos.ScheduleThreshingActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
-import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +34,6 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class ScheduledThreshingView extends AppCompatActivity {
@@ -110,16 +96,11 @@ public class ScheduledThreshingView extends AppCompatActivity {
     @BindView(R.id.radioGroup1)
     RadioGroup RadioGroup;
 
-
-
-
-
-/*    PCPWSPageListModelClass pcpwsPageListModelClass;
+/*  PCPWSPageListModelClass pcpwsPageListModelClass;
 
     PCPWSPendingAdapter pcpwsPendingAdapter;
 
     PCPWSReviewedAdapter pcpwsReviewedAdapter;*/
-
 
     List<ViewScheduleRecyclerModel> viewScheduleRecyclerModel;
 
@@ -130,8 +111,6 @@ public class ScheduledThreshingView extends AppCompatActivity {
     SharedPrefs sharedPrefs;
 
     SetPortfolioMethods setPortfolioMethods;
-
-    String staff_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,28 +133,24 @@ public class ScheduledThreshingView extends AppCompatActivity {
 
         toolbar.setNavigationOnClickListener(view -> loadPreviousActivity());
 
-/*        pcpwsPageListModelClass = new ViewModelProvider(this, new MyViewModelFactory(appDatabase.pcpwsActivitiesFlagDao(), this)).get(PCPWSPageListModelClass.class);
+        /*pcpwsPageListModelClass = new ViewModelProvider(this, new MyViewModelFactory(appDatabase.pcpwsActivitiesFlagDao(), this)).get(PCPWSPageListModelClass.class);
         pcpwsPageListModelClass.filterTextAll.setValue("");*/
 
-       // pending_container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-       // tv_pending.setTextColor(getResources().getColor(R.color.text_color_white));
-      /*  int offset;
+        // pending_container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        // tv_pending.setTextColor(getResources().getColor(R.color.text_color_white));
+        /*int offset;
         if (sharedPrefs.getKeyAdapterOffset1() == 0){
             offset = 1;
             sharedPrefs.setKeyAdapterOffset1(1);
         }else{
             offset = 0;
-        }
-*/
+        }*/
 
         //rbAllSchedules.isChecked();
-
-
         //setAdapter(offset);
 
-        staff_id = "%"+sharedPrefs.getKeyPcPwsHomeStaffId()+"%";
-
         setAllSchedules();
+        FilterRecycler(search_edit_text, viewSchedulesAdapter);
         rbAllSchedules.setChecked(true);
         rbUrgentSchedules.setChecked(false);
 
@@ -183,27 +158,20 @@ public class ScheduledThreshingView extends AppCompatActivity {
         main2ActivityMethods.confirmPhoneDate();
         main2ActivityMethods.confirmLocationOpen();
 
-        RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(android.widget.RadioGroup group, int checkedId) {
-                if(checkedId== R.id.rbAllSchedules){
-                    //do your stuff.
-                    setAllSchedules();
-                    FilterRecycler(search_edit_text,viewSchedulesAdapter);
-                }else if (checkedId ==  R.id.rbUrgentSchedules){
-                    //do your stuff.
-                    setRbUrgentSchedules();
-
-                    FilterRecycler(search_edit_text,viewSchedulesAdapter);
-                }
+        RadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rbAllSchedules) {
+                //do your stuff.
+                setAllSchedules();
+                FilterRecycler(search_edit_text, viewSchedulesAdapter);
+            } else if (checkedId == R.id.rbUrgentSchedules) {
+                //do your stuff.
+                setRbUrgentSchedules();
+                FilterRecycler(search_edit_text, viewSchedulesAdapter);
+            } else {
+                //Do nothing
             }
         });
-
-        FilterRecycler(search_edit_text,viewSchedulesAdapter);
-
     }
-
-
 
     void FilterRecycler(EditText edt, ViewSchedulesAdapter adapter){
         edt.addTextChangedListener(new TextWatcher() {
@@ -222,7 +190,7 @@ public class ScheduledThreshingView extends AppCompatActivity {
         });
     }
 
-/*    @OnCheckedChanged(R.id.rbAllSchedules)
+    /*    @OnCheckedChanged(R.id.rbAllSchedules)
     void allSchedules(CompoundButton button, boolean checked) {
 
     }
@@ -233,39 +201,48 @@ public class ScheduledThreshingView extends AppCompatActivity {
 
     }*/
 
-
-
-    void setAllSchedules(){
+    void setAllSchedules() {
 
         viewScheduleRecyclerModel = new ArrayList<>();
-        viewScheduleRecyclerModel = AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewAllScheduledFields(
-                staff_id
-        );
+        viewScheduleRecyclerModel = AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewAllScheduledFields(sharedPrefs.getStaffID());
 
+        if (viewScheduleRecyclerModel.isEmpty()) {
+            emptyView.setVisibility(View.VISIBLE);
+            recycler_view.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            recycler_view.setVisibility(View.VISIBLE);
 
-        viewSchedulesAdapter = new ViewSchedulesAdapter(viewScheduleRecyclerModel,getApplicationContext(),emptyView, recycler_view);
-        recycler_view.setAdapter(viewSchedulesAdapter);
+            viewSchedulesAdapter = new ViewSchedulesAdapter(viewScheduleRecyclerModel, getApplicationContext(), emptyView, recycler_view);
+            recycler_view.setAdapter(viewSchedulesAdapter);
+        }
 
-
-    /*    int offset;
+        /*    int offset;
         if (sharedPrefs.getKeyAdapterOffset1() == 0){
             offset = 1;
             sharedPrefs.setKeyAdapterOffset1(1);
         }else{
             offset = 0;
         }*/
-       // setAdapter(offset);
+        // setAdapter(offset);
     }
 
-    void setRbUrgentSchedules(){
+    void setRbUrgentSchedules() {
         viewScheduleRecyclerModel = new ArrayList<>();
-        viewScheduleRecyclerModel = appDatabase.scheduleThreshingActivitiesFlagDao().viewAllUrgentScheduledFields(
-                staff_id
-        );
+        viewScheduleRecyclerModel = appDatabase.scheduleThreshingActivitiesFlagDao().viewAllUrgentScheduledFields(sharedPrefs.getStaffID());
 
-        viewSchedulesAdapter = new ViewSchedulesAdapter(viewScheduleRecyclerModel,getApplicationContext(), emptyView,recycler_view);
-        recycler_view.setAdapter(viewSchedulesAdapter);
-/*        int offset;
+        if (viewScheduleRecyclerModel.isEmpty()) {
+            emptyView.setVisibility(View.VISIBLE);
+            recycler_view.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            recycler_view.setVisibility(View.VISIBLE);
+
+            viewSchedulesAdapter = new ViewSchedulesAdapter(viewScheduleRecyclerModel, getApplicationContext(), emptyView, recycler_view);
+            recycler_view.setAdapter(viewSchedulesAdapter);
+        }
+
+        /*        int offset;
         if (sharedPrefs.getKeyAdapterOffset() == 0){
             offset = 1;
             sharedPrefs.setKeyAdapterOffset(1);
@@ -275,7 +252,7 @@ public class ScheduledThreshingView extends AppCompatActivity {
         //setReviewedAdapterRecycler(offset);
     }
 
-/*
+    /*
     @OnClick(R.id.reviewed_container)
     public void setReviewed_container(View view){
         reviewed_container.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -291,7 +268,7 @@ public class ScheduledThreshingView extends AppCompatActivity {
     }
 */
 
-/*
+    /*
     @OnClick(R.id.pending_container)
     public void setPending_container(View view){
 
@@ -388,7 +365,7 @@ public class ScheduledThreshingView extends AppCompatActivity {
             }
         });
     }
-/*
+    /*
 
     private void setAdapter(int offset) {
         viewSchedulesAdapter = new ViewSchedulesAdapter(this);
@@ -431,7 +408,6 @@ public class ScheduledThreshingView extends AppCompatActivity {
 
 */
 
-
     private void updateView(int itemCount) {
         if (itemCount > 0) {
             // The list is not empty. Show the recycler view.
@@ -445,66 +421,67 @@ public class ScheduledThreshingView extends AppCompatActivity {
 
     }
 
- /*   private void setReviewedAdapterRecycler(int offset) {
-        pcpwsReviewedAdapter = new PCPWSReviewedAdapter(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        if (offset == 1){
-            int smallPadding = getResources().getDimensionPixelSize(R.dimen.dimen_5dp);
-            VerticalSpaceItemDecoration verticalSpaceItemDecoration = new VerticalSpaceItemDecoration(smallPadding);
-            recycler_view.addItemDecoration(verticalSpaceItemDecoration);
-        }
-        recycler_view.setLayoutManager(layoutManager);
-        //portfolioPageListModelClass.setPortfolioRecyclerModelList1.observe(this,setAddedPortfolioAdapter::submitList);
-        pcpwsPageListModelClass.pcpwsRecyclerModelList1.observe(this,pcpwsRecyclerModelList1 -> {
+    /*   private void setReviewedAdapterRecycler(int offset) {
+            pcpwsReviewedAdapter = new PCPWSReviewedAdapter(this);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            if (offset == 1){
+                int smallPadding = getResources().getDimensionPixelSize(R.dimen.dimen_5dp);
+                VerticalSpaceItemDecoration verticalSpaceItemDecoration = new VerticalSpaceItemDecoration(smallPadding);
+                recycler_view.addItemDecoration(verticalSpaceItemDecoration);
+            }
+            recycler_view.setLayoutManager(layoutManager);
+            //portfolioPageListModelClass.setPortfolioRecyclerModelList1.observe(this,setAddedPortfolioAdapter::submitList);
+            pcpwsPageListModelClass.pcpwsRecyclerModelList1.observe(this,pcpwsRecyclerModelList1 -> {
 
 
-            updateView(pcpwsRecyclerModelList1.size());
-            pcpwsReviewedAdapter.submitList(pcpwsRecyclerModelList1);
+                updateView(pcpwsRecyclerModelList1.size());
+                pcpwsReviewedAdapter.submitList(pcpwsRecyclerModelList1);
 
-            pcpwsRecyclerModelList1.addWeakCallback(null, new PagedList.Callback() {
-                @Override
-                public void onChanged(int position, int count) {
-                    updateView(pcpwsRecyclerModelList1.size());
-                }
+                pcpwsRecyclerModelList1.addWeakCallback(null, new PagedList.Callback() {
+                    @Override
+                    public void onChanged(int position, int count) {
+                        updateView(pcpwsRecyclerModelList1.size());
+                    }
 
-                @Override
-                public void onInserted(int position, int count) {
+                    @Override
+                    public void onInserted(int position, int count) {
 
-                }
+                    }
 
-                @Override
-                public void onRemoved(int position, int count) {
+                    @Override
+                    public void onRemoved(int position, int count) {
 
-                }
+                    }
+                });
             });
-        });
-        recycler_view.setAdapter(pcpwsReviewedAdapter);
+            recycler_view.setAdapter(pcpwsReviewedAdapter);
 
-        textWatcherAdded(search_edit_text,pcpwsPageListModelClass);
+            textWatcherAdded(search_edit_text,pcpwsPageListModelClass);
 
-    }
-*/
-  /*  public static class MyViewModelFactory implements ViewModelProvider.Factory {
-        private ScheduleThreshingActivitiesFlagDao application;
-        private  Context context;
-
-
-        MyViewModelFactory(ScheduleThreshingActivitiesFlagDao application, Context context) {
-            this.application = application;
-            this.context = context;
         }
+    */
+    /*  public static class MyViewModelFactory implements ViewModelProvider.Factory {
+            private ScheduleThreshingActivitiesFlagDao application;
+            private  Context context;
 
-        @Override
-        public <T extends ViewModel> T create(Class<T> modelClass) {
-            return (T) new PCPWSPageListModelClass(application, context);
+
+            MyViewModelFactory(ScheduleThreshingActivitiesFlagDao application, Context context) {
+                this.application = application;
+                this.context = context;
+            }
+
+            @Override
+            public <T extends ViewModel> T create(Class<T> modelClass) {
+                return (T) new PCPWSPageListModelClass(application, context);
+            }
         }
-    }
-*/
+    */
+
     @Override
     public void onBackPressed() {
-        if (search_linear_layout.getVisibility() == View.VISIBLE){
+        if (search_linear_layout.getVisibility() == View.VISIBLE) {
             removeSearchTray();
-        }else{
+        } else {
             loadPreviousActivity();
         }
     }
