@@ -1,6 +1,5 @@
 package com.babbangona.mspalybookupgrade.network;
 
-import com.babbangona.mspalybookupgrade.data.db.entities.PWSCategoryList;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
 import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
 import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
@@ -139,8 +138,8 @@ public interface RetrofitInterface {
 
     @GET("downloadPCPWSActivityFlag")
     Call<PCPWSActivitiesFlagDownload> downloadPCPWSActivityFlag(@Query("staff_id") String staff_id,
-                                                              @Query("portfolio_list") String portfolio_list,
-                                                              @Query("last_synced_time") String last_synced_time);
+                                                                @Query("portfolio_list") String portfolio_list,
+                                                                @Query("last_synced_time") String last_synced_time);
 
     @GET("downloadScheduledThreshingActivityFlag")
     Call<ScheduledThreshingActivitiesFlagDownload> downloadScheduledThreshingActivityFlag(@Query("staff_id") String staff_id,
@@ -149,7 +148,8 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @POST("uploadScheduledThreshingActivitiesRecord")
-    Call<List<ScheduledThreshingActivitiesUpload>> uploadScheduledThreshingActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
+    Call<List<ScheduledThreshingActivitiesUpload>> uploadScheduledThreshingActivitiesRecord(@Field("upload_list") String upload_list,
+                                                                                            @Field("staff_id") String staff_id);
 
     @GET("downloadConfirmThreshingActivityFlag")
     Call<ConfirmThreshingActivitiesFlagDownload> downloadConfirmThreshingActivityFlag(@Query("staff_id") String staff_id,
@@ -158,7 +158,8 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @POST("uploadConfirmThreshingActivitiesRecord")
-    Call<List<ConfirmThreshingActivitiesUpload>> uploadConfirmThreshingActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
+    Call<List<ConfirmThreshingActivitiesUpload>> uploadConfirmThreshingActivitiesRecord(@Field("upload_list") String upload_list,
+                                                                                        @Field("staff_id") String staff_id);
 
     @FormUrlEncoded
     @POST("yourPHPName.php")
