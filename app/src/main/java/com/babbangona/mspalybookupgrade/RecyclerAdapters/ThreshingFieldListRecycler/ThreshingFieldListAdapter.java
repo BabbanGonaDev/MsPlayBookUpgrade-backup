@@ -166,6 +166,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                 if (status > 0){
                     showDialogForRescheduleThreshing(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
                 }else{
+                    //TODO: HTA-YYY
                     Intent intent = new Intent (context, ThreshingDateSelectionActivity.class);
                     sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
                     sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);

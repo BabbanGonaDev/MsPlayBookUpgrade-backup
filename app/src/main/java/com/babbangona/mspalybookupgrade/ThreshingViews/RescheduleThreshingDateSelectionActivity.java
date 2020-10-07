@@ -724,6 +724,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         tv_reason.setTypeface(null, Typeface.ITALIC);
         layout.addView(tv_reason);
 
+
         builder.setTitle(context.getResources().getString(R.string.reschedule_title))
                 .setMessage(message)
                 .setView(layout)
@@ -752,6 +753,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
 
         //String unique_field_id, String schedule_date, String reschedule_reason, String staff_id, String date_logged
 
+        //TODO: HTA-180
         appDatabase.scheduleThreshingActivitiesFlagDao().updateScheduleDate(
                 unique_field_id,
                 schedule_date,

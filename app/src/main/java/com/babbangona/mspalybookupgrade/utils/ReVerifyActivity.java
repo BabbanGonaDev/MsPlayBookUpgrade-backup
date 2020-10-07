@@ -109,6 +109,7 @@ public class ReVerifyActivity extends AppCompatActivity {
     @OnClick(R.id.btnScanSuccessful)
     public void setBtnScanSuccessful() {
         //go to fields activity
+        //TODO: HTA-YYY
         finish();
         startActivity(new Intent(ReVerifyActivity.this, FieldList.class));
     }
@@ -131,6 +132,7 @@ public class ReVerifyActivity extends AppCompatActivity {
                     if (templateModel.getResult().equalsIgnoreCase("1")) {
                         //move to next activity
                         //save template to shared preference
+                        //TODO: HTA 136
                         setCapturedImage(scanned_image_iv, templateModel.getImage_person_large());
                         sharedPrefs.setKeyThreshingRecaptureFlag("0");
                         sharedPrefs.setKeyThreshingTemplate(templateModel.getTemplate());
@@ -265,6 +267,7 @@ public class ReVerifyActivity extends AppCompatActivity {
 
         }else{
             this.runOnUiThread(()->{
+                //TODO: HTA-XXX
                 scanned_image_iv.setImageResource(R.drawable.bg_logo);
             });
         }
