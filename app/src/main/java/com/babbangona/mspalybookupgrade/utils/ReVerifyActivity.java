@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -265,7 +264,7 @@ public class ReVerifyActivity extends AppCompatActivity {
 
         }else{
             this.runOnUiThread(()->{
-                scanned_image_iv.setImageResource(R.drawable.bg_logo);
+                scanned_image_iv.setImageResource(R.drawable.ic_scan_user);
             });
         }
 

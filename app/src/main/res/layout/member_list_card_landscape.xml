@@ -18,8 +18,7 @@
             android:id="@+id/leader_image"
             android:layout_width="@dimen/dimen_130dp"
             android:layout_height="@dimen/dimen_130dp"
-            android:background="?attr/colorPrimaryDark"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerInside" />
 
         <RelativeLayout
             android:layout_width="match_parent"
