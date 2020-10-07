@@ -40,7 +40,6 @@ import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -130,7 +129,6 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
                 else {
                     emptyView.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
-
                 }
                 notifyDataSetChanged();
             }
@@ -141,8 +139,9 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
     public List<ViewScheduleRecyclerModel> filteredList(List<ViewScheduleRecyclerModel> hl,String cs) {
         List<ViewScheduleRecyclerModel> xl  = new ArrayList<>();
         for(ViewScheduleRecyclerModel memberData : hl){
-            if(memberData.getField_id().toLowerCase().contains(cs.toLowerCase()) ||
-                    memberData.getLocation().toLowerCase().contains(cs.toLowerCase()) ||  memberData.getMember_name().toLowerCase().contains(cs.toLowerCase())){
+            if (memberData.getField_id().toLowerCase().contains(cs.toLowerCase()) ||
+                    memberData.getLocation().toLowerCase().contains(cs.toLowerCase()) ||
+                    memberData.getMember_name().toLowerCase().contains(cs.toLowerCase())) {
 
                 xl.add(memberData);
             }
@@ -179,35 +178,32 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
         ViewHolder(View itemView){
             super(itemView);
             ButterKnife.bind(this, itemView);
-
         }
 
+        void nowBind(ViewScheduleRecyclerModel viewSchedule) {
 
+            tvMemberName.setText(context.getResources().getString(R.string.member_name) + ": " + viewSchedule.getMember_name());
+            tvPhoneNumber.setText(context.getResources().getString(R.string.phone_number) + ": " + viewSchedule.getPhone_number());
+            tvFieldID.setText(context.getResources().getString(R.string.static_field_id) + ": " + viewSchedule.getField_id());
+            tvLocation.setText(context.getResources().getString(R.string.location) + ": " + viewSchedule.getLocation());
+            tvThreshingDate.setText(context.getResources().getString(R.string.thresh_date) + ": " + viewSchedule.getThreshing_date());
+            tvFieldSize.setText(context.getResources().getString(R.string.field_size) + ": " + viewSchedule.getField_size() + "Ha ");
 
-        void nowBind(ViewScheduleRecyclerModel viewSchedule){
-
-            tvMemberName.setText(context.getResources().getString(R.string.member_name)+"    "+viewSchedule.getMember_name());
-            tvPhoneNumber.setText(context.getResources().getString(R.string.phone_number)+":   "+viewSchedule.getPhone_number());
-            tvFieldID.setText(context.getResources().getString(R.string.static_field_id)+":       "+viewSchedule.getField_id());
-            tvLocation.setText(context.getResources().getString(R.string.location)+":            "+viewSchedule.getLocation());
-            tvThreshingDate.setText(context.getResources().getString(R.string.thresh_date)+":  "+viewSchedule.getThreshing_date());
-            tvFieldSize.setText(context.getResources().getString(R.string.field_size)+":         "+viewSchedule.getField_size()+"Ha ");
-
-
-            getStatus(viewSchedule.getField_id(),imgAssignmentFLag);
+            getStatus(viewSchedule.getField_id(), imgAssignmentFLag);
         }
 
         void getStatus(String unique_field_id, ImageView iv_activity_signal){
             int status = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldScheduleStatus(unique_field_id);
             int urgent_status = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldUrgentScheduleStatus(unique_field_id);
             int confirm_status = appDatabase.confirmThreshingActivitiesFlagDao().getFieldConfirmStatus(unique_field_id);
-            if (confirm_status > 0){
+            if (confirm_status > 0) {
                 iv_activity_signal.setBackground(context.getResources().getDrawable(R.drawable.assignment_green));
-            }else{
-                if (status > 0){ iv_activity_signal.setBackground(context.getResources().getDrawable(R.drawable.assignment_light_green));
-                }else if(urgent_status > 0){
+            } else {
+                if (status > 0) {
+                    iv_activity_signal.setBackground(context.getResources().getDrawable(R.drawable.assignment_light_green));
+                } else if (urgent_status > 0) {
                     iv_activity_signal.setBackground(context.getResources().getDrawable(R.drawable.assignment_yellow));
-                }else{
+                } else {
                     iv_activity_signal.setBackground(context.getResources().getDrawable(R.drawable.assignment_red));
                 }
             }
