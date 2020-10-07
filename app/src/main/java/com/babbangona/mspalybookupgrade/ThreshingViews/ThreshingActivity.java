@@ -78,10 +78,10 @@ public class ThreshingActivity extends AppCompatActivity {
     @OnClick(R.id.btnScheduleThreshing)
     public void setBtnScheduleThreshing(){
         sharedPrefs.setKeyThreshingActivityRoute(DatabaseStringConstants.SCHEDULE_THRESHING);
-        if (sharedPrefs.getStaffID().equalsIgnoreCase("T-10000000000000BB")){
+        /*if (sharedPrefs.getStaffID().equalsIgnoreCase("T-10000000000000BB")){
             appDatabase.membersDao().updateCoach();
             appDatabase.membersDao().updateMemberBgtID();
-        }
+        }*/
         startActivity(new Intent(ThreshingActivity.this,MemberList.class));
     }
 

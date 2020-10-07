@@ -162,6 +162,7 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                     }else{
                         mCtx.startActivity(new Intent(mCtx, FieldList.class));
                     }
+                    //mCtx.startActivity(new Intent(mCtx, FieldList.class));
                 })
                 .setNegativeButton(context.getResources().getString(R.string.thresher_self), (dialog, which) -> {
                     dialog.dismiss();
