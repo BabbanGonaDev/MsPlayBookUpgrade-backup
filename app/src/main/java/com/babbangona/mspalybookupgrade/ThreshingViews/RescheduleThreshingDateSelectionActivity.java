@@ -740,6 +740,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 })
                 .setNeutralButton(context.getResources().getString(R.string.no), (dialog, which) -> {
                     dialog.dismiss();
+                    goToHomePage();
                 })
                 .setCancelable(false)
                 .show();
