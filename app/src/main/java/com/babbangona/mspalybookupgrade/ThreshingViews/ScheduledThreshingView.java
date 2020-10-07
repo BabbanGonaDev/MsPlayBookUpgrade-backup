@@ -224,7 +224,7 @@ public class ScheduledThreshingView extends AppCompatActivity {
         }else{
             offset = 0;
         }*/
-        // setAdapter(offset);
+        //setAdapter(offset);
     }
 
     void setRbUrgentSchedules() {
