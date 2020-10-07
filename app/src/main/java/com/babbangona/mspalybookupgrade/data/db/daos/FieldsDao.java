@@ -319,6 +319,10 @@ public abstract class FieldsDao {
             "WHERE a.unique_field_id = :unique_field_id ")
     public abstract FieldListRecyclerModel getFieldCompleteDetails(String unique_field_id);
 
+
+    @Query(" SELECT unique_field_id from fields where unique_member_id = :member_id")
+    public abstract List<String> getFieldIDBYMEmber(String member_id);
+
     @Query(" SELECT field_code FROM fields WHERE unique_field_id = :unique_field_id ")
     public abstract String getFieldCode(String unique_field_id);
 
