@@ -239,10 +239,12 @@
     <string name="please_confirm_thresh_date">Please confirm entered thresh date</string>
     <string name="error_thresh_date">Scheduled thresh date should be within today and 31st of December of this year</string>
     <string name="error_re_thresh_date">Scheduled thresh date should be within today and 31st of December of this year</string>
+    <string name="error_re_thresh_date_split_1">thresh date should is not within today and 31st of December of this year</string>
     <string name="error_re_thresh_date_same">New schedule date and Old schedule date cannot be the same</string>
     <string name="error_thresh_date_mismatch">Scheduled thresh dates mismatch</string>
     <string name="error_phone_number_mismatch">Member phone numbers should match</string>
     <string name="thresh_date_error">The entered threshing date has a scheduled work of 8 hours or more, please select another date.</string>
+    <string name="thresh_date_error_field_split_1">has a threshing date with a scheduled work of 8 hours or more.</string>
     <string name="select_collection_center_title">Select Collection Center</string>
     <string name="select_member_phone_number_title">Enter Member\'s Phone Number</string>
     <string name="confirm_harvest_cc_center">Confirm Har. Collection Point</string>

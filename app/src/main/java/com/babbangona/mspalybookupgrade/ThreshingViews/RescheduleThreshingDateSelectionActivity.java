@@ -113,15 +113,16 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         raw_old_thresh_date = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeyThreshingUniqueFieldId());
         old_thresh_date = parseDate(raw_old_thresh_date);
 
-        showUrgentStart(getResources().getString(R.string.select_threshing_type),RescheduleThreshingDateSelectionActivity.this);
         if (sharedPrefs.getKeyRescheduleStateFlag().equalsIgnoreCase("0")){
             resetLayout();
             fillSwapSpinner(actSwap,RescheduleThreshingDateSelectionActivity.this);
+            showUrgentStart(getResources().getString(R.string.select_threshing_type),RescheduleThreshingDateSelectionActivity.this);
         }else{
             String answer = "Yes";
             actSwap.setText(answer);
             actSwap.setEnabled(false);
             tv_old_thresh_date.setText(getRescheduleParameters(answer));
+            checkIfDateChangeable(sharedPrefs.getKeyThreshingUniqueFieldId(), sharedPrefs.getKeySwapFieldId());
         }
         actSwap.setOnItemClickListener((parent, view, position, id) -> {
             swap_answer = (String)parent.getItemAtPosition(position);
@@ -261,10 +262,10 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
             checkForEmptyTextInputFields();
 //            Toast.makeText(this, getResources().getString(R.string.error_thresh_date_mismatch), Toast.LENGTH_LONG).show();
             showDateProblemStart(getResources().getString(R.string.error_thresh_date_mismatch),this);
-        }else if (!checkThreshHours(tv_enter_date.getText().toString().trim(), sharedPrefs.getStaffID())){
+        }else if (checkThreshHours(tv_enter_date.getText().toString().trim(), sharedPrefs.getStaffID())){
 //            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
             showDateProblemStart(getResources().getString(R.string.thresh_date_error),this);
-        }else if (actSwap.getText().toString().equalsIgnoreCase("yes") && !checkThreshHours(raw_old_thresh_date,sharedPrefs.getStaffID())){
+        }else if (actSwap.getText().toString().equalsIgnoreCase("yes") && checkThreshHours(raw_old_thresh_date,sharedPrefs.getStaffID())){
 //            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
             showDateProblemStart(getResources().getString(R.string.swap_thresh_date_error),this);
         }else{
@@ -459,7 +460,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
             }
         }
         double result = getFieldsTravelTime() + (count * getAverageTransitionTime()) + (cumulativeFieldSize * getTimePerHa());
-        return result < 8;
+        return result >= 8;
     }
 
     private double returnRightDoubleValue(String inputValue){
@@ -549,6 +550,26 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 .show();
     }
 
+    private void showDateProblemStartSwap(String message, Context context){
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showDateProblemStartSwapBody(builder, message, context);
+    }
+
+    private void showDateProblemStartSwapBody(MaterialAlertDialogBuilder builder, String message,
+                                     Context context) {
+
+        builder.setIcon(context.getResources().getDrawable(R.drawable.ic_crying))
+                .setTitle(context.getResources().getString(R.string.oops))
+                .setMessage(message)
+                .setPositiveButton(context.getResources().getString(R.string.go_back), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                    goToHomePage();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
     private void showDialogForExit(Context context, String message,
                                    String unique_field_id, String former_schedule_date,
                                    String new_schedule_date, String reason, String swap_flag) {
@@ -622,6 +643,100 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                             String.valueOf(longitude),
                             sharedPrefs.getKeyThreshingIkNumber(),
                             sharedPrefs.getKeyThreshingCropType(),swap_flag);
+                })
+                .setNeutralButton(context.getResources().getString(R.string.no), (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    private void showDialogForExitSwap(Context context, String message,
+                                   String unique_field_id, String former_schedule_date,
+                                   String new_schedule_date, String reason) {
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showDialogForExitSwapBody(builder, context, message, unique_field_id, former_schedule_date, new_schedule_date, reason);
+    }
+
+    private void showDialogForExitSwapBody(MaterialAlertDialogBuilder builder, Context context, String message,
+                                       String unique_field_id, String former_schedule_date,
+                                       String new_schedule_date, String reason) {
+
+        locationGetter = GPSController.initialiseLocationListener(this);
+        double latitude = locationGetter.getLatitude();
+        double longitude = locationGetter.getLongitude();
+
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        int paddingDp = 20;
+        float density = context.getResources().getDisplayMetrics().density;
+        int paddingPixel = (int)(paddingDp * density);
+
+        String field_id_text = "Selected Field ID: " + unique_field_id;
+        String swap_field_id = "Swap Field ID: " + sharedPrefs.getKeySwapFieldId();
+        String old_schedule_date_text = "Selected Field ID Old Schedule Date: " + former_schedule_date;
+        String new_schedule_date_text = "Selected Field ID New Schedule Date: " + new_schedule_date;
+        String old_schedule_date_text_1 = "Swap Field ID Old Schedule Date: " + new_schedule_date;
+        String new_schedule_date_text_1 = "Swap Field ID New Schedule Date: " + former_schedule_date;
+        String reason_text = "Reason: " + reason;
+
+        final TextView fieldId = new TextView(context);
+        fieldId.setText(field_id_text);
+        fieldId.setPadding(paddingPixel, 0, 0, 0);
+        fieldId.setTypeface(null, Typeface.ITALIC);
+        layout.addView(fieldId);
+
+        final TextView old_schedule_date = new TextView(context);
+        old_schedule_date.setText(old_schedule_date_text);
+        old_schedule_date.setPadding(paddingPixel, 0, 0, 0);
+        old_schedule_date.setTypeface(null, Typeface.ITALIC);
+        layout.addView(old_schedule_date);
+
+        final TextView tv_new_schedule_date = new TextView(context);
+        tv_new_schedule_date.setText(new_schedule_date_text);
+        tv_new_schedule_date.setPadding(paddingPixel, 0, 0, 0);
+        tv_new_schedule_date.setTypeface(null, Typeface.ITALIC);
+        layout.addView(tv_new_schedule_date);
+
+        final TextView tv_swap_field_id = new TextView(context);
+        tv_swap_field_id.setText(swap_field_id);
+        tv_swap_field_id.setPadding(paddingPixel, 0, 0, 0);
+        tv_swap_field_id.setTypeface(null, Typeface.ITALIC);
+        layout.addView(tv_swap_field_id);
+
+        final TextView old_schedule_date_swap = new TextView(context);
+        old_schedule_date_swap.setText(old_schedule_date_text_1);
+        old_schedule_date_swap.setPadding(paddingPixel, 0, 0, 0);
+        old_schedule_date_swap.setTypeface(null, Typeface.ITALIC);
+        layout.addView(old_schedule_date_swap);
+
+        final TextView tv_new_schedule_date_swap = new TextView(context);
+        tv_new_schedule_date_swap.setText(new_schedule_date_text_1);
+        tv_new_schedule_date_swap.setPadding(paddingPixel, 0, 0, 0);
+        tv_new_schedule_date_swap.setTypeface(null, Typeface.ITALIC);
+        layout.addView(tv_new_schedule_date_swap);
+
+
+        final TextView tv_reason = new TextView(context);
+        tv_reason.setText(reason_text);
+        tv_reason.setPadding(paddingPixel, 0, 0, 0);
+        tv_reason.setTypeface(null, Typeface.ITALIC);
+        layout.addView(tv_reason);
+
+        builder.setTitle(context.getResources().getString(R.string.reschedule_title))
+                .setMessage(message)
+                .setView(layout)
+                .setPositiveButton(context.getResources().getString(R.string.yes), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                    updateActivity(sharedPrefs.getKeyThreshingUniqueFieldId(),
+                            reverseParseDate(tv_enter_date.getText().toString()),
+                            Objects.requireNonNull(edtRescheduleReason.getText()).toString(),
+                            String.valueOf(latitude),
+                            String.valueOf(longitude),
+                            sharedPrefs.getKeyThreshingIkNumber(),
+                            sharedPrefs.getKeyThreshingCropType(),"Yes");
                 })
                 .setNeutralButton(context.getResources().getString(R.string.no), (dialog, which) -> {
                     dialog.dismiss();
@@ -849,5 +964,28 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
     void resetLayout(){
         layout_reason.setVisibility(View.GONE);
         actSwap.setText("");
+    }
+
+    void checkIfDateChangeable(String first_selected_field, String second_selected_field){
+
+        String first_selected_field_date = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(first_selected_field);
+        String second_selected_field_date = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(second_selected_field);
+
+        if (getDateCorrelationFlag(parseDate(first_selected_field_date), getMaximumScheduleDate()) == 0){
+            showDateProblemStartSwap(first_selected_field + " "+getResources().getString(R.string.error_re_thresh_date_split_1),this);
+        }else if (checkThreshHours(first_selected_field_date,sharedPrefs.getStaffID())){
+            showDateProblemStartSwap(first_selected_field + " "+getResources().getString(R.string.thresh_date_error_field_split_1),this);
+        }else if (getDateCorrelationFlag(parseDate(second_selected_field_date), getMaximumScheduleDate()) == 0){
+            showDateProblemStartSwap(first_selected_field + " "+getResources().getString(R.string.error_re_thresh_date_split_1),this);
+        }else if (checkThreshHours(second_selected_field_date,sharedPrefs.getStaffID())){
+            showDateProblemStartSwap(second_selected_field + " "+getResources().getString(R.string.thresh_date_error_field_split_1),this);
+        }else {
+            showDialogForExitSwap(this,
+                    "Please confirm rescheduling information" ,
+                    sharedPrefs.getKeyThreshingUniqueFieldId(),
+                    parseDate(first_selected_field_date),
+                    parseDate(second_selected_field_date),
+                    "Swap Field Schedule");
+        }
     }
 }
