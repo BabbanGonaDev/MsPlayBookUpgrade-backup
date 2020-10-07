@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -31,7 +30,6 @@ import com.babbangona.mspalybookupgrade.utils.ReVerifyActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,6 +80,9 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
         @BindView(R.id.tv_ik_number)
         TextView tv_ik_number;
 
+        @BindView(R.id.tv_role)
+        TextView tv_role;
+
         @BindView(R.id.assignment_flag)
         View assignment_flag;
 
@@ -90,12 +91,13 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         public void nowBind(MemberListRecyclerModel memberListRecyclerModel){
             setTextController(tv_member_name, memberListRecyclerModel.getMember_name());
             setTextController(tv_member_r_id, memberListRecyclerModel.getMember_r_id());
+            setTextController(tv_role, memberListRecyclerModel.getRole());
             setTextController(tv_village, memberListRecyclerModel.getVillage());
             setTextController(tv_ik_number, memberListRecyclerModel.getIk_number());
             setLeader_image(leader_image,memberListRecyclerModel.getUnique_member_id(),mCtx);

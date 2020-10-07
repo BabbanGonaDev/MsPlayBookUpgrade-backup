@@ -54,8 +54,9 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
             "WHERE b.mss = :mss AND b.deactivate = '0' ")
     public abstract double getCoachTotalFieldsSum(String mss);
 
+    //TODO: HTA-182 Completed
     @Query("UPDATE schedule_threshing_activities_flag SET schedule_date = :schedule_date, reschedule_reason = :reschedule_reason," +
-            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged, reschedule_flag = '1', urgent_flag = '0' " +
+            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged, reschedule_flag = '1', urgent_flag = '0', schedule_flag = '1' " +
             "WHERE unique_field_id = :unique_field_id")
     public abstract void updateScheduleDate(String unique_field_id, String schedule_date,
                                             String reschedule_reason, String staff_id, String date_logged);

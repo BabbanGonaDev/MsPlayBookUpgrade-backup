@@ -20,7 +20,7 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/bg_white_rounded_small"
             android:contentDescription="@string/a_picture"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             app:shapeAppearanceOverlay="@style/rounded_image_view" />
 
         <Button
