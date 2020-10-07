@@ -180,7 +180,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                 //thresh confirmed, do you want to reset confirm?
                 showConfirmSuccess(context.getResources().getString(R.string.error_reschedule_after_confirm),context,"crying");
             }else{
-                if (status > 0){
+                if (status > 0 || urgent_status > 0){
                     Intent intent = new Intent (context, RescheduleThreshingDateSelectionActivity.class);
                     sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
                     sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);
