@@ -153,128 +153,6 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
         }
     }
 
-    private void showDialogForThresher(Context context, MemberListRecyclerModel memberListRecyclerModel) {
-        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
-        showDialogForThresherBody(builder, context, memberListRecyclerModel);
-    }
-
-    private void showDialogForThresherBody(MaterialAlertDialogBuilder builder, Context context, MemberListRecyclerModel memberListRecyclerModel) {
-
-        builder.setTitle(context.getResources().getString(R.string.thresher_title))
-                .setIcon(context.getResources().getDrawable(R.drawable.ic_smiley_face))
-                .setMessage(context.getResources().getString(R.string.thresher_question))
-                .setPositiveButton(context.getResources().getString(R.string.thresher_bg), (dialog, which) -> {
-                    //this is to dismiss the dialog
-                    dialog.dismiss();
-                    sharedPrefs.setKeyThresher("BG");
-                    sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
-                    mCtx.startActivity(new Intent(mCtx, FieldList.class));
-                })
-                .setNegativeButton(context.getResources().getString(R.string.thresher_self), (dialog, which) -> {
-                    dialog.dismiss();
-                    sharedPrefs.setKeyThresher("Self");
-
-                    confirmStatus(builder,context,memberListRecyclerModel);
-
-
-                    /*
-                    sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
-                    if (getLuxandFlag().equalsIgnoreCase("0")){
-                        Intent intent = new Intent (mCtx, ReVerifyActivity.class);
-                        mCtx.startActivity(intent);
-                    }else{
-                        mCtx.startActivity(new Intent(mCtx, FieldList.class));
-                    }*/
-
-                })
-                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .setCancelable(false)
-                .show();
-    }
-
-    //this function asks the bgt if they are
-    void confirmStatus(MaterialAlertDialogBuilder builder, Context context, MemberListRecyclerModel memberListRecyclerModel){
-        GPSController.LocationGetter locationGetter;
-        locationGetter = GPSController.initialiseLocationListener(context);
-        double latitude = locationGetter.getLatitude();
-        double longitude = locationGetter.getLongitude();
-
-        builder.setTitle(context.getResources().getString(R.string.thresher_title))
-                .setIcon(context.getResources().getDrawable(R.drawable.ic_smiley_face))
-                .setMessage(context.getResources().getString(R.string.thresher_question2))
-                .setPositiveButton(context.getResources().getString(R.string.yes), (dialog, which) -> {
-                    dialog.dismiss();
-
-
-
-                   List<String> fields  =  new ArrayList<>();
-                   fields = AppDatabase.getInstance(mCtx).fieldsDao().getFieldIDBYMEmber(memberListRecyclerModel.getUnique_member_id());
-
-                   for (int i  = 0; i <fields.size(); i++) {
-
-
-                       appDatabase.scheduleThreshingActivitiesFlagDao().insert(new ScheduledThreshingActivitiesFlag(
-                                       fields.get(i),
-                                       "Self",
-                                       "0",
-                                       sharedPrefs.getKeyThreshingTemplate(),
-                                       "XXX",
-                                       "XXX",
-                                       "XXX",
-                                       getDeviceID(),
-                                       BuildConfig.VERSION_NAME,
-                                       latitude+"",
-                                       longitude+"",
-                                       sharedPrefs.getStaffID(),
-                                       getDate("spread"),
-                                       "0",
-                                       "XXX",
-                                       sharedPrefs.getKeyThreshingIkNumber(),
-                                       "0",
-                                       "1",
-                                       "0"
-                               )
-                       );
-
-                       appDatabase.logsDao().insert(new Logs(fields.get(i), sharedPrefs.getStaffID(),
-                               "Schedule threshing", getDate("normal"), sharedPrefs.getStaffRole(),
-                               latitude+"", longitude+"", getDeviceID(), "0",
-                               memberListRecyclerModel.getIk_number(), "Maize"));
-                   }
-
-                   mCtx.startActivity(new Intent(mCtx, ThreshingActivity.class));
-                })
-                .setNegativeButton(context.getResources().getString(R.string.no), (dialog, which) -> {
-                    dialog.dismiss();
-
-
-                })
-                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .setCancelable(false)
-                .show();
-
-    }
-
-
-    private String getDate(String module){
-
-        SimpleDateFormat dateFormat1;
-        if (module.matches("concat")) {
-            dateFormat1 = new SimpleDateFormat("yyMMddHHmmss", Locale.getDefault());
-        }else if (module.matches("spread")) {
-            dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        }else{
-            dateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        }
-
-        Date date1 = new Date();
-        return dateFormat1.format(date1);
-    }
-
     void submit(MemberListRecyclerModel memberListRecyclerModel){
 
         if (memberListRecyclerModel.getStaff_id() != null) {
@@ -282,13 +160,12 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 String route = sharedPrefs.getKeyThreshingActivityRoute();
                 switch (route){
                     case "1":
-                        showDialogForThresher(mCtx,memberListRecyclerModel);
-                        break;
                     case "2":
                     case "3":
                     case "4":
                         sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
-                        mCtx.startActivity(new Intent (mCtx, FieldList.class));
+                        sharedPrefs.setKeyThreshingIkNumber(memberListRecyclerModel.getIk_number());
+                        mCtx.startActivity(new Intent(mCtx, FieldList.class));
                         break;
                     case "5":
                         sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
