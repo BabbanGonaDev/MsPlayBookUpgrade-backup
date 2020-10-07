@@ -1,11 +1,14 @@
 package com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,16 +23,27 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.ThreshingViews.FieldList;
+import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingActivity;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
+import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
+import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.babbangona.mspalybookupgrade.utils.ReVerifyActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -165,13 +179,18 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 .setNegativeButton(context.getResources().getString(R.string.thresher_self), (dialog, which) -> {
                     dialog.dismiss();
                     sharedPrefs.setKeyThresher("Self");
+
+                    confirmStatus(builder,context,memberListRecyclerModel);
+
+
+                    /*
                     sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
                     if (getLuxandFlag().equalsIgnoreCase("0")){
                         Intent intent = new Intent (mCtx, ReVerifyActivity.class);
                         mCtx.startActivity(intent);
                     }else{
                         mCtx.startActivity(new Intent(mCtx, FieldList.class));
-                    }
+                    }*/
 
                 })
                 .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
@@ -179,6 +198,87 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 })
                 .setCancelable(false)
                 .show();
+    }
+
+    //this function asks the bgt if they are
+    void confirmStatus(MaterialAlertDialogBuilder builder, Context context, MemberListRecyclerModel memberListRecyclerModel){
+        GPSController.LocationGetter locationGetter;
+        locationGetter = GPSController.initialiseLocationListener(context);
+        double latitude = locationGetter.getLatitude();
+        double longitude = locationGetter.getLongitude();
+
+        builder.setTitle(context.getResources().getString(R.string.thresher_title))
+                .setIcon(context.getResources().getDrawable(R.drawable.ic_smiley_face))
+                .setMessage(context.getResources().getString(R.string.thresher_question2))
+                .setPositiveButton(context.getResources().getString(R.string.yes), (dialog, which) -> {
+                    dialog.dismiss();
+
+
+
+                   List<String> fields  =  new ArrayList<>();
+                   fields = AppDatabase.getInstance(mCtx).fieldsDao().getFieldIDBYMEmber(memberListRecyclerModel.getUnique_member_id());
+
+                   for (int i  = 0; i <fields.size(); i++) {
+
+
+                       appDatabase.scheduleThreshingActivitiesFlagDao().insert(new ScheduledThreshingActivitiesFlag(
+                                       fields.get(i),
+                                       "Self",
+                                       "0",
+                                       sharedPrefs.getKeyThreshingTemplate(),
+                                       "XXX",
+                                       "XXX",
+                                       "XXX",
+                                       getDeviceID(),
+                                       BuildConfig.VERSION_NAME,
+                                       latitude+"",
+                                       longitude+"",
+                                       sharedPrefs.getStaffID(),
+                                       getDate("spread"),
+                                       "0",
+                                       "XXX",
+                                       sharedPrefs.getKeyThreshingIkNumber(),
+                                       "0",
+                                       "1",
+                                       "0"
+                               )
+                       );
+
+                       appDatabase.logsDao().insert(new Logs(fields.get(i), sharedPrefs.getStaffID(),
+                               "Schedule threshing", getDate("normal"), sharedPrefs.getStaffRole(),
+                               latitude+"", longitude+"", getDeviceID(), "0",
+                               memberListRecyclerModel.getIk_number(), "Maize"));
+                   }
+
+                   mCtx.startActivity(new Intent(mCtx, ThreshingActivity.class));
+                })
+                .setNegativeButton(context.getResources().getString(R.string.no), (dialog, which) -> {
+                    dialog.dismiss();
+
+
+                })
+                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
+
+    }
+
+
+    private String getDate(String module){
+
+        SimpleDateFormat dateFormat1;
+        if (module.matches("concat")) {
+            dateFormat1 = new SimpleDateFormat("yyMMddHHmmss", Locale.getDefault());
+        }else if (module.matches("spread")) {
+            dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        }else{
+            dateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        }
+
+        Date date1 = new Date();
+        return dateFormat1.format(date1);
     }
 
     void submit(MemberListRecyclerModel memberListRecyclerModel){
@@ -280,4 +380,25 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                     return oldMemberListRecyclerModel.getUnique_member_id().equals(newMemberListRecyclerModel.getUnique_member_id());
                 }
             };
+
+
+    private String getDeviceID(){
+        String device_id;
+        TelephonyManager tm = (TelephonyManager) Objects.requireNonNull(mCtx).getSystemService(Context.TELEPHONY_SERVICE);
+        if(ContextCompat.checkSelfPermission(mCtx, Manifest.permission. READ_PHONE_STATE)== PackageManager.PERMISSION_GRANTED){
+            try {
+                device_id = tm.getDeviceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                device_id = "";
+            }
+            if (device_id == null){
+                device_id = "";
+            }
+        } else{
+            device_id = "";
+        }
+        return device_id;
+    }
+
 }

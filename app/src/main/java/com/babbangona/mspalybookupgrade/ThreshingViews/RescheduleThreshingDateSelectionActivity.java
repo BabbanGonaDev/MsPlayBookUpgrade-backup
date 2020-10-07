@@ -121,8 +121,9 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
             String answer = "Yes";
             actSwap.setText(answer);
             actSwap.setEnabled(false);
+            tv_enter_date.setVisibility(View.GONE);
+            tv_confirm_date.setVisibility(View.GONE);
             tv_old_thresh_date.setText(getRescheduleParameters(answer));
-            checkIfDateChangeable(sharedPrefs.getKeyThreshingUniqueFieldId(), sharedPrefs.getKeySwapFieldId());
         }
         actSwap.setOnItemClickListener((parent, view, position, id) -> {
             swap_answer = (String)parent.getItemAtPosition(position);
@@ -131,6 +132,14 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(RescheduleThreshingDateSelectionActivity.this));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,RescheduleThreshingDateSelectionActivity.this);
+    }
+
+    String getOld_thresh_date(String raw_old_thresh_date){
+        if (raw_old_thresh_date.equalsIgnoreCase("0000-00-00")){
+            return "Date not yet set";
+        }else{
+            return parseDate(raw_old_thresh_date);
+        }
     }
 
     void moveToSelectSwap(String swap_answer){
@@ -155,12 +164,19 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         if (swap_answer.equalsIgnoreCase("no")){
             text = "Field ID: " + sharedPrefs.getKeyThreshingUniqueFieldId() + "\n" +
                     "IK Number: " + sharedPrefs.getKeyThreshingIkNumber() + "\n" +
-                    "Old Scheduled Date: " + old_thresh_date;
+                    "Old Scheduled Date: " + getOld_thresh_date(raw_old_thresh_date);
         }else{
-            text = "Field ID: " + sharedPrefs.getKeyThreshingUniqueFieldId() + "\n" +
-                    "IK Number: " + sharedPrefs.getKeyThreshingIkNumber() + "\n" +
-                    "Old Scheduled Date: " + old_thresh_date + "\n" +
-                    "Swap Field ID: " + sharedPrefs.getKeySwapFieldId();
+
+            String first_selected_field_date = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeyThreshingUniqueFieldId());
+            String second_selected_field_date = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeySwapFieldId());
+
+            text = "IK Number: " + sharedPrefs.getKeyThreshingIkNumber() + "\n" +
+                    "Selected Field ID: " + sharedPrefs.getKeyThreshingUniqueFieldId() + "\n" +
+                    "Selected Field ID Old Schedule Date: " + parseDate(first_selected_field_date) + "\n" +
+                    "Selected Field ID New Schedule Date: " + parseDate(second_selected_field_date) + "\n" +
+                    "Swap Field ID: " + sharedPrefs.getKeySwapFieldId() + "\n" +
+                    "Swap Field ID Old Schedule Date: " + parseDate(second_selected_field_date) + "\n" +
+                    "Swap Field ID New Schedule Date: " + parseDate(first_selected_field_date);
 
         }
         return text;
@@ -240,47 +256,57 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
 
     @OnClick(R.id.btnSubmit)
     public  void setBtnSubmit(){
-        if (validateFieldsInfo(tv_enter_date,tv_confirm_date,edtRescheduleReason) == 0){
-            checkForEmptyTextViewFields();
-            checkForEmptyTextInputFields();
-        }else if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim(), getMaximumScheduleDate()) == 0 ||
-                getDateCorrelationFlag(tv_confirm_date.getText().toString().trim(), getMaximumScheduleDate()) == 0){
-            checkForEmptyTextViewFields();
-            checkForWrongSelectedDate();
-            checkForEmptyTextInputFields();
-//            Toast.makeText(this, getResources().getString(R.string.error_thresh_date), Toast.LENGTH_LONG).show();
-            showDateProblemStart(getResources().getString(R.string.error_re_thresh_date),this);
-        }else if (getDateCorrelationFlagSameDate(tv_enter_date.getText().toString().trim(), old_thresh_date) == 0 ){
-            checkForEmptyTextViewFields();
-            checkForWrongSelectedDate();
-            checkForEmptyTextInputFields();
-//            Toast.makeText(this, getResources().getString(R.string.error_thresh_date), Toast.LENGTH_LONG).show();
-            showDateProblemStart(getResources().getString(R.string.error_re_thresh_date_same),this);
-        }else if (!tv_enter_date.getText().toString().trim().matches(tv_confirm_date.getText().toString().trim())){
-            checkForWrongSelectedDate();
-            checkForMismatchedDate();
-            checkForEmptyTextInputFields();
-//            Toast.makeText(this, getResources().getString(R.string.error_thresh_date_mismatch), Toast.LENGTH_LONG).show();
-            showDateProblemStart(getResources().getString(R.string.error_thresh_date_mismatch),this);
-        }else if (checkThreshHours(tv_enter_date.getText().toString().trim(), sharedPrefs.getStaffID())){
-//            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
-            showDateProblemStart(getResources().getString(R.string.thresh_date_error),this);
-        }else if (actSwap.getText().toString().equalsIgnoreCase("yes") && checkThreshHours(raw_old_thresh_date,sharedPrefs.getStaffID())){
-//            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
-            showDateProblemStart(getResources().getString(R.string.swap_thresh_date_error),this);
+        if (actSwap.getText().toString().equalsIgnoreCase("Yes")){
+            if(Objects.requireNonNull(edtRescheduleReason.getText()).toString().matches("")) {
+                checkForEmptyTextInputFields();
+            }else{
+                checkForEmptyTextInputFields();
+                checkIfDateChangeable(sharedPrefs.getKeyThreshingUniqueFieldId(), sharedPrefs.getKeySwapFieldId());
+            }
         }else{
-            checkForEmptyTextViewFields();
-            checkForMismatchedDate();
-            checkForWrongSelectedDate();
-            checkForEmptyTextInputFields();
-            //save to shared preference and move on
-            showDialogForExit(this,
-                    "Please confirm rescheduling information" ,
-                    sharedPrefs.getKeyThreshingUniqueFieldId(),
-                    parseDate(appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeyThreshingUniqueFieldId())),
-                    tv_enter_date.getText().toString().trim(),
-                    Objects.requireNonNull(edtRescheduleReason.getText()).toString().trim(), actSwap.getText().toString());
+            if (validateFieldsInfo(tv_enter_date,tv_confirm_date,edtRescheduleReason) == 0){
+                checkForEmptyTextViewFields();
+                checkForEmptyTextInputFields();
+            }else if (getDateCorrelationFlag(tv_enter_date.getText().toString().trim(), getMaximumScheduleDate()) == 0 ||
+                    getDateCorrelationFlag(tv_confirm_date.getText().toString().trim(), getMaximumScheduleDate()) == 0){
+                checkForEmptyTextViewFields();
+                checkForWrongSelectedDate();
+                checkForEmptyTextInputFields();
+//            Toast.makeText(this, getResources().getString(R.string.error_thresh_date), Toast.LENGTH_LONG).show();
+                showDateProblemStart(getResources().getString(R.string.error_re_thresh_date),this);
+            }else if (getDateCorrelationFlagSameDate(tv_enter_date.getText().toString().trim(), old_thresh_date) == 0 ){
+                checkForEmptyTextViewFields();
+                checkForWrongSelectedDate();
+                checkForEmptyTextInputFields();
+//            Toast.makeText(this, getResources().getString(R.string.error_thresh_date), Toast.LENGTH_LONG).show();
+                showDateProblemStart(getResources().getString(R.string.error_re_thresh_date_same),this);
+            }else if (!tv_enter_date.getText().toString().trim().matches(tv_confirm_date.getText().toString().trim())){
+                checkForWrongSelectedDate();
+                checkForMismatchedDate();
+                checkForEmptyTextInputFields();
+//            Toast.makeText(this, getResources().getString(R.string.error_thresh_date_mismatch), Toast.LENGTH_LONG).show();
+                showDateProblemStart(getResources().getString(R.string.error_thresh_date_mismatch),this);
+            }else if (checkThreshHours(tv_enter_date.getText().toString().trim(), sharedPrefs.getStaffID())){
+//            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
+                showDateProblemStart(getResources().getString(R.string.thresh_date_error),this);
+            }else if (actSwap.getText().toString().equalsIgnoreCase("yes") && checkThreshHours(raw_old_thresh_date,sharedPrefs.getStaffID())){
+//            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
+                showDateProblemStart(getResources().getString(R.string.swap_thresh_date_error),this);
+            }else{
+                checkForEmptyTextViewFields();
+                checkForMismatchedDate();
+                checkForWrongSelectedDate();
+                checkForEmptyTextInputFields();
+                //save to shared preference and move on
+                showDialogForExit(this,
+                        "Please confirm rescheduling information" ,
+                        sharedPrefs.getKeyThreshingUniqueFieldId(),
+                        parseDate(appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeyThreshingUniqueFieldId())),
+                        tv_enter_date.getText().toString().trim(),
+                        Objects.requireNonNull(edtRescheduleReason.getText()).toString().trim(), actSwap.getText().toString());
+            }
         }
+
     }
 
     public int validateFieldsInfo(MaterialTextView tv_enter_date, MaterialTextView tv_confirm_date,
@@ -564,7 +590,6 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 .setPositiveButton(context.getResources().getString(R.string.go_back), (dialog, which) -> {
                     //this is to dismiss the dialog
                     dialog.dismiss();
-                    goToHomePage();
                 })
                 .setCancelable(false)
                 .show();
@@ -741,7 +766,6 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 })
                 .setNeutralButton(context.getResources().getString(R.string.no), (dialog, which) -> {
                     dialog.dismiss();
-                    goToHomePage();
                 })
                 .setCancelable(false)
                 .show();
@@ -988,7 +1012,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                     sharedPrefs.getKeyThreshingUniqueFieldId(),
                     parseDate(first_selected_field_date),
                     parseDate(second_selected_field_date),
-                    "Swap Field Schedule");
+                    Objects.requireNonNull(edtRescheduleReason.getText()).toString().trim());
         }
     }
 }
