@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
+import com.babbangona.mspalybookupgrade.ThreshingViews.FieldList;
 import com.babbangona.mspalybookupgrade.ThreshingViews.RescheduleThreshingDateSelectionActivity;
 import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingDateSelectionActivity;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
@@ -37,6 +38,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
+import com.babbangona.mspalybookupgrade.utils.ReVerifyActivity;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -167,12 +169,21 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     showDialogForRescheduleThreshing(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
                 }else{
                     //TODO: HTA-YYY
-                    Intent intent = new Intent (context, ThreshingDateSelectionActivity.class);
-                    sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
-                    sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);
-                    sharedPrefs.setKeyThreshingCropType(fieldListRecyclerModel.getCrop_type());
-                    sharedPrefs.setKeyThreshingIkNumber(fieldListRecyclerModel.getIk_number());
-                    context.startActivity(intent);
+                    if (getLuxandFlag().equalsIgnoreCase("0")){
+                        Intent intent = new Intent (context, ReVerifyActivity.class);
+                        sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
+                        sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);
+                        sharedPrefs.setKeyThreshingCropType(fieldListRecyclerModel.getCrop_type());
+                        sharedPrefs.setKeyThreshingIkNumber(fieldListRecyclerModel.getIk_number());
+                        context.startActivity(intent);
+                    }else{
+                        Intent intent = new Intent (context, ThreshingDateSelectionActivity.class);
+                        sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
+                        sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);
+                        sharedPrefs.setKeyThreshingCropType(fieldListRecyclerModel.getCrop_type());
+                        sharedPrefs.setKeyThreshingIkNumber(fieldListRecyclerModel.getIk_number());
+                        context.startActivity(intent);
+                    }
                 }
             }
 
@@ -788,5 +799,19 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
             maximum_schedule_date = "2020-12-31";
         }
         return maximum_schedule_date;
+    }
+
+    String getLuxandFlag(){
+        String luxand_flag;
+        try {
+            luxand_flag = appDatabase.appVariablesDao().getLuxandFlag("1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            luxand_flag = "0";
+        }
+        if (luxand_flag == null || luxand_flag.equalsIgnoreCase("") ){
+            luxand_flag = "0";
+        }
+        return luxand_flag;
     }
 }

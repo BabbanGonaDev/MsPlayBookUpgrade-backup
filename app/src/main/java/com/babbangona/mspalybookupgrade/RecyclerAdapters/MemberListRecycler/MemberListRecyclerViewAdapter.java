@@ -26,7 +26,6 @@ import com.babbangona.mspalybookupgrade.ThreshingViews.FieldList;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
-import com.babbangona.mspalybookupgrade.utils.ReVerifyActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
@@ -154,25 +153,13 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                     dialog.dismiss();
                     sharedPrefs.setKeyThresher("BG");
                     sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
-                    if (getLuxandFlag().equalsIgnoreCase("0")){
-                        Intent intent = new Intent (mCtx, ReVerifyActivity.class);
-                        mCtx.startActivity(intent);
-                    }else{
-                        mCtx.startActivity(new Intent(mCtx, FieldList.class));
-                    }
-                    //mCtx.startActivity(new Intent(mCtx, FieldList.class));
+                    mCtx.startActivity(new Intent(mCtx, FieldList.class));
                 })
                 .setNegativeButton(context.getResources().getString(R.string.thresher_self), (dialog, which) -> {
                     dialog.dismiss();
                     sharedPrefs.setKeyThresher("Self");
                     sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
-                    if (getLuxandFlag().equalsIgnoreCase("0")){
-                        Intent intent = new Intent (mCtx, ReVerifyActivity.class);
-                        mCtx.startActivity(intent);
-                    }else{
-                        mCtx.startActivity(new Intent(mCtx, FieldList.class));
-                    }
-
+                    mCtx.startActivity(new Intent(mCtx, FieldList.class));
                 })
                 .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
                     dialog.dismiss();
@@ -248,20 +235,6 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 })
                 .setCancelable(false)
                 .show();
-    }
-
-    String getLuxandFlag(){
-        String luxand_flag;
-        try {
-            luxand_flag = appDatabase.appVariablesDao().getLuxandFlag("1");
-        } catch (Exception e) {
-            e.printStackTrace();
-            luxand_flag = "0";
-        }
-        if (luxand_flag == null || luxand_flag.equalsIgnoreCase("") ){
-            luxand_flag = "0";
-        }
-        return luxand_flag;
     }
 
     private static DiffUtil.ItemCallback<MemberListRecyclerModel> USER_DIFF =

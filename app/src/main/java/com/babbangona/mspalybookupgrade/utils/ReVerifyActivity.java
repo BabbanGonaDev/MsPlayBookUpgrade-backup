@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberListRecyclerModel;
 import com.babbangona.mspalybookupgrade.ThreshingViews.FieldList;
+import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingDateSelectionActivity;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
@@ -110,7 +111,8 @@ public class ReVerifyActivity extends AppCompatActivity {
         //go to fields activity
         //TODO: HTA-YYY
         finish();
-        startActivity(new Intent(ReVerifyActivity.this, FieldList.class));
+        Intent intent = new Intent (ReVerifyActivity.this, ThreshingDateSelectionActivity.class);
+        startActivity(intent);
     }
 
 
