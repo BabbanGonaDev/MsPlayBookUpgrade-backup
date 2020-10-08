@@ -133,6 +133,8 @@ public class ScheduledThreshingView extends AppCompatActivity {
 
         toolbar.setNavigationOnClickListener(view -> loadPreviousActivity());
 
+        setPortfolioMethods.setFooter(last_sync_date_tv, tv_staff_id, ScheduledThreshingView.this);
+
         /*pcpwsPageListModelClass = new ViewModelProvider(this, new MyViewModelFactory(appDatabase.pcpwsActivitiesFlagDao(), this)).get(PCPWSPageListModelClass.class);
         pcpwsPageListModelClass.filterTextAll.setValue("");*/
 
