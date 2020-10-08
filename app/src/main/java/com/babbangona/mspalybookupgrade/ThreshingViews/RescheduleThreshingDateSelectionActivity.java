@@ -950,10 +950,10 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Handle item selection
-        if (item.getItemId() == R.id.schedule) {
+        /*if (item.getItemId() == R.id.schedule) {
             startActivity(new Intent(RescheduleThreshingDateSelectionActivity.this, CalenderViewActivity.class));
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 

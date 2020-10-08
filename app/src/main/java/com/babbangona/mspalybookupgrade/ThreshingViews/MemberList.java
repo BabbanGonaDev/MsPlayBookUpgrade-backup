@@ -1,14 +1,5 @@
 package com.babbangona.mspalybookupgrade.ThreshingViews;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.paging.PagedList;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,17 +14,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.babbangona.mspalybookupgrade.BuildConfig;
-import com.babbangona.mspalybookupgrade.ComingSoon;
-import com.babbangona.mspalybookupgrade.FieldListPage;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.babbangona.mspalybookupgrade.R;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListPageListModelClass;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerAdapter;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberListRecyclerViewAdapter;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberPageListModelClass;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
-import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.MembersDao;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 
@@ -243,10 +237,10 @@ public class MemberList extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Handle item selection
-        if (item.getItemId() == R.id.schedule) {
+        /*if (item.getItemId() == R.id.schedule) {
             startActivity(new Intent(MemberList.this, CalenderViewActivity.class));
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 }
