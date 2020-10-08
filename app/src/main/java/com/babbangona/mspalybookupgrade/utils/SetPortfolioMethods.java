@@ -217,6 +217,26 @@ public class SetPortfolioMethods {
         return str;
     }
 
+    public String parseDateCustomStandard(String time) {
+        String inputPattern = "dd-MMM-yyyy";
+        String outputPattern = "yyyy-MM-dd";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.getDefault());
+
+        Date date;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            if (date != null) {
+                str = outputFormat.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
     public String reverseParseDate(String time) {
         String inputPattern = "dd-MMM-yyyy";
         String outputPattern = "yyyy-MM-dd";

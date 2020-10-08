@@ -493,7 +493,7 @@ public class ActivityListDownloadService extends IntentService {
                         );
                     }
                     getActivityList();
-                    Toast.makeText(ActivityListDownloadService.this, "Download done", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(ActivityListDownloadService.this, "Download done", Toast.LENGTH_LONG).show();
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
