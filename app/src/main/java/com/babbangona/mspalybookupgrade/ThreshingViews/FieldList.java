@@ -75,6 +75,7 @@ public class FieldList extends AppCompatActivity {
                     threshingFieldListAdapter = new ThreshingFieldListAdapter(
                             appDatabase.fieldsDao().getThreshingMemberFieldsList(sharedPrefs.getKeyThreshingUniqueMemberId()),
                             FieldList.this);
+
                     RecyclerView.LayoutManager aLayoutManager = new LinearLayoutManager(FieldList.this);
                     recycler_view.setLayoutManager(aLayoutManager);
                     recycler_view.setItemAnimator(new DefaultItemAnimator());

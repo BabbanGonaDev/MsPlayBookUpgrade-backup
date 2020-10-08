@@ -275,7 +275,12 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
     private void showDialogForConfirmThreshing(Context context, ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
                                                String code_use_flag, FieldListRecyclerModel fieldListRecyclerModel, int position) {
         AlertDialog.Builder builder = (new AlertDialog.Builder(context));
-        showDialogForConfirmThreshingBody(builder, context, threshingFieldListRecyclerModel, code_use_flag, fieldListRecyclerModel, position);
+
+        if (sharedPrefs.getStaffRole().equalsIgnoreCase("BGT")) {
+            showDialogForConfirmThreshingBody(builder, context, threshingFieldListRecyclerModel, code_use_flag, fieldListRecyclerModel, position);
+        }else{
+
+        }
     }
 
 
@@ -878,9 +883,9 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                                         "Self",
                                         "0",
                                         sharedPrefs.getKeyThreshingTemplate(),
-                                        "XXX",
-                                        "XXX",
-                                        "XXX",
+                                        "0000-00-00",
+                                        "None",
+                                        "None",
                                         getDeviceID(),
                                         BuildConfig.VERSION_NAME,
                                         latitude+"",
