@@ -127,7 +127,7 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 });
 
             }else{
-                iv_picture.setImageResource(R.drawable.bg_logo);
+                iv_picture.setImageResource(R.drawable.avatar);
             }
         }
 

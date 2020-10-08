@@ -145,9 +145,11 @@ public class ThreshingActivity extends AppCompatActivity {
         if (sharedPrefs.getStaffRole().equalsIgnoreCase("BGT")){
             btnScheduleThreshing.setVisibility(View.VISIBLE);
             btnUpdateScheduleThreshing.setVisibility(View.VISIBLE);
+            btnMarkHG.setVisibility(View.VISIBLE);
         }else{
             btnScheduleThreshing.setVisibility(View.GONE);
             btnUpdateScheduleThreshing.setVisibility(View.GONE);
+            btnMarkHG.setVisibility(View.GONE);
 
         }
     }
