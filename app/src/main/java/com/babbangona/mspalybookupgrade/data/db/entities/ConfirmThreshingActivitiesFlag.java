@@ -45,10 +45,17 @@ public class ConfirmThreshingActivitiesFlag {
     @ColumnInfo(name = DatabaseStringConstants.COL_SYNC_FLAG_CONFIRM)
     private String sync_flag;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_THRESHER)
+    private String thresher;
+
+    @ColumnInfo(name = DatabaseStringConstants.COL_THRESHER_ID)
+    private String thresher_id;
+
+
     public ConfirmThreshingActivitiesFlag(@NonNull String unique_field_id, String confirm_flag,
                                           String confirm_date, String imei, String app_version,
                                           String latitude, String longitude, String staff_id,
-                                          String used_code, String ik_number, String sync_flag) {
+                                          String used_code, String ik_number, String sync_flag, String thresher_id) {
         this.unique_field_id = unique_field_id;
         this.confirm_flag = confirm_flag;
         this.confirm_date = confirm_date;
@@ -60,7 +67,10 @@ public class ConfirmThreshingActivitiesFlag {
         this.used_code = used_code;
         this.ik_number = ik_number;
         this.sync_flag = sync_flag;
+        this.thresher = thresher;
+        this.thresher_id = thresher_id;
     }
+
 
     @NonNull
     public String getUnique_field_id() {
@@ -149,5 +159,21 @@ public class ConfirmThreshingActivitiesFlag {
 
     public void setSync_flag(String sync_flag) {
         this.sync_flag = sync_flag;
+    }
+
+    public String getThresher() {
+        return thresher;
+    }
+
+    public void setThresher(String thresher) {
+        this.thresher = thresher;
+    }
+
+    public String getThresher_id() {
+        return thresher_id;
+    }
+
+    public void setThresher_id(String thresher_id) {
+        this.thresher_id = thresher_id;
     }
 }

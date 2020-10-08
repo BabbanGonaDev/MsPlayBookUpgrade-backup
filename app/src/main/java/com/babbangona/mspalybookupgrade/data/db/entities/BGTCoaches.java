@@ -17,12 +17,18 @@ public class BGTCoaches {
     @NonNull
     private String bgt_id;
 
+
+    @ColumnInfo(name = DatabaseStringConstants.COL_BGT_NAME)
+    @NonNull
+    private String bgt_name;
+
     @ColumnInfo(name = DatabaseStringConstants.COL_COACH_ID)
     private String coach_id;
 
-    public BGTCoaches(@NonNull String bgt_id, String coach_id) {
+    public BGTCoaches(@NonNull String bgt_id, String coach_id, String bgt_name) {
         this.bgt_id = bgt_id;
         this.coach_id = coach_id;
+        this.bgt_name = bgt_name;
     }
 
     @NonNull
@@ -40,5 +46,14 @@ public class BGTCoaches {
 
     public void setCoach_id(String coach_id) {
         this.coach_id = coach_id;
+    }
+
+    @NonNull
+    public String getBgt_name() {
+        return bgt_name;
+    }
+
+    public void setBgt_name(@NonNull String bgt_name) {
+        this.bgt_name = bgt_name;
     }
 }
