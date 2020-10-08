@@ -304,9 +304,9 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 checkForEmptyTextInputFields();
                 //save to shared preference and move on
                 showDialogForExit(this,
-                        "Please confirm rescheduling information" ,
+                        "Please confirm rescheduling information",
                         sharedPrefs.getKeyThreshingUniqueFieldId(),
-                        parseDate(appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeyThreshingUniqueFieldId())),
+                        getOld_thresh_date(appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeyThreshingUniqueFieldId())),
                         tv_enter_date.getText().toString().trim(),
                         Objects.requireNonNull(edtRescheduleReason.getText()).toString().trim(), actSwap.getText().toString());
             }

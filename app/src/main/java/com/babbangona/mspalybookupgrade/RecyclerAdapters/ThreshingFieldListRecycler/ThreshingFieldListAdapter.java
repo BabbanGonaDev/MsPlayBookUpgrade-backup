@@ -842,7 +842,6 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     sharedPrefs.setKeyThresher("Self");
 
                     confirmStatus(builder,context);
-
                 })
                 .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
                     dialog.dismiss();
