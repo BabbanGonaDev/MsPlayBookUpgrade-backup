@@ -28,8 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberListRecyclerModel;
-import com.babbangona.mspalybookupgrade.ThreshingViews.FieldList;
 import com.babbangona.mspalybookupgrade.ThreshingViews.RescheduleThreshingDateSelectionActivity;
 import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingActivity;
 import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingDateSelectionActivity;
@@ -164,7 +162,9 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
         int urgent_status = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldUrgentScheduleStatus(threshingFieldListRecyclerModel.getUnique_field_id());
         int confirm_status = appDatabase.confirmThreshingActivitiesFlagDao().getFieldConfirmStatus(threshingFieldListRecyclerModel.getUnique_field_id());
         FieldListRecyclerModel fieldListRecyclerModel = appDatabase.fieldsDao().getFieldCompleteDetails(threshingFieldListRecyclerModel.getUnique_field_id());
+
         if (route.equalsIgnoreCase(DatabaseStringConstants.SCHEDULE_THRESHING)){
+
             if (confirm_status > 0){
                 //thresh confirmed, do you want to reset confirm?
                 showConfirmSuccess(context.getResources().getString(R.string.error_schedule_after_confirm),context,"crying");
@@ -180,6 +180,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
             }
 
         } else if (route.equalsIgnoreCase(DatabaseStringConstants.UPDATE_THRESHING)){
+
             if (confirm_status > 0){
                 //thresh confirmed, do you want to reset confirm?
                 showConfirmSuccess(context.getResources().getString(R.string.error_reschedule_after_confirm),context,"crying");
@@ -195,7 +196,9 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     showConfirmSuccess(context.getResources().getString(R.string.error_reschedule_before_schedule),context,"crying");
                 }
             }
+
         } else if (route.equalsIgnoreCase(DatabaseStringConstants.CONFIRM_THRESHING)){
+
             // confirm threshing
             if (confirm_status > 0){
                 //thresh confirmed, do you want to reset confirm?
@@ -213,13 +216,16 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
             }
 
         } else if (route.equalsIgnoreCase(DatabaseStringConstants.MARK_HG_AT_RISK)){
+
             //log HG at risk
             if (threshingFieldListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())){
                 showDialogForLogHGStart(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
             }else{
                 showConfirmSuccess(context.getResources().getString(R.string.error_hg_field_not_assigned),context,"crying");
             }
+
         } else if (route.equalsIgnoreCase(DatabaseStringConstants.SWAP_SCHEDULE_DATE)){
+
             //select field ID to swap
             if (confirm_status > 0){
                 //thresh confirmed, do you want to reset confirm?
@@ -239,6 +245,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     showConfirmSuccess(context.getResources().getString(R.string.error_swap_not_scheduled),context,"crying");
                 }
             }
+
         }
     }
 
@@ -277,9 +284,6 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
         AlertDialog.Builder builder = (new AlertDialog.Builder(context));
         showDialogForConfirmThreshingBody(builder, context, threshingFieldListRecyclerModel, code_use_flag, fieldListRecyclerModel, position);
     }
-
-
-    //TODO Rehoboth  HTA-172 this is the function to prevent future date
 
     private void showDialogForConfirmThreshingBody(AlertDialog.Builder builder, Context context,
                                                    ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
@@ -722,18 +726,6 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
             String text = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
             textView.setText(setPortfolioMethods.parseDateCustom(text));
 
-            //If it still doesn't work, use this method.
-            /*Calendar selected = Calendar.getInstance();
-            selected.set(year, monthOfYear, dayOfMonth);
-
-            long selectedMilli = selected.getTimeInMillis();
-
-            Date datePickerDate = new Date(selectedMilli);
-            if (datePickerDate.after(new Date())) {
-                datePickerDob.updateDate(cal.get(Calendar.YEAR),
-                        cal.get(Calendar.MONTH),
-                        cal.get(Calendar.DAY_OF_MONTH));
-            }*/
         }, mYear, mMonth, mDay);
 
         mDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());

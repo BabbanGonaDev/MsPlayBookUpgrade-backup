@@ -2,6 +2,7 @@ package com.babbangona.mspalybookupgrade.ThreshingViews;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -86,9 +87,10 @@ public class ThreshingActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btnUpdateScheduleThreshing)
-    public void setBtnUpdateScheduleThreshing(){
+    public void setBtnUpdateScheduleThreshing() {
         sharedPrefs.setKeyThreshingActivityRoute(DatabaseStringConstants.UPDATE_THRESHING);
-        startActivity(new Intent(ThreshingActivity.this,MemberList.class));
+        Log.d("CHECK", "Route set: ===========> " + DatabaseStringConstants.UPDATE_THRESHING);
+        startActivity(new Intent(ThreshingActivity.this, MemberList.class));
     }
 
     @OnClick(R.id.btnConfirmThreshing)
