@@ -396,7 +396,7 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
                     }else{
                         dialog.dismiss();
                         saveConfirm(context,threshingFieldListRecyclerModel,code_use_flag,
-                                fieldListRecyclerModel,String.valueOf(latitude),String.valueOf(longitude));
+                                fieldListRecyclerModel,String.valueOf(latitude),String.valueOf(longitude), new SharedPrefs(context).getStaffID());
                         notifyItemChanged(position);
                     }
 
@@ -429,7 +429,7 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
     void saveConfirm(Context context,
                      ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
                      String code_use_flag, FieldListRecyclerModel fieldListRecyclerModel,
-                     String latitude, String longitude){
+                     String latitude, String longitude, String thresher){
 
         appDatabase.confirmThreshingActivitiesFlagDao().insert(new ConfirmThreshingActivitiesFlag(
                 threshingFieldListRecyclerModel.getUnique_field_id(),
@@ -442,7 +442,7 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
                 sharedPrefs.getStaffID(),
                 code_use_flag,
                 fieldListRecyclerModel.getIk_number(),
-                "0"));
+                "0",thresher));
 
         appDatabase.logsDao().insert(new Logs(threshingFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                 "Confirmed threshing",getDate("normal"),sharedPrefs.getStaffRole(),

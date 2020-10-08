@@ -292,6 +292,7 @@ public class DatabaseStringConstants {
      */
     public static final String COL_UNIQUE_FIELD_ID_SCHEDULE             = "unique_field_id";
     public static final String COL_THRESHER_SCHEDULE                    = "thresher";
+    public static final String COL_THRESHER_ID                          = "thresher_id";
     public static final String COL_FACE_SCAN_FLAG_SCHEDULE              = "face_scan_flag";
     public static final String COL_TEMPLATE_SCHEDULE                    = "template";
     public static final String COL_SCHEDULE_DATE                        = "schedule_date";
@@ -325,6 +326,9 @@ public class DatabaseStringConstants {
     public static final String COL_SYNC_FLAG_CONFIRM                    = "sync_flag";
     public static final String COL_IK_NUMBER_CONFIRM                    = "ik_number";
 
+    public static final String COL_THRESHER                   = "thresher";
+
+
 
     /**
      * locations_table Column Names
@@ -354,5 +358,6 @@ public class DatabaseStringConstants {
      */
     public static final String COL_BGT_ID                               = "bgt_id";
     public static final String COL_COACH_ID                             = "coach_id";
+    public static final String COL_BGT_NAME                             = "bgt_name";
 
 }
