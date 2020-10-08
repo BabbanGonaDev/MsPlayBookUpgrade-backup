@@ -192,21 +192,12 @@ public class ScheduledThreshingView extends AppCompatActivity {
         });
     }
 
-    /*    @OnCheckedChanged(R.id.rbAllSchedules)
-    void allSchedules(CompoundButton button, boolean checked) {
-
-    }
-
-
-    @OnCheckedChanged(R.id.rbUrgentSchedules)
-    void UrgentSchedules(CompoundButton button, boolean checked) {
-
-    }*/
-
     void setAllSchedules() {
-
+        //Get all scheduled fields.
         viewScheduleRecyclerModel = new ArrayList<>();
-        viewScheduleRecyclerModel = AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewAllScheduledFields(sharedPrefs.getStaffID());
+        viewScheduleRecyclerModel = AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewAllButConfirmedFields(sharedPrefs.getStaffID());
+        viewScheduleRecyclerModel.addAll(AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewConfirmedFields(sharedPrefs.getStaffID()));
+
 
         if (viewScheduleRecyclerModel.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
