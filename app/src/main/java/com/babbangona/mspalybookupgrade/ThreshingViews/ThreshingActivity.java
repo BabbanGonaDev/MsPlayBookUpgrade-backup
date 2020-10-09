@@ -2,9 +2,13 @@ package com.babbangona.mspalybookupgrade.ThreshingViews;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -86,9 +90,10 @@ public class ThreshingActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btnUpdateScheduleThreshing)
-    public void setBtnUpdateScheduleThreshing(){
+    public void setBtnUpdateScheduleThreshing() {
         sharedPrefs.setKeyThreshingActivityRoute(DatabaseStringConstants.UPDATE_THRESHING);
-        startActivity(new Intent(ThreshingActivity.this,MemberList.class));
+        Log.d("CHECK", "Route set: ===========> " + DatabaseStringConstants.UPDATE_THRESHING);
+        startActivity(new Intent(ThreshingActivity.this, MemberList.class));
     }
 
     @OnClick(R.id.btnConfirmThreshing)
@@ -123,7 +128,7 @@ public class ThreshingActivity extends AppCompatActivity {
     }
 
     //Remove the calendar icon from homepage.
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.threshing_menu, menu);
         return true;
@@ -132,20 +137,22 @@ public class ThreshingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Handle item selection
-        if (item.getItemId() == R.id.schedule) {
+        /*if (item.getItemId() == R.id.schedule) {
             startActivity(new Intent(ThreshingActivity.this, CalenderViewActivity.class));
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     void removeScheduleAndUpdate(){
         if (sharedPrefs.getStaffRole().equalsIgnoreCase("BGT")){
             btnScheduleThreshing.setVisibility(View.VISIBLE);
             btnUpdateScheduleThreshing.setVisibility(View.VISIBLE);
+            btnMarkHG.setVisibility(View.VISIBLE);
         }else{
             btnScheduleThreshing.setVisibility(View.GONE);
             btnUpdateScheduleThreshing.setVisibility(View.GONE);
+            btnMarkHG.setVisibility(View.GONE);
 
         }
     }

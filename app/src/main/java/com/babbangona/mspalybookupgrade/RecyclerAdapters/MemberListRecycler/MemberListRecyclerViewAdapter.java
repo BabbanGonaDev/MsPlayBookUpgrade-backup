@@ -23,26 +23,15 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.ComingSoon;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.ThreshingViews.FieldList;
-import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingActivity;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
-import com.babbangona.mspalybookupgrade.data.db.entities.Logs;
-import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
-import com.babbangona.mspalybookupgrade.utils.GPSController;
-import com.babbangona.mspalybookupgrade.utils.ReVerifyActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -138,7 +127,7 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                 });
 
             }else{
-                iv_picture.setImageResource(R.drawable.bg_logo);
+                iv_picture.setImageResource(R.drawable.avatar);
             }
         }
 
@@ -158,6 +147,7 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
         if (memberListRecyclerModel.getStaff_id() != null) {
             if (memberListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())){
                 String route = sharedPrefs.getKeyThreshingActivityRoute();
+                Log.d("CHECK", "Route in memberlist recycler ======================> " + route);
                 switch (route){
                     case "1":
                     case "2":

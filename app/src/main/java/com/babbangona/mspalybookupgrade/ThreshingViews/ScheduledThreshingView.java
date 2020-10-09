@@ -133,6 +133,8 @@ public class ScheduledThreshingView extends AppCompatActivity {
 
         toolbar.setNavigationOnClickListener(view -> loadPreviousActivity());
 
+        setPortfolioMethods.setFooter(last_sync_date_tv, tv_staff_id, ScheduledThreshingView.this);
+
         /*pcpwsPageListModelClass = new ViewModelProvider(this, new MyViewModelFactory(appDatabase.pcpwsActivitiesFlagDao(), this)).get(PCPWSPageListModelClass.class);
         pcpwsPageListModelClass.filterTextAll.setValue("");*/
 
@@ -190,21 +192,12 @@ public class ScheduledThreshingView extends AppCompatActivity {
         });
     }
 
-    /*    @OnCheckedChanged(R.id.rbAllSchedules)
-    void allSchedules(CompoundButton button, boolean checked) {
-
-    }
-
-
-    @OnCheckedChanged(R.id.rbUrgentSchedules)
-    void UrgentSchedules(CompoundButton button, boolean checked) {
-
-    }*/
-
     void setAllSchedules() {
-
+        //Get all scheduled fields.
         viewScheduleRecyclerModel = new ArrayList<>();
-        viewScheduleRecyclerModel = AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewAllScheduledFields(sharedPrefs.getStaffID());
+        viewScheduleRecyclerModel = AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewAllButConfirmedFields(sharedPrefs.getStaffID());
+        viewScheduleRecyclerModel.addAll(AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewConfirmedFields(sharedPrefs.getStaffID()));
+
 
         if (viewScheduleRecyclerModel.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);

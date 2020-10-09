@@ -1,11 +1,5 @@
 package com.babbangona.mspalybookupgrade.ThreshingViews;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -36,6 +30,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
@@ -242,10 +242,10 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Handle item selection
-        if (item.getItemId() == R.id.schedule) {
+        /*if (item.getItemId() == R.id.schedule) {
             startActivity(new Intent(ThreshingDateSelectionActivity.this, CalenderViewActivity.class));
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 

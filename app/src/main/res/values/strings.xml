@@ -18,7 +18,7 @@
     <string name="sentence_close_pws">have been affected by poor weather.)</string>
     <string name="set_portfolio">This activity allow supervisors select staff under their portfolio</string>
     <string name="strange_activity">Please contact your supervisors before using this activity</string>
-    <string name="downloading_data">Downloading Data</string>
+    <string name="downloading_data">Syncing Data</string>
     <string name="please_wait">Please wait…</string>
     <string name="update">Update</string>
     <string name="update_portfolio">Update Portfolio</string>
@@ -277,6 +277,7 @@
     <string name="location_question">Are you in the member\'s village</string>
     <string name="thresher_title">Select Thresher</string>
     <string name="thresher_question">By whom the product is to be threshed?</string>
+    <string name="confirm_thresher_question">who threshed this field ?</string>
     <string name="thresher_question2">Are you sure the member would thresh?</string>
     <string name="thresher_self">Self</string>
     <string name="thresher_bg">BG</string>

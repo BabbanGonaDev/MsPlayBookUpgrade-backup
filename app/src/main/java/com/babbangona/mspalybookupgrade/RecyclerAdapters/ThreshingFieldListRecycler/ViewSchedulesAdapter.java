@@ -186,8 +186,12 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
             tvPhoneNumber.setText(context.getResources().getString(R.string.phone_number) + ": " + viewSchedule.getPhone_number());
             tvFieldID.setText(context.getResources().getString(R.string.static_field_id) + ": " + viewSchedule.getField_id());
             tvLocation.setText(context.getResources().getString(R.string.location) + ": " + viewSchedule.getLocation());
-            tvThreshingDate.setText(context.getResources().getString(R.string.thresh_date) + ": " + viewSchedule.getThreshing_date());
             tvFieldSize.setText(context.getResources().getString(R.string.field_size) + ": " + viewSchedule.getField_size() + "Ha ");
+            if (viewSchedule.getThreshing_date().equals("0000-00-00")) {
+                tvThreshingDate.setText(context.getResources().getString(R.string.thresh_date) + ": None");
+            } else {
+                tvThreshingDate.setText(context.getResources().getString(R.string.thresh_date) + ": " + viewSchedule.getThreshing_date());
+            }
 
             getStatus(viewSchedule.getField_id(), imgAssignmentFLag);
         }
@@ -392,7 +396,7 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
                     }else{
                         dialog.dismiss();
                         saveConfirm(context,threshingFieldListRecyclerModel,code_use_flag,
-                                fieldListRecyclerModel,String.valueOf(latitude),String.valueOf(longitude));
+                                fieldListRecyclerModel,String.valueOf(latitude),String.valueOf(longitude), new SharedPrefs(context).getStaffID());
                         notifyItemChanged(position);
                     }
 
@@ -425,7 +429,7 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
     void saveConfirm(Context context,
                      ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
                      String code_use_flag, FieldListRecyclerModel fieldListRecyclerModel,
-                     String latitude, String longitude){
+                     String latitude, String longitude, String thresher){
 
         appDatabase.confirmThreshingActivitiesFlagDao().insert(new ConfirmThreshingActivitiesFlag(
                 threshingFieldListRecyclerModel.getUnique_field_id(),
@@ -438,7 +442,7 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
                 sharedPrefs.getStaffID(),
                 code_use_flag,
                 fieldListRecyclerModel.getIk_number(),
-                "0"));
+                "0",thresher));
 
         appDatabase.logsDao().insert(new Logs(threshingFieldListRecyclerModel.getUnique_field_id(),sharedPrefs.getStaffID(),
                 "Confirmed threshing",getDate("normal"),sharedPrefs.getStaffRole(),

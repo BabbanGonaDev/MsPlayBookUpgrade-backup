@@ -70,6 +70,9 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
     @BindView(R.id.edtRescheduleReason)
     TextInputEditText edtRescheduleReason;
 
+    @BindView(R.id.reschedule_title)
+    TextView reschedule_title;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -113,16 +116,18 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         raw_old_thresh_date = appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeyThreshingUniqueFieldId());
         old_thresh_date = parseDate(raw_old_thresh_date);
 
-        if (sharedPrefs.getKeyRescheduleStateFlag().equalsIgnoreCase("0")){
+        if (sharedPrefs.getKeyRescheduleStateFlag().equalsIgnoreCase("0")) {
             resetLayout();
-            fillSwapSpinner(actSwap,RescheduleThreshingDateSelectionActivity.this);
-            showUrgentStart(getResources().getString(R.string.select_threshing_type),RescheduleThreshingDateSelectionActivity.this);
-        }else{
+            fillSwapSpinner(actSwap, RescheduleThreshingDateSelectionActivity.this);
+            showUrgentStart(getResources().getString(R.string.select_threshing_type), RescheduleThreshingDateSelectionActivity.this);
+        } else {
             String answer = "Yes";
             actSwap.setText(answer);
             actSwap.setEnabled(false);
             tv_enter_date.setVisibility(View.GONE);
             tv_confirm_date.setVisibility(View.GONE);
+            //Change reschedule title whenever we want to reschedule. HTA-186
+            reschedule_title.setText("Enter threshing reason");
             tv_old_thresh_date.setText(getRescheduleParameters(answer));
         }
         actSwap.setOnItemClickListener((parent, view, position, id) -> {
@@ -299,9 +304,9 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 checkForEmptyTextInputFields();
                 //save to shared preference and move on
                 showDialogForExit(this,
-                        "Please confirm rescheduling information" ,
+                        "Please confirm rescheduling information",
                         sharedPrefs.getKeyThreshingUniqueFieldId(),
-                        parseDate(appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeyThreshingUniqueFieldId())),
+                        getOld_thresh_date(appDatabase.scheduleThreshingActivitiesFlagDao().getFieldSchedule(sharedPrefs.getKeyThreshingUniqueFieldId())),
                         tv_enter_date.getText().toString().trim(),
                         Objects.requireNonNull(edtRescheduleReason.getText()).toString().trim(), actSwap.getText().toString());
             }
@@ -945,10 +950,10 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Handle item selection
-        if (item.getItemId() == R.id.schedule) {
+        /*if (item.getItemId() == R.id.schedule) {
             startActivity(new Intent(RescheduleThreshingDateSelectionActivity.this, CalenderViewActivity.class));
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
