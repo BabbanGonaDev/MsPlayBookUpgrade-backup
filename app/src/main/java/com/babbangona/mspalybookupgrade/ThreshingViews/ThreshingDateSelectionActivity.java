@@ -815,6 +815,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                         reverseParseDate(tv_enter_date.getText().toString().trim()),
                         actCollectionCenter.getText().toString().trim(),
                         Objects.requireNonNull(edtPhoneNumber.getText()).toString().trim());
+
             } else {
                 lats.add(lat);
                 longs.add(lng);
@@ -824,6 +825,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 //count.setText(String.valueOf(size));
 
                 Log.d("goThere2",latLongs.toString());
+
 
             }
 
@@ -836,7 +838,10 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
 
             Log.d("goThere3",latLongs.toString());
 
+
+
         }
+
     }
 
     @Override
@@ -855,9 +860,15 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
     }
 
     void goToHomeLocationCapture(){
-        finish();
-        Intent intent = new Intent(ThreshingDateSelectionActivity.this, ThreshingActivity.class);
-        startActivity(intent);
+
+
+        sharedPrefs.setKeyVillageLocation(user_lat, user_long);
+        saveDetails(1,
+                reverseParseDate(tv_enter_date.getText().toString().trim()),
+                actCollectionCenter.getText().toString().trim(),
+                Objects.requireNonNull(edtPhoneNumber.getText()).toString().trim());
+
+
     }
 
     public boolean permissionGranted() {
@@ -884,6 +895,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                     dialog.dismiss();
                     locationDialog.show();
                     locationTimer.start();
+
                 })
                 .setNeutralButton(context.getResources().getString(R.string.no), (dialog, which) -> {
                     dialog.dismiss();
@@ -1130,6 +1142,8 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 .setPositiveButton(context.getResources().getString(R.string.done), (dialog, which) -> {
                     //this is to dismiss the dialog
                     dialog.dismiss();
+
+
                     goToHomePage();
                 })
                 .setCancelable(false)

@@ -197,6 +197,7 @@ public class ScheduledThreshingView extends AppCompatActivity {
         viewScheduleRecyclerModel = new ArrayList<>();
         viewScheduleRecyclerModel = AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewAllButConfirmedFields(sharedPrefs.getStaffID());
         viewScheduleRecyclerModel.addAll(AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewConfirmedFields(sharedPrefs.getStaffID()));
+        viewScheduleRecyclerModel.addAll(AppDatabase.getInstance(this).scheduleThreshingActivitiesFlagDao().viewConfirmedFieldsNotScheduled(sharedPrefs.getStaffID()));
 
 
         if (viewScheduleRecyclerModel.isEmpty()) {
