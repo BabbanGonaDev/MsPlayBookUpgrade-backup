@@ -17,10 +17,10 @@ import java.util.List;
 @Dao
 public abstract class ScheduleThreshingActivitiesFlagDao {
 
-    @Query(" SELECT COUNT(a.unique_field_id) FROM schedule_threshing_activities_flag a JOIN fields b " +
+    @Query(" SELECT COUNT(a.unique_field_id) FROM confirm_threshing_activities_flag a JOIN fields b " +
             "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
-            "WHERE b.staff_id = :staff_id AND b.deactivate = '0' ")
-    public abstract int getAssignedScheduleThreshCount(String staff_id);
+            "WHERE b.staff_id = :staff_id AND b.deactivate = '0'AND a.confirm_flag = '1' ")
+    public abstract int getAssignedConfirmedThreshCount(String staff_id);
 
     @Query(" SELECT COUNT(a.unique_field_id) FROM schedule_threshing_activities_flag a JOIN fields b " +
             "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
@@ -45,14 +45,14 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
             "WHERE b.staff_id = :staff_id AND b.deactivate = '0' ")
     public abstract float getAssignedTotalFieldsSum(String staff_id);
 
-    @Query(" SELECT SUM(b.field_size) FROM schedule_threshing_activities_flag a JOIN fields b " +
+    /*@Query(" SELECT SUM(b.field_size) FROM schedule_threshing_activities_flag a JOIN fields b " +
             "ON a.unique_field_id = b.unique_field_id JOIN members c on b.unique_member_id = c.unique_member_id " +
             "WHERE b.mss = :mss AND b.deactivate = '0' ")
     public abstract float getCoachScheduleThreshSum(String mss);
 
     @Query(" SELECT SUM(b.field_size) FROM fields b JOIN members c on b.unique_member_id = c.unique_member_id " +
             "WHERE b.mss = :mss AND b.deactivate = '0' ")
-    public abstract double getCoachTotalFieldsSum(String mss);
+    public abstract double getCoachTotalFieldsSum(String mss);*/
 
     //TODO: HTA-182 Completed
     @Query("UPDATE schedule_threshing_activities_flag SET schedule_date = :schedule_date, reschedule_reason = :reschedule_reason," +

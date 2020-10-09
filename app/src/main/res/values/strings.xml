@@ -11,6 +11,7 @@
     <string name="fertilizer_1_pt_1">% of Fertilizer 1 Completed</string>
     <string name="fertilizer_2_pt_1">% of Fertilizer 2 Completed</string>
     <string name="hg_pt_1">% of Fields have issues</string>
+    <string name="schedule_pt_1">% of Fields have threshed</string>
     <string name="out_of">out of</string>
     <string name="sentence_close">fields.)</string>
     <string name="sentence_close_hg">fields have HGs.)</string>

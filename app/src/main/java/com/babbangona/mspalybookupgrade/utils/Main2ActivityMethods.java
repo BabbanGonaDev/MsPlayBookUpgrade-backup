@@ -123,6 +123,8 @@ public class Main2ActivityMethods {
             count_returned = 0;
         }else if (activity_id.equalsIgnoreCase("5")){
             count_returned = appDatabase.pwsActivitiesFlagDao().getPWSCount("%"+sharedPrefs.getStaffID()+"%");
+        }else if (activity_id.equalsIgnoreCase("7")){
+            count_returned = appDatabase.scheduleThreshingActivitiesFlagDao().getAssignedConfirmedThreshCount(sharedPrefs.getStaffID());
         }else{
             count_returned = 0;
         }
@@ -164,6 +166,13 @@ public class Main2ActivityMethods {
                     " " +context.getResources().getString(R.string.out_of)+
                     " "+total_field_count+
                     " "+context.getResources().getString(R.string.sentence_close_pws);
+        }else if (activity_id.equalsIgnoreCase("7")){
+            composed_sentence = (int)percent+
+                    " "+context.getResources().getString(R.string.schedule_pt_1)+
+                    " ("+logged_field_count+
+                    " " +context.getResources().getString(R.string.out_of)+
+                    " "+total_field_count+
+                    " "+context.getResources().getString(R.string.sentence_close);
         }else{
             composed_sentence = context.getResources().getString(R.string.strange_activity);
         }
