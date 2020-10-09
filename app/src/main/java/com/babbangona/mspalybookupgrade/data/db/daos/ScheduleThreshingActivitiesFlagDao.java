@@ -98,14 +98,16 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
             "JOIN fields AS b ON a.unique_field_id = b.unique_field_id " +
             "JOIN members AS c on b.unique_member_id = c.unique_member_id " +
             "WHERE  (a.staff_id = :staff_id or a.staff_id != :staff_id) AND b.deactivate = '0'" +
-            "AND a.unique_field_id NOT IN (SELECT unique_field_id FROM confirm_threshing_activities_flag)")
+            "AND a.unique_field_id NOT IN (SELECT unique_field_id FROM confirm_threshing_activities_flag)" +
+            "ORDER BY a.schedule_date DESC")
     public abstract List<ViewScheduleRecyclerModel> viewAllButConfirmedFields(String staff_id);
 
     @Query("SELECT  c.first_name||' '||c.last_name AS member_name, d.phone_number AS phone_number, c.village_name AS location,  a.unique_field_id AS field_id,  a.confirm_date AS threshing_date, b.field_size AS field_size FROM confirm_threshing_activities_flag AS a\n" +
             "JOIN fields AS b ON a.unique_field_id = b.unique_field_id " +
             "JOIN members AS c ON b.unique_member_id = c.unique_member_id " +
             "JOIN schedule_threshing_activities_flag AS d ON a.unique_field_id = d.unique_field_id " +
-            "WHERE (a.staff_id = :staff_id or a.staff_id != :staff_id) AND b.deactivate = '0'")
+            "WHERE (a.staff_id = :staff_id or a.staff_id != :staff_id) AND b.deactivate = '0'" +
+            "ORDER BY a.confirm_date DESC")
     public abstract List<ViewScheduleRecyclerModel> viewConfirmedFields(String staff_id);
 
     @Query(" SELECT  c.first_name||' '||c.last_name as member_name, a.phone_number as phone_number, c.village_name as location,  a.unique_field_id as field_id,  a.schedule_date as threshing_date, b.field_size as field_size  FROM schedule_threshing_activities_flag a " +
@@ -116,7 +118,8 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
 
     @Query(" SELECT c.first_name||' '||c.last_name as member_name, a.phone_number as phone_number, c.village_name as location,  a.unique_field_id as field_id,  a.schedule_date as threshing_date, b.field_size as field_size FROM schedule_threshing_activities_flag a " +
             "JOIN fields b ON a.unique_field_id = b.unique_field_id  JOIN members c on b.unique_member_id = c.unique_member_id " +
-            "WHERE  (a.staff_id = :staff_id or a.staff_id != :staff_id )  AND b.deactivate = '0' and a.urgent_flag = '1' and a.unique_field_id  NOT IN (SELECT unique_field_id FROM confirm_threshing_activities_flag) ")
+            "WHERE  (a.staff_id = :staff_id or a.staff_id != :staff_id )  AND b.deactivate = '0' and a.urgent_flag = '1' and a.unique_field_id  NOT IN (SELECT unique_field_id FROM confirm_threshing_activities_flag)" +
+            "ORDER BY a.schedule_date DESC")
     public abstract List<ViewScheduleRecyclerModel> viewAllUrgentScheduledFields(String staff_id);
 
 
