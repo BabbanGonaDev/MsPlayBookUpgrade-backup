@@ -168,6 +168,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
 
         if (route.equalsIgnoreCase(DatabaseStringConstants.SCHEDULE_THRESHING)){
 
+           // Toast.makeText(context, status+""+urgent_status, Toast.LENGTH_SHORT).show();
             if (confirm_status > 0){
                 //thresh confirmed, do you want to reset confirm?
                 showConfirmSuccess(context.getResources().getString(R.string.error_schedule_after_confirm),context,"crying");

@@ -181,6 +181,10 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                          sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
                          sharedPrefs.setKeyThreshingIkNumber(memberListRecyclerModel.getIk_number());
                          mCtx.startActivity(new Intent(mCtx, FieldList.class));
+                     }else{
+
+                         //You cannot schedule for this guy
+                         showScheduleProblemStart(mCtx.getResources().getString(R.string.wrong_member_schedule), mCtx);
                      }
                  }else {
 
