@@ -17,9 +17,7 @@ public class BGTCoaches {
     @NonNull
     private String bgt_id;
 
-
     @ColumnInfo(name = DatabaseStringConstants.COL_BGT_NAME)
-    @NonNull
     private String bgt_name;
 
     @ColumnInfo(name = DatabaseStringConstants.COL_COACH_ID)
@@ -48,12 +46,11 @@ public class BGTCoaches {
         this.coach_id = coach_id;
     }
 
-    @NonNull
     public String getBgt_name() {
         return bgt_name;
     }
 
-    public void setBgt_name(@NonNull String bgt_name) {
+    public void setBgt_name(String bgt_name) {
         this.bgt_name = bgt_name;
     }
 }

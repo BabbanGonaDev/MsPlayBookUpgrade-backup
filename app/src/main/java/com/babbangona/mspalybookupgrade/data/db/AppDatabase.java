@@ -208,8 +208,6 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-
-
     private static final Migration MIGRATION_6_7 = new Migration(6, 7) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -438,7 +436,7 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
 
-            database.execSQL("ALTER TABLE bgt_coaches ADD COLUMN 'bgt_name'");
+            database.execSQL("ALTER TABLE bgt_coaches ADD COLUMN 'bgt_name' TEXT ");
             database.execSQL("ALTER TABLE confirm_threshing_activities_flag ADD COLUMN 'thresher' TEXT ");
             database.execSQL("ALTER TABLE confirm_threshing_activities_flag ADD COLUMN 'thresher_id' TEXT");
 
