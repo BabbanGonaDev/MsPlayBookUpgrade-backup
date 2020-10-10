@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 13;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 14;
 
     /**
      * Names of tables
@@ -325,8 +325,7 @@ public class DatabaseStringConstants {
     public static final String COL_USED_CODE                            = "used_code";
     public static final String COL_SYNC_FLAG_CONFIRM                    = "sync_flag";
     public static final String COL_IK_NUMBER_CONFIRM                    = "ik_number";
-
-    public static final String COL_THRESHER                   = "thresher";
+    public static final String COL_THRESHER                             = "thresher";
 
 
 

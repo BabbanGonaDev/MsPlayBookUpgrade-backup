@@ -168,8 +168,29 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
                         break;
                 }
             }else{
-                //You cannot schedule for this guy
-                showScheduleProblemStart(mCtx.getResources().getString(R.string.wrong_member_schedule),mCtx);
+
+
+                /**
+                 * The block below enables a BGT to confirm threshing for a field not assigned to him
+                 * */
+
+                //TODO: Block for BGT to confirm field he didnt thresh
+                 String route  = sharedPrefs.getKeyThreshingActivityRoute();
+                 if(!memberListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())) {
+                     if (route.equalsIgnoreCase("3")) {
+                         sharedPrefs.setKeyThreshingUniqueMemberId(memberListRecyclerModel.getUnique_member_id());
+                         sharedPrefs.setKeyThreshingIkNumber(memberListRecyclerModel.getIk_number());
+                         mCtx.startActivity(new Intent(mCtx, FieldList.class));
+                     }else{
+
+                         //You cannot schedule for this guy
+                         showScheduleProblemStart(mCtx.getResources().getString(R.string.wrong_member_schedule), mCtx);
+                     }
+                 }else {
+
+                     //You cannot schedule for this guy
+                     showScheduleProblemStart(mCtx.getResources().getString(R.string.wrong_member_schedule), mCtx);
+                 }
             }
         } else {
             showScheduleProblemStart(mCtx.getResources().getString(R.string.wrong_member_schedule),mCtx);

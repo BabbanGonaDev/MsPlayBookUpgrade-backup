@@ -168,12 +168,15 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
 
         if (route.equalsIgnoreCase(DatabaseStringConstants.SCHEDULE_THRESHING)){
 
+           // Toast.makeText(context, status+""+urgent_status, Toast.LENGTH_SHORT).show();
             if (confirm_status > 0){
                 //thresh confirmed, do you want to reset confirm?
                 showConfirmSuccess(context.getResources().getString(R.string.error_schedule_after_confirm),context,"crying");
             }else{
                 if (status > 0){
-                    showDialogForRescheduleThreshing(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
+                   // showDialogForRescheduleThreshing(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
+                    showDialogForRescheduleThreshingBodyUrgent(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
+
                 }else if(urgent_status > 0 ){
                     showDialogForRescheduleThreshingBodyUrgent(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
 
@@ -218,8 +221,17 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     }else{
                         showDialogForConfirmWithCode(context,threshingFieldListRecyclerModel,fieldListRecyclerModel,position);
                     }
-                }else{
-                    showConfirmSuccess(context.getResources().getString(R.string.error_confirm_before_schedule),context,"crying");
+                }
+                else{
+
+
+                    if (!threshingFieldListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())){
+                        showDialogForConfirmWithCode(context,threshingFieldListRecyclerModel,fieldListRecyclerModel,position);
+                    }else{
+                        showConfirmSuccess(context.getResources().getString(R.string.error_confirm_before_schedule),context,"crying");
+                    }
+
+
                 }
             }
 

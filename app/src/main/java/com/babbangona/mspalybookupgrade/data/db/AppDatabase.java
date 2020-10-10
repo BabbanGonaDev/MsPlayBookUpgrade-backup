@@ -208,8 +208,6 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-
-
     private static final Migration MIGRATION_6_7 = new Migration(6, 7) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -432,6 +430,18 @@ public abstract class AppDatabase extends RoomDatabase {
 
         }
     };
+
+
+    private static final Migration MIGRATION_13_14 = new Migration(13, 14) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+            database.execSQL("ALTER TABLE bgt_coaches ADD COLUMN 'bgt_name' TEXT ");
+            database.execSQL("ALTER TABLE confirm_threshing_activities_flag ADD COLUMN 'thresher' TEXT ");
+            database.execSQL("ALTER TABLE confirm_threshing_activities_flag ADD COLUMN 'thresher_id' TEXT");
+
+        }
+    };
     
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
@@ -441,7 +451,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 .allowMainThreadQueries()
                 .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,
                         MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,
-                        MIGRATION_11_12,MIGRATION_12_13)
+                        MIGRATION_11_12,MIGRATION_12_13,MIGRATION_13_14)
                 .build();
 //                .fallbackToDestructiveMigration()
     }
