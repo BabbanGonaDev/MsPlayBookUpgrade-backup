@@ -8,9 +8,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpHomeRecycler.FertilizerHomeRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberListRecyclerModel;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.ThreshingFieldListRecycler.ViewScheduleRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 
 import java.util.List;
@@ -43,6 +42,17 @@ public abstract class MembersDao {
             "FROM members b WHERE b.coach_id = :mss AND LOWER(b.first_name || ' ' || b.last_name || b.phone_number || " +
             "b.village_name || b.ik_number || 'R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:search) ")
     public abstract DataSource.Factory<Integer, MemberListRecyclerModel> getMemberListBySearch(String mss, String search);
+
+    @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, " +
+            "b.village_name as village, b.ik_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
+            "FROM members b WHERE b.coach_id = :mss AND LOWER(b.role) = LOWER('Leader')")
+    public abstract DataSource.Factory<Integer, FertilizerHomeRecyclerModel> getLeaderMemberList(String mss);
+
+    @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, " +
+            "b.village_name as village, b.ik_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
+            "FROM members b WHERE b.coach_id = :mss AND LOWER(b.role) = LOWER('Leader') AND LOWER(b.first_name || ' ' || " +
+            "b.last_name || b.phone_number || b.village_name || b.ik_number || 'R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:search) ")
+    public abstract DataSource.Factory<Integer, FertilizerHomeRecyclerModel> getLeaderMemberListBySearch(String mss, String search);
 
 
 
