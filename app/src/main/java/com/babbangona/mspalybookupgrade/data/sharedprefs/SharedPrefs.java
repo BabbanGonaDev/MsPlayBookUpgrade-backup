@@ -95,11 +95,18 @@ public class SharedPrefs {
     public static final String KEY_SWAP_FIELD_ID                    = "swap_field_id";
     public static final String KEY_RESCHEDULE_STATE_FLAG            = "reschedule_state_flag";
 
+    public static final String KEY_FERTILIZER_SIGN_UP_IK_NUMBER     = "fertilizer_sign_up_ik_number";
+
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyFertilizerSignUpIkNumber(String fertilizer_sign_up_ik_number){
+        editor.putString(KEY_FERTILIZER_SIGN_UP_IK_NUMBER, fertilizer_sign_up_ik_number)
+                .commit();
     }
 
     public void setKeyRescheduleStateFlag(String reschedule_state_flag){
@@ -646,5 +653,9 @@ public class SharedPrefs {
 
     public String getKeyRescheduleStateFlag() {
         return pref.getString(KEY_RESCHEDULE_STATE_FLAG, "0");
+    }
+
+    public String getKeyFertilizerSignUpIkNumber() {
+        return pref.getString(KEY_FERTILIZER_SIGN_UP_IK_NUMBER, "IKSomething");
     }
 }

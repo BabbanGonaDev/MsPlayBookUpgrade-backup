@@ -329,4 +329,8 @@
     <string name="all_schedules">All Schedules</string>
     <string name="urgent_schedules">Urgent Schedules</string>
     <string name="location">Location</string>
+    <string name="trust_group_members_title">Trust Group Members</string>
+    <string name="list_of_tg_title">List of Trust Group</string>
+    <string name="tg_leader">TG Leader:</string>
+    <string name="location_constant">Location:</string>
 </resources>

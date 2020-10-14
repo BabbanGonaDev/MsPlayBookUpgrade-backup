@@ -32,7 +32,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
-        <activity android:name=".FertilizerSignUpViews.FertilizerSignUpHome"></activity>
+        <activity android:name=".FertilizerSignUpViews.FertilizerSignUpMembers"></activity>
+        <activity android:name=".FertilizerSignUpViews.FertilizerSignUpHome" />
         <activity
             android:name=".ThreshingViews.ScheduleThreshingSummary"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -167,7 +168,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ThreshingViews.ScheduledThreshingView"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Homepage"
             android:exported="true"

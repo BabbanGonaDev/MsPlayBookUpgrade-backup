@@ -1,8 +1,7 @@
-package com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpHomeRecycler;
+package com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpMembersRecycler;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -19,7 +18,6 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.babbangona.mspalybookupgrade.FertilizerSignUpViews.FertilizerSignUpMembers;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -30,13 +28,13 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FertilizerHomeRecyclerViewAdapter extends PagedListAdapter<FertilizerHomeRecyclerModel, FertilizerHomeRecyclerViewAdapter.MyViewHolder> {
+public class FertilizerMembersRecyclerViewAdapter extends PagedListAdapter<FertilizerMembersRecyclerModel, FertilizerMembersRecyclerViewAdapter.MyViewHolder> {
 
     private Context mCtx;
     SharedPrefs sharedPrefs;
     AppDatabase appDatabase;
 
-    public FertilizerHomeRecyclerViewAdapter(Context context){
+    public FertilizerMembersRecyclerViewAdapter(Context context){
         super(USER_DIFF);
         this.mCtx = context;
         sharedPrefs = new SharedPrefs(mCtx);
@@ -53,9 +51,9 @@ public class FertilizerHomeRecyclerViewAdapter extends PagedListAdapter<Fertiliz
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Log.i("binder", "onBindViewHolder:  i bind ");
-        FertilizerHomeRecyclerModel fertilizerHomeRecyclerModel = getItem(position);
-        if (fertilizerHomeRecyclerModel != null) {
-            holder.nowBind(fertilizerHomeRecyclerModel);
+        FertilizerMembersRecyclerModel fertilizerMembersRecyclerModel = getItem(position);
+        if (fertilizerMembersRecyclerModel != null) {
+            holder.nowBind(fertilizerMembersRecyclerModel);
         }
     }
 
@@ -81,12 +79,12 @@ public class FertilizerHomeRecyclerViewAdapter extends PagedListAdapter<Fertiliz
             ButterKnife.bind(this, itemView);
         }
 
-        public void nowBind(FertilizerHomeRecyclerModel fertilizerHomeRecyclerModel){
-            setTextController(tv_member_name, fertilizerHomeRecyclerModel.getMember_name());
-            setTextController(tv_village, fertilizerHomeRecyclerModel.getVillage());
-            setTextController(tv_ik_number, fertilizerHomeRecyclerModel.getIk_number());
-            setLeader_image(leader_image, fertilizerHomeRecyclerModel.getUnique_member_id(),mCtx);
-            card_container.setOnClickListener((view)->submit(fertilizerHomeRecyclerModel));
+        public void nowBind(FertilizerMembersRecyclerModel fertilizerMembersRecyclerModel){
+            setTextController(tv_member_name, fertilizerMembersRecyclerModel.getMember_name());
+            setTextController(tv_village, fertilizerMembersRecyclerModel.getVillage());
+            setTextController(tv_ik_number, fertilizerMembersRecyclerModel.getIk_number());
+            setLeader_image(leader_image, fertilizerMembersRecyclerModel.getUnique_member_id(),mCtx);
+            card_container.setOnClickListener((view)->submit(fertilizerMembersRecyclerModel));
 
         }
 
@@ -113,26 +111,24 @@ public class FertilizerHomeRecyclerViewAdapter extends PagedListAdapter<Fertiliz
         }
     }
 
-    void submit(FertilizerHomeRecyclerModel fertilizerHomeRecyclerModel){
-        //move to fertilizer trust group member class
-        sharedPrefs.setKeyFertilizerSignUpIkNumber(fertilizerHomeRecyclerModel.getIk_number());
-        mCtx.startActivity(new Intent(mCtx, FertilizerSignUpMembers.class));
+    void submit(FertilizerMembersRecyclerModel fertilizerMembersRecyclerModel){
+        //move to select collection center after asking if member is available
     }
 
-    private static DiffUtil.ItemCallback<FertilizerHomeRecyclerModel> USER_DIFF =
-            new DiffUtil.ItemCallback<FertilizerHomeRecyclerModel>() {
+    private static DiffUtil.ItemCallback<FertilizerMembersRecyclerModel> USER_DIFF =
+            new DiffUtil.ItemCallback<FertilizerMembersRecyclerModel>() {
                 // MSB details may have changed if reloaded from the database,
                 // but ID is fixed.
                 @Override
-                public boolean areItemsTheSame(FertilizerHomeRecyclerModel oldFertilizerHomeRecyclerModel,
-                                               FertilizerHomeRecyclerModel newFertilizerHomeRecyclerModel) {
-                    return oldFertilizerHomeRecyclerModel.getUnique_member_id().equals(newFertilizerHomeRecyclerModel.getUnique_member_id());
+                public boolean areItemsTheSame(FertilizerMembersRecyclerModel oldFertilizerMembersRecyclerModel,
+                                               FertilizerMembersRecyclerModel newFertilizerMembersRecyclerModel) {
+                    return oldFertilizerMembersRecyclerModel.getUnique_member_id().equals(newFertilizerMembersRecyclerModel.getUnique_member_id());
                 }
 
                 @Override
-                public boolean areContentsTheSame(FertilizerHomeRecyclerModel oldFertilizerHomeRecyclerModel,
-                                                  FertilizerHomeRecyclerModel newFertilizerHomeRecyclerModel) {
-                    return oldFertilizerHomeRecyclerModel.getUnique_member_id().equals(newFertilizerHomeRecyclerModel.getUnique_member_id());
+                public boolean areContentsTheSame(FertilizerMembersRecyclerModel oldFertilizerMembersRecyclerModel,
+                                                  FertilizerMembersRecyclerModel newFertilizerMembersRecyclerModel) {
+                    return oldFertilizerMembersRecyclerModel.getUnique_member_id().equals(newFertilizerMembersRecyclerModel.getUnique_member_id());
                 }
             };
 
