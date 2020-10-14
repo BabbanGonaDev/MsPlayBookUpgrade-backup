@@ -279,7 +279,7 @@
     <string name="thresher_question">By whom the product is to be threshed?</string>
     <string name="confirm_thresher_question">who threshed this field ?</string>
     <string name="thresher_question2">Are you sure the member would thresh?</string>
-    <string name="thresher_self">Self</string>
+    <string name="thresher_self">Member</string>
     <string name="thresher_bg">BG</string>
     <string name="threshing_success">Threshing has been scheduled successfully</string>
     <string name="re_threshing_success">Threshing has been rescheduled successfully</string>

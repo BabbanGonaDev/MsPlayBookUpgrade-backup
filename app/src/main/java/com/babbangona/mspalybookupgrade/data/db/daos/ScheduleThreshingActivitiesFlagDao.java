@@ -99,7 +99,7 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
             "JOIN members AS c on b.unique_member_id = c.unique_member_id " +
             "WHERE  (a.staff_id = :staff_id or a.staff_id != :staff_id) AND b.deactivate = '0'" +
             "AND a.unique_field_id NOT IN (SELECT unique_field_id FROM confirm_threshing_activities_flag)" +
-            "ORDER BY a.schedule_date DESC")
+            "ORDER BY a.schedule_date ASC")
     public abstract List<ViewScheduleRecyclerModel> viewAllButConfirmedFields(String staff_id);
 
     @Query("SELECT  c.first_name||' '||c.last_name AS member_name, d.phone_number AS phone_number, c.village_name AS location,  a.unique_field_id AS field_id,  a.confirm_date AS threshing_date, b.field_size AS field_size FROM confirm_threshing_activities_flag AS a\n" +
