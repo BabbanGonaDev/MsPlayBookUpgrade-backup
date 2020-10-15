@@ -32,7 +32,13 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
-        <activity android:name=".donotpay.views.DNPHomeActivity"></activity>
+        <activity android:name=".donotpay.views.DNPMarkTGActivity"></activity>
+        <activity
+            android:name=".donotpay.views.DNPTrustGroupActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".donotpay.views.DNPHomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ThreshingViews.ScheduleThreshingSummary"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -167,7 +173,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ThreshingViews.ScheduledThreshingView"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Homepage"
             android:exported="true"

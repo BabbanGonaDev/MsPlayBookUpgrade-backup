@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.data.db.daos;
 
+import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -8,10 +9,9 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberListRecyclerModel;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.ThreshingFieldListRecycler.ViewScheduleRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
+import com.babbangona.mspalybookupgrade.donotpay.data.models.TGList;
 
 import java.util.List;
 
@@ -44,10 +44,15 @@ public abstract class MembersDao {
             "b.village_name || b.ik_number || 'R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:search) ")
     public abstract DataSource.Factory<Integer, MemberListRecyclerModel> getMemberListBySearch(String mss, String search);
 
-
+    /**
+     * Get Trust Group list for Do Not Pay module
+     */
+    @Query("SELECT unique_member_id, ik_number, first_name, last_name, village_name FROM members WHERE role = 'Leader' GROUP by ik_number")
+    public abstract LiveData<List<TGList>> getTrustGroupsList();
 
     /**
      * Insert the object in database
+     *
      * @param members, object to be inserted
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -69,7 +74,5 @@ public abstract class MembersDao {
      */
     @Delete
     public abstract void delete(Members members);
-
-
 
 }

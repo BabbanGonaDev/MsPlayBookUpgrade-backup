@@ -26,6 +26,7 @@ import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.databinding.ActivityTransporterHomeBinding;
+import com.babbangona.mspalybookupgrade.donotpay.views.DNPHomeActivity;
 import com.babbangona.mspalybookupgrade.transporter.data.TSessionManager;
 import com.babbangona.mspalybookupgrade.transporter.data.room.TransporterDatabase;
 import com.babbangona.mspalybookupgrade.transporter.data.room.tables.CardsTable;
@@ -111,6 +112,9 @@ public class TransporterHomeActivity extends AppCompatActivity {
         binding.btnViewRegTransporters.setOnClickListener(v -> {
             startActivity(new Intent(TransporterHomeActivity.this, ViewRegisteredTransporters.class));
         });
+
+        //TODO: Rehoboth - Remember to remove this
+        binding.btnDoNotPay.setOnClickListener(v -> startActivity(new Intent(TransporterHomeActivity.this, DNPHomeActivity.class)));
     }
 
     @Override
