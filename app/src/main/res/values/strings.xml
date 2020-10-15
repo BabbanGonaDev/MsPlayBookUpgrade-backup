@@ -333,4 +333,12 @@
     <string name="list_of_tg_title">List of Trust Group</string>
     <string name="tg_leader">TG Leader:</string>
     <string name="location_constant">Location:</string>
+    <string name="name_constant">Name:</string>
+    <string name="member_presence_question">Is member present?</string>
+    <string name="fertilizer_cc">Fert. Collection Point</string>
+    <string name="fertilizer_cc_static">Fert. Collection Point:</string>
+    <string name="fertilizer_cc_confirm">Confirm Fert. Collection Point</string>
+    <string name="fertilizer_center_finish">Save Fertilizer Collection Point</string>
+    <string name="fertilizer_collection_point_success">You have successfully registered for fertilizer program</string>
+    <string name="error_fertilizer_collection_point_location">Please select fertilizer collection center</string>
 </resources>

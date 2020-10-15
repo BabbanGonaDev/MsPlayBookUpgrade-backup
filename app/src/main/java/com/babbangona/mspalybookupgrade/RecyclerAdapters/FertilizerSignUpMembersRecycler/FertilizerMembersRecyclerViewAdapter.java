@@ -2,6 +2,7 @@ package com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpMember
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -18,10 +19,15 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.babbangona.mspalybookupgrade.FertilizerSignUpViews.FertilizerCollectionCenter;
+import com.babbangona.mspalybookupgrade.FertilizerSignUpViews.ReVerifyActivityFertilizerSignUp;
 import com.babbangona.mspalybookupgrade.R;
+import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingDateSelectionActivity;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.utils.ReVerifyActivity;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 
@@ -80,9 +86,9 @@ public class FertilizerMembersRecyclerViewAdapter extends PagedListAdapter<Ferti
         }
 
         public void nowBind(FertilizerMembersRecyclerModel fertilizerMembersRecyclerModel){
-            setTextController(tv_member_name, fertilizerMembersRecyclerModel.getMember_name());
-            setTextController(tv_village, fertilizerMembersRecyclerModel.getVillage());
-            setTextController(tv_ik_number, fertilizerMembersRecyclerModel.getIk_number());
+            setTextController(tv_member_name, mCtx.getResources().getString(R.string.name_constant)+" "+fertilizerMembersRecyclerModel.getMember_name());
+            setTextController(tv_village, mCtx.getResources().getString(R.string.location_constant)+" "+fertilizerMembersRecyclerModel.getVillage());
+            setTextController(tv_ik_number, mCtx.getResources().getString(R.string.ik_number)+" "+fertilizerMembersRecyclerModel.getIk_number());
             setLeader_image(leader_image, fertilizerMembersRecyclerModel.getUnique_member_id(),mCtx);
             card_container.setOnClickListener((view)->submit(fertilizerMembersRecyclerModel));
 
@@ -113,6 +119,59 @@ public class FertilizerMembersRecyclerViewAdapter extends PagedListAdapter<Ferti
 
     void submit(FertilizerMembersRecyclerModel fertilizerMembersRecyclerModel){
         //move to select collection center after asking if member is available
+
+    }
+
+    private void showDialogForSignUp(Context context,
+                                       FertilizerMembersRecyclerModel fertilizerMembersRecyclerModel) {
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showDialogForSignUpBody(builder, context, fertilizerMembersRecyclerModel);
+    }
+
+    private void showDialogForSignUpBody(MaterialAlertDialogBuilder builder, Context context, FertilizerMembersRecyclerModel fertilizerMembersRecyclerModel) {
+
+        builder.setMessage(context.getResources().getString(R.string.member_presence_question))
+                .setPositiveButton(context.getResources().getString(R.string.yes), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+                    if (getFertilizerLuxandFlag().equalsIgnoreCase("0")){
+                        Intent intent = new Intent (context, ReVerifyActivityFertilizerSignUp.class);
+                        sharedPrefs.setKeyFertilizerSignUpMemberId(fertilizerMembersRecyclerModel.getUnique_member_id());
+                        sharedPrefs.setKeyThreshingUniqueMemberId(fertilizerMembersRecyclerModel.getUnique_member_id());
+                        context.startActivity(intent);
+                    }else{
+                        Intent intent = new Intent (context, FertilizerCollectionCenter.class);
+                        sharedPrefs.setKeyFertilizerSignUpMemberId(fertilizerMembersRecyclerModel.getUnique_member_id());
+                        context.startActivity(intent);
+                    }
+                })
+                .setNegativeButton(context.getResources().getString(R.string.no), (dialog, which) -> {
+                    dialog.dismiss();
+                    Intent intent = new Intent (context, FertilizerCollectionCenter.class);
+                    sharedPrefs.setKeyFertilizerSignUpMemberId(fertilizerMembersRecyclerModel.getUnique_member_id());
+                    context.startActivity(intent);
+
+
+                })
+                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    String getFertilizerLuxandFlag(){
+        String fertilizer_luxand_flag;
+        try {
+            fertilizer_luxand_flag = appDatabase.appVariablesDao().getFertilizerLuxandFlag("1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            fertilizer_luxand_flag = "0";
+        }
+        if (fertilizer_luxand_flag == null || fertilizer_luxand_flag.equalsIgnoreCase("") ){
+            fertilizer_luxand_flag = "0";
+        }
+        return fertilizer_luxand_flag;
     }
 
     private static DiffUtil.ItemCallback<FertilizerMembersRecyclerModel> USER_DIFF =

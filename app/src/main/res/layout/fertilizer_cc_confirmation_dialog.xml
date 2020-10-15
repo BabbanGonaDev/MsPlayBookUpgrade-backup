@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fertilizer_cc_confirmation_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_layout"
+    android:orientation="vertical"
+    android:padding="8dp"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--<TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:drawablePadding="5dp"
+                android:text="@string/bottom_sheet_state"
+                android:textSize="18sp"
+                android:id="@+id/state"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:drawablePadding="5dp"
+                android:text="@string/bottom_sheet_lga"
+                android:textSize="18sp"
+                android:id="@+id/lga"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:drawablePadding="5dp"
+                android:text="@string/bottom_sheet_ward"
+                android:textSize="18sp"
+                android:id="@+id/ward"
+                android:textColor="@color/text_color_black"/>-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:drawablePadding="5dp"
+                android:text="@string/fertilizer_cc_static"
+                android:textSize="18sp"
+                android:id="@+id/village"
+                android:textColor="@color/text_color_black"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--<TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:drawablePadding="5dp"
+                android:text="@string/state"
+                android:textSize="18sp"
+                android:id="@+id/bottom_sheet_state"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:drawablePadding="5dp"
+                android:text="@string/lga"
+                android:textSize="18sp"
+                android:id="@+id/bottom_sheet_lga"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/text_color_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:drawablePadding="5dp"
+                android:id="@+id/bottom_sheet_ward"
+                android:text="@string/ward"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="18sp"
+                android:textColor="@color/text_color_black"/>-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:drawablePadding="5dp"
+                android:text="@string/fertilizer_cc"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:textSize="18sp"
+                android:id="@+id/bottom_sheet_village"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/text_color_black"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        style="?android:attr/buttonBarStyle">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            style="?attr/materialButtonOutlinedStyle"
+            android:text="@string/cancel"
+            android:textColor="@color/displayBar"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            app:cornerRadius="@dimen/dimen_10dp"
+            android:textSize="16sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:baselineAligned="false"
+            android:text="@string/confirm"
+            android:textColor="@color/text_color_white"
+            android:layout_marginStart="@dimen/dimen_5dp"
+            app:cornerRadius="@dimen/dimen_10dp"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

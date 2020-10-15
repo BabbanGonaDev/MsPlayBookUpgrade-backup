@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".FertilizerSignUpViews.FertilizerCollectionCenter"
+    tools:showIn="@layout/activity_fertilizer_collection_center">
+
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/off_white"
+        android:theme="@style/Theme.Threshing">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.Threshing.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/displayBar"
+            app:navigationIcon="@drawable/ic_baseline_chevron_left_24"
+            app:title="@string/app_name" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/harvest_cc_center_title"
+                android:textColor="@color/text_color_black"
+                android:textSize="@dimen/dimen_26sp"
+                android:layout_margin="@dimen/dimen_10dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ExposedDropdownMenu"
+                android:id="@+id/edlVillage"
+                android:paddingStart="@dimen/dimen_10dp"
+                android:paddingEnd="@dimen/dimen_10dp"
+                android:hint="@string/fertilizer_cc">
+
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/actVillage"
+                    android:editable="false" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ExposedDropdownMenu"
+                android:id="@+id/edlVillageCopy"
+                android:paddingStart="@dimen/dimen_10dp"
+                android:paddingEnd="@dimen/dimen_10dp"
+                android:hint="@string/fertilizer_cc_confirm">
+
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/actVillageCopy"
+                    android:editable="false" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmit"
+                android:layout_marginTop="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:cornerRadius="@dimen/dimen_20dp"
+                android:textSize="@dimen/dimen_20sp"
+                android:textColor="@android:color/white"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:paddingEnd="@dimen/dimen_20dp"
+                android:paddingStart="@dimen/dimen_20dp"
+                android:textAllCaps="false"
+                android:text="@string/submit" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

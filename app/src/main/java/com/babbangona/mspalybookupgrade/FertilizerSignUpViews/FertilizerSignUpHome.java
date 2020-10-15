@@ -2,6 +2,8 @@ package com.babbangona.mspalybookupgrade.FertilizerSignUpViews;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,12 +23,10 @@ import android.widget.TextView;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpHomeRecycler.FertilizerHomePageListModelClass;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpHomeRecycler.FertilizerHomeRecyclerViewAdapter;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberListRecyclerViewAdapter;
-import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberPageListModelClass;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
-import com.babbangona.mspalybookupgrade.ThreshingViews.MemberList;
 import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingActivity;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
+import com.babbangona.mspalybookupgrade.data.db.daos.MembersDao;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 
 import java.util.Objects;
@@ -88,7 +88,10 @@ public class FertilizerSignUpHome extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(FertilizerSignUpHome.this));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
+        fertilizerHomePageListModelClass = new ViewModelProvider(this, new MyViewModelFactory(appDatabase.membersDao(), this)).get(FertilizerHomePageListModelClass.class);
+        fertilizerHomePageListModelClass.filterTextAll.setValue("");
 
+        setAdapter();
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,FertilizerSignUpHome.this);
     }
 
@@ -104,6 +107,21 @@ public class FertilizerSignUpHome extends AppCompatActivity {
     @OnClick(R.id.back_to_toolbar)
     public void move_away_from_search(View view){
         removeSearchTray();
+    }
+
+    public static class MyViewModelFactory implements ViewModelProvider.Factory {
+        private MembersDao application;
+        private Context context;
+
+        MyViewModelFactory(MembersDao application, Context context) {
+            this.application = application;
+            this.context = context;
+        }
+
+        @Override
+        public <T extends ViewModel> T create(Class<T> modelClass) {
+            return (T) new FertilizerHomePageListModelClass(application, context);
+        }
     }
 
     void removeSearchTray(){

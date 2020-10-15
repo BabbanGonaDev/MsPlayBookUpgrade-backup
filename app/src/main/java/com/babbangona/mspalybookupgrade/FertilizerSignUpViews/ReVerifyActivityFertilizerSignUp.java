@@ -134,11 +134,10 @@ public class ReVerifyActivityFertilizerSignUp extends AppCompatActivity {
                     if (templateModel.getResult().equalsIgnoreCase("1")) {
                         //move to next activity
                         //save template to shared preference
-                        //TODO: HTA 136
                         setCapturedImage(scanned_image_iv, templateModel.getImage_person_large());
-                        sharedPrefs.setKeyThreshingRecaptureFlag("0");
-                        sharedPrefs.setKeyThreshingTemplate(templateModel.getTemplate());
-                        sharedPrefs.setKeyThreshingPicture(templateModel.getImage_person_small());
+                        sharedPrefs.setKeyFertilizerRecaptureFlag("0");
+                        sharedPrefs.setKeyFertilizerTemplate(templateModel.getTemplate());
+                        sharedPrefs.setKeyFertilizerPicture(templateModel.getImage_person_small());
                         state = 4;
                     } else {
                         //either remain here or move away from here.
@@ -156,9 +155,9 @@ public class ReVerifyActivityFertilizerSignUp extends AppCompatActivity {
                 if (data.getIntExtra("RESULT", 0) == 1) {
                     //member passes authentication
                     state = 2;
-                    sharedPrefs.setKeyThreshingRecaptureFlag("0");
-                    sharedPrefs.setKeyThreshingTemplate("XXX");
-                    sharedPrefs.setKeyThreshingPicture("XXX");
+                    sharedPrefs.setKeyFertilizerRecaptureFlag("0");
+                    sharedPrefs.setKeyFertilizerTemplate("XXX");
+                    sharedPrefs.setKeyFertilizerPicture("XXX");
                 } else {
                     //member_fails_authentication
                     count += 1;
@@ -269,7 +268,6 @@ public class ReVerifyActivityFertilizerSignUp extends AppCompatActivity {
 
         }else{
             this.runOnUiThread(()->{
-                //TODO: HTA-XXX
                 scanned_image_iv.setImageResource(R.drawable.ic_face_scan);
             });
         }
@@ -280,9 +278,9 @@ public class ReVerifyActivityFertilizerSignUp extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        sharedPrefs.setKeyThreshingRecaptureFlag("0");
-        sharedPrefs.setKeyThreshingTemplate("XXX");
-        sharedPrefs.setKeyThreshingPicture("XXX");
+        sharedPrefs.setKeyFertilizerRecaptureFlag("0");
+        sharedPrefs.setKeyFertilizerTemplate("XXX");
+        sharedPrefs.setKeyFertilizerPicture("XXX");
         super.onBackPressed();
     }
 }

@@ -35,9 +35,11 @@ public interface AppVariablesDao {
     @Query("SELECT maximum_schedule_date FROM app_variables WHERE variable_id = :variable_id")
     String getMaximumScheduleDate(String variable_id);
 
-
     @Query("SELECT luxand_flag FROM app_variables WHERE variable_id = :variable_id")
     String getLuxandFlag(String variable_id);
+
+    @Query("SELECT fertilizer_luxand_flag FROM app_variables WHERE variable_id = :variable_id")
+    String getFertilizerLuxandFlag(String variable_id);
 
     /**
      * Insert the object in database

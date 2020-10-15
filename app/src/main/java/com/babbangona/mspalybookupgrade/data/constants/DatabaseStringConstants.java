@@ -207,6 +207,7 @@ public class DatabaseStringConstants {
     public static final String TIME_PER_HA                                  = "time_per_ha";
     public static final String MAXIMUM_SCHEDULE_DATE                        = "maximum_schedule_date";
     public static final String LUXAND_FLAG                                  = "luxand_flag";
+    public static final String FERTILIZER_LUXAND_FLAG                       = "fertilizer_luxand_flag";
 
     /**
      * rf_list column names
@@ -236,6 +237,7 @@ public class DatabaseStringConstants {
     public static final String NORMAL_ACTIVITY_PICTURE_LOCATION         = "MsPlaybookPictures/Normal_Activities";
     public static final String PWS_ACTIVITY_PICTURE_LOCATION            = "MsPlaybookPictures/PWS_Activities";
     public static final String MEMBER_PICTURE_LOCATION                  = "MsPlaybookPictures/Recaptured_Member_Pictures";
+    public static final String MEMBER_PICTURE_LOCATION_FERTILIZER       = "MsPlaybookPictures/Recaptured_Member_Pictures_Fertilizers";
     public static final String MS_PLAYBOOK_PICTURE_LOCATION             = "MsPlaybookPictures";
     public static final String MS_PLAYBOOK_INPUT_PICTURE_LOCATION       = "MsPlaybookInputPictures";
     public static final String FERT_1_ACTIVITY                          = "1";
@@ -244,6 +246,7 @@ public class DatabaseStringConstants {
     public static final String SET_PORTFOLIO_ACTIVITY                   = "4";
     public static final String POOR_WEATHER_SUPPORT_ACTIVITY            = "5";
     public static final String BGT_THRESHING_ACTIVITY                   = "7";
+    public static final String FERTILIZER_SIGN_UP_ACTIVITY              = "8";
     public static final String SCHEDULE_THRESHING                       = "1";
     public static final String UPDATE_THRESHING                         = "2";
     public static final String CONFIRM_THRESHING                        = "3";

@@ -128,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
                 activityLists.add(new ActivityList("7","en",
                         "Threshing Activity", "com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingActivity",
                         "1","MIK","0"));
+                activityLists.add(new ActivityList("8","en",
+                        "Fertilizer Sign Up Activity", "com.babbangona.mspalybookupgrade.FertilizerSignUpViews.FertilizerSignUpHome",
+                        "1","MIK","0"));
                 appDatabase.activityListDao().insert(activityLists);
 
                 List<PWSCategoryList> pwsCategoryLists = new ArrayList<>();

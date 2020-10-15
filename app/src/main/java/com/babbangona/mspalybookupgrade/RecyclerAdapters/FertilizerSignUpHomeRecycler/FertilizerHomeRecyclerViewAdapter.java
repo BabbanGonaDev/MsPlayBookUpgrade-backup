@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 
 public class FertilizerHomeRecyclerViewAdapter extends PagedListAdapter<FertilizerHomeRecyclerModel, FertilizerHomeRecyclerViewAdapter.MyViewHolder> {
 
-    private Context mCtx;
+    private final Context mCtx;
     SharedPrefs sharedPrefs;
     AppDatabase appDatabase;
 
@@ -82,10 +82,10 @@ public class FertilizerHomeRecyclerViewAdapter extends PagedListAdapter<Fertiliz
         }
 
         public void nowBind(FertilizerHomeRecyclerModel fertilizerHomeRecyclerModel){
-            setTextController(tv_member_name, fertilizerHomeRecyclerModel.getMember_name());
-            setTextController(tv_village, fertilizerHomeRecyclerModel.getVillage());
-            setTextController(tv_ik_number, fertilizerHomeRecyclerModel.getIk_number());
-            setLeader_image(leader_image, fertilizerHomeRecyclerModel.getUnique_member_id(),mCtx);
+            setTextController(tv_member_name, mCtx.getResources().getString(R.string.tg_leader)+" "+fertilizerHomeRecyclerModel.getMember_name());
+            setTextController(tv_village, mCtx.getResources().getString(R.string.location_constant)+" "+fertilizerHomeRecyclerModel.getVillage());
+            setTextController(tv_ik_number, mCtx.getResources().getString(R.string.ik_number)+" "+fertilizerHomeRecyclerModel.getIk_number());
+            setLeader_image(leader_image, fertilizerHomeRecyclerModel.getUnique_member_id());
             card_container.setOnClickListener((view)->submit(fertilizerHomeRecyclerModel));
 
         }
@@ -94,7 +94,7 @@ public class FertilizerHomeRecyclerViewAdapter extends PagedListAdapter<Fertiliz
             textView.setText(text);
         }
 
-        void setLeader_image(ImageView iv_picture, String unique_id, Context context){
+        void setLeader_image(ImageView iv_picture, String unique_id){
 
             File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_INPUT_PICTURE_LOCATION);
             String image_name = File.separator + unique_id + "_thumb.jpg";
@@ -119,7 +119,7 @@ public class FertilizerHomeRecyclerViewAdapter extends PagedListAdapter<Fertiliz
         mCtx.startActivity(new Intent(mCtx, FertilizerSignUpMembers.class));
     }
 
-    private static DiffUtil.ItemCallback<FertilizerHomeRecyclerModel> USER_DIFF =
+    private static final DiffUtil.ItemCallback<FertilizerHomeRecyclerModel> USER_DIFF =
             new DiffUtil.ItemCallback<FertilizerHomeRecyclerModel>() {
                 // MSB details may have changed if reloaded from the database,
                 // but ID is fixed.

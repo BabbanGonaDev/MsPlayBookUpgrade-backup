@@ -96,12 +96,36 @@ public class SharedPrefs {
     public static final String KEY_RESCHEDULE_STATE_FLAG            = "reschedule_state_flag";
 
     public static final String KEY_FERTILIZER_SIGN_UP_IK_NUMBER     = "fertilizer_sign_up_ik_number";
+    public static final String KEY_FERTILIZER_SIGN_UP_MEMBER_ID     = "fertilizer_sign_up_unique_member_id";
+    public static final String KEY_FERTILIZER_RECAPTURE_FLAG        = "fertilizer_recapture_flag";
+    public static final String KEY_FERTILIZER_TEMPLATE              = "fertilizer_template";
+    public static final String KEY_FERTILIZER_PICTURE               = "fertilizer_picture";
 
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyFertilizerPicture(String fertilizer_picture){
+        editor.putString(KEY_FERTILIZER_PICTURE, fertilizer_picture)
+                .commit();
+    }
+
+    public void setKeyFertilizerTemplate(String fertilizer_template){
+        editor.putString(KEY_FERTILIZER_TEMPLATE, fertilizer_template)
+                .commit();
+    }
+
+    public void setKeyFertilizerRecaptureFlag(String fertilizer_recapture_flag){
+        editor.putString(KEY_FERTILIZER_RECAPTURE_FLAG, fertilizer_recapture_flag)
+                .commit();
+    }
+
+    public void setKeyFertilizerSignUpMemberId(String fertilizer_sign_up_unique_member_id){
+        editor.putString(KEY_FERTILIZER_SIGN_UP_MEMBER_ID, fertilizer_sign_up_unique_member_id)
+                .commit();
     }
 
     public void setKeyFertilizerSignUpIkNumber(String fertilizer_sign_up_ik_number){
@@ -657,5 +681,21 @@ public class SharedPrefs {
 
     public String getKeyFertilizerSignUpIkNumber() {
         return pref.getString(KEY_FERTILIZER_SIGN_UP_IK_NUMBER, "IKSomething");
+    }
+
+    public String getKeyFertilizerSignUpMemberId() {
+        return pref.getString(KEY_FERTILIZER_SIGN_UP_MEMBER_ID, "");
+    }
+
+    public String getKeyFertilizerRecaptureFlag() {
+        return pref.getString(KEY_FERTILIZER_RECAPTURE_FLAG, "0");
+    }
+
+    public String getKeyFertilizerTemplate() {
+        return pref.getString(KEY_FERTILIZER_TEMPLATE, "XXX");
+    }
+
+    public String getKeyFertilizerPicture() {
+        return pref.getString(KEY_FERTILIZER_PICTURE, "XXX");
     }
 }

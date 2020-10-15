@@ -33,6 +33,9 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
         <activity
+            android:name=".FertilizerSignUpViews.FertilizerCollectionCenter"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".FertilizerSignUpViews.ReVerifyActivityFertilizerSignUp"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

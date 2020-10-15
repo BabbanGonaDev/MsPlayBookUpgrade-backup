@@ -442,6 +442,18 @@ public abstract class AppDatabase extends RoomDatabase {
 
         }
     };
+
+
+    private static final Migration MIGRATION_14_15 = new Migration(14, 15) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'fertilizer_luxand_flag' TEXT DEFAULT '0'");
+
+            //member_presence_flag
+
+        }
+    };
     
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
