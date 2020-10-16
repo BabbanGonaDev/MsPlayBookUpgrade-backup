@@ -20,6 +20,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
 import com.babbangona.mspalybookupgrade.data.db.entities.BGTCoaches;
 import com.babbangona.mspalybookupgrade.data.db.entities.Category;
 import com.babbangona.mspalybookupgrade.data.db.entities.ConfirmThreshingActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerMembers;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
@@ -45,6 +46,8 @@ import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersDownload;
+import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
@@ -133,6 +136,7 @@ public class ActivityListDownloadService extends IntentService {
         getScheduledThreshingActivitiesFlagDownload();
         getConfirmThreshingActivitiesFlagDownload();
         getBGTCoachesDownload();
+        getFertilizerMembersDownload();
         getAppVariablesDownload();
 
         File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_PICTURE_LOCATION);
@@ -160,6 +164,9 @@ public class ActivityListDownloadService extends IntentService {
         }
         if (appDatabase.confirmThreshingActivitiesFlagDao().getUnSyncedConfirmThreshingActivitiesCount() > 0){
             syncUpConfirmThreshingActivities();
+        }
+        if (appDatabase.fertilizerMembersDao().getUnSyncedFertilizerMembersCount() > 0){
+            syncUpFertilizerMembersSignUp();
         }
 
         getStaffList();
@@ -3647,7 +3654,7 @@ public class ActivityListDownloadService extends IntentService {
                             }
                         });
                         if (getStaffCountLastSync() > 0){
-                            appDatabase.lastSyncTableDao().updateLastSyncUpScheduleActivitiesFlag(sharedPrefs.getStaffID(),confirmThreshingActivitiesUploadList.get(0).getLast_synced());
+                            appDatabase.lastSyncTableDao().updateLastSyncUpConfirmActivitiesFlag(sharedPrefs.getStaffID(),confirmThreshingActivitiesUploadList.get(0).getLast_synced());
                         }else{
                             LastSyncTable lastSyncTable = new LastSyncTable();
                             lastSyncTable.setLast_sync_up_confirm_activities_flag(confirmThreshingActivitiesUploadList.get(0).getLast_synced());
@@ -3704,6 +3711,231 @@ public class ActivityListDownloadService extends IntentService {
                 );
             }
         });
+    }
+
+    private void syncUpFertilizerMembersSignUp() {
+        List<FertilizerMembers> fertilizerMembersList = appDatabase.fertilizerMembersDao().getUnSyncedFertilizerMembers();
+        String composed_json = new Gson().toJson(fertilizerMembersList);
+//        Log.d("CHECK", "ConfirmedThreshingActivities: " + composed_json);
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<List<FertilizerMembersUpload>> call = retrofitInterface.uploadFertilizerMembersRecord(composed_json, sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<List<FertilizerMembersUpload>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<FertilizerMembersUpload>> call, @NonNull Response<List<FertilizerMembersUpload>> response) {
+                if (response.isSuccessful()) {
+
+                    List<FertilizerMembersUpload> fertilizerMembersUploadList = response.body();
+                    if (fertilizerMembersUploadList == null){
+                        Log.d("result", "null");
+                        saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
+                                "Fertilizer Members Upload",
+                                "0",
+                                "Upload null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else if(fertilizerMembersUploadList.size() == 0){
+                        Log.d("result", "0");
+                        saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
+                                "Fertilizer Members Upload",
+                                "0",
+                                "Upload empty",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else {
+                        AsyncTask.execute(()->{
+                            for (int i = 0; i < fertilizerMembersUploadList.size(); i++) {
+                                FertilizerMembersUpload fertilizerMembersUpload = fertilizerMembersUploadList.get(i);
+                                appDatabase.fertilizerMembersDao().updateFertilizerMembersSyncFlag(fertilizerMembersUpload.getUnique_member_id());
+                                insetToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
+                                        "Fertilizer Members Upload",
+                                        "1",
+                                        returnRemark(fertilizerMembersUploadList.size()),
+                                        fertilizerMembersUploadList.get(0).getLast_synced()
+
+                                );
+                            }
+                        });
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncUpFertilizerMembers(sharedPrefs.getStaffID(),fertilizerMembersUploadList.get(0).getLast_synced());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_up_fertilizer_members(fertilizerMembersUploadList.get(0).getLast_synced());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                        }
+
+                    }
+                } else {
+                    Log.i("tobi_fertilizer_mem_up", "onResponse ERROR: " + response.body());
+                    int sc = response.code();
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            break;
+                        case 401:
+                            Log.e("Error 401", "Bad Request");
+                            break;
+                        case 403:
+                            Log.e("Error 403", "Bad Request");
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            break;
+                        case 500:
+                            Log.e("Error 500", "Bad Request");
+                            break;
+                        case 501:
+                            Log.e("Error 501", "Bad Request");
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error " + response.code());
+                            break;
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
+                            "Fertilizer Members Upload",
+                            "0",
+                            "Upload error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<FertilizerMembersUpload>> call, @NonNull Throwable t) {
+                Log.d("TobiNewFertilizerMembersUpload", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
+                        "Fertilizer Members Upload",
+                        "0",
+                        "Upload failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+    }
+
+    public void getFertilizerMembersDownload() {
+
+        String last_synced = getLastSyncFertilizerMembers();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<FertilizerMembersDownload> call = retrofitInterface.downloadFertilizerMembers(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+//        Log.d("CHECK", "download : " + sharedPrefs.getStaffID() + " == " + portfolioToGson(sharedPrefs.getKeyPortfolioList()) + " == " + last_synced);
+        call.enqueue(new Callback<FertilizerMembersDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<FertilizerMembersDownload> call,
+                                   @NonNull Response<FertilizerMembersDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    FertilizerMembersDownload fertilizerMembersDownload = response.body();
+
+                    if (fertilizerMembersDownload != null) {
+                        List<FertilizerMembers> fertilizerMembersList = fertilizerMembersDownload.getDownload_list();
+                        if (fertilizerMembersList.size() > 0){
+                            saveToFertilizerMembersTable(fertilizerMembersList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncDownFertilizerMembers(sharedPrefs.getStaffID(),fertilizerMembersDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_fertilizer_members(fertilizerMembersDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_download",
+                                "Fertilizer Members Download",
+                                "1",
+                                returnRemark(fertilizerMembersList.size()),
+                                fertilizerMembersDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_download",
+                                "Fertilizer Members Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_download",
+                            "Fertilizer Members Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<FertilizerMembersDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_fertilizer_mem_down", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_download",
+                        "Fertilizer Members Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToFertilizerMembersTable(List<FertilizerMembers> fertilizerMembersList){
+        SaveFertilizerMembersTable saveFertilizerMembersTable = new SaveFertilizerMembersTable();
+        saveFertilizerMembersTable.execute(fertilizerMembersList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveFertilizerMembersTable extends AsyncTask<List<FertilizerMembers>, Void, Void> {
+
+
+        private final String TAG = SaveFertilizerMembersTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<FertilizerMembers>... params) {
+
+            List<FertilizerMembers> fertilizerMembersList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.fertilizerMembersDao().insert(fertilizerMembersList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
     }
 
     String getLastSyncTimeStaffList(){
@@ -3959,6 +4191,20 @@ public class ActivityListDownloadService extends IntentService {
         String last_sync_time;
         try {
             last_sync_time = appDatabase.lastSyncTableDao().getLastSyncBGTCoaches(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncFertilizerMembers(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownFertilizerMembers(sharedPrefs.getStaffID());
         } catch (Exception e) {
             e.printStackTrace();
             last_sync_time = "2019-01-01 00:00:00";

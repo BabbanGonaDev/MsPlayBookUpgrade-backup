@@ -98,6 +98,12 @@ public class LastSyncTable {
     @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_BGT_COACHES_TABLE)
     private String last_sync_bgt_coaches;
 
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_UP_FERTILIZER_MEMBERS)
+    private String last_sync_up_fertilizer_members;
+
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_FERTILIZER_MEMBERS)
+    private String last_sync_down_fertilizer_members;
+
     public LastSyncTable() {
     }
 
@@ -113,7 +119,7 @@ public class LastSyncTable {
                          String last_sync_down_pc_pws_activities_flag, String last_sync_pws_activities_controller,
                          String last_sync_up_scheduled_activities_flag, String last_sync_down_scheduled_activities_flag,
                          String last_sync_up_confirm_activities_flag, String last_sync_down_confirm_activities_flag,
-                         String last_sync_bgt_coaches) {
+                         String last_sync_bgt_coaches, String last_sync_up_fertilizer_members, String last_sync_down_fertilizer_members) {
         this.staff_id = staff_id;
         this.last_sync_activity_list = last_sync_activity_list;
         this.last_sync_up_normal_activities_flag = last_sync_up_normal_activities_flag;
@@ -142,6 +148,8 @@ public class LastSyncTable {
         this.last_sync_up_confirm_activities_flag = last_sync_up_confirm_activities_flag;
         this.last_sync_down_confirm_activities_flag = last_sync_down_confirm_activities_flag;
         this.last_sync_bgt_coaches = last_sync_bgt_coaches;
+        this.last_sync_up_fertilizer_members = last_sync_up_fertilizer_members;
+        this.last_sync_down_fertilizer_members = last_sync_down_fertilizer_members;
     }
 
     @NonNull
@@ -367,5 +375,21 @@ public class LastSyncTable {
 
     public void setLast_sync_bgt_coaches(String last_sync_bgt_coaches) {
         this.last_sync_bgt_coaches = last_sync_bgt_coaches;
+    }
+
+    public String getLast_sync_up_fertilizer_members() {
+        return last_sync_up_fertilizer_members;
+    }
+
+    public void setLast_sync_up_fertilizer_members(String last_sync_up_fertilizer_members) {
+        this.last_sync_up_fertilizer_members = last_sync_up_fertilizer_members;
+    }
+
+    public String getLast_sync_down_fertilizer_members() {
+        return last_sync_down_fertilizer_members;
+    }
+
+    public void setLast_sync_down_fertilizer_members(String last_sync_down_fertilizer_members) {
+        this.last_sync_down_fertilizer_members = last_sync_down_fertilizer_members;
     }
 }

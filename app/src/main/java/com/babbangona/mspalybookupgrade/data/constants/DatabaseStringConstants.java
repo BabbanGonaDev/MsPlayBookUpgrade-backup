@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 14;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 15;
 
     /**
      * Names of tables
@@ -36,6 +36,7 @@ public class DatabaseStringConstants {
     public static final String LOCATIONS_TABLE                              = "locations_table";
     public static final String THRESHING_LOCATION                           = "threshing_location";
     public static final String BGT_COACHES_TABLE                            = "bgt_coaches";
+    public static final String FERTILIZER_MEMBERS_TABLE                     = "fertilizer_members";
 
     /**
      * activity_list column names
@@ -169,6 +170,8 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_UP_CONFIRM_ACTIVITY_FLAGS_TABLE    = "last_sync_up_confirm_activities_flag";
     public static final String LAST_SYNC_DOWN_CONFIRM_ACTIVITY_FLAGS_TABLE  = "last_sync_down_confirm_activities_flag";
     public static final String LAST_SYNC_BGT_COACHES_TABLE                  = "last_sync_bgt_coaches";
+    public static final String LAST_SYNC_UP_FERTILIZER_MEMBERS              = "last_sync_up_fertilizer_members";
+    public static final String LAST_SYNC_DOWN_FERTILIZER_MEMBERS            = "last_sync_down_fertilizer_members";
 
     /**
      * category column names
@@ -361,5 +364,23 @@ public class DatabaseStringConstants {
     public static final String COL_BGT_ID                               = "bgt_id";
     public static final String COL_COACH_ID                             = "coach_id";
     public static final String COL_BGT_NAME                             = "bgt_name";
+
+    /**
+     * fertilizer_members column names
+     */
+    public static final String COL_UNIQUE_MEMBER_ID_FERT                = "unique_member_id";
+    public static final String COL_FIRST_NAME_FERT                      = "first_name";
+    public static final String COL_LAST_NAME_FERT                       = "last_name";
+    public static final String COL_IK_NUMBER_FERT                       = "ik_number";
+    public static final String COL_VILLAGE_FERT                         = "village_name";
+    public static final String COL_FACE_SCAN_FLAG                       = "face_scan_flag";
+    public static final String COL_TEMPLATE_FERT                        = "template";
+    public static final String COL_DEACTIVATE_FERT                      = "deactivate";
+    public static final String COL_MEMBER_PRESENCE                      = "member_presence";
+    public static final String COL_COLLECTION_CENTER_FERT               = "collection_center";
+    public static final String COL_STAFF_ID_FERT                        = "staff_id";
+    public static final String COL_SYNC_FLAG_FERT                       = "sync_flag";
+    public static final String COL_APP_VERSION_FERT                     = "app_version";
+    public static final String COL_IMEI_FERT                            = "imei";
 
 }

@@ -60,6 +60,9 @@ public abstract class MembersDao {
             "FROM members b WHERE b.ik_number = :ik_number ")
     public abstract DataSource.Factory<Integer, FertilizerMembersRecyclerModel> getTrustGroupMemberList(String ik_number);
 
+    @Query("SELECT first_name, last_name, ik_number, village_name FROM members WHERE unique_member_id = :unique_member_id")
+    public abstract Members.MemberDetails getMemberDetails(String unique_member_id);
+
 
 
     /**

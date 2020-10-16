@@ -1,11 +1,14 @@
 package com.babbangona.mspalybookupgrade.network;
 
+import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerMembers;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
 import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
 import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersDownload;
+import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
@@ -160,6 +163,16 @@ public interface RetrofitInterface {
     @POST("uploadConfirmThreshingActivitiesRecord")
     Call<List<ConfirmThreshingActivitiesUpload>> uploadConfirmThreshingActivitiesRecord(@Field("upload_list") String upload_list,
                                                                                         @Field("staff_id") String staff_id);
+
+    @GET("downloadFertilizerMembers")
+    Call<FertilizerMembersDownload> downloadFertilizerMembers(@Query("staff_id") String staff_id,
+                                                                         @Query("portfolio_list") String portfolio_list,
+                                                                         @Query("last_synced_time") String last_synced_time);
+
+    @FormUrlEncoded
+    @POST("uploadFertilizerProgram")
+    Call<List<FertilizerMembersUpload>> uploadFertilizerMembersRecord(@Field("upload_list") String upload_list,
+                                                                               @Field("staff_id") String staff_id);
 
     @FormUrlEncoded
     @POST("yourPHPName.php")

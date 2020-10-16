@@ -20,11 +20,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.Homepage;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpHomeRecycler.FertilizerHomePageListModelClass;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpHomeRecycler.FertilizerHomeRecyclerViewAdapter;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.VerticalSpaceItemDecoration;
-import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingActivity;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.daos.MembersDao;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
@@ -214,7 +214,7 @@ public class FertilizerSignUpHome extends AppCompatActivity {
     }
 
     public void loadPreviousActivity() {
-        startActivity(new Intent(FertilizerSignUpHome.this, ThreshingActivity.class));
+        startActivity(new Intent(FertilizerSignUpHome.this, Homepage.class));
     }
 
     @Override

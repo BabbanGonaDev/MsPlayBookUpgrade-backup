@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -119,7 +120,13 @@ public class FertilizerMembersRecyclerViewAdapter extends PagedListAdapter<Ferti
 
     void submit(FertilizerMembersRecyclerModel fertilizerMembersRecyclerModel){
         //move to select collection center after asking if member is available
-
+        int member_existence = appDatabase.fertilizerMembersDao().getFertilizerMemberCount(fertilizerMembersRecyclerModel.getUnique_member_id());
+        if (member_existence > 0){
+            //member already registered
+            showConfirmSuccess(mCtx.getResources().getString(R.string.error_member_already_registered),mCtx,"crying");
+        }else{
+            showDialogForSignUp(mCtx, fertilizerMembersRecyclerModel);
+        }
     }
 
     private void showDialogForSignUp(Context context,
@@ -134,6 +141,7 @@ public class FertilizerMembersRecyclerViewAdapter extends PagedListAdapter<Ferti
                 .setPositiveButton(context.getResources().getString(R.string.yes), (dialog, which) -> {
                     //this is to dismiss the dialog
                     dialog.dismiss();
+                    sharedPrefs.setKeyFertilizerMemberPresence("1");
                     if (getFertilizerLuxandFlag().equalsIgnoreCase("0")){
                         Intent intent = new Intent (context, ReVerifyActivityFertilizerSignUp.class);
                         sharedPrefs.setKeyFertilizerSignUpMemberId(fertilizerMembersRecyclerModel.getUnique_member_id());
@@ -148,12 +156,39 @@ public class FertilizerMembersRecyclerViewAdapter extends PagedListAdapter<Ferti
                 .setNegativeButton(context.getResources().getString(R.string.no), (dialog, which) -> {
                     dialog.dismiss();
                     Intent intent = new Intent (context, FertilizerCollectionCenter.class);
+                    sharedPrefs.setKeyFertilizerMemberPresence("0");
                     sharedPrefs.setKeyFertilizerSignUpMemberId(fertilizerMembersRecyclerModel.getUnique_member_id());
                     context.startActivity(intent);
 
 
                 })
                 .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    private void showConfirmSuccess(String message, Context context, String smiley_flag){
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        showConfirmSuccessBody(builder, message, context, smiley_flag);
+    }
+
+    private void showConfirmSuccessBody(MaterialAlertDialogBuilder builder, String message,
+                                        Context context, String smiley_flag) {
+        Drawable drawable;
+        if (smiley_flag.equalsIgnoreCase("smiley")){
+            drawable = context.getResources().getDrawable(R.drawable.ic_smiley_face);
+        }else if (smiley_flag.equalsIgnoreCase("crying")){
+            drawable = context.getResources().getDrawable(R.drawable.ic_crying);
+        }else{
+            drawable = null;
+        }
+
+        builder.setIcon(drawable)
+                .setMessage(message)
+                .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
+                    //this is to dismiss the dialog
                     dialog.dismiss();
                 })
                 .setCancelable(false)

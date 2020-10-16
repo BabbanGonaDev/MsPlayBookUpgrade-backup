@@ -1,9 +1,12 @@
 package com.babbangona.mspalybookupgrade.FertilizerSignUpViews;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,10 +18,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingDateSelectionActivity;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
+import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerMembers;
+import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.db.entities.NormalActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
@@ -137,10 +144,23 @@ public class FertilizerCollectionCenter extends AppCompatActivity {
     public  void next(View view){
         if (validateMemberInfo(actVillage, actVillageCopy) == 0){
             checkForEmptyFields();
+        } else if(!actVillage.getText().toString().trim().matches(actVillageCopy.getText().toString().trim())){
+            checkForMismatchedCollectionCenter();
         }else{
+            checkForMismatchedCollectionCenter();
             checkForEmptyFields();
             setBottomSheerTexts();
             showBottomSheet();
+        }
+    }
+
+    void checkForMismatchedCollectionCenter(){
+        if (!actVillage.getText().toString().trim().matches(actVillageCopy.getText().toString().trim())){
+            setErrorOfTextView(edlVillage, getResources().getString(R.string.error_collection_center_mismatch));
+            setErrorOfTextView(edlVillageCopy, getResources().getString(R.string.error_collection_center_mismatch));
+        }else{
+            removeErrorFromText(edlVillage);
+            removeErrorFromText(edlVillageCopy);
         }
     }
 
@@ -185,8 +205,9 @@ public class FertilizerCollectionCenter extends AppCompatActivity {
 
     @OnClick(R.id.btnConfirm)
     public  void setBtnConfirm(View view){
-        if (updateNormalActivitiesFlag(harvest_collection_center, sharedPrefs.getKeyFertilizerSignUpMemberId()
+        if (updateFertilizerMembers(harvest_collection_center, sharedPrefs.getKeyFertilizerSignUpMemberId()
         ).equalsIgnoreCase("1")){
+            showBottomSheet();
             showDialogForPassedVerification(this.getResources().getString(R.string.fertilizer_collection_point_success), FertilizerCollectionCenter.this);
         }
     }
@@ -252,29 +273,46 @@ public class FertilizerCollectionCenter extends AppCompatActivity {
                 .setPositiveButton(context.getResources().getString(R.string.ok), (dialog, which) -> {
                     //this is to dismiss the dialog
                     dialog.dismiss();
-                    onBackPressed();
+                    backToHomePage();
                 }).setCancelable(false)
                 .show();
     }
 
-    String updateNormalActivitiesFlag(String location_id, String unique_member_id){
+    String updateFertilizerMembers(String location_id, String unique_member_id){
         String flag;
-//        int field_existence = appDatabase.normalActivitiesFlagDao().countFieldInNormalActivity(unique_field_id);
+        int member_existence = appDatabase.fertilizerMembersDao().getFertilizerMemberCount(unique_member_id);
+        Members.MemberDetails memberDetails = appDatabase.membersDao().getMemberDetails(unique_member_id);
         try {
-//            if (field_existence > 0){
-//                appDatabase.normalActivitiesFlagDao().updateLocationID(location_id, unique_field_id);
-//            }else{
-//                appDatabase.normalActivitiesFlagDao().insert(new NormalActivitiesFlag(unique_field_id,
-//                        "0","0000-00-00","0","0000-00-00",
-//                        sharedPrefs.getStaffID(),"0",sharedPrefs.getKeyHarvestCcIkNumber(),
-//                        sharedPrefs.getKeyHarvestCcCropType(),location_id,"0000-00-00"));
-//            }
+            if (member_existence > 0){
+                appDatabase.fertilizerMembersDao().updateCollectionCenter(location_id, unique_member_id);
+            }else{
+                appDatabase.fertilizerMembersDao().insert(new FertilizerMembers(
+                        unique_member_id,
+                        memberDetails.getFirst_name(),
+                        memberDetails.getLast_name(),
+                        memberDetails.getIk_number(),
+                        memberDetails.getVillage_name(),
+                        sharedPrefs.getKeyFertilizerRecaptureFlag(),
+                        sharedPrefs.getKeyFertilizerTemplate(),
+                        "0",
+                        sharedPrefs.getKeyFertilizerMemberPresence(),
+                        location_id,
+                        sharedPrefs.getStaffID(),
+                        BuildConfig.VERSION_NAME,
+                        getDeviceID(),
+                        "0"));
+            }
             flag = "1";
         } catch (Exception e) {
             e.printStackTrace();
             flag = "0";
         }
         return flag;
+    }
+
+    void backToHomePage(){
+        finish();
+        startActivity(new Intent(FertilizerCollectionCenter.this, FertilizerSignUpHome.class));
     }
 
     @Override
@@ -285,5 +323,24 @@ public class FertilizerCollectionCenter extends AppCompatActivity {
             finish();
             startActivity(new Intent(FertilizerCollectionCenter.this, FertilizerSignUpMembers.class));
         }
+    }
+
+    private String getDeviceID(){
+        String device_id;
+        TelephonyManager tm = (TelephonyManager) Objects.requireNonNull(this).getSystemService(Context.TELEPHONY_SERVICE);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission. READ_PHONE_STATE)== PackageManager.PERMISSION_GRANTED){
+            try {
+                device_id = tm.getDeviceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                device_id = "";
+            }
+            if (device_id == null){
+                device_id = "";
+            }
+        } else{
+            device_id = "";
+        }
+        return device_id;
     }
 }

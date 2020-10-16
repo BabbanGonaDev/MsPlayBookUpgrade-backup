@@ -341,4 +341,5 @@
     <string name="fertilizer_center_finish">Save Fertilizer Collection Point</string>
     <string name="fertilizer_collection_point_success">You have successfully registered for fertilizer program</string>
     <string name="error_fertilizer_collection_point_location">Please select fertilizer collection center</string>
+    <string name="error_member_already_registered">You have already registered for the fertilizer program</string>
 </resources>

@@ -1,19 +1,17 @@
 {
-  "version": 1,
+  "version": 2,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
   },
   "applicationId": "com.babbangona.mspalybookupgrade",
-  "variantName": "release",
+  "variantName": "processReleaseResources",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "properties": [],
       "versionCode": 1,
-      "versionName": "2.2.7",
-      "enabled": true,
+      "versionName": "2.2.9",
       "outputFile": "app-release.apk"
     }
   ]

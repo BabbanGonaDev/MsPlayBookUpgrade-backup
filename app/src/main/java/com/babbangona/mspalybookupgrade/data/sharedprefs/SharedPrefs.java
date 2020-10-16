@@ -100,12 +100,18 @@ public class SharedPrefs {
     public static final String KEY_FERTILIZER_RECAPTURE_FLAG        = "fertilizer_recapture_flag";
     public static final String KEY_FERTILIZER_TEMPLATE              = "fertilizer_template";
     public static final String KEY_FERTILIZER_PICTURE               = "fertilizer_picture";
+    public static final String KEY_FERTILIZER_MEMBER_PRESENCE       = "member_presence";
 
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyFertilizerMemberPresence(String member_presence){
+        editor.putString(KEY_FERTILIZER_MEMBER_PRESENCE, member_presence)
+                .commit();
     }
 
     public void setKeyFertilizerPicture(String fertilizer_picture){
@@ -697,5 +703,9 @@ public class SharedPrefs {
 
     public String getKeyFertilizerPicture() {
         return pref.getString(KEY_FERTILIZER_PICTURE, "XXX");
+    }
+
+    public String getKeyFertilizerMemberPresence() {
+        return pref.getString(KEY_FERTILIZER_MEMBER_PRESENCE, "0");
     }
 }

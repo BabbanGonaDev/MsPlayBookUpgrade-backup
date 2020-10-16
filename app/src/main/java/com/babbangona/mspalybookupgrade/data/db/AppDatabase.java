@@ -14,6 +14,7 @@ import com.babbangona.mspalybookupgrade.data.db.daos.AppVariablesDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.BGTCoachesDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.CategoryDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.ConfirmThreshingActivitiesFlagDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.FertilizerMembersDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGListDao;
@@ -37,6 +38,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
 import com.babbangona.mspalybookupgrade.data.db.entities.BGTCoaches;
 import com.babbangona.mspalybookupgrade.data.db.entities.Category;
 import com.babbangona.mspalybookupgrade.data.db.entities.ConfirmThreshingActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerMembers;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
@@ -62,7 +64,8 @@ import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
         SyncSummary.class, HarvestLocationsTable.class, AppVariables.class, RFActivitiesFlag.class,
         RFList.class, PictureSync.class, PWSActivitiesFlag.class, PWSCategoryList.class,
         PCPWSActivitiesFlag.class, PWSActivityController.class,
-        ScheduledThreshingActivitiesFlag.class, BGTCoaches.class, ConfirmThreshingActivitiesFlag.class},
+        ScheduledThreshingActivitiesFlag.class, BGTCoaches.class, ConfirmThreshingActivitiesFlag.class,
+        FertilizerMembers.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -92,6 +95,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ScheduleThreshingActivitiesFlagDao scheduleThreshingActivitiesFlagDao();
     public abstract BGTCoachesDao bgtCoachesDao();
     public abstract ConfirmThreshingActivitiesFlagDao confirmThreshingActivitiesFlagDao();
+    public abstract FertilizerMembersDao fertilizerMembersDao();
 
     /**
      * Return instance of database creation
@@ -450,7 +454,26 @@ public abstract class AppDatabase extends RoomDatabase {
 
             database.execSQL("ALTER TABLE app_variables ADD COLUMN 'fertilizer_luxand_flag' TEXT DEFAULT '0'");
 
-            //member_presence_flag
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_up_fertilizer_members' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_fertilizer_members' TEXT DEFAULT '2019-01-01 00:00:00'");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS fertilizer_members (" +
+                    "unique_member_id TEXT  NOT NULL," +
+                    "first_name TEXT," +
+                    "last_name TEXT," +
+                    "ik_number TEXT," +
+                    "village_name TEXT," +
+                    "face_scan_flag TEXT," +
+                    "template TEXT," +
+                    "deactivate TEXT," +
+                    "member_presence TEXT," +
+                    "collection_center TEXT," +
+                    "staff_id TEXT," +
+                    "app_version TEXT," +
+                    "imei TEXT," +
+                    "sync_flag TEXT," +
+                    "PRIMARY KEY(unique_member_id))"
+            );
 
         }
     };
@@ -463,7 +486,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 .allowMainThreadQueries()
                 .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,
                         MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,
-                        MIGRATION_11_12,MIGRATION_12_13,MIGRATION_13_14)
+                        MIGRATION_11_12,MIGRATION_12_13,MIGRATION_13_14,MIGRATION_14_15)
                 .build();
 //                .fallbackToDestructiveMigration()
     }
