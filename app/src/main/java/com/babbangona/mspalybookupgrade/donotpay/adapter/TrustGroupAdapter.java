@@ -51,6 +51,7 @@ public class TrustGroupAdapter extends RecyclerView.Adapter<TrustGroupAdapter.Vi
         }
     }
 
+    //TODO: Implement search.
     @Override
     public Filter getFilter() {
         return new Filter() {

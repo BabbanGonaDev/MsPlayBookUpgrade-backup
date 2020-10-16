@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 public class DSessionManager {
 
+    public static final String KEY_SELECTED_TG = "selected_tg";
+
     /**
      * App-specific keys. (Keys needed for proper operation of the application)
      */
@@ -38,6 +40,10 @@ public class DSessionManager {
         editor.putString(KEY_LOG_IN_STAFF_NAME, value).commit();
     }
 
+    public void SET_SELECTED_TG(String value) {
+        editor.putString(KEY_SELECTED_TG, value).commit();
+    }
+
 
     /**
      * =====================================================================
@@ -47,6 +53,10 @@ public class DSessionManager {
 
     public String GET_LOG_IN_STAFF_ID() {
         return prefs.getString(KEY_LOG_IN_STAFF_ID, "");
+    }
+
+    public String GET_SELECTED_TG() {
+        return prefs.getString(KEY_SELECTED_TG, "");
     }
 
 }

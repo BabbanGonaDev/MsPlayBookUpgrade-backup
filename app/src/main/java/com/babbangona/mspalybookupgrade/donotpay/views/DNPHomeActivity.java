@@ -3,7 +3,9 @@ package com.babbangona.mspalybookupgrade.donotpay.views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -58,6 +60,16 @@ public class DNPHomeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     public Boolean confirmDNPPhoneDate() {
         String default_date = "2020-10-14 00:00:00";

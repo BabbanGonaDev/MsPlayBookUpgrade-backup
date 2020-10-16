@@ -32,7 +32,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
-        <activity android:name=".donotpay.views.DNPMarkTGActivity"></activity>
+        <activity
+            android:name=".donotpay.views.DNPMarkTGActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".donotpay.views.DNPTrustGroupActivity"
             android:theme="@style/AppTheme.NoActionBar" />

@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface DoNotPayDAO {
 
-    @Insert()
+    @Insert
     void insert(DoNotPayTable doNotPayTable);
 
     @Query("SELECT * FROM donotpay_table WHERE sync_flag = 0")
