@@ -35,6 +35,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -288,10 +291,7 @@ public class FertilizerCollectionCenter extends AppCompatActivity {
             }else{
                 appDatabase.fertilizerMembersDao().insert(new FertilizerMembers(
                         unique_member_id,
-                        memberDetails.getFirst_name(),
-                        memberDetails.getLast_name(),
                         memberDetails.getIk_number(),
-                        memberDetails.getVillage_name(),
                         sharedPrefs.getKeyFertilizerRecaptureFlag(),
                         sharedPrefs.getKeyFertilizerTemplate(),
                         "0",
@@ -300,7 +300,9 @@ public class FertilizerCollectionCenter extends AppCompatActivity {
                         sharedPrefs.getStaffID(),
                         BuildConfig.VERSION_NAME,
                         getDeviceID(),
-                        "0"));
+                        "0",
+                        getResources().getString(R.string.app_name),
+                        getDate("spread")));
             }
             flag = "1";
         } catch (Exception e) {
@@ -333,14 +335,29 @@ public class FertilizerCollectionCenter extends AppCompatActivity {
                 device_id = tm.getDeviceId();
             } catch (Exception e) {
                 e.printStackTrace();
-                device_id = "";
+                device_id = "None";
             }
             if (device_id == null){
-                device_id = "";
+                device_id = "None";
             }
         } else{
-            device_id = "";
+            device_id = "None";
         }
         return device_id;
+    }
+
+    private String getDate(String module){
+
+        SimpleDateFormat dateFormat1;
+        if (module.matches("concat")) {
+            dateFormat1 = new SimpleDateFormat("yyMMddHHmmss", Locale.getDefault());
+        }else if (module.matches("spread")) {
+            dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        }else{
+            dateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        }
+
+        Date date1 = new Date();
+        return dateFormat1.format(date1);
     }
 }

@@ -86,6 +86,9 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
         @BindView(R.id.tv_role)
         TextView tv_role;
 
+        @BindView(R.id.tv_phone_number)
+        TextView tv_phone_number;
+
         @BindView(R.id.assignment_flag)
         View assignment_flag;
 
@@ -103,17 +106,21 @@ public class MemberListRecyclerViewAdapter extends PagedListAdapter<MemberListRe
             setTextController(tv_role, memberListRecyclerModel.getRole());
             setTextController(tv_village, memberListRecyclerModel.getVillage());
             setTextController(tv_ik_number, memberListRecyclerModel.getIk_number());
-            setLeader_image(leader_image,memberListRecyclerModel.getUnique_member_id(),mCtx);
+            setTextController(tv_phone_number, memberListRecyclerModel.getPhone_number());
+            setLeader_image(leader_image,memberListRecyclerModel.getUnique_member_id());
             setAssignment_flag(memberListRecyclerModel.getStaff_id(), mCtx);
             card_container.setOnClickListener((view)->submit(memberListRecyclerModel));
 
         }
 
         void setTextController(TextView textView, String text) {
+            if (text == null){
+                text = "";
+            }
             textView.setText(text);
         }
 
-        void setLeader_image(ImageView iv_picture, String unique_id, Context context){
+        void setLeader_image(ImageView iv_picture, String unique_id){
 
             File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_INPUT_PICTURE_LOCATION);
             String image_name = File.separator + unique_id + "_thumb.jpg";

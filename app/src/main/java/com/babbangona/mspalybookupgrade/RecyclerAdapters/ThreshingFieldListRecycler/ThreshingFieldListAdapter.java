@@ -961,7 +961,13 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     dialog.dismiss();
                     sharedPrefs.setKeyThresher("Self");
 
-                    confirmStatus(builder,context,fieldListRecyclerModel);
+                    //confirmStatus(builder,context,fieldListRecyclerModel);
+                    Intent intent = new Intent (context, ThreshingDateSelectionActivity.class);
+                    sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
+                    sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);
+                    sharedPrefs.setKeyThreshingCropType(fieldListRecyclerModel.getCrop_type());
+                    sharedPrefs.setKeyThreshingIkNumber(fieldListRecyclerModel.getIk_number());
+                    context.startActivity(intent);
 
 
                 })

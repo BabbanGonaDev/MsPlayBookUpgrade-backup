@@ -17,6 +17,7 @@
     <string name="sentence_close_hg">fields have HGs.)</string>
     <string name="sentence_close_pws">have been affected by poor weather.)</string>
     <string name="set_portfolio">This activity allow supervisors select staff under their portfolio</string>
+    <string name="set_fertilizer_sign_up">This activity allow staff recruit members for the fertilizer program</string>
     <string name="strange_activity">Please contact your supervisors before using this activity</string>
     <string name="downloading_data">Syncing Data</string>
     <string name="please_wait">Please wait…</string>
@@ -262,6 +263,7 @@
     <string name="collection_center_static">Collection center:</string>
     <string name="collection_center">Collection center</string>
     <string name="phone_number_static">Phone number:</string>
+    <string name="phone_number_static_new">Phone no:</string>
     <string name="phone_number">Phone number</string>
     <string name="location_details">Location Details</string>
     <string name="location_saved">Location Saved</string>

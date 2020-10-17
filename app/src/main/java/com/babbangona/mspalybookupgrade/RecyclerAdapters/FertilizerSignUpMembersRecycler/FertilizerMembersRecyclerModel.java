@@ -1,8 +1,5 @@
 package com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpMembersRecycler;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public class FertilizerMembersRecyclerModel {
 
     private String unique_member_id;
@@ -17,14 +14,18 @@ public class FertilizerMembersRecyclerModel {
 
     private String member_r_id;
 
+    private String phone_number;
+
     public FertilizerMembersRecyclerModel(String unique_member_id, String member_name, String role,
-                                          String village, String ik_number, String member_r_id) {
+                                          String village, String ik_number, String member_r_id,
+                                          String phone_number) {
         this.unique_member_id = unique_member_id;
         this.member_name = member_name;
         this.role = role;
         this.village = village;
         this.ik_number = ik_number;
         this.member_r_id = member_r_id;
+        this.phone_number = phone_number;
     }
 
     public String getUnique_member_id() {
@@ -75,4 +76,11 @@ public class FertilizerMembersRecyclerModel {
         this.member_r_id = member_r_id;
     }
 
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
 }

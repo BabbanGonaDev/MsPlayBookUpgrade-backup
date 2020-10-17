@@ -27,7 +27,8 @@ public abstract class FertilizerMembersDao {
     @Query(" SELECT * FROM fertilizer_members WHERE sync_flag != '1' ")
     public abstract List<FertilizerMembers> getUnSyncedFertilizerMembers();
 
-    @Query("UPDATE fertilizer_members SET collection_center = :collection_center, sync_flag='0' WHERE unique_member_id = :unique_member_id" )
+    @Query("UPDATE fertilizer_members SET distribution_centre = :collection_center, deactivate = '0', " +
+            "sync_flag='0' WHERE unique_member_id = :unique_member_id" )
     public abstract void updateCollectionCenter(String collection_center, String unique_member_id);
 
     /**

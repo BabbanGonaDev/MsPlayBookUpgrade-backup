@@ -78,6 +78,9 @@ public class FertilizerMembersRecyclerViewAdapter extends PagedListAdapter<Ferti
         @BindView(R.id.tv_ik_number)
         TextView tv_ik_number;
 
+        @BindView(R.id.tv_phone_number)
+        TextView tv_phone_number;
+
         @BindView(R.id.card_container)
         LinearLayout card_container;
 
@@ -90,9 +93,17 @@ public class FertilizerMembersRecyclerViewAdapter extends PagedListAdapter<Ferti
             setTextController(tv_member_name, mCtx.getResources().getString(R.string.name_constant)+" "+fertilizerMembersRecyclerModel.getMember_name());
             setTextController(tv_village, mCtx.getResources().getString(R.string.location_constant)+" "+fertilizerMembersRecyclerModel.getVillage());
             setTextController(tv_ik_number, mCtx.getResources().getString(R.string.ik_number)+" "+fertilizerMembersRecyclerModel.getIk_number());
+            setTextController(tv_phone_number, mCtx.getResources().getString(R.string.phone_number_static_new)+" "+cleanInputText(fertilizerMembersRecyclerModel.getPhone_number()));
             setLeader_image(leader_image, fertilizerMembersRecyclerModel.getUnique_member_id(),mCtx);
             card_container.setOnClickListener((view)->submit(fertilizerMembersRecyclerModel));
 
+        }
+
+        String cleanInputText(String input_text){
+            if (input_text == null){
+                input_text = "";
+            }
+            return input_text;
         }
 
         void setTextController(TextView textView, String text) {

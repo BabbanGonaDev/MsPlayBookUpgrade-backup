@@ -459,19 +459,18 @@ public abstract class AppDatabase extends RoomDatabase {
 
             database.execSQL("CREATE TABLE IF NOT EXISTS fertilizer_members (" +
                     "unique_member_id TEXT  NOT NULL," +
-                    "first_name TEXT," +
-                    "last_name TEXT," +
                     "ik_number TEXT," +
-                    "village_name TEXT," +
                     "face_scan_flag TEXT," +
                     "template TEXT," +
                     "deactivate TEXT," +
                     "member_presence TEXT," +
-                    "collection_center TEXT," +
+                    "distribution_centre TEXT," +
                     "staff_id TEXT," +
                     "app_version TEXT," +
                     "imei TEXT," +
                     "sync_flag TEXT," +
+                    "app_onboarded TEXT," +
+                    "date_created TEXT," +
                     "PRIMARY KEY(unique_member_id))"
             );
 

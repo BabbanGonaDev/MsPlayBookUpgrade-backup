@@ -211,7 +211,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.ACTIVITY_LIST_TABLE,
                                 "Activity List Download",
                                 "1",
-                                returnRemark(activityLists.size()),
+                                returnRemark(activityLists.size(), "d"),
                                 activityListDownload.getLast_sync_time()
 
                         );
@@ -333,7 +333,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.HG_LIST_TABLE,
                                 "HG List Download",
                                 "1",
-                                returnRemark(hgLists.size()),
+                                returnRemark(hgLists.size(), "d"),
                                 hgListDownload.getLast_sync_time()
 
                         );
@@ -474,14 +474,14 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.FIELDS_TABLE,
                                 "Fields Record Download",
                                 "1",
-                                returnRemark(fieldsList.size()),
+                                returnRemark(fieldsList.size(), "d"),
                                 msPlaybookInputDownload.getLast_sync_time()
 
                         );
                         insetToSyncSummary(DatabaseStringConstants.MEMBERS_TABLE,
                                 "Members Record Download",
                                 "1",
-                                returnRemark(membersList.size()),
+                                returnRemark(membersList.size(), "d"),
                                 msPlaybookInputDownload.getLast_sync_time()
 
                         );
@@ -899,7 +899,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.LOGS_TABLE+"_upload",
                                     "Logs Upload",
                                     "1",
-                                    returnRemark(logsUploadList.size()),
+                                    returnRemark(logsUploadList.size(), "u"),
                                     logsUploadList.get(0).getLast_synced()
 
                             );
@@ -1004,7 +1004,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.HG_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "HG Activities Upload",
                                     "1",
-                                    returnRemark(hgActivitiesUploadList.size()),
+                                    returnRemark(hgActivitiesUploadList.size(), "u"),
                                     hgActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -1105,7 +1105,7 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.NORMAL_ACTIVITY_FLAGS_TABLE+"_upload",
                                         "Normal Activities Upload",
                                         "1",
-                                        returnRemark(normalActivitiesUploadList.size()),
+                                        returnRemark(normalActivitiesUploadList.size(), "u"),
                                         normalActivitiesUploadList.get(0).getLast_synced()
 
                                 );
@@ -1202,7 +1202,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.STAFF_TABLE,
                                 "Staff List Download",
                                 "1",
-                                returnRemark(staffLists.size()),
+                                returnRemark(staffLists.size(), "d"),
                                 staffListDownload.getLast_sync_time()
                         );
                     }else{
@@ -1322,7 +1322,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.LOGS_TABLE+"_download",
                                 "Logs Download",
                                 "1",
-                                returnRemark(logsList.size()),
+                                returnRemark(logsList.size(), "d"),
                                 logsDownload.getLast_sync_time()
                         );
                     }else{
@@ -1443,7 +1443,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.HG_ACTIVITY_FLAGS_TABLE+"_download",
                                 "HG Activities Download",
                                 "1",
-                                returnRemark(hgActivitiesFlagList.size()),
+                                returnRemark(hgActivitiesFlagList.size(), "d"),
                                 hgActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -1564,7 +1564,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.NORMAL_ACTIVITY_FLAGS_TABLE+"_download",
                                 "Normal Activities Download",
                                 "1",
-                                returnRemark(normalActivitiesFlagList.size()),
+                                returnRemark(normalActivitiesFlagList.size(), "d"),
                                 normalActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -1685,7 +1685,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.CATEGORY_TABLE,
                                 "Category List Download",
                                 "1",
-                                returnRemark(categoryList.size()),
+                                returnRemark(categoryList.size(), "d"),
                                 categoryDownload.getLast_sync_time()
                         );
                     }else{
@@ -1806,7 +1806,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.HARVEST_LOCATION_TABLE,
                                 "Harvest Collection Centres Download",
                                 "1",
-                                returnRemark(harvestLocationsTableList.size()),
+                                returnRemark(harvestLocationsTableList.size(), "d"),
                                 harvestLocationDownload.getLast_sync_time()
                         );
                     }else{
@@ -1917,7 +1917,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.APP_VARIABLES,
                                 "App Variables Download",
                                 "1",
-                                returnRemark(appVariablesList.size()),
+                                returnRemark(appVariablesList.size(), "d"),
                                 appVariablesDownload.getLast_sync_time()
                         );
                     }else{
@@ -2038,7 +2038,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.RF_LIST_TABLE,
                                 "RF List Download",
                                 "1",
-                                returnRemark(rfLists.size()),
+                                returnRemark(rfLists.size(), "d"),
                                 rfListDownload.getLast_sync_time()
 
                         );
@@ -2159,7 +2159,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_download",
                                 "RF Activities Download",
                                 "1",
-                                returnRemark(rfActivitiesFlagList.size()),
+                                returnRemark(rfActivitiesFlagList.size(), "d"),
                                 rfActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -2290,7 +2290,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "RF Activities Upload",
                                     "1",
-                                    returnRemark(rfActivitiesUploadList.size()),
+                                    returnRemark(rfActivitiesUploadList.size(), "u"),
                                     rfActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -2478,7 +2478,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PWS_CATEGORY_LIST_TABLE,
                                 "PWS Category List Download",
                                 "1",
-                                returnRemark(pwsCategoryLists.size()),
+                                returnRemark(pwsCategoryLists.size(), "d"),
                                 pwsCategoryListDownload.getLast_sync_time()
 
                         );
@@ -2609,7 +2609,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "PWS Activities Upload",
                                     "1",
-                                    returnRemark(pwsActivitiesUploadList.size()),
+                                    returnRemark(pwsActivitiesUploadList.size(), "u"),
                                     pwsActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -2715,7 +2715,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "PC PWS Activities Upload",
                                     "1",
-                                    returnRemark(pcpwsActivitiesUploadList.size()),
+                                    returnRemark(pcpwsActivitiesUploadList.size(), "u"),
                                     pcpwsActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -2811,7 +2811,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_download",
                                 "PWS Activities Download",
                                 "1",
-                                returnRemark(pwsActivitiesFlagList.size()),
+                                returnRemark(pwsActivitiesFlagList.size(), "d"),
                                 pwsActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -2932,7 +2932,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_download",
                                 "PC PWS Activities Download",
                                 "1",
-                                returnRemark(pcpwsActivitiesFlagList.size()),
+                                returnRemark(pcpwsActivitiesFlagList.size(), "d"),
                                 pcpwsActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -3053,7 +3053,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_CONTROLLER_TABLE,
                                 "PWS Activity Controller List Download",
                                 "1",
-                                returnRemark(pwsActivityControllerList.size()),
+                                returnRemark(pwsActivityControllerList.size(), "d"),
                                 pwsActivityControllerDownload.getLast_sync_time()
                         );
                     }else{
@@ -3174,7 +3174,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
                                 "Scheduled Activities Download",
                                 "1",
-                                returnRemark(scheduledThreshingActivitiesFlagList.size()),
+                                returnRemark(scheduledThreshingActivitiesFlagList.size(), "d"),
                                 scheduledThreshingActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -3296,7 +3296,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
                                 "Confirm Activities Download",
                                 "1",
-                                returnRemark(confirmThreshingActivitiesFlagList.size()),
+                                returnRemark(confirmThreshingActivitiesFlagList.size(), "d"),
                                 confirmThreshingActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -3417,7 +3417,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.BGT_COACHES_TABLE+"_download",
                                 "BGT Coaches Download",
                                 "1",
-                                returnRemark(bgtCoachesList.size()),
+                                returnRemark(bgtCoachesList.size(),"d"),
                                 bgtCoachesDownload.getLast_sync_time()
                         );
                     }else{
@@ -3544,7 +3544,7 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
                                         "Scheduled Activities Upload",
                                         "1",
-                                        returnRemark(scheduledThreshingActivitiesUploadList.size()),
+                                        returnRemark(scheduledThreshingActivitiesUploadList.size(),"u"),
                                         scheduledThreshingActivitiesUploadList.get(0).getLast_synced()
 
                                 );
@@ -3647,7 +3647,7 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
                                         "Confirm Activities Upload",
                                         "1",
-                                        returnRemark(confirmThreshingActivitiesUploadList.size()),
+                                        returnRemark(confirmThreshingActivitiesUploadList.size(),"u"),
                                         confirmThreshingActivitiesUploadList.get(0).getLast_synced()
 
                                 );
@@ -3716,7 +3716,7 @@ public class ActivityListDownloadService extends IntentService {
     private void syncUpFertilizerMembersSignUp() {
         List<FertilizerMembers> fertilizerMembersList = appDatabase.fertilizerMembersDao().getUnSyncedFertilizerMembers();
         String composed_json = new Gson().toJson(fertilizerMembersList);
-//        Log.d("CHECK", "ConfirmedThreshingActivities: " + composed_json);
+        //Log.d("CHECK", "FertilizerMembersSignUp: " + composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<FertilizerMembersUpload>> call = retrofitInterface.uploadFertilizerMembersRecord(composed_json, sharedPrefs.getStaffID());
         sharedPrefs.setKeyProgressDialogStatus(0);
@@ -3750,7 +3750,7 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
                                         "Fertilizer Members Upload",
                                         "1",
-                                        returnRemark(fertilizerMembersUploadList.size()),
+                                        returnRemark(fertilizerMembersUploadList.size(),"u"),
                                         fertilizerMembersUploadList.get(0).getLast_synced()
 
                                 );
@@ -3848,7 +3848,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_download",
                                 "Fertilizer Members Download",
                                 "1",
-                                returnRemark(fertilizerMembersList.size()),
+                                returnRemark(fertilizerMembersList.size(),"d"),
                                 fertilizerMembersDownload.getLast_sync_time()
                         );
                     }else{
@@ -4248,10 +4248,14 @@ public class ActivityListDownloadService extends IntentService {
         }
     }
 
-    String returnRemark(int size){
+    String returnRemark(int size, String upload_flag){
         String statement;
         if (size > 0){
-            statement = "Download successful";
+            if (upload_flag.equalsIgnoreCase("d")){
+                statement = "Download successful";
+            }else{
+                statement = "Upload successful";
+            }
         }else{
             statement = "Download Empty";
         }

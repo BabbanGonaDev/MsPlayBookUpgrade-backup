@@ -369,18 +369,17 @@ public class DatabaseStringConstants {
      * fertilizer_members column names
      */
     public static final String COL_UNIQUE_MEMBER_ID_FERT                = "unique_member_id";
-    public static final String COL_FIRST_NAME_FERT                      = "first_name";
-    public static final String COL_LAST_NAME_FERT                       = "last_name";
     public static final String COL_IK_NUMBER_FERT                       = "ik_number";
-    public static final String COL_VILLAGE_FERT                         = "village_name";
     public static final String COL_FACE_SCAN_FLAG                       = "face_scan_flag";
     public static final String COL_TEMPLATE_FERT                        = "template";
     public static final String COL_DEACTIVATE_FERT                      = "deactivate";
     public static final String COL_MEMBER_PRESENCE                      = "member_presence";
-    public static final String COL_COLLECTION_CENTER_FERT               = "collection_center";
+    public static final String COL_DISTRIBUTION_CENTER_FERT             = "distribution_centre";
     public static final String COL_STAFF_ID_FERT                        = "staff_id";
     public static final String COL_SYNC_FLAG_FERT                       = "sync_flag";
     public static final String COL_APP_VERSION_FERT                     = "app_version";
     public static final String COL_IMEI_FERT                            = "imei";
+    public static final String COL_APP_ON_BOARDED                       = "app_onboarded";
+    public static final String COL_DATE_CREATED                         = "date_created";
 
 }

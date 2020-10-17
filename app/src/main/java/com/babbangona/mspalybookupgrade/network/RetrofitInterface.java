@@ -164,13 +164,13 @@ public interface RetrofitInterface {
     Call<List<ConfirmThreshingActivitiesUpload>> uploadConfirmThreshingActivitiesRecord(@Field("upload_list") String upload_list,
                                                                                         @Field("staff_id") String staff_id);
 
-    @GET("downloadFertilizerMembers")
+    @GET("downloadFertilizerSignup")
     Call<FertilizerMembersDownload> downloadFertilizerMembers(@Query("staff_id") String staff_id,
                                                                          @Query("portfolio_list") String portfolio_list,
                                                                          @Query("last_synced_time") String last_synced_time);
 
     @FormUrlEncoded
-    @POST("uploadFertilizerProgram")
+    @POST("uploadFertilizerSignup")
     Call<List<FertilizerMembersUpload>> uploadFertilizerMembersRecord(@Field("upload_list") String upload_list,
                                                                                @Field("staff_id") String staff_id);
 
