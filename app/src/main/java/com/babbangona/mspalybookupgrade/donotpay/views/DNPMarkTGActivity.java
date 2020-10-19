@@ -116,12 +116,9 @@ public class DNPMarkTGActivity extends AppCompatActivity {
                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime()),
                     0));
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    //Inform user of success.
-                    confirmMarkedTg();
-                }
+            runOnUiThread(() -> {
+                //Inform user of success.
+                confirmMarkedTg();
             });
         });
 
@@ -150,7 +147,7 @@ public class DNPMarkTGActivity extends AppCompatActivity {
         DialogCustomOneButtonBinding dialogBinding = DataBindingUtil
                 .inflate(LayoutInflater.from(this), R.layout.dialog_custom_one_button, null, false);
 
-        Dialog dialog = new Dialog(this, R.style.Theme_MaterialComponents_Light_Dialog);
+        Dialog dialog = new Dialog(this, R.style.Theme_MaterialComponents_Light_Dialog_Alert);
         dialog.setContentView(dialogBinding.getRoot());
         dialogBinding.btnPrimary.setText("Continue");
         dialogBinding.imgViewAvatar.setImageResource(R.drawable.ic_smiley_face);
