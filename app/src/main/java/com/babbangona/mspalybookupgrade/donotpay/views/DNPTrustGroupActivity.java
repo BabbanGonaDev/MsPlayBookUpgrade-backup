@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,7 +67,13 @@ public class DNPTrustGroupActivity extends AppCompatActivity implements SearchVi
     private void initTrustGroupRecycler() {
         appDb.membersDao().getTrustGroupsList().observe(this, tgLists -> {
             //put adapter here
-            adapter = new TrustGroupAdapter(this, tgLists, list -> requestMarkTg(list));
+            adapter = new TrustGroupAdapter(this, tgLists, list -> {
+                if (db.getDoNotPayDao().checkTGMarked(list.getIk_number()) == 0) {
+                    requestMarkTg(list);
+                } else {
+                    Toast.makeText(this, "This Trust Group has already been marked as Do Not Pay", Toast.LENGTH_LONG).show();
+                }
+            });
 
             binding.rcvTrustGroups.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             binding.rcvTrustGroups.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));

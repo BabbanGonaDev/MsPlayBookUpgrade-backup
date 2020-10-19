@@ -16,4 +16,7 @@ public interface DoNotPayDAO {
 
     @Query("SELECT * FROM donotpay_table WHERE sync_flag = 0")
     List<DoNotPayTable> getUnsyncedDNP();
+
+    @Query("SELECT COUNT(ik_number) FROM donotpay_table WHERE ik_number = :ikNumber")
+    Integer checkTGMarked(String ikNumber);
 }

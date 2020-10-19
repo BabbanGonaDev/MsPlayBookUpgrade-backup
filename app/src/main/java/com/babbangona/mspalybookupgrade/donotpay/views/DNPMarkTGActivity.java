@@ -1,10 +1,13 @@
 package com.babbangona.mspalybookupgrade.donotpay.views;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,6 +21,7 @@ import androidx.databinding.DataBindingUtil;
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.databinding.ActivityDonotpayMarkTgBinding;
+import com.babbangona.mspalybookupgrade.databinding.DialogCustomOneButtonBinding;
 import com.babbangona.mspalybookupgrade.donotpay.data.DSessionManager;
 import com.babbangona.mspalybookupgrade.donotpay.data.room.DNPDatabase;
 import com.babbangona.mspalybookupgrade.donotpay.data.room.tables.DoNotPayTable;
@@ -116,6 +120,7 @@ public class DNPMarkTGActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     //Inform user of success.
+                    confirmMarkedTg();
                 }
             });
         });
@@ -139,5 +144,25 @@ public class DNPMarkTGActivity extends AppCompatActivity {
             device_id = "";
         }
         return device_id;
+    }
+
+    private void confirmMarkedTg() {
+        DialogCustomOneButtonBinding dialogBinding = DataBindingUtil
+                .inflate(LayoutInflater.from(this), R.layout.dialog_custom_one_button, null, false);
+
+        Dialog dialog = new Dialog(this, R.style.Theme_MaterialComponents_Light_Dialog);
+        dialog.setContentView(dialogBinding.getRoot());
+        dialogBinding.btnPrimary.setText("Continue");
+        dialogBinding.imgViewAvatar.setImageResource(R.drawable.ic_smiley_face);
+        dialogBinding.mtvDialogText.setText("The TG has been successfully flagged as Do Not Pay");
+
+        dialogBinding.btnPrimary.setOnClickListener(v -> {
+            startActivity(new Intent(this, DNPHomeActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            dialog.dismiss();
+        });
+
+        dialog.setCancelable(false);
+        dialog.show();
     }
 }
