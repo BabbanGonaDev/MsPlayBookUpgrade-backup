@@ -50,6 +50,8 @@ public class DNPTrustGroupActivity extends AppCompatActivity implements SearchVi
 
         binding.searchView.setOnQueryTextListener(this);
 
+        binding.searchView.setOnClickListener(v -> binding.searchView.setIconified(false));
+
         initTrustGroupRecycler();
     }
 

@@ -1,6 +1,7 @@
 package com.babbangona.mspalybookupgrade.donotpay.adapter;
 
 import android.content.Context;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -9,9 +10,14 @@ import android.widget.Filterable;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.babbangona.mspalybookupgrade.R;
+import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.databinding.ItemDonotpayTrustGroupsBinding;
 import com.babbangona.mspalybookupgrade.donotpay.data.models.TGList;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrustGroupAdapter extends RecyclerView.Adapter<TrustGroupAdapter.ViewHolder> implements Filterable {
@@ -51,18 +57,33 @@ public class TrustGroupAdapter extends RecyclerView.Adapter<TrustGroupAdapter.Vi
         }
     }
 
-    //TODO: Implement search.
     @Override
     public Filter getFilter() {
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                return null;
+                String char_string = constraint.toString().trim();
+                if (char_string.isEmpty()) {
+                    mFilteredList = list;
+                } else {
+                    List<TGList> filtered_list = new ArrayList<>();
+                    for (TGList tg : list) {
+                        if (tg.getIk_number().toLowerCase().contains(char_string)) {
+                            filtered_list.add(tg);
+                        }
+                    }
+                    mFilteredList = filtered_list;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mFilteredList;
+                return filterResults;
+
             }
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-
+                mFilteredList = (List<TGList>) results.values;
+                notifyDataSetChanged();
             }
         };
     }
@@ -87,6 +108,16 @@ public class TrustGroupAdapter extends RecyclerView.Adapter<TrustGroupAdapter.Vi
             binding.mtvTgLeader.setText("TG Leader: " + list.getFirst_name() + " " + list.getLast_name());
             binding.mtvIkNumber.setText("IK Number: " + list.getIk_number());
             binding.mtvLocation.setText("Location: " + list.getVillage_name());
+
+            File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_INPUT_PICTURE_LOCATION);
+            String image_name = File.separator + list.getUnique_member_id() + "_thumb.jpg";
+
+            Picasso
+                    .get()
+                    .load(new File(ImgDirectory.getAbsoluteFile(), image_name))
+                    .error(R.drawable.avatar)
+                    .into(binding.imgViewTrustGroup);
+
             binding.executePendingBindings();
         }
 
