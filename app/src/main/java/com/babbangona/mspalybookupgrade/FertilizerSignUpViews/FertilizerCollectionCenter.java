@@ -114,6 +114,10 @@ public class FertilizerCollectionCenter extends AppCompatActivity {
             fillVillageSpinner(actVillageCopy, FertilizerCollectionCenter.this);
         });
 
+        actVillageCopy.setOnItemClickListener((parent, view, position, id) -> {
+            checkForMismatchedCollectionCenter();
+        });
+
         sheetBehavior = BottomSheetBehavior.from(fertilizer_cc_confirmation_dialog);
         addBehaviourToBottomSheet(sheetBehavior);
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,FertilizerCollectionCenter.this);

@@ -112,7 +112,7 @@ public class ReVerifyActivityFertilizerSignUp extends AppCompatActivity {
         //go to fields activity
         //TODO: HTA-YYY
         finish();
-        Intent intent = new Intent (ReVerifyActivityFertilizerSignUp.this, ThreshingDateSelectionActivity.class);
+        Intent intent = new Intent (ReVerifyActivityFertilizerSignUp.this, FertilizerSignUpMembers.class);
         startActivity(intent);
     }
 
@@ -135,7 +135,7 @@ public class ReVerifyActivityFertilizerSignUp extends AppCompatActivity {
                         //move to next activity
                         //save template to shared preference
                         setCapturedImage(scanned_image_iv, templateModel.getImage_person_large());
-                        sharedPrefs.setKeyFertilizerRecaptureFlag("0");
+                        sharedPrefs.setKeyFertilizerRecaptureFlag("1");
                         sharedPrefs.setKeyFertilizerTemplate(templateModel.getTemplate());
                         sharedPrefs.setKeyFertilizerPicture(templateModel.getImage_person_small());
                         state = 4;

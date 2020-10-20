@@ -326,7 +326,7 @@
     <string name="select_threshing_type">Select type of threshing</string>
     <string name="scheduled">Scheduled</string>
     <string name="urgent">Urgent</string>
-    <string name="error_confirm_date_abnormal">Please date should be within 15th of May and 31th of December</string>
+    <string name="error_confirm_date_abnormal">Please date should be within the 15th of May and the current date</string>
     <string name="scheduled_list_title">List of Fields</string>
     <string name="all_schedules">All Schedules</string>
     <string name="urgent_schedules">Urgent Schedules</string>
