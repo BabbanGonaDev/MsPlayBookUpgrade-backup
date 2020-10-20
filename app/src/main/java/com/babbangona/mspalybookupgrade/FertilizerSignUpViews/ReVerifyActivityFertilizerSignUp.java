@@ -109,10 +109,9 @@ public class ReVerifyActivityFertilizerSignUp extends AppCompatActivity {
 
     @OnClick(R.id.btnScanSuccessful)
     public void setBtnScanSuccessful() {
-        //go to fields activity
-        //TODO: HTA-YYY
+        //go to collection center activity
         finish();
-        Intent intent = new Intent (ReVerifyActivityFertilizerSignUp.this, FertilizerSignUpMembers.class);
+        Intent intent = new Intent (ReVerifyActivityFertilizerSignUp.this, FertilizerCollectionCenter.class);
         startActivity(intent);
     }
 
