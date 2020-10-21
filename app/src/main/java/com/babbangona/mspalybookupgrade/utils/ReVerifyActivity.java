@@ -79,7 +79,6 @@ public class ReVerifyActivity extends AppCompatActivity {
         templateModel = new MemberListRecyclerModel.TemplateModel();
         count = 0;
         state = 0;
-        sharedPrefs.setKeyThreshingRecaptureFlag("0");
 
         setMemberImage(scanned_image_iv,sharedPrefs.getKeyThreshingUniqueMemberId());
         showLogic(state);

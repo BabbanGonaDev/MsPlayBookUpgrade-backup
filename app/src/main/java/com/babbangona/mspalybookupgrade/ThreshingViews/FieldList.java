@@ -60,6 +60,7 @@ public class FieldList extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(FieldList.this));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,FieldList.this);
+        sharedPrefs.setKeyThreshingRecaptureFlag("0");
     }
 
     public void initActivitiesRecycler(){
