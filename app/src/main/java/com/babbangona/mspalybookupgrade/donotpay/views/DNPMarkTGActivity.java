@@ -29,6 +29,7 @@ import com.babbangona.mspalybookupgrade.transporter.helpers.AppExecutors;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -36,12 +37,6 @@ public class DNPMarkTGActivity extends AppCompatActivity {
     ActivityDonotpayMarkTgBinding binding;
     DNPDatabase db;
     DSessionManager session;
-
-    //TODO: => Change this to database call.
-    String[] reasons = new String[]{"This is the first reason",
-            "This is the No. 2 reason",
-            "Way to the Tree of Life",
-            "Faith, Hope & Charity", "Others"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +58,7 @@ public class DNPMarkTGActivity extends AppCompatActivity {
         binding.autocompleteReason.setOnItemClickListener((parent, view, position, id) -> {
             String selected = binding.autocompleteReason.getText().toString().trim();
 
-            if (selected.equalsIgnoreCase("others")) {
+            if (selected.equalsIgnoreCase("other")) {
                 binding.etCustomReason.setText("");
                 binding.etCustomReason.setVisibility(View.VISIBLE);
             } else {
@@ -75,10 +70,10 @@ public class DNPMarkTGActivity extends AppCompatActivity {
         binding.btnSubmit.setOnClickListener(v -> {
             String selected = binding.autocompleteReason.getText().toString().trim();
 
-            if (selected.equalsIgnoreCase("others") && !binding.etCustomReason.getText().toString().trim().equals("")) {
+            if (selected.equalsIgnoreCase("other") && !binding.etCustomReason.getText().toString().trim().equals("")) {
                 String custom = binding.etCustomReason.getText().toString().trim();
                 submit(custom);
-            } else if (!selected.equalsIgnoreCase("others") && !selected.equals("")) {
+            } else if (!selected.equalsIgnoreCase("other") && !selected.equals("")) {
                 submit(selected);
             } else {
                 Toast.makeText(this, "Kindly enter your reason for marking the TG", Toast.LENGTH_LONG).show();
@@ -98,6 +93,7 @@ public class DNPMarkTGActivity extends AppCompatActivity {
     }
 
     public void initReasonAdapter() {
+        List<String> reasons = db.getDoNotPayReasonsDao().getDNPReasons();
         ArrayAdapter<String> reasons_adapter =
                 new ArrayAdapter<>(getApplicationContext(),
                         R.layout.dropdown_menu_transporter_popup_item,

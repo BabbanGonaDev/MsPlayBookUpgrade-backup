@@ -13,8 +13,8 @@ import java.util.List;
 public interface DoNotPayReasonsDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertDNPReasonsList(List<DoNotPayReasonsTable> list);
+    void insertDNPReasons(DoNotPayReasonsTable single);
 
-    @Query("SELECT * FROM donotpay_reasons_table WHERE active_flag = 1")
-    List<DoNotPayReasonsTable> getDNPReasons();
+    @Query("SELECT reason FROM donotpay_reasons_table WHERE active_flag = 1")
+    List<String> getDNPReasons();
 }

@@ -55,4 +55,25 @@ public class DoNotPayTable {
     public Integer getSync_flag() {
         return sync_flag;
     }
+
+    /**
+     * Tuple for sync_up response
+     */
+    public static class Response {
+        private String ik_number;
+        private Integer sync_flag;
+
+        public Response(String ik_number, Integer sync_flag) {
+            this.ik_number = ik_number;
+            this.sync_flag = sync_flag;
+        }
+
+        public String getIk_number() {
+            return ik_number;
+        }
+
+        public Integer getSync_flag() {
+            return sync_flag;
+        }
+    }
 }

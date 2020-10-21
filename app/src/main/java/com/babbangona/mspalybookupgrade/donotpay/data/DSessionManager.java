@@ -13,6 +13,12 @@ public class DSessionManager {
     public static final String KEY_LOG_IN_STAFF_ID = "log_in_staff_id";
     public static final String KEY_LOG_IN_STAFF_NAME = "log_in_staff_name";
 
+    /**
+     * Regular needed keys for smooth operation of the app
+     */
+    public static final String KEY_LAST_SYNC_DNP_TABLE = "last_sync_dnp_table";
+    public static final String KEY_LAST_SYNC_DNP_REASONS = "last_sync_dnp_reasons";
+
 
     private static final String PREF_NAME = "DNP Preferences";
     SharedPreferences prefs;
@@ -44,6 +50,13 @@ public class DSessionManager {
         editor.putString(KEY_SELECTED_TG, value).commit();
     }
 
+    public void SET_LAST_SYNC_DNP_TABLE(String value) {
+        editor.putString(KEY_LAST_SYNC_DNP_TABLE, value).commit();
+    }
+
+    public void SET_LAST_SYNC_DNP_REASONS(String value) {
+        editor.putString(KEY_LAST_SYNC_DNP_REASONS, value).commit();
+    }
 
     /**
      * =====================================================================
@@ -59,4 +72,11 @@ public class DSessionManager {
         return prefs.getString(KEY_SELECTED_TG, "");
     }
 
+    public String GET_LAST_SYNC_DNP() {
+        return prefs.getString(KEY_LAST_SYNC_DNP_TABLE, "2020-10-20 00:00:00");
+    }
+
+    public String GET_LAST_SYNC_DNP_REASONS() {
+        return prefs.getString(KEY_LAST_SYNC_DNP_REASONS, "2020-10-20 00:00:00");
+    }
 }
