@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
+import com.babbangona.mspalybookupgrade.ThreshingViews.LogThreshingHG;
 import com.babbangona.mspalybookupgrade.ThreshingViews.RescheduleThreshingDateSelectionActivity;
 import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingActivity;
 import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingDateSelectionActivity;
@@ -595,11 +596,20 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                 .setPositiveButton(context.getResources().getString(R.string.yes), (dialog, which) -> {
                     //this is to dismiss the dialog
                     dialog.dismiss();
-                    showDialogForLogHGEnd(context, threshingFieldListRecyclerModel, fieldListRecyclerModel, "Yes");
+                    //showDialogForLogHGEnd(context, threshingFieldListRecyclerModel, fieldListRecyclerModel, "Yes");
+                    Intent intent = new Intent (context, LogThreshingHG.class);
+                    sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
+                    sharedPrefs.setKeyThreshingThreshValue("Yes");
+                    context.startActivity(intent);
                 })
                 .setNeutralButton(context.getResources().getString(R.string.no), (dialog, which) -> {
                     dialog.dismiss();
-                    showDialogForLogHGEnd(context, threshingFieldListRecyclerModel, fieldListRecyclerModel, "No");
+                    //showDialogForLogHGEnd(context, threshingFieldListRecyclerModel, fieldListRecyclerModel, "No");
+
+                    Intent intent = new Intent (context, LogThreshingHG.class);
+                    sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
+                    sharedPrefs.setKeyThreshingThreshValue("No");
+                    context.startActivity(intent);
                 })
                 .setCancelable(false)
                 .show();

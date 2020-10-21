@@ -94,6 +94,7 @@ public class SharedPrefs {
     public static final String KEY_THRESHER                         = "thresher";
     public static final String KEY_SWAP_FIELD_ID                    = "swap_field_id";
     public static final String KEY_RESCHEDULE_STATE_FLAG            = "reschedule_state_flag";
+    public static final String KEY_THRESHING_THRESH_VALUE           = "hg_thresh_value";
 
     public static final String KEY_FERTILIZER_SIGN_UP_IK_NUMBER     = "fertilizer_sign_up_ik_number";
     public static final String KEY_FERTILIZER_SIGN_UP_MEMBER_ID     = "fertilizer_sign_up_unique_member_id";
@@ -107,6 +108,11 @@ public class SharedPrefs {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyThreshingThreshValue(String hg_thresh_value){
+        editor.putString(KEY_THRESHING_THRESH_VALUE, hg_thresh_value)
+                .commit();
     }
 
     public void setKeyFertilizerMemberPresence(String member_presence){
@@ -707,5 +713,9 @@ public class SharedPrefs {
 
     public String getKeyFertilizerMemberPresence() {
         return pref.getString(KEY_FERTILIZER_MEMBER_PRESENCE, "0");
+    }
+
+    public String getKeyThreshingThreshValue() {
+        return pref.getString(KEY_THRESHING_THRESH_VALUE, "XX");
     }
 }

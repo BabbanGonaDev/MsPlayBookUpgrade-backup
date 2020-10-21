@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 15;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 16;
 
     /**
      * Names of tables
@@ -211,6 +211,7 @@ public class DatabaseStringConstants {
     public static final String MAXIMUM_SCHEDULE_DATE                        = "maximum_schedule_date";
     public static final String LUXAND_FLAG                                  = "luxand_flag";
     public static final String FERTILIZER_LUXAND_FLAG                       = "fertilizer_luxand_flag";
+    public static final String ISSUES_LIST                                  = "issues_list";
 
     /**
      * rf_list column names

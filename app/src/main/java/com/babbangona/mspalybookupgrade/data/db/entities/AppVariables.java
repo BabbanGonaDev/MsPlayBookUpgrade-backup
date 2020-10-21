@@ -44,10 +44,13 @@ public class AppVariables {
     @ColumnInfo(name = DatabaseStringConstants.FERTILIZER_LUXAND_FLAG)
     private String fertilizer_luxand_flag;
 
+    @ColumnInfo(name = DatabaseStringConstants.ISSUES_LIST)
+    private String issues_list;
+
     public AppVariables(@NonNull String variable_id, String edit_harvest_location_flag,
                         String minimum_log_date, String maximum_log_date, String fields_travel_time,
                         String average_transition_time, String time_per_ha, String maximum_schedule_date,
-                        String luxand_flag, String fertilizer_luxand_flag) {
+                        String luxand_flag, String fertilizer_luxand_flag, String issues_list) {
         this.variable_id = variable_id;
         this.edit_harvest_location_flag = edit_harvest_location_flag;
         this.minimum_log_date = minimum_log_date;
@@ -58,6 +61,7 @@ public class AppVariables {
         this.maximum_schedule_date = maximum_schedule_date;
         this.luxand_flag = luxand_flag;
         this.fertilizer_luxand_flag = fertilizer_luxand_flag;
+        this.issues_list = issues_list;
     }
 
     public String getFields_travel_time() {
@@ -139,5 +143,13 @@ public class AppVariables {
 
     public void setFertilizer_luxand_flag(String fertilizer_luxand_flag) {
         this.fertilizer_luxand_flag = fertilizer_luxand_flag;
+    }
+
+    public String getIssues_list() {
+        return issues_list;
+    }
+
+    public void setIssues_list(String issues_list) {
+        this.issues_list = issues_list;
     }
 }

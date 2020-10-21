@@ -41,6 +41,9 @@ public interface AppVariablesDao {
     @Query("SELECT fertilizer_luxand_flag FROM app_variables WHERE variable_id = :variable_id")
     String getFertilizerLuxandFlag(String variable_id);
 
+    @Query("SELECT issues_list FROM app_variables WHERE variable_id = :variable_id")
+    String getIssuesList(String variable_id);
+
     /**
      * Insert the object in database
      * @param appVariables, object to be inserted

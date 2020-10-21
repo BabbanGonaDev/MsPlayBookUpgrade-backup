@@ -344,4 +344,9 @@
     <string name="fertilizer_collection_point_success">You have successfully registered for fertilizer program</string>
     <string name="error_fertilizer_collection_point_location">Please select fertilizer collection center</string>
     <string name="error_member_already_registered">You have already registered for the fertilizer program</string>
+    <string name="select_hg_title">HG Reason</string>
+    <string name="select_hg_reason">Select HG Reason</string>
+    <string name="enter_other_reason">Type other reasons here</string>
+    <string name="enter_reason">Please enter a reason</string>
+    <string name="hg_log_completed">HG Logged Successfully</string>
 </resources>
