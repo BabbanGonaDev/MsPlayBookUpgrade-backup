@@ -2,6 +2,7 @@ package com.babbangona.mspalybookupgrade.data.db;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -33,6 +34,7 @@ import com.babbangona.mspalybookupgrade.data.db.daos.RFListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.ScheduleThreshingActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.SyncSummaryDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.VillageLocationsDao;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
 import com.babbangona.mspalybookupgrade.data.db.entities.BGTCoaches;
@@ -57,6 +59,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
 import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
+import com.babbangona.mspalybookupgrade.data.db.entities.VillageLocations;
 
 
 @Database(entities = {ActivityList.class, NormalActivitiesFlag.class, Fields.class, StaffList.class,
@@ -65,7 +68,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
         RFList.class, PictureSync.class, PWSActivitiesFlag.class, PWSCategoryList.class,
         PCPWSActivitiesFlag.class, PWSActivityController.class,
         ScheduledThreshingActivitiesFlag.class, BGTCoaches.class, ConfirmThreshingActivitiesFlag.class,
-        FertilizerMembers.class},
+        FertilizerMembers.class, VillageLocations.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -86,20 +89,49 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract HarvestLocationsDao harvestLocationsDao();
     public abstract AppVariablesDao appVariablesDao();
     public abstract RFActivitiesFlagDao rfActivitiesFlagDao();
+
     public abstract RFListDao rfListDao();
+
     public abstract PictureSyncDao pictureSyncDao();
+
     public abstract PWSActivitiesFlagDao pwsActivitiesFlagDao();
+
     public abstract PWSCategoryListDao pwsCategoryListDao();
+
     public abstract PCPWSActivitiesFlagDao pcpwsActivitiesFlagDao();
+
     public abstract PWSActivityControllerDao pwsActivityControllerDao();
+
     public abstract ScheduleThreshingActivitiesFlagDao scheduleThreshingActivitiesFlagDao();
+
     public abstract BGTCoachesDao bgtCoachesDao();
+
     public abstract ConfirmThreshingActivitiesFlagDao confirmThreshingActivitiesFlagDao();
+
     public abstract FertilizerMembersDao fertilizerMembersDao();
+
+    private static final Migration MIGRATION_16_17 = new Migration(16, 17) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            //Add the village locations table
+            database.execSQL("CREATE TABLE IF NOT EXISTS village_locations (" +
+                    "unique_member_id TEXT NOT NULL," +
+                    "village_name TEXT," +
+                    "village_id TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "staff_id TEXT," +
+                    "PRIMARY KEY(unique_member_id))"
+            );
+
+            //Add village locations to last_sync table.
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_village_locations' TEXT DEFAULT '2019-01-01 00:00:00'");
+        }
+    };
 
     /**
      * Return instance of database creation
-     * */
+     */
     public static AppDatabase getInstance(Context context) {
         if (null == appDatabase) {
             appDatabase = buildDatabaseInstance(context);
@@ -435,7 +467,6 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-
     private static final Migration MIGRATION_13_14 = new Migration(13, 14) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -443,10 +474,8 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE bgt_coaches ADD COLUMN 'bgt_name' TEXT ");
             database.execSQL("ALTER TABLE confirm_threshing_activities_flag ADD COLUMN 'thresher' TEXT ");
             database.execSQL("ALTER TABLE confirm_threshing_activities_flag ADD COLUMN 'thresher_id' TEXT");
-
         }
     };
-
 
     private static final Migration MIGRATION_14_15 = new Migration(14, 15) {
         @Override
@@ -477,7 +506,6 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-
     private static final Migration MIGRATION_15_16 = new Migration(15, 16) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -486,21 +514,24 @@ public abstract class AppDatabase extends RoomDatabase {
 
         }
     };
-    
+
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
                 context,
                 AppDatabase.class,
                 DatabaseStringConstants.MS_PLAYBOOK_DATABASE_NAME)
                 .allowMainThreadQueries()
-                .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,
-                        MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,
-                        MIGRATION_11_12,MIGRATION_12_13,MIGRATION_13_14,MIGRATION_14_15,MIGRATION_15_16)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,
+                        MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11,
+                        MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16,
+                        MIGRATION_16_17)
                 .build();
 //                .fallbackToDestructiveMigration()
     }
 
-    public void cleanUp(){
+    public abstract VillageLocationsDao villageLocationsDao();
+
+    public void cleanUp() {
         appDatabase = null;
     }
 }

@@ -5,8 +5,8 @@ public class DatabaseStringConstants {
     /**
      * database particulars
      */
-    public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 16;
+    public static final String MS_PLAYBOOK_DATABASE_NAME = "ms_playbook_upgrade.db";
+    public static final int MS_PLAYBOOK_DATABASE_VERSION = 17;
 
     /**
      * Names of tables
@@ -36,7 +36,8 @@ public class DatabaseStringConstants {
     public static final String LOCATIONS_TABLE                              = "locations_table";
     public static final String THRESHING_LOCATION                           = "threshing_location";
     public static final String BGT_COACHES_TABLE                            = "bgt_coaches";
-    public static final String FERTILIZER_MEMBERS_TABLE                     = "fertilizer_members";
+    public static final String FERTILIZER_MEMBERS_TABLE = "fertilizer_members";
+    public static final String VILLAGE_LOCATIONS_TABLE = "village_locations";
 
     /**
      * activity_list column names
@@ -171,7 +172,8 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_DOWN_CONFIRM_ACTIVITY_FLAGS_TABLE  = "last_sync_down_confirm_activities_flag";
     public static final String LAST_SYNC_BGT_COACHES_TABLE                  = "last_sync_bgt_coaches";
     public static final String LAST_SYNC_UP_FERTILIZER_MEMBERS              = "last_sync_up_fertilizer_members";
-    public static final String LAST_SYNC_DOWN_FERTILIZER_MEMBERS            = "last_sync_down_fertilizer_members";
+    public static final String LAST_SYNC_DOWN_FERTILIZER_MEMBERS = "last_sync_down_fertilizer_members";
+    public static final String LAST_SYNC_DOWN_VILLAGE_LOCATIONS = "last_sync_down_village_locations";
 
     /**
      * category column names
