@@ -73,6 +73,25 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/dummy_layouty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_goToHarvest"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="@color/text_color_black"
+                            android:text="Harvest Home Page"
+                            android:textColor="@android:color/white"
+                            android:layout_gravity="center_horizontal"
+                            app:cornerRadius="12dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/layoutyy"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"

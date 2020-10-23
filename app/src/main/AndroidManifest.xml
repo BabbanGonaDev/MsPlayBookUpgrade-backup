@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -32,11 +33,22 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
-        <activity android:name=".HarvestSummary.MemberDetails"></activity>
-        <activity android:name=".HarvestSummary.TrustGroupMembers" />
-        <activity android:name=".HarvestSummary.TrustGroupDetails" />
-        <activity android:name=".HarvestSummary.HarvestSummaryPage" />
-        <activity android:name=".HarvestSummary.HarvestTrustGroupList" />
+        <activity
+            android:name=".HarvestSummary.MemberDetails"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".HarvestSummary.TrustGroupMembers"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".HarvestSummary.TrustGroupDetails"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".HarvestSummary.HarvestSummaryPage"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".HarvestSummary.HarvestTrustGroupList"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".HarvestSummary.HarvestHomePage" />
         <activity
             android:name=".ThreshingViews.ScheduleThreshingSummary"

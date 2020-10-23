@@ -95,6 +95,9 @@ public class SharedPrefs {
     public static final String KEY_SWAP_FIELD_ID                    = "swap_field_id";
     public static final String KEY_RESCHEDULE_STATE_FLAG            = "reschedule_state_flag";
 
+    public static final String KEY_HARVEST_SUMMARY_IK_NUMBER                        = "harvest_summary_ik_number";
+    public static final String INDIVIDUAL_KEY_HARVEST_SUMMARY_IK_NUMBER             = "individual_harvest_summary_ik_number";
+
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
@@ -392,6 +395,17 @@ public class SharedPrefs {
         editor.commit();
     }
 
+    public void setKeyHarvestSummaryIkNumber(String harvestSummaryIkNumber){
+        editor.putString(KEY_HARVEST_SUMMARY_IK_NUMBER, harvestSummaryIkNumber);
+        editor.commit();
+    }
+
+    public void setKeyIndividualHarvestSummaryIkNumber(String individualHarvestSummaryIkNumber){
+        editor.putString(INDIVIDUAL_KEY_HARVEST_SUMMARY_IK_NUMBER, individualHarvestSummaryIkNumber);
+        editor.commit();
+    }
+
+
     /**
      *      Do not edit anything below
      * ____________________________________________________________________________________________
@@ -646,5 +660,13 @@ public class SharedPrefs {
 
     public String getKeyRescheduleStateFlag() {
         return pref.getString(KEY_RESCHEDULE_STATE_FLAG, "0");
+    }
+
+    public String getKeyHarvestSummaryIkNumber(){
+        return pref.getString(KEY_HARVEST_SUMMARY_IK_NUMBER,"");
+    }
+
+    public String getKeyIndividualHarvestSummaryIkNumber(){
+        return pref.getString(INDIVIDUAL_KEY_HARVEST_SUMMARY_IK_NUMBER,"");
     }
 }
