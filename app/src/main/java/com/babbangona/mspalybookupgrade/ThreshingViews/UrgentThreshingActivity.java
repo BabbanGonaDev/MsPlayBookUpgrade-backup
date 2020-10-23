@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.TextView;
 
 import com.babbangona.mspalybookupgrade.R;
@@ -70,6 +72,8 @@ public class UrgentThreshingActivity extends AppCompatActivity {
         setPortfolioMethods = new SetPortfolioMethods();
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(UrgentThreshingActivity.this));
+
+        textWatcher(edtOtherReason, edlOtherReason, getResources().getString(R.string.enter_reason));
 
 
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,UrgentThreshingActivity.this);
@@ -225,5 +229,37 @@ public class UrgentThreshingActivity extends AppCompatActivity {
             device_id = "";
         }
         return device_id;
+    }
+
+    void textWatcher(TextInputEditText textInputEditText, TextInputLayout textInputLayout, String error_message) {
+        textInputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (Objects.requireNonNull(textInputEditText.getText()).toString().length() > 0){
+                    if (!validateFields(textInputEditText)){
+                        setErrorOfTextView(textInputLayout,error_message);
+                    }else {
+                        removeErrorFromText(textInputLayout);
+                    }
+                }else{
+                    removeErrorFromText(textInputLayout);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private boolean validateFields(TextInputEditText textInputEditText){
+        String watchWord = Objects.requireNonNull(textInputEditText.getText()).toString();
+        return watchWord.length() >= 2;
     }
 }
