@@ -110,25 +110,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract FertilizerMembersDao fertilizerMembersDao();
 
-    private static final Migration MIGRATION_16_17 = new Migration(16, 17) {
-        @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
-            //Add the village locations table
-            database.execSQL("CREATE TABLE IF NOT EXISTS village_locations (" +
-                    "unique_member_id TEXT NOT NULL," +
-                    "village_name TEXT," +
-                    "village_id TEXT," +
-                    "latitude TEXT," +
-                    "longitude TEXT," +
-                    "staff_id TEXT," +
-                    "PRIMARY KEY(unique_member_id))"
-            );
-
-            //Add village locations to last_sync table.
-            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_village_locations' TEXT DEFAULT '2019-01-01 00:00:00'");
-        }
-    };
-
     /**
      * Return instance of database creation
      */
@@ -512,6 +493,25 @@ public abstract class AppDatabase extends RoomDatabase {
 
             database.execSQL("ALTER TABLE app_variables ADD COLUMN 'issues_list' TEXT DEFAULT ''");
 
+        }
+    };
+
+    private static final Migration MIGRATION_16_17 = new Migration(16, 17) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            //Add the village locations table
+            database.execSQL("CREATE TABLE IF NOT EXISTS village_locations (" +
+                    "unique_member_id TEXT NOT NULL," +
+                    "village_name TEXT," +
+                    "village_id TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "staff_id TEXT," +
+                    "PRIMARY KEY(unique_member_id))"
+            );
+
+            //Add village locations to last_sync table.
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_village_locations' TEXT DEFAULT '2019-01-01 00:00:00'");
         }
     };
 

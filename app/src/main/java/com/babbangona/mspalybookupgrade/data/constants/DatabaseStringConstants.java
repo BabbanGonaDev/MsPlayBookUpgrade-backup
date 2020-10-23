@@ -204,23 +204,26 @@ public class DatabaseStringConstants {
      * app_variables column names
      */
     public static final String VARIABLE_ID                                  = "variable_id";
-    public static final String EDIT_HARVEST_LOCATION_FLAG                   = "edit_harvest_location_flag";
-    public static final String MINIMUM_LOG_DATE_FLAG                        = "minimum_log_date";
-    public static final String MAXIMUM_LOG_DATE_FLAG                        = "maximum_log_date";
-    public static final String FIELDS_TRAVEL_TIME                           = "fields_travel_time";
-    public static final String AVERAGE_TRANSITION_TIME                      = "average_transition_time";
-    public static final String TIME_PER_HA                                  = "time_per_ha";
-    public static final String MAXIMUM_SCHEDULE_DATE                        = "maximum_schedule_date";
-    public static final String LUXAND_FLAG                                  = "luxand_flag";
-    public static final String FERTILIZER_LUXAND_FLAG                       = "fertilizer_luxand_flag";
-    public static final String ISSUES_LIST                                  = "issues_list";
+    public static final String EDIT_HARVEST_LOCATION_FLAG = "edit_harvest_location_flag";
+    public static final String MINIMUM_LOG_DATE_FLAG = "minimum_log_date";
+    public static final String MAXIMUM_LOG_DATE_FLAG = "maximum_log_date";
+    public static final String FIELDS_TRAVEL_TIME = "fields_travel_time";
+    public static final String AVERAGE_TRANSITION_TIME = "average_transition_time";
+    public static final String TIME_PER_HA = "time_per_ha";
+    public static final String MAXIMUM_SCHEDULE_DATE = "maximum_schedule_date";
+    public static final String LUXAND_FLAG = "luxand_flag";
+    public static final String FERTILIZER_LUXAND_FLAG = "fertilizer_luxand_flag";
+    public static final String ISSUES_LIST = "issues_list";
+    public static final String LOCATION_TRACKER_FLAG = "bgt_location_tracker_flag";
+    public static final String LOCATION_TRACKER_DAYS = "bgt_location_tracker_days";
+    public static final String LOCATION_TRACKER_HOURS = "bgt_location_tracker_hours";
 
     /**
      * rf_list column names
      */
-    public static final String COL_RF_TYPE_RF_LIST                          = "rf_type";
-    public static final String COL_RF_TYPE_DEACTIVATED_STATUS               = "deactivated_status";
-    public static final String COL_USER_CATEGORY_RF_LIST                    = "user_category";
+    public static final String COL_RF_TYPE_RF_LIST = "rf_type";
+    public static final String COL_RF_TYPE_DEACTIVATED_STATUS = "deactivated_status";
+    public static final String COL_USER_CATEGORY_RF_LIST = "user_category";
 
     /**
      * rf_activities column names
