@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_open_access_control)
     public void navigateToAccessControl(){
-        Launch();
-        //OpenAccessControl();
+        //Launch();
+        OpenAccessControl();
     }
 
     void OpenAccessControl(){
