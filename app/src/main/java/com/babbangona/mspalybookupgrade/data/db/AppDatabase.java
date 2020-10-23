@@ -512,6 +512,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
             //Add village locations to last_sync table.
             database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_village_locations' TEXT DEFAULT '2019-01-01 00:00:00'");
+
+            //Add bgt_location_tracker variables to the app variables table.
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'bgt_location_tracker_flag' TEXT DEFAULT '1'");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'bgt_location_tracker_days' TEXT DEFAULT 'Monday,Tuesday,Wednesday,Thursday,Friday'");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'bgt_location_tracker_hours' TEXT DEFAULT '09:00:00,18:00:00'");
         }
     };
 

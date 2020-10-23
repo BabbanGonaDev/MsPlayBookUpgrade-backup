@@ -44,8 +44,18 @@ public interface AppVariablesDao {
     @Query("SELECT issues_list FROM app_variables WHERE variable_id = :variable_id")
     String getIssuesList(String variable_id);
 
+    @Query("SELECT bgt_location_tracker_flag FROM app_variables WHERE variable_id = :variable_id")
+    String getBgtLocationTrackerFlag(String variable_id);
+
+    @Query("SELECT bgt_location_tracker_days FROM app_variables WHERE variable_id = :variable_id")
+    String getBgtLocationTrackerDays(String variable_id);
+
+    @Query("SELECT bgt_location_tracker_hours FROM app_variables WHERE variable_id = :variable_id")
+    String getBgtLocationTrackerHours(String variable_id);
+
     /**
      * Insert the object in database
+     *
      * @param appVariables, object to be inserted
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
