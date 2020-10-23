@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#FAFAFA</color>
+    <color name="colorError">#F44336</color>
+    <color name="colorOnBackground">#212121</color>
+    <color name="colorOnError">#FFFFFF</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorOnSurface">#212121</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryVariant">#000000</color>
+    <color name="colorSecondary">#2962FF</color>
+    <color name="colorSecondaryVariant">#0039CB</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <string name="Luxand_Params_Default">
+                        ContinuousVideoFeed=true;
+                        KeepFaceImages=false;
+                        FacialFeatureJitterSuppression=5;
+                        RecognitionPrecision=1;
+                        Threshold=0.982;
+                        Threshold2=0.982;
+                        ThresholdFeed=0.982;
+                        MemoryLimit=10240;
+                        HandleArbitraryRotations=true;
+                        DetermineFaceRotationAngle=true;
+                        InternalResizeWidth=100;
+                        KeepFaceImages=false;
+                        FaceDetectionThreshold=5;
+    </string>
+    <string name="Luxand_Params_Keep_Face">
+                        ContinuousVideoFeed=true;
+                        KeepFaceImages=true;
+                        FacialFeatureJitterSuppression=5;
+                        RecognitionPrecision=1;
+                        Threshold=0.982;
+                        Threshold2=0.982;
+                        ThresholdFeed=0.982;
+                        MemoryLimit=10240;
+                        HandleArbitraryRotations=true;
+                        DetermineFaceRotationAngle=true;
+                        InternalResizeWidth=100;
+                        KeepFaceImages=false;
+                        FaceDetectionThreshold=5;
+    </string>
+    <string name="app_name">BGFR</string>
+    <string name="capture">START</string>
+    <string name="capture_id">Capture ID</string>
+    <string name="error_camera">CANNOT OPEN CAMERA: PLEASE ENABLE CAMERA PERMISSIONS.</string>
+    <string name="flash">FLASH</string>
+    <string name="start">START</string>
+    <string name="switcher">SWITCH</string>
+    <string name="temp1">0</string>
+    <string name="temp2">0</string>
+    <string name="timer">00:00</string>
+    <style name="BGFR" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="colorError">@color/colorError</item>
+        <item name="colorOnError">@color/colorOnError</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnBackground">@color/colorOnBackground</item>
+    </style>
+</resources>

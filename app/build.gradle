@@ -94,7 +94,7 @@ dependencies {
     implementation project(':BGFR')
 
     repositories {
-        maven{
+        maven {
             url 'https://sdk.uxcam.com/android/'
         }
     }
