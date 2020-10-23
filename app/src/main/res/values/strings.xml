@@ -350,4 +350,5 @@
     <string name="enter_reason">Please enter a reason</string>
     <string name="hg_log_completed">HG Logged Successfully</string>
     <string name="cannot_swap_urgent">You cannot swap an urgent schedule with another field scheduled for threshing.</string>
+    <string name="urgent_schedule_reason">Urgent Schedule Reason</string>
 </resources>

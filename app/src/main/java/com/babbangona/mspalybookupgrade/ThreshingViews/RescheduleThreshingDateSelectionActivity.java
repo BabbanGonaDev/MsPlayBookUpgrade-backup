@@ -844,11 +844,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 .setNegativeButton(context.getResources().getString(R.string.urgent), (dialog, which) -> {
                     //this is to dismiss the dialog
                     dialog.dismiss();
-                    updateUrgentActivity(sharedPrefs.getKeyThreshingUniqueFieldId(),
-                            String.valueOf(latitude),
-                            String.valueOf(longitude),
-                            sharedPrefs.getKeyThreshingIkNumber(),
-                            sharedPrefs.getKeyThreshingCropType());
+                    launchUrgentActivity();
                 })
                 .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
                     //this is to dismiss the dialog
@@ -857,6 +853,11 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 })
                 .setCancelable(false)
                 .show();
+    }
+
+    void launchUrgentActivity(){
+        finish();
+        startActivity(new Intent(RescheduleThreshingDateSelectionActivity.this, UrgentThreshingActivity.class));
     }
 
     private void updateUrgentActivity(String unique_field_id,
@@ -870,7 +871,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 "0000-00-00",
                 "urgent reschedule",
                 sharedPrefs.getStaffID(),
-                getDate("spread")
+                getDate("spread"),""
 
         );
 

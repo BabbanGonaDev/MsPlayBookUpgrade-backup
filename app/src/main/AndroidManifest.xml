@@ -34,7 +34,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
-        <activity android:name=".ThreshingViews.LogThreshingHG"
+        <activity android:name=".ThreshingViews.UrgentThreshingActivity"></activity>
+        <activity
+            android:name=".ThreshingViews.LogThreshingHG"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FertilizerSignUpViews.FertilizerCollectionCenter"
