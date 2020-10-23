@@ -175,8 +175,8 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                 showConfirmSuccess(context.getResources().getString(R.string.error_schedule_after_confirm),context,"crying");
             }else{
                 if (status > 0){
-                    showDialogForRescheduleThreshing(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
-                    //showDialogForRescheduleThreshingBodyUrgent(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
+                    //showDialogForRescheduleThreshing(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
+                    showDialogForRescheduleThreshingBodyUrgent(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
 
                 }else if(urgent_status > 0 ){
                     showDialogForRescheduleThreshingBodyUrgent(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
