@@ -121,7 +121,6 @@ public class ActivityListDownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        getInputData();
         getHGList();
         getRFList();
         getPWSCategoryList();
@@ -172,6 +171,7 @@ public class ActivityListDownloadService extends IntentService {
         getStaffList();
         getLogsDownload();
         pictureLoop(ImgDirectory);
+        getInputData();
     }
 
     /*
@@ -185,7 +185,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<ActivityListDownload> call = retrofitInterface.getActivityListDownload(last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<ActivityListDownload>() {
             @Override
             public void onResponse(@NonNull Call<ActivityListDownload> call,
@@ -211,7 +213,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.ACTIVITY_LIST_TABLE,
                                 "Activity List Download",
                                 "1",
-                                returnRemark(activityLists.size(), "d"),
+                                returnRemark(activityLists.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 activityListDownload.getLast_sync_time()
 
                         );
@@ -222,6 +224,9 @@ public class ActivityListDownloadService extends IntentService {
                                 "Download null",
                                 "0000-00-00 00:00:00"
                         );
+                    }
+                    if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+                        Toast.makeText(ActivityListDownloadService.this, "Syncing done", Toast.LENGTH_LONG).show();
                     }
                 }else {
                     int sc = response.code();
@@ -308,7 +313,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<HGListDownload> call = retrofitInterface.getHGListDownload(last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<HGListDownload>() {
             @Override
             public void onResponse(@NonNull Call<HGListDownload> call,
@@ -333,7 +340,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.HG_LIST_TABLE,
                                 "HG List Download",
                                 "1",
-                                returnRemark(hgLists.size(), "d"),
+                                returnRemark(hgLists.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 hgListDownload.getLast_sync_time()
 
                         );
@@ -429,7 +436,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<MsPlaybookInputDownload> call = retrofitInterface.getMsPlaybookInputDataDownload(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<MsPlaybookInputDownload>() {
             @Override
             public void onResponse(@NonNull Call<MsPlaybookInputDownload> call,
@@ -458,7 +467,9 @@ public class ActivityListDownloadService extends IntentService {
                             List<String> member_list = new ArrayList<>();
                             for (Members members: membersList){
                                 downloadPictures(members.getUnique_member_id());
-                                sharedPrefs.setKeyProgressDialogStatus(0);
+                                if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
                             }
 
 
@@ -474,14 +485,14 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.FIELDS_TABLE,
                                 "Fields Record Download",
                                 "1",
-                                returnRemark(fieldsList.size(), "d"),
+                                returnRemark(fieldsList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 msPlaybookInputDownload.getLast_sync_time()
 
                         );
                         insetToSyncSummary(DatabaseStringConstants.MEMBERS_TABLE,
                                 "Members Record Download",
                                 "1",
-                                returnRemark(membersList.size(), "d"),
+                                returnRemark(membersList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 msPlaybookInputDownload.getLast_sync_time()
 
                         );
@@ -500,7 +511,6 @@ public class ActivityListDownloadService extends IntentService {
                         );
                     }
                     getActivityList();
-                    Toast.makeText(ActivityListDownloadService.this, "Syncing done", Toast.LENGTH_LONG).show();
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
@@ -863,7 +873,9 @@ public class ActivityListDownloadService extends IntentService {
         Log.d("composed_json",composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<LogsUpload>> call = retrofitInterface.uploadLogsRecord(composed_json, sharedPrefs.getStaffID());
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<List<LogsUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<LogsUpload>> call, @NonNull Response<List<LogsUpload>> response) {
@@ -899,7 +911,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.LOGS_TABLE+"_upload",
                                     "Logs Upload",
                                     "1",
-                                    returnRemark(logsUploadList.size(), "u"),
+                                    returnRemark(logsUploadList.size(), DatabaseStringConstants.SYNC_MESSAGE_UPLOAD_FLAG),
                                     logsUploadList.get(0).getLast_synced()
 
                             );
@@ -969,7 +981,9 @@ public class ActivityListDownloadService extends IntentService {
         Log.d("composed_json",composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<HGActivitiesUpload>> call = retrofitInterface.uploadHGActivitiesRecord(composed_json, sharedPrefs.getStaffID());
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<List<HGActivitiesUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<HGActivitiesUpload>> call, @NonNull Response<List<HGActivitiesUpload>> response) {
@@ -1004,7 +1018,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.HG_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "HG Activities Upload",
                                     "1",
-                                    returnRemark(hgActivitiesUploadList.size(), "u"),
+                                    returnRemark(hgActivitiesUploadList.size(), DatabaseStringConstants.SYNC_MESSAGE_UPLOAD_FLAG),
                                     hgActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -1074,7 +1088,9 @@ public class ActivityListDownloadService extends IntentService {
         String composed_json = new Gson().toJson(normalActivitiesFlagList);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<NormalActivitiesUpload>> call = retrofitInterface.uploadNormalActivitiesRecord(composed_json, sharedPrefs.getStaffID());
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<List<NormalActivitiesUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<NormalActivitiesUpload>> call, @NonNull Response<List<NormalActivitiesUpload>> response) {
@@ -1105,7 +1121,7 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.NORMAL_ACTIVITY_FLAGS_TABLE+"_upload",
                                         "Normal Activities Upload",
                                         "1",
-                                        returnRemark(normalActivitiesUploadList.size(), "u"),
+                                        returnRemark(normalActivitiesUploadList.size(), DatabaseStringConstants.SYNC_MESSAGE_UPLOAD_FLAG),
                                         normalActivitiesUploadList.get(0).getLast_synced()
 
                                 );
@@ -1177,7 +1193,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<StaffListDownload> call = retrofitInterface.getStaffListDownload(last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<StaffListDownload>() {
             @Override
             public void onResponse(@NonNull Call<StaffListDownload> call,
@@ -1202,7 +1220,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.STAFF_TABLE,
                                 "Staff List Download",
                                 "1",
-                                returnRemark(staffLists.size(), "d"),
+                                returnRemark(staffLists.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 staffListDownload.getLast_sync_time()
                         );
                     }else{
@@ -1297,7 +1315,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<LogsDownload> call = retrofitInterface.downloadLogs(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<LogsDownload>() {
             @Override
             public void onResponse(@NonNull Call<LogsDownload> call,
@@ -1322,7 +1342,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.LOGS_TABLE+"_download",
                                 "Logs Download",
                                 "1",
-                                returnRemark(logsList.size(), "d"),
+                                returnRemark(logsList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 logsDownload.getLast_sync_time()
                         );
                     }else{
@@ -1418,7 +1438,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<HGActivitiesFlagDownload> call = retrofitInterface.downloadHGActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<HGActivitiesFlagDownload>() {
             @Override
             public void onResponse(@NonNull Call<HGActivitiesFlagDownload> call,
@@ -1443,7 +1465,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.HG_ACTIVITY_FLAGS_TABLE+"_download",
                                 "HG Activities Download",
                                 "1",
-                                returnRemark(hgActivitiesFlagList.size(), "d"),
+                                returnRemark(hgActivitiesFlagList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 hgActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -1539,7 +1561,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<NormalActivitiesFlagDownload> call = retrofitInterface.downloadNormalActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<NormalActivitiesFlagDownload>() {
             @Override
             public void onResponse(@NonNull Call<NormalActivitiesFlagDownload> call,
@@ -1564,7 +1588,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.NORMAL_ACTIVITY_FLAGS_TABLE+"_download",
                                 "Normal Activities Download",
                                 "1",
-                                returnRemark(normalActivitiesFlagList.size(), "d"),
+                                returnRemark(normalActivitiesFlagList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 normalActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -1660,7 +1684,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<CategoryDownload> call = retrofitInterface.downloadCategory(last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<CategoryDownload>() {
             @Override
             public void onResponse(@NonNull Call<CategoryDownload> call,
@@ -1685,7 +1711,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.CATEGORY_TABLE,
                                 "Category List Download",
                                 "1",
-                                returnRemark(categoryList.size(), "d"),
+                                returnRemark(categoryList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 categoryDownload.getLast_sync_time()
                         );
                     }else{
@@ -1781,7 +1807,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<HarvestLocationDownload> call = retrofitInterface.downloadHarvestLocation(last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<HarvestLocationDownload>() {
             @Override
             public void onResponse(@NonNull Call<HarvestLocationDownload> call,
@@ -1806,7 +1834,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.HARVEST_LOCATION_TABLE,
                                 "Harvest Collection Centres Download",
                                 "1",
-                                returnRemark(harvestLocationsTableList.size(), "d"),
+                                returnRemark(harvestLocationsTableList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 harvestLocationDownload.getLast_sync_time()
                         );
                     }else{
@@ -1900,7 +1928,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<AppVariablesDownload> call = retrofitInterface.downloadAppVariables(sharedPrefs.getStaffID());
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<AppVariablesDownload>() {
             @Override
             public void onResponse(@NonNull Call<AppVariablesDownload> call,
@@ -1917,7 +1947,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.APP_VARIABLES,
                                 "App Variables Download",
                                 "1",
-                                returnRemark(appVariablesList.size(), "d"),
+                                returnRemark(appVariablesList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 appVariablesDownload.getLast_sync_time()
                         );
                     }else{
@@ -2013,7 +2043,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<RFListDownload> call = retrofitInterface.getRFListDownload(last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<RFListDownload>() {
             @Override
             public void onResponse(@NonNull Call<RFListDownload> call,
@@ -2038,7 +2070,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.RF_LIST_TABLE,
                                 "RF List Download",
                                 "1",
-                                returnRemark(rfLists.size(), "d"),
+                                returnRemark(rfLists.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 rfListDownload.getLast_sync_time()
 
                         );
@@ -2134,7 +2166,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<RFActivitiesFlagDownload> call = retrofitInterface.downloadRFActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<RFActivitiesFlagDownload>() {
             @Override
             public void onResponse(@NonNull Call<RFActivitiesFlagDownload> call,
@@ -2159,7 +2193,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_download",
                                 "RF Activities Download",
                                 "1",
-                                returnRemark(rfActivitiesFlagList.size(), "d"),
+                                returnRemark(rfActivitiesFlagList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 rfActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -2255,7 +2289,9 @@ public class ActivityListDownloadService extends IntentService {
         Log.d("composed_json",composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<RFActivitiesUpload>> call = retrofitInterface.uploadRFActivitiesRecord(composed_json, sharedPrefs.getStaffID());
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<List<RFActivitiesUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<RFActivitiesUpload>> call, @NonNull Response<List<RFActivitiesUpload>> response) {
@@ -2290,7 +2326,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "RF Activities Upload",
                                     "1",
-                                    returnRemark(rfActivitiesUploadList.size(), "u"),
+                                    returnRemark(rfActivitiesUploadList.size(), DatabaseStringConstants.SYNC_MESSAGE_UPLOAD_FLAG),
                                     rfActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -2453,7 +2489,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<PWSCategoryListDownload> call = retrofitInterface.getPWSCategoryList(last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<PWSCategoryListDownload>() {
             @Override
             public void onResponse(@NonNull Call<PWSCategoryListDownload> call,
@@ -2478,7 +2516,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PWS_CATEGORY_LIST_TABLE,
                                 "PWS Category List Download",
                                 "1",
-                                returnRemark(pwsCategoryLists.size(), "d"),
+                                returnRemark(pwsCategoryLists.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 pwsCategoryListDownload.getLast_sync_time()
 
                         );
@@ -2574,7 +2612,9 @@ public class ActivityListDownloadService extends IntentService {
         //Log.d("composed_json_pws",composed_json_pws);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<PWSActivitiesUpload>> call = retrofitInterface.uploadPWSActivitiesRecord(composed_json_pws, sharedPrefs.getStaffID());
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<List<PWSActivitiesUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<PWSActivitiesUpload>> call, @NonNull Response<List<PWSActivitiesUpload>> response) {
@@ -2609,7 +2649,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "PWS Activities Upload",
                                     "1",
-                                    returnRemark(pwsActivitiesUploadList.size(), "u"),
+                                    returnRemark(pwsActivitiesUploadList.size(), DatabaseStringConstants.SYNC_MESSAGE_UPLOAD_FLAG),
                                     pwsActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -2680,7 +2720,9 @@ public class ActivityListDownloadService extends IntentService {
         Log.d("composed_json",composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<PCPWSActivitiesUpload>> call = retrofitInterface.uploadPCPWSActivitiesRecord(composed_json, sharedPrefs.getStaffID());
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<List<PCPWSActivitiesUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<PCPWSActivitiesUpload>> call, @NonNull Response<List<PCPWSActivitiesUpload>> response) {
@@ -2715,7 +2757,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "PC PWS Activities Upload",
                                     "1",
-                                    returnRemark(pcpwsActivitiesUploadList.size(), "u"),
+                                    returnRemark(pcpwsActivitiesUploadList.size(), DatabaseStringConstants.SYNC_MESSAGE_UPLOAD_FLAG),
                                     pcpwsActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -2786,7 +2828,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<PWSActivitiesFlagDownload> call = retrofitInterface.downloadPWSActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<PWSActivitiesFlagDownload>() {
             @Override
             public void onResponse(@NonNull Call<PWSActivitiesFlagDownload> call,
@@ -2811,7 +2855,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_download",
                                 "PWS Activities Download",
                                 "1",
-                                returnRemark(pwsActivitiesFlagList.size(), "d"),
+                                returnRemark(pwsActivitiesFlagList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 pwsActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -2907,7 +2951,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<PCPWSActivitiesFlagDownload> call = retrofitInterface.downloadPCPWSActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<PCPWSActivitiesFlagDownload>() {
             @Override
             public void onResponse(@NonNull Call<PCPWSActivitiesFlagDownload> call,
@@ -2932,7 +2978,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_download",
                                 "PC PWS Activities Download",
                                 "1",
-                                returnRemark(pcpwsActivitiesFlagList.size(), "d"),
+                                returnRemark(pcpwsActivitiesFlagList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 pcpwsActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -3028,7 +3074,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<PWSActivityControllerDownload> call = retrofitInterface.downloadPWSActivityController(last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<PWSActivityControllerDownload>() {
             @Override
             public void onResponse(@NonNull Call<PWSActivityControllerDownload> call,
@@ -3053,7 +3101,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_CONTROLLER_TABLE,
                                 "PWS Activity Controller List Download",
                                 "1",
-                                returnRemark(pwsActivityControllerList.size(), "d"),
+                                returnRemark(pwsActivityControllerList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 pwsActivityControllerDownload.getLast_sync_time()
                         );
                     }else{
@@ -3149,7 +3197,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<ScheduledThreshingActivitiesFlagDownload> call = retrofitInterface.downloadScheduledThreshingActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<ScheduledThreshingActivitiesFlagDownload>() {
             @Override
             public void onResponse(@NonNull Call<ScheduledThreshingActivitiesFlagDownload> call,
@@ -3174,7 +3224,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
                                 "Scheduled Activities Download",
                                 "1",
-                                returnRemark(scheduledThreshingActivitiesFlagList.size(), "d"),
+                                returnRemark(scheduledThreshingActivitiesFlagList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 scheduledThreshingActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -3270,7 +3320,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<ConfirmThreshingActivitiesFlagDownload> call = retrofitInterface.downloadConfirmThreshingActivityFlag(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         Log.d("CHECK", "download confirm threshing: " + sharedPrefs.getStaffID() + " == " + portfolioToGson(sharedPrefs.getKeyPortfolioList()) + " == " + last_synced);
         call.enqueue(new Callback<ConfirmThreshingActivitiesFlagDownload>() {
             @Override
@@ -3296,7 +3348,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
                                 "Confirm Activities Download",
                                 "1",
-                                returnRemark(confirmThreshingActivitiesFlagList.size(), "d"),
+                                returnRemark(confirmThreshingActivitiesFlagList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 confirmThreshingActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -3392,7 +3444,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<BGTCoachesDownload> call = retrofitInterface.downloadBGTCoaches(last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<BGTCoachesDownload>() {
             @Override
             public void onResponse(@NonNull Call<BGTCoachesDownload> call,
@@ -3417,7 +3471,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.BGT_COACHES_TABLE+"_download",
                                 "BGT Coaches Download",
                                 "1",
-                                returnRemark(bgtCoachesList.size(),"d"),
+                                returnRemark(bgtCoachesList.size(),DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 bgtCoachesDownload.getLast_sync_time()
                         );
                     }else{
@@ -3513,7 +3567,9 @@ public class ActivityListDownloadService extends IntentService {
         Log.d("CHECK", "ScheduledThreshingActivities: " + composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<ScheduledThreshingActivitiesUpload>> call = retrofitInterface.uploadScheduledThreshingActivitiesRecord(composed_json, sharedPrefs.getStaffID());
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<List<ScheduledThreshingActivitiesUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<ScheduledThreshingActivitiesUpload>> call, @NonNull Response<List<ScheduledThreshingActivitiesUpload>> response) {
@@ -3544,7 +3600,7 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
                                         "Scheduled Activities Upload",
                                         "1",
-                                        returnRemark(scheduledThreshingActivitiesUploadList.size(),"u"),
+                                        returnRemark(scheduledThreshingActivitiesUploadList.size(),DatabaseStringConstants.SYNC_MESSAGE_UPLOAD_FLAG),
                                         scheduledThreshingActivitiesUploadList.get(0).getLast_synced()
 
                                 );
@@ -3616,7 +3672,9 @@ public class ActivityListDownloadService extends IntentService {
         Log.d("CHECK", "ConfirmedThreshingActivities: " + composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<ConfirmThreshingActivitiesUpload>> call = retrofitInterface.uploadConfirmThreshingActivitiesRecord(composed_json, sharedPrefs.getStaffID());
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<List<ConfirmThreshingActivitiesUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<ConfirmThreshingActivitiesUpload>> call, @NonNull Response<List<ConfirmThreshingActivitiesUpload>> response) {
@@ -3647,7 +3705,7 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
                                         "Confirm Activities Upload",
                                         "1",
-                                        returnRemark(confirmThreshingActivitiesUploadList.size(),"u"),
+                                        returnRemark(confirmThreshingActivitiesUploadList.size(),DatabaseStringConstants.SYNC_MESSAGE_UPLOAD_FLAG),
                                         confirmThreshingActivitiesUploadList.get(0).getLast_synced()
 
                                 );
@@ -3719,7 +3777,9 @@ public class ActivityListDownloadService extends IntentService {
         //Log.d("CHECK", "FertilizerMembersSignUp: " + composed_json);
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<List<FertilizerMembersUpload>> call = retrofitInterface.uploadFertilizerMembersRecord(composed_json, sharedPrefs.getStaffID());
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
         call.enqueue(new Callback<List<FertilizerMembersUpload>>() {
             @Override
             public void onResponse(@NonNull Call<List<FertilizerMembersUpload>> call, @NonNull Response<List<FertilizerMembersUpload>> response) {
@@ -3750,7 +3810,7 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
                                         "Fertilizer Members Upload",
                                         "1",
-                                        returnRemark(fertilizerMembersUploadList.size(),"u"),
+                                        returnRemark(fertilizerMembersUploadList.size(),DatabaseStringConstants.SYNC_MESSAGE_UPLOAD_FLAG),
                                         fertilizerMembersUploadList.get(0).getLast_synced()
 
                                 );
@@ -3822,7 +3882,9 @@ public class ActivityListDownloadService extends IntentService {
 
         retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
         Call<FertilizerMembersDownload> call = retrofitInterface.downloadFertilizerMembers(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
-        sharedPrefs.setKeyProgressDialogStatus(0);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
 //        Log.d("CHECK", "download : " + sharedPrefs.getStaffID() + " == " + portfolioToGson(sharedPrefs.getKeyPortfolioList()) + " == " + last_synced);
         call.enqueue(new Callback<FertilizerMembersDownload>() {
             @Override
@@ -3848,7 +3910,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_download",
                                 "Fertilizer Members Download",
                                 "1",
-                                returnRemark(fertilizerMembersList.size(),"d"),
+                                returnRemark(fertilizerMembersList.size(),DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
                                 fertilizerMembersDownload.getLast_sync_time()
                         );
                     }else{
@@ -4251,7 +4313,7 @@ public class ActivityListDownloadService extends IntentService {
     String returnRemark(int size, String upload_flag){
         String statement;
         if (size > 0){
-            if (upload_flag.equalsIgnoreCase("d")){
+            if (upload_flag.equalsIgnoreCase(DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG)){
                 statement = "Download successful";
             }else{
                 statement = "Upload successful";

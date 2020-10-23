@@ -103,11 +103,18 @@ public class SharedPrefs {
     public static final String KEY_FERTILIZER_PICTURE               = "fertilizer_picture";
     public static final String KEY_FERTILIZER_MEMBER_PRESENCE       = "member_presence";
 
+    public static final String KEY_AUTO_SYNC_FLAG                   = "auto_sync_flag";
+
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyAutoSyncFlag(int auto_sync_flag){
+        editor.putInt(KEY_AUTO_SYNC_FLAG, auto_sync_flag)
+                .commit();
     }
 
     public void setKeyThreshingThreshValue(String hg_thresh_value){
@@ -717,5 +724,9 @@ public class SharedPrefs {
 
     public String getKeyThreshingThreshValue() {
         return pref.getString(KEY_THRESHING_THRESH_VALUE, "XX");
+    }
+
+    public int getKeyAutoSyncFlag() {
+        return pref.getInt(KEY_AUTO_SYNC_FLAG, 0);
     }
 }

@@ -256,6 +256,10 @@ public class DatabaseStringConstants {
     public static final String CONFIRM_THRESHING                        = "3";
     public static final String MARK_HG_AT_RISK                          = "4";
     public static final String SWAP_SCHEDULE_DATE                       = "5";
+    public static final String SYNC_MESSAGE_UPLOAD_FLAG                 = "u";
+    public static final String SYNC_MESSAGE_DOWNLOAD_FLAG               = "d";
+    public static final int SYNC_TYPE_AUTO                              = 0;
+    public static final int SYNC_TYPE_MANUAL                            = 1;
 
     /**
      * picture_sync column names

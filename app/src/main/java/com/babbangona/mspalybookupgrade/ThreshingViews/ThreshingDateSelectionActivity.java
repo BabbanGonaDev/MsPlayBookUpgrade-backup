@@ -173,7 +173,9 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(ThreshingDateSelectionActivity.this));
         toolbar.setNavigationOnClickListener(v -> goToHomePage());
 
-        showUrgentStart(getResources().getString(R.string.select_threshing_type),ThreshingDateSelectionActivity.this);
+        if (sharedPrefs.getKeyThresher().equalsIgnoreCase("BG")){
+            showUrgentStart(getResources().getString(R.string.select_threshing_type),ThreshingDateSelectionActivity.this);
+        }
         fillCollectionCenterSpinner(actCollectionCenter, ThreshingDateSelectionActivity.this);
 
         actCollectionCenter.setOnItemClickListener((parent, view, position, id) -> {
