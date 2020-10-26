@@ -102,6 +102,7 @@ public class SharedPrefs {
     public static final String KEY_FERTILIZER_TEMPLATE              = "fertilizer_template";
     public static final String KEY_FERTILIZER_PICTURE               = "fertilizer_picture";
     public static final String KEY_FERTILIZER_MEMBER_PRESENCE       = "member_presence";
+    public static final String KEY_IMEI                             = "imei";
 
     // Constructor
     public SharedPrefs(Context context){
@@ -717,5 +718,14 @@ public class SharedPrefs {
 
     public String getKeyThreshingThreshValue() {
         return pref.getString(KEY_THRESHING_THRESH_VALUE, "XX");
+    }
+    public void setIMEI(String deviceId) {
+        editor.putString(KEY_IMEI, deviceId);
+        // commit changes
+        editor.commit();
+    }
+
+    public String getIMEI(){
+        return pref.getString(KEY_IMEI, null);
     }
 }

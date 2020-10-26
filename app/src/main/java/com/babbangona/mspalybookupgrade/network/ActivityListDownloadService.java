@@ -4,15 +4,22 @@ import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
+import com.babbangona.mspalybookupgrade.LocationTraker.worker.LocationTrackerWorker;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
@@ -89,6 +96,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -504,6 +512,7 @@ public class ActivityListDownloadService extends IntentService {
                     }
                     getActivityList();
                     Toast.makeText(ActivityListDownloadService.this, "Syncing done", Toast.LENGTH_LONG).show();
+                    locationTracking();
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
@@ -538,6 +547,32 @@ public class ActivityListDownloadService extends IntentService {
                     );
                 }
                 sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            private void locationTracking() {
+
+                String appVariables = appDatabase.appVariablesDao().getBgtLocationTrackerFlag("1");
+                Log.d("Worker","Flags: " + appVariables);
+                if(appVariables.equals("1")){
+                    TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+                    try {
+                        PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                        //Log.d("IMEI --> ", telephonyManager.getDeviceId() + " ---> "+ pinfo.versionName);
+                        sharedPrefs.setIMEI(telephonyManager.getDeviceId());
+            /*sharedPreference.putValue("IMEI",telephonyManager.getDeviceId());
+            sharedPreference.putValue("versionName",pinfo.versionName);*/
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("Worker","Worker Initialized");
+                    PeriodicWorkRequest.Builder photoCheckBuilder =
+                            new PeriodicWorkRequest.Builder(LocationTrackerWorker.class, 1, TimeUnit.HOURS);
+                    PeriodicWorkRequest request = photoCheckBuilder.build();
+                    WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("LocationTrack", ExistingPeriodicWorkPolicy.KEEP , request);
+                }else {
+                    Log.d("Worker","Location tracker not enabled");
+                }
+
             }
 
             @Override
