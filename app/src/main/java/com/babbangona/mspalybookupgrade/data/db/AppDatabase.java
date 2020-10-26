@@ -9,6 +9,8 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.babbangona.mspalybookupgrade.LocationTraker.database.dao.StaffDao;
+import com.babbangona.mspalybookupgrade.LocationTraker.database.entity.StaffDetails;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.daos.ActivityListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.AppVariablesDao;
@@ -68,7 +70,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.VillageLocations;
         RFList.class, PictureSync.class, PWSActivitiesFlag.class, PWSCategoryList.class,
         PCPWSActivitiesFlag.class, PWSActivityController.class,
         ScheduledThreshingActivitiesFlag.class, BGTCoaches.class, ConfirmThreshingActivitiesFlag.class,
-        FertilizerMembers.class, VillageLocations.class},
+        FertilizerMembers.class, VillageLocations.class, StaffDetails.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -109,6 +111,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ConfirmThreshingActivitiesFlagDao confirmThreshingActivitiesFlagDao();
 
     public abstract FertilizerMembersDao fertilizerMembersDao();
+
+    public abstract StaffDao staffDao();
 
     /**
      * Return instance of database creation
@@ -520,6 +524,27 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_17_18 = new Migration(17, 18) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS location_tracker (" +
+                    "id INTEGER  NOT NULL," +
+                    "bgtId TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "coach_id TEXT," +
+                    "imei TEXT," +
+                    "appVersion TEXT," +
+                    "outside_field_portfolio_flag INTEGER NOT NULL," +
+                    "outside_village_portfolio_flag INTEGER NOT NULL," +
+                    "dateLogged TEXT," +
+                    "timestamp TEXT," +
+                    "sync_flag INTEGER NOT NULL," +
+                    "PRIMARY KEY(id))"
+            );
+        }
+    };
+
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
                 context,
@@ -529,7 +554,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,
                         MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11,
                         MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16,
-                        MIGRATION_16_17)
+                        MIGRATION_16_17,MIGRATION_17_18)
                 .build();
 //                .fallbackToDestructiveMigration()
     }
