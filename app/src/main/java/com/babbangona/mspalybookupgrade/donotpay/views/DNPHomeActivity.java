@@ -62,7 +62,7 @@ public class DNPHomeActivity extends AppCompatActivity {
         session.SET_LOG_IN_STAFF_ID(shared.getStaffID());
         session.SET_LOG_IN_STAFF_NAME(shared.getStaffName());
 
-        binding.footer.tvLastSyncTime.setText("Coming Soon");
+        binding.footer.tvLastSyncTime.setText(session.GET_LAST_SYNC_DNP());
         binding.footer.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
 
         confirmDNPPhoneDate();

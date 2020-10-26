@@ -45,7 +45,7 @@ public class DNPTrustGroupActivity extends AppCompatActivity implements SearchVi
         appDb = AppDatabase.getInstance(this);
         session = new DSessionManager(this);
 
-        binding.footer.tvLastSyncTime.setText("Coming Soon");
+        binding.footer.tvLastSyncTime.setText(session.GET_LAST_SYNC_DNP());
         binding.footer.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
 
         binding.searchView.setOnQueryTextListener(this);

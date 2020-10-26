@@ -50,7 +50,7 @@ public class DNPMarkTGActivity extends AppCompatActivity {
         db = DNPDatabase.getInstance(this);
         session = new DSessionManager(this);
 
-        binding.footer.tvLastSyncTime.setText("Coming Soon");
+        binding.footer.tvLastSyncTime.setText(session.GET_LAST_SYNC_DNP());
         binding.footer.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
 
         initReasonAdapter();
