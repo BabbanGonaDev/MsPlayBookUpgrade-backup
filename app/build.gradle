@@ -61,6 +61,8 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.opencsv:opencsv:4.6'
 
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
     //the implementation for butter knife
     implementation 'com.jakewharton:butterknife:10.2.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'

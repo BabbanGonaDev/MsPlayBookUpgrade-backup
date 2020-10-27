@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/silver"
     tools:context=".HarvestSummary.HarvestTrustGroupList">
 
     <LinearLayout
@@ -87,24 +88,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/search_page_container"
-        android:layout_below="@id/title_container">
+        android:layout_below="@id/title_container"
+        android:background="@color/silver"
+        android:paddingLeft="8dp"
+        android:paddingTop="0dp"
+        android:paddingRight="8dp">
 
         <SearchView
+            android:id="@+id/issue_list_search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/issue_list_search_view"
-            android:layout_weight="20"
-            android:layout_below="@id/title_container"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
             android:background="@drawable/bg_white_rounded"
-            android:queryBackground="@drawable/bg_white_rounded"
-            android:submitBackground="@drawable/bg_white_rounded"
+            android:iconifiedByDefault="false"
             android:layoutDirection="rtl"
             android:queryHint="@string/seach_hint"
-            app:queryHint="@string/seach_hint"
-            android:iconifiedByDefault="false"
+            app:defaultQueryHint="@string/seach_hint"
             app:iconifiedByDefault="false"
-            app:defaultQueryHint="@string/seach_hint" />
+            app:queryHint="@string/seach_hint" />
 
     </LinearLayout>
 
@@ -162,7 +163,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="@dimen/dimen_15dp"
         android:layout_marginEnd="@dimen/dimen_15dp"
-        android:layout_marginBottom="@dimen/dimen_10dp"
         android:orientation="horizontal"
         android:id="@+id/time_staff_container"
         android:layout_weight="30">
@@ -172,7 +172,7 @@
             android:layout_height="match_parent"
             android:layout_weight="10"
             android:text="Last Sync Date:"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="5dp">
 
         </TextView>
 
@@ -182,7 +182,7 @@
             android:layout_weight="10"
             android:id="@+id/sync_date_notifier"
             android:text="01/01/2020"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="5dp">
 
         </TextView>
 
@@ -192,7 +192,7 @@
             android:layout_weight="10"
             android:id="@+id/staff_id_notifier"
             android:text="T-100000000000AA"
-            android:layout_marginTop="25dp">
+            android:layout_marginTop="5dp">
 
         </TextView>
 

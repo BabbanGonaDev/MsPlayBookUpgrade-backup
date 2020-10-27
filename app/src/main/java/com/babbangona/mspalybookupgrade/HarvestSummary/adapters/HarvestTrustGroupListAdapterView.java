@@ -2,6 +2,9 @@ package com.babbangona.mspalybookupgrade.HarvestSummary.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +12,20 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.babbangona.mspalybookupgrade.HarvestSummary.HarvestSummaryPage;
 import com.babbangona.mspalybookupgrade.R;
+import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -53,13 +61,31 @@ public class HarvestTrustGroupListAdapterView extends RecyclerView.Adapter<Harve
         holder.tgLeader.setText(members1.getFirst_name() + " " + members1.getLast_name());
         holder.location.setText(members1.getVillage_name());
 
+        File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_INPUT_PICTURE_LOCATION);
+        String image_name = File.separator + allMembers.get(position).getUnique_member_id() + "_thumb.jpg";
+
+        Picasso
+                .with(context)
+                .load(new File(ImgDirectory.getAbsoluteFile(), image_name))
+                .error(R.drawable.user)
+                .into(holder.tgImage);
+
+        /*File imageFile = new File(Objects.requireNonNull(context.getExternalFilesDir(null))
+                .getAbsoluteFile(), DatabaseStringConstants.MS_PLAYBOOK_INPUT_PICTURE_LOCATION + "/" + filteredMembers.get(position).getUnique_member_id() + "_thumb.jpg");
+
+        Log.d("creedpictures", members1.getUnique_member_id());
+
+        if (imageFile.exists()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            holder.tgImage.setImageBitmap(myBitmap);
+        }*/
+
         holder.tgCardLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sharedPrefs.setKeyHarvestSummaryIkNumber(members1.getIk_number());
                 Intent intent = new Intent(context, HarvestSummaryPage.class);
                 context.startActivity(intent);
-                Toast.makeText(context, members1.getIk_number(), Toast.LENGTH_SHORT).show();
             }
         });
 

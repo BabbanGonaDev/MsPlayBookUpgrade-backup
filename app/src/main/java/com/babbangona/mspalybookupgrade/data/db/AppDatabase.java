@@ -8,6 +8,8 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.babbangona.mspalybookupgrade.HarvestSummary.data.dao.CollectionCenterDao;
+import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.daos.ActivityListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.AppVariablesDao;
@@ -62,7 +64,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
         SyncSummary.class, HarvestLocationsTable.class, AppVariables.class, RFActivitiesFlag.class,
         RFList.class, PictureSync.class, PWSActivitiesFlag.class, PWSCategoryList.class,
         PCPWSActivitiesFlag.class, PWSActivityController.class,
-        ScheduledThreshingActivitiesFlag.class, BGTCoaches.class, ConfirmThreshingActivitiesFlag.class},
+        ScheduledThreshingActivitiesFlag.class, BGTCoaches.class, ConfirmThreshingActivitiesFlag.class, CollectionCenterEntity.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -92,6 +94,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ScheduleThreshingActivitiesFlagDao scheduleThreshingActivitiesFlagDao();
     public abstract BGTCoachesDao bgtCoachesDao();
     public abstract ConfirmThreshingActivitiesFlagDao confirmThreshingActivitiesFlagDao();
+    public abstract CollectionCenterDao getCollectionCenterDao();
 
     /**
      * Return instance of database creation

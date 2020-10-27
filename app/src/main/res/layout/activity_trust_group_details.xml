@@ -110,18 +110,159 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/trust_group_list_recycler"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="4dp"
             android:layout_below="@id/trust_group_details_title">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/tg_details_card">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/ik_number_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ik_number_label" />
+
+
+                    <TextView
+                        android:id="@+id/ik_number_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/no_of_bags_marketed_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_of_bags_marketed" />
+
+                    <TextView
+                        android:id="@+id/no_of_bags_marketed_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/no_of_bags_transported_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_of_bags_transported" />
+
+                    <TextView
+                        android:id="@+id/no_of_bags_transported_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/expected_bags_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expected_bags" />
+
+                    <TextView
+                        android:id="@+id/expected_bags_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/harvest_complete_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/harvest_complete" />
+
+
+                    <TextView
+                        android:id="@+id/harvest_complete_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/payment_status_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/payment_status" />
+
+                    <TextView
+                        android:id="@+id/payment_status_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_continue_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dimen_150dp"
+            android:layout_height="60dp"
             android:layout_marginBottom="@dimen/dimen_15dp"
             android:layout_centerHorizontal="true"
             android:backgroundTint="@color/displayBar"
