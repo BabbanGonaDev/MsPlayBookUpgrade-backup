@@ -14,6 +14,7 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpMembers
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.donotpay.data.models.TGList;
+import com.babbangona.mspalybookupgrade.tpo.data.models.MemberModel;
 
 import java.util.List;
 
@@ -73,7 +74,19 @@ public abstract class MembersDao {
     public abstract LiveData<List<TGList>> getTrustGroupsList();
 
     /**
+     * Functions below are used by the TPO application module
+     */
+    @Query("SELECT unique_member_id, first_name, last_name, ik_number, phone_number, coach_id FROM members")
+    public abstract DataSource.Factory<Integer, MemberModel> getAllTpoMembers();
+
+    @Query("SELECT unique_member_id, first_name, last_name, ik_number, phone_number, coach_id FROM members " +
+            "WHERE LOWER(first_name) LIKE :filter OR LOWER(last_name) LIKE :filter OR LOWER(ik_number) LIKE :filter OR phone_number LIKE :filter OR coach_id LIKE :filter")
+    public abstract DataSource.Factory<Integer, MemberModel> getAllTpoMembersFilter(String filter);
+
+
+    /**
      * Insert the object in database
+     *
      * @param members, object to be inserted
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)

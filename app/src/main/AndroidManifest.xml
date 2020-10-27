@@ -34,7 +34,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:roundIcon">
-        <activity android:name=".tpo.views.TPOHomeActivity"></activity>
+        <activity android:name=".tpo.views.SaveTPODetailsActivity"></activity>
+        <activity android:name=".tpo.views.TPOScannerActivity" />
+        <activity android:name=".tpo.views.MarkAttendanceActivity" />
+        <activity android:name=".tpo.views.TPOHomeActivity" />
         <activity
             android:name=".ThreshingViews.UrgentThreshingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -53,8 +56,6 @@
         <activity
             android:name=".FertilizerSignUpViews.FertilizerSignUpHome"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ThreshingViews.ScheduleThreshingSummary"
         <activity
             android:name=".donotpay.views.DNPMarkTGActivity"
             android:theme="@style/AppTheme.NoActionBar" />
