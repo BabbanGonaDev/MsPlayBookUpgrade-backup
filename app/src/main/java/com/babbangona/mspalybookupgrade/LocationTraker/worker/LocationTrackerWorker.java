@@ -173,7 +173,6 @@ public class LocationTrackerWorker extends Worker {
         }else {
             Log.d("Worker","Location tracker not enabled current day");
         }
-
         return Result.success();
     }
 }

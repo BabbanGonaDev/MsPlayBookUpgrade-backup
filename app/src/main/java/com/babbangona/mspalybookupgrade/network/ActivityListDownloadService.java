@@ -572,7 +572,6 @@ public class ActivityListDownloadService extends IntentService {
                 }else {
                     Log.d("Worker","Location tracker not enabled");
                 }
-
             }
 
             @Override
