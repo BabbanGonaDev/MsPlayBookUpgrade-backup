@@ -135,17 +135,6 @@
 
             </TextView>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_filter_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="60dp"
-                android:backgroundTint="@color/displayBar"
-                android:text="Filter"
-                android:textColor="@android:color/white"
-                android:layout_gravity="center_horizontal"
-                app:cornerRadius="12dp"/>
-
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

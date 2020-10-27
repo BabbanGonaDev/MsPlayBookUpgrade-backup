@@ -329,7 +329,7 @@
     <string name="all_schedules">All Schedules</string>
     <string name="urgent_schedules">Urgent Schedules</string>
     <string name="location">Location</string>
-    <string name="seach_hint">Search for Issues with Ticket No, User ID or Application name</string>
+    <string name="seach_hint">Search for Member with Name, Iknumber, and Location</string>
     <string name="list_of_trust_group">List of Trust Group</string>
     <string name="trust_group_details">Trust Group Details</string>
     <string name="trust_group_members">Trust Group Members</string>
