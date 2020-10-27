@@ -41,9 +41,8 @@ public class MarkAttendanceActivity extends AppCompatActivity implements SearchV
 
         session = new TPOSessionManager(this);
 
-        //TODO: Rehoboth, pls change this....
-        binding.footer.tvLastSyncTime.setText("To Be Added");
-        binding.footer.tvStaffId.setText("Also be added");
+        binding.footer.tvLastSyncTime.setText(session.GET_LAST_SYNC_TIME());
+        binding.footer.tvStaffId.setText(session.GET_LOG_IN_STAFF_ID());
 
         initRecycler();
 

@@ -2,8 +2,8 @@ package com.babbangona.mspalybookupgrade.tpo.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,6 +16,11 @@ import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.databinding.ActivityTpoHomeBinding;
 import com.babbangona.mspalybookupgrade.tpo.data.TPOSessionManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class TPOHomeActivity extends AppCompatActivity {
     private static final int QR_SCAN_CODE = 560;
@@ -37,15 +42,17 @@ public class TPOHomeActivity extends AppCompatActivity {
 
         session = new TPOSessionManager(this);
 
+        confirmTPOPhoneDate();
+
         binding.btnScanQr.setOnClickListener(v -> {
             Intent intent = new Intent(this, TPOScannerActivity.class);
             startActivityForResult(intent, QR_SCAN_CODE);
         });
 
-        binding.btnMarkAttendance.setOnClickListener(v -> {
+        /*binding.btnMarkAttendance.setOnClickListener(v -> {
             //Proceed to activity select member.
             startActivity(new Intent(TPOHomeActivity.this, MarkAttendanceActivity.class));
-        });
+        });*/
     }
 
     @Override
@@ -57,11 +64,12 @@ public class TPOHomeActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 //Save to shared prefs and then proceed.
                 if (data.getStringExtra("STATUS").equals("SUCCESS")) {
+
                     String cc_id = data.getStringExtra("CC_ID");
                     session.SET_COLLECTION_CENTER_ID(cc_id);
-                    binding.btnScanQr.setVisibility(View.GONE);
-                    binding.btnMarkAttendance.setVisibility(View.VISIBLE);
-                    Toast.makeText(this, "CC ID: " + cc_id + " captured. Click to begin.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "CC ID: " + cc_id + " captured.", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(TPOHomeActivity.this, MarkAttendanceActivity.class));
+
                 } else {
 
                     new MaterialAlertDialogBuilder(this)
@@ -77,7 +85,6 @@ public class TPOHomeActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -87,5 +94,35 @@ public class TPOHomeActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public Boolean confirmTPOPhoneDate() {
+        String default_date = "2020-10-14 00:00:00";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        Date last_sync = null;
+        Date def_date = null;
+        try {
+            //last_sync = sdf.parse(last_sync_transporter);
+            def_date = sdf.parse(default_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (new Date().before(def_date)) {
+            //Current Date is behind default date or last sync date, redirect
+            new MaterialAlertDialogBuilder(TPOHomeActivity.this)
+                    .setIcon(getResources().getDrawable(R.drawable.ic_wrong_calendar))
+                    .setTitle("Incorrect Date")
+                    .setMessage("Kindly correct phone date/time to use the Transporter Module")
+                    .setCancelable(false)
+                    .setPositiveButton("Okay", (dialogInterface, i) -> {
+                        startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
+                    }).setCancelable(false).show();
+        } else {
+            return true;
+        }
+
+        return false;
     }
 }

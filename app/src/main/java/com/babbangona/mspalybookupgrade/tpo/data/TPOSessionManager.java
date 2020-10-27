@@ -16,6 +16,7 @@ public class TPOSessionManager {
      */
     public static final String KEY_LOG_IN_STAFF_ID = "log_in_staff_id";
     public static final String KEY_LOG_IN_STAFF_NAME = "log_in_staff_name";
+    public static final String KEY_LAST_SYNC_TIME = "last_sync_time";
 
 
     private static final String PREF_NAME = "TPO Preferences";
@@ -52,6 +53,10 @@ public class TPOSessionManager {
         editor.putString(KEY_SELECTED_MEMBER, value).commit();
     }
 
+    public void SET_LAST_SYNC_TIME(String value) {
+        editor.putString(KEY_LAST_SYNC_TIME, value).commit();
+    }
+
     /**
      * =========================================================================
      * KEEP ALL SESSION GETTERS BELOW THIS LINE
@@ -70,4 +75,7 @@ public class TPOSessionManager {
         return prefs.getString(KEY_SELECTED_MEMBER, "");
     }
 
+    public String GET_LAST_SYNC_TIME() {
+        return prefs.getString(KEY_LAST_SYNC_TIME, "2020-10-27 00:00:00");
+    }
 }
