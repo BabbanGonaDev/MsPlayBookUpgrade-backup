@@ -550,21 +550,28 @@ public class ActivityListDownloadService extends IntentService {
             }
 
             private void locationTracking() {
-                TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-                try {
-                    PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                    //Log.d("IMEI --> ", telephonyManager.getDeviceId() + " ---> "+ pinfo.versionName);
-                    sharedPrefs.setIMEI(telephonyManager.getDeviceId());
+
+                String appVariables = appDatabase.appVariablesDao().getBgtLocationTrackerFlag("1");
+                Log.d("Worker","Flags: " + appVariables);
+                if(appVariables.equals("1")){
+                    TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+                    try {
+                        PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                        //Log.d("IMEI --> ", telephonyManager.getDeviceId() + " ---> "+ pinfo.versionName);
+                        sharedPrefs.setIMEI(telephonyManager.getDeviceId());
             /*sharedPreference.putValue("IMEI",telephonyManager.getDeviceId());
             sharedPreference.putValue("versionName",pinfo.versionName);*/
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("Worker","Worker Initialized");
+                    PeriodicWorkRequest.Builder photoCheckBuilder =
+                            new PeriodicWorkRequest.Builder(LocationTrackerWorker.class, 1, TimeUnit.HOURS);
+                    PeriodicWorkRequest request = photoCheckBuilder.build();
+                    WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("LocationTrack", ExistingPeriodicWorkPolicy.KEEP , request);
+                }else {
+                    Log.d("Worker","Location tracker not enabled");
                 }
-                Log.d("Worker","Worker Initialized");
-                PeriodicWorkRequest.Builder photoCheckBuilder =
-                        new PeriodicWorkRequest.Builder(LocationTrackerWorker.class, 1, TimeUnit.HOURS);
-                PeriodicWorkRequest request = photoCheckBuilder.build();
-                WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("LocationTrack", ExistingPeriodicWorkPolicy.KEEP , request);
             }
 
             @Override
