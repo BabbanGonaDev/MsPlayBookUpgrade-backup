@@ -25,8 +25,7 @@ import java.util.Locale;
 public class TPOHomeActivity extends AppCompatActivity {
     private static final int QR_SCAN_CODE = 560;
     /**
-     * Starting of this activity, will first trigger a QRCode scan for the warehouse.
-     * Then the mark attendance button will now show.
+     * Kindly note that the sync implementation for this module is triggered from the sync button at the home page.
      */
 
     ActivityTpoHomeBinding binding;

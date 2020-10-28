@@ -2,6 +2,7 @@ package com.babbangona.mspalybookupgrade.tpo.data.room.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.babbangona.mspalybookupgrade.tpo.data.room.tables.DeliveryAttendance;
@@ -11,7 +12,7 @@ import java.util.List;
 @Dao
 public interface DeliveryAttendanceDAO {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(DeliveryAttendance delivery);
 
     @Query("SELECT * FROM delivery_attendance_table WHERE sync_flag = 0")

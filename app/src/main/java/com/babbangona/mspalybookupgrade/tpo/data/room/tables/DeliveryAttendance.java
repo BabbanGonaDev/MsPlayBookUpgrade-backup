@@ -65,4 +65,43 @@ public class DeliveryAttendance {
     public Integer getSync_flag() {
         return sync_flag;
     }
+
+    /**
+     * Tuple for sync_up response
+     */
+    public static class Response {
+        private String unique_member_id;
+        private String cc_id;
+        private String qty_delivered;
+        private String date_delivered;
+        private Integer sync_flag;
+
+        public Response(String unique_member_id, String cc_id, String qty_delivered, String date_delivered, Integer sync_flag) {
+            this.unique_member_id = unique_member_id;
+            this.cc_id = cc_id;
+            this.qty_delivered = qty_delivered;
+            this.date_delivered = date_delivered;
+            this.sync_flag = sync_flag;
+        }
+
+        public String getUnique_member_id() {
+            return unique_member_id;
+        }
+
+        public String getCc_id() {
+            return cc_id;
+        }
+
+        public String getQty_delivered() {
+            return qty_delivered;
+        }
+
+        public String getDate_delivered() {
+            return date_delivered;
+        }
+
+        public Integer getSync_flag() {
+            return sync_flag;
+        }
+    }
 }

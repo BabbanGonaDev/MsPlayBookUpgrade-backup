@@ -25,6 +25,11 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
@@ -34,6 +39,7 @@ import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.ActivityListDownloadService;
+import com.babbangona.mspalybookupgrade.tpo.services.SyncWorker;
 import com.babbangona.mspalybookupgrade.utils.AutoSync;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
@@ -86,6 +92,9 @@ public class Homepage extends AppCompatActivity {
     SharedPrefs sharedPrefs;
 
     private static final int PERMISSIONS_REQUEST_CODE = 4043;
+    private static String WORK_MANAGER_TPO_SINGLE_REFRESH = "tpo_single_refresh";
+    private static String WORK_MANAGER_TPO_PERIODIC_REFRESH = "tpo_periodic_refresh";
+
 
     String[] appPermissions = {
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -134,6 +143,7 @@ public class Homepage extends AppCompatActivity {
         /*startActivity(new Intent(this, TransporterHomeActivity.class));*/
         //Start AutoSync
         autoSyncClass();
+        setUpTpoPeriodicSync();
     }
 
     void autoSyncClass(){
@@ -159,6 +169,7 @@ public class Homepage extends AppCompatActivity {
                 if(checkAndRequestPermissions()){
                     if(isNetworkConnectionAvailable()){
                         dialogWithSync();
+                        syncTPORecords();
                     }else{
                         checkNetworkConnection();
                     }
@@ -339,8 +350,6 @@ public class Homepage extends AppCompatActivity {
         }
     }
 
-
-
     private void showDialogForSync(String s, Context context) {
         MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
         showDialogForSync(builder,s,context);
@@ -519,7 +528,37 @@ public class Homepage extends AppCompatActivity {
 
     //cancel timer
     void cancelTimer() {
-        if(timer!=null)
+        if (timer != null)
             timer.cancel();
+    }
+
+    public void syncTPORecords() {
+        /**
+         * Work manager sync implementation for TPO Delivery Attendance module.
+         */
+
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(SyncWorker.class).build();
+
+        WorkManager
+                .getInstance(Homepage.this)
+                .enqueueUniqueWork(WORK_MANAGER_TPO_SINGLE_REFRESH, ExistingWorkPolicy.REPLACE, request);
+    }
+
+    public void setUpTpoPeriodicSync() {
+        /**
+         * Work manager auto-sync implementation for TPO Delivery Attendance module.
+         */
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        PeriodicWorkRequest periodic_request = new PeriodicWorkRequest.Builder(SyncWorker.class, 1, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager
+                .getInstance(Homepage.this)
+                .enqueueUniquePeriodicWork(WORK_MANAGER_TPO_PERIODIC_REFRESH, ExistingPeriodicWorkPolicy.REPLACE, periodic_request);
     }
 }
