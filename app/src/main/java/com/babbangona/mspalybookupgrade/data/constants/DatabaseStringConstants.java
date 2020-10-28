@@ -36,6 +36,7 @@ public class DatabaseStringConstants {
     public static final String LOCATIONS_TABLE                              = "locations_table";
     public static final String THRESHING_LOCATION                           = "threshing_location";
     public static final String BGT_COACHES_TABLE                            = "bgt_coaches";
+    public static final String COLLECTION_CENTER_TABLE                      = "collection_center";
 
     /**
      * activity_list column names

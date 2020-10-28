@@ -141,7 +141,7 @@ public class Homepage extends AppCompatActivity {
         myCollectionCenterList = new ArrayList<>();
         myCollectionCenterList = collectionCenterData();
 
-        appDatabase.getCollectionCenterDao().insert(myCollectionCenterList);
+        //appDatabase.getCollectionCenterDao().insert(myCollectionCenterList);
 
         dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         goToHarvest.setOnClickListener(new View.OnClickListener() {

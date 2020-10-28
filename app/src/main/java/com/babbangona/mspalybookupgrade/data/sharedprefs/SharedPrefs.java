@@ -100,7 +100,8 @@ public class SharedPrefs {
     public static final String INDIVIDUAL_KEY_HARVEST_SUMMARY_IK_NUMBER             = "individual_harvest_summary_ik_number";
     public static final String INDIVIDUAL_KEY_HARVEST_SUMMARY_UNIQUE_MEMBER_ID      = "individual_harvest_summary_unique_member_id";
 
-    public static final String KEY_LAST_SYNC_TIME                   = "last_sync_time";
+    public static final String KEY_LAST_SYNC_TIME                                     = "last_sync_time";
+    public static final String KEY_COLLECTION_CENTER_LAST_SYNC_TIME                   = "collection_center_last_sync_time";
 
     // Constructor
     public SharedPrefs(Context context){
@@ -424,6 +425,11 @@ public class SharedPrefs {
         editor.commit();
     }
 
+    public void setKeyCollectionCenterLastSyncTime(String temp) {
+        editor.putString(KEY_COLLECTION_CENTER_LAST_SYNC_TIME, temp);
+        editor.commit();
+    }
+
 
     /**
      *      Do not edit anything below
@@ -699,5 +705,9 @@ public class SharedPrefs {
 
     public String getKeyLastSyncTime() {
         return pref.getString(KEY_LAST_SYNC_TIME, "2020-06-28 00:00:00");
+    }
+
+    public String getCollectionCenterLastSyncTime() {
+        return pref.getString(KEY_COLLECTION_CENTER_LAST_SYNC_TIME, "2018-01-01 00:00:00");
     }
 }

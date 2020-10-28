@@ -1,51 +1,66 @@
 package com.babbangona.mspalybookupgrade.HarvestSummary.data.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
-@Entity(tableName = "collection_center_member_info", primaryKeys = {"unique_member_id","ik_number"})
+@Entity(tableName = "collection_center_member_info", primaryKeys = {"unique_member_id"})
 public class CollectionCenterEntity {
 
     @NonNull
     @ColumnInfo(name = "unique_member_id")
+    @SerializedName("unique_member_id")
     private String unique_member_id;
 
     @NonNull
     @ColumnInfo(name = "ik_number")
+    @SerializedName("ik_number")
     private String ik_number;
 
     @ColumnInfo(name = "no_of_bags_marketed")
+    @SerializedName("no_of_bags_marketed")
     private String no_of_bags_marketed;
 
     @ColumnInfo(name = "no_of_bags_transported")
+    @SerializedName("no_of_bags_transported")
     private String no_of_bags_transported;
 
     @ColumnInfo(name = "expected_bags")
+    @SerializedName("expected_bags")
     private String expected_bags;
 
     @ColumnInfo(name = "harvest_complete")
+    @SerializedName("harvest_complete")
     private String harvest_complete;
 
     @ColumnInfo(name = "payment_status")
+    @SerializedName("payment_status")
     private String payment_status;
 
     @ColumnInfo(name = "harvest_advance_paid")
+    @SerializedName("harvest_advance_paid")
     private String harvest_advance_paid;
 
     @ColumnInfo(name = "transporter_name")
+    @SerializedName("transporter_name")
     private String transporter_name;
 
     @ColumnInfo(name = "transporter_phone_number")
+    @SerializedName("transporter_phone_number")
     private String transporter_phone_number;
 
     @ColumnInfo(name = "bgt_name")
+    @SerializedName("bgt_name")
     private String bgt_name;
 
+    @NonNull
     @ColumnInfo(name = "bgt_staff_id")
+    @SerializedName("bgt_staff_id")
     private String bgt_staff_id;
 
-    public CollectionCenterEntity(@NonNull String unique_member_id, @NonNull String ik_number, String no_of_bags_marketed, String no_of_bags_transported, String expected_bags, String harvest_complete, String payment_status, String harvest_advance_paid, String transporter_name, String transporter_phone_number, String bgt_name, String bgt_staff_id) {
+    public CollectionCenterEntity(@NonNull String unique_member_id, @NonNull String ik_number, String no_of_bags_marketed, String no_of_bags_transported, String expected_bags, String harvest_complete, String payment_status, String harvest_advance_paid, String transporter_name, String transporter_phone_number, String bgt_name, @NonNull String bgt_staff_id) {
         this.unique_member_id = unique_member_id;
         this.ik_number = ik_number;
         this.no_of_bags_marketed = no_of_bags_marketed;
@@ -58,6 +73,9 @@ public class CollectionCenterEntity {
         this.transporter_phone_number = transporter_phone_number;
         this.bgt_name = bgt_name;
         this.bgt_staff_id = bgt_staff_id;
+    }
+
+    public CollectionCenterEntity() {
     }
 
     @NonNull
