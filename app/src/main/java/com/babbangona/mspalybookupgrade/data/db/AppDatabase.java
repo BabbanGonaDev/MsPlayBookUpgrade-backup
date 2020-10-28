@@ -14,6 +14,7 @@ import com.babbangona.mspalybookupgrade.data.db.daos.AppVariablesDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.BGTCoachesDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.CategoryDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.ConfirmThreshingActivitiesFlagDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.FertilizerLocationsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.FertilizerMembersDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGActivitiesFlagDao;
@@ -38,6 +39,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
 import com.babbangona.mspalybookupgrade.data.db.entities.BGTCoaches;
 import com.babbangona.mspalybookupgrade.data.db.entities.Category;
 import com.babbangona.mspalybookupgrade.data.db.entities.ConfirmThreshingActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerLocationsTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerMembers;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
@@ -65,7 +67,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
         RFList.class, PictureSync.class, PWSActivitiesFlag.class, PWSCategoryList.class,
         PCPWSActivitiesFlag.class, PWSActivityController.class,
         ScheduledThreshingActivitiesFlag.class, BGTCoaches.class, ConfirmThreshingActivitiesFlag.class,
-        FertilizerMembers.class},
+        FertilizerMembers.class, FertilizerLocationsTable.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
 
@@ -96,6 +98,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract BGTCoachesDao bgtCoachesDao();
     public abstract ConfirmThreshingActivitiesFlagDao confirmThreshingActivitiesFlagDao();
     public abstract FertilizerMembersDao fertilizerMembersDao();
+    public abstract FertilizerLocationsDao fertilizerLocationsDao();
 
     /**
      * Return instance of database creation
@@ -486,6 +489,23 @@ public abstract class AppDatabase extends RoomDatabase {
 
         }
     };
+
+
+    private static final Migration MIGRATION_16_17 = new Migration(16, 17) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+            database.execSQL("ALTER TABLE schedule_threshing_activities_flag ADD COLUMN 'thresher_id' TEXT DEFAULT ''");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_fertilizer_location' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("CREATE TABLE IF NOT EXISTS fertilizer_location (" +
+                    "cmp_id TEXT  NOT NULL," +
+                    "distribution_center TEXT," +
+                    "status TEXT," +
+                    "PRIMARY KEY(cmp_id))"
+            );
+
+        }
+    };
     
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
@@ -495,7 +515,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 .allowMainThreadQueries()
                 .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,
                         MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,
-                        MIGRATION_11_12,MIGRATION_12_13,MIGRATION_13_14,MIGRATION_14_15,MIGRATION_15_16)
+                        MIGRATION_11_12,MIGRATION_12_13,MIGRATION_13_14,MIGRATION_14_15,MIGRATION_15_16,MIGRATION_16_17)
                 .build();
 //                .fallbackToDestructiveMigration()
     }

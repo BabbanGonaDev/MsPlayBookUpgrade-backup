@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 16;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 17;
 
     /**
      * Names of tables
@@ -37,6 +37,7 @@ public class DatabaseStringConstants {
     public static final String THRESHING_LOCATION                           = "threshing_location";
     public static final String BGT_COACHES_TABLE                            = "bgt_coaches";
     public static final String FERTILIZER_MEMBERS_TABLE                     = "fertilizer_members";
+    public static final String FERTILIZER_LOCATION_TABLE                    = "fertilizer_location";
 
     /**
      * activity_list column names
@@ -172,6 +173,7 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_BGT_COACHES_TABLE                  = "last_sync_bgt_coaches";
     public static final String LAST_SYNC_UP_FERTILIZER_MEMBERS              = "last_sync_up_fertilizer_members";
     public static final String LAST_SYNC_DOWN_FERTILIZER_MEMBERS            = "last_sync_down_fertilizer_members";
+    public static final String LAST_SYNC_FERTILIZER_LOCATION                = "last_sync_fertilizer_location";
 
     /**
      * category column names
@@ -386,5 +388,12 @@ public class DatabaseStringConstants {
     public static final String COL_IMEI_FERT                            = "imei";
     public static final String COL_APP_ON_BOARDED                       = "app_onboarded";
     public static final String COL_DATE_CREATED                         = "date_created";
+
+    /**
+     * fertilizer_location column names
+     */
+    public static final String COL_DISTRIBUTION_CENTER                  = "distribution_center";
+    public static final String COL_CMP_ID                               = "cmp_id";
+    public static final String COL_STATUS_FERT_LOCATION                 = "status";
 
 }

@@ -233,7 +233,7 @@ public class FertilizerCollectionCenter extends AppCompatActivity {
     }
 
     public void fillVillageSpinner(AutoCompleteTextView autoCompleteTextView, Context context) {
-        ArrayAdapter village = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, appDatabase.harvestLocationsDao().getAllCollectionPointsNoConstraint());
+        ArrayAdapter village = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, appDatabase.fertilizerLocationsDao().getAllFertilizerCollection());
         spinnerViewController(autoCompleteTextView,village);
     }
 

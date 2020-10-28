@@ -110,7 +110,7 @@ public class UrgentThreshingActivity extends AppCompatActivity {
     private void showLogUrgentFinish(Context context, String reason){
         MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
         showLogUrgentFinishBody(builder,
-                context.getResources().getString(R.string.confirm_reason_title) +" "+reason,
+                context.getResources().getString(R.string.confirm_urgent_threshing_reason_title) +" "+reason,
                 context, reason);
     }
 

@@ -172,6 +172,12 @@ public interface LastSyncTableDao {
     @Query("UPDATE last_sync SET last_sync_down_fertilizer_members =:last_sync_down_fertilizer_members WHERE staff_id = :staff_id")
     void updateLastSyncDownFertilizerMembers(String staff_id, String last_sync_down_fertilizer_members);
 
+    @Query("SELECT last_sync_fertilizer_location FROM last_sync WHERE staff_id = :staff_id")
+    String getLastSyncFertilizerLocation(String staff_id);
+
+    @Query("UPDATE last_sync SET last_sync_fertilizer_location =:last_sync_fertilizer_location WHERE staff_id = :staff_id")
+    void updateLastSyncFertilizerLocation(String staff_id, String last_sync_fertilizer_location);
+
     /**
      * Insert the object in database
      * @param lastSyncTable, object to be inserted

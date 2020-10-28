@@ -1004,25 +1004,26 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     List<String> fields  =  new ArrayList<>();
 
                         appDatabase.scheduleThreshingActivitiesFlagDao().insert(new ScheduledThreshingActivitiesFlag(
-                                        fieldListRecyclerModel.getUnique_field_id(),
-                                        "Self",
-                                        "0",
-                                        sharedPrefs.getKeyThreshingTemplate(),
-                                        "0000-00-00",
-                                        "None",
-                                        "None",
-                                        getDeviceID(),
-                                        BuildConfig.VERSION_NAME,
-                                        latitude+"",
-                                        longitude+"",
-                                        sharedPrefs.getStaffID(),
-                                        getDate("spread"),
-                                        "0",
-                                        "XXX",
-                                        sharedPrefs.getKeyThreshingIkNumber(),
-                                        "0",
-                                        "1",
-                                        "0"
+                                fieldListRecyclerModel.getUnique_field_id(),
+                                "Self",
+                                "0",
+                                sharedPrefs.getKeyThreshingTemplate(),
+                                "0000-00-00",
+                                "None",
+                                "None",
+                                getDeviceID(),
+                                BuildConfig.VERSION_NAME,
+                                latitude+"",
+                                longitude+"",
+                                sharedPrefs.getStaffID(),
+                                getDate("spread"),
+                                "0",
+                                "XXX",
+                                sharedPrefs.getKeyThreshingIkNumber(),
+                                "0",
+                                "1",
+                                "0",
+                                sharedPrefs.getStaffID()
                                 )
                         );
 

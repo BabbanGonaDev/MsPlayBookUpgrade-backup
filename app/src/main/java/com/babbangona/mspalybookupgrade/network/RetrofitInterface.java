@@ -7,6 +7,7 @@ import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.FertilizerLocationDownload;
 import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersDownload;
 import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
@@ -173,6 +174,9 @@ public interface RetrofitInterface {
     @POST("uploadFertilizerSignup")
     Call<List<FertilizerMembersUpload>> uploadFertilizerMembersRecord(@Field("upload_list") String upload_list,
                                                                                @Field("staff_id") String staff_id);
+
+    @GET("downloadDistributionCenter")
+    Call<FertilizerLocationDownload> downloadFertilizerLocation(@Query("last_synced_time") String last_synced_time);
 
     @FormUrlEncoded
     @POST("yourPHPName.php")

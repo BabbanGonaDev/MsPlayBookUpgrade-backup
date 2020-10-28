@@ -20,6 +20,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
 import com.babbangona.mspalybookupgrade.data.db.entities.BGTCoaches;
 import com.babbangona.mspalybookupgrade.data.db.entities.Category;
 import com.babbangona.mspalybookupgrade.data.db.entities.ConfirmThreshingActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerLocationsTable;
 import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerMembers;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
@@ -46,6 +47,7 @@ import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.FertilizerLocationDownload;
 import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersDownload;
 import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
@@ -136,6 +138,7 @@ public class ActivityListDownloadService extends IntentService {
         getConfirmThreshingActivitiesFlagDownload();
         getBGTCoachesDownload();
         getFertilizerMembersDownload();
+        getFertilizerLocationDownload();
         getAppVariablesDownload();
 
         File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_PICTURE_LOCATION);
@@ -468,8 +471,8 @@ public class ActivityListDownloadService extends IntentService {
                             for (Members members: membersList){
                                 downloadPictures(members.getUnique_member_id());
                                 if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
-            sharedPrefs.setKeyProgressDialogStatus(0);
-        }
+                                    sharedPrefs.setKeyProgressDialogStatus(0);
+                                }
                             }
 
 
@@ -529,7 +532,9 @@ public class ActivityListDownloadService extends IntentService {
                     }
                     sharedPrefs.setKeyProgressDialogStatus(1);
                     getActivityList();
-                    Toast.makeText(ActivityListDownloadService.this, "Download failed, network error", Toast.LENGTH_LONG).show();
+                    if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+                        Toast.makeText(ActivityListDownloadService.this, "Download failed, network error", Toast.LENGTH_LONG).show();
+                    }
 
                     saveToSyncSummary(DatabaseStringConstants.FIELDS_TABLE,
                             "Fields Record Download",
@@ -4000,6 +4005,129 @@ public class ActivityListDownloadService extends IntentService {
         }
     }
 
+    public void getFertilizerLocationDownload() {
+
+        String last_synced = getLastSyncFertilizerLocation();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<FertilizerLocationDownload> call = retrofitInterface.downloadFertilizerLocation(last_synced);
+        if (sharedPrefs.getKeyAutoSyncFlag() == DatabaseStringConstants.SYNC_TYPE_MANUAL){
+            sharedPrefs.setKeyProgressDialogStatus(0);
+        }
+        call.enqueue(new Callback<FertilizerLocationDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<FertilizerLocationDownload> call,
+                                   @NonNull Response<FertilizerLocationDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    FertilizerLocationDownload fertilizerLocationDownload = response.body();
+
+                    if (fertilizerLocationDownload != null) {
+                        List<FertilizerLocationsTable> fertilizerLocationsTableList = fertilizerLocationDownload.getDownload_list();
+                        if (fertilizerLocationsTableList.size() > 0){
+                            saveToFertilizerLocationsTable(fertilizerLocationsTableList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncFertilizerLocation(sharedPrefs.getStaffID(),fertilizerLocationDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_fertilizer_location(fertilizerLocationDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.FERTILIZER_LOCATION_TABLE,
+                                "Fertilizer Collection Centres Download",
+                                "1",
+                                returnRemark(fertilizerLocationsTableList.size(), DatabaseStringConstants.SYNC_MESSAGE_DOWNLOAD_FLAG),
+                                fertilizerLocationDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.FERTILIZER_LOCATION_TABLE,
+                                "Fertilizer Collection Centres Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode Category:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.FERTILIZER_LOCATION_TABLE,
+                            "Fertilizer Collection Centres Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<FertilizerLocationDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_fertilizer_locations_table", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.FERTILIZER_LOCATION_TABLE,
+                        "Fertilizer Collection Centres Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToFertilizerLocationsTable(List<FertilizerLocationsTable> fertilizerLocationsTableList){
+        SaveToFertilizerLocationsTable saveToFertilizerLocationsTable = new SaveToFertilizerLocationsTable();
+        saveToFertilizerLocationsTable.execute(fertilizerLocationsTableList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveToFertilizerLocationsTable extends AsyncTask<List<FertilizerLocationsTable>, Void, Void> {
+
+
+        private final String TAG = SaveToFertilizerLocationsTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<FertilizerLocationsTable>... params) {
+
+            List<FertilizerLocationsTable> fertilizerLocationsTableList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.fertilizerLocationsDao().insert(fertilizerLocationsTableList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
     String getLastSyncTimeStaffList(){
         String last_sync_time;
         try {
@@ -4267,6 +4395,20 @@ public class ActivityListDownloadService extends IntentService {
         String last_sync_time;
         try {
             last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownFertilizerMembers(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncFertilizerLocation(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncFertilizerLocation(sharedPrefs.getStaffID());
         } catch (Exception e) {
             e.printStackTrace();
             last_sync_time = "2019-01-01 00:00:00";
