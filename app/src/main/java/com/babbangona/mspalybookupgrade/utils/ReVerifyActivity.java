@@ -135,7 +135,7 @@ public class ReVerifyActivity extends AppCompatActivity {
                         //save template to shared preference
                         //TODO: HTA 136
                         setCapturedImage(scanned_image_iv, templateModel.getImage_person_large());
-                        sharedPrefs.setKeyThreshingRecaptureFlag("0");
+                        sharedPrefs.setKeyThreshingRecaptureFlag("1");
                         sharedPrefs.setKeyThreshingTemplate(templateModel.getTemplate());
                         sharedPrefs.setKeyThreshingPicture(templateModel.getImage_person_small());
                         state = 4;

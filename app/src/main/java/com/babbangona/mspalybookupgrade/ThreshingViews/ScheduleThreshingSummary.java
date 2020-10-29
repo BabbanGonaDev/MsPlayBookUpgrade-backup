@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -145,16 +146,23 @@ public class ScheduleThreshingSummary extends AppCompatActivity {
     void progressDialog(float total, float progress){
         progress_bar.setMax((int) total);
         progress_bar.setProgress((int) progress);
-        progress_bar.setProgressDrawable(getResources().getDrawable(R.drawable.progress_drawable_horizontal_hg));
+        progress_bar.setProgressDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.progress_drawable_horizontal,getTheme()));
     }
 
     void setOtherTextViews(){
         String assigned_threshed = roundFieldSizeDouble(total_assigned_threshed) + "HA /";
         String assigned_total = roundFieldSizeDouble(total_assigned) + "HA";
-        String unassigned_threshed = roundFieldSizeDouble(total_fields_threshed_by_staff-total_assigned_threshed) + "HA";
+        String unassigned_threshed = roundFieldSizeDouble(revertToZero(total_fields_threshed_by_staff-total_assigned_threshed)) + "HA";
         tv_assigned_threshed.setText(assigned_threshed);
         tv_total_assigned.setText(assigned_total);
         tv_unassigned_threshed.setText(unassigned_threshed);
+    }
+
+    double revertToZero(double input_value){
+        if (input_value < 0){
+            input_value = input_value * (-1);
+        }
+        return input_value;
     }
 
     private double roundFieldSizeDouble(double result){

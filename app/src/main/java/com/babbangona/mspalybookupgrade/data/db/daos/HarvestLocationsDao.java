@@ -26,7 +26,7 @@ public interface HarvestLocationsDao {
     @Query("SELECT DISTINCT centre FROM harvest_location  WHERE state =:state AND lga =:lga AND WARD=:ward ORDER BY ward ASC")
     List<String> getAllCollectionPoints(String state, String lga, String ward);
 
-    @Query("SELECT DISTINCT centre FROM harvest_location ORDER BY ward ASC")
+    @Query("SELECT DISTINCT centre FROM harvest_location WHERE deactivate = '0' ORDER BY ward ASC")
     List<String> getAllCollectionPointsNoConstraint();
 
 

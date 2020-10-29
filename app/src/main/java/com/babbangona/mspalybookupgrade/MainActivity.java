@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
     void OpenMain2(){
         Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
         intent.putExtra("staff_name","test_user");
-        intent.putExtra("staff_id","T-10000000000000BB");
-        intent.putExtra("staff_role","BGT");
+        intent.putExtra("staff_id","T-10000000000000AA");
+        intent.putExtra("staff_role","MIK");
         intent.putExtra("staff_program","BGD");
         startActivity(intent);
     }
@@ -127,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
                         "1","BGT","0"));
                 activityLists.add(new ActivityList("7","en",
                         "Threshing Activity", "com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingActivity",
+                        "1","MIK","0"));
+                activityLists.add(new ActivityList("8","en",
+                        "Fertilizer Sign Up Activity", "com.babbangona.mspalybookupgrade.FertilizerSignUpViews.FertilizerSignUpHome",
                         "1","MIK","0"));
                 appDatabase.activityListDao().insert(activityLists);
 

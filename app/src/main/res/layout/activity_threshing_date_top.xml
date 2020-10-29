@@ -10,20 +10,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_above="@id/bottom_menu"
         android:paddingBottom="5sp" >
         <include layout="@layout/activity_threshing_date_selection" />
     </LinearLayout>
 
 
     <!-- FOOTER -->
-    <LinearLayout
+    <!--<LinearLayout
+
+        android:layout_above="@id/bottom_menu"
         android:id="@+id/bottom_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentBottom="true">
-        <!-- menu bar -->
+        &lt;!&ndash; menu bar &ndash;&gt;
         <include layout="@layout/app_footer" />
-    </LinearLayout>
+    </LinearLayout>-->
 </RelativeLayout>

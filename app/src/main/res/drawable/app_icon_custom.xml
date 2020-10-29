@@ -7,7 +7,7 @@
     </item>
 
     <item
-        android:drawable="@drawable/ic_book"
+        android:drawable="@drawable/ic_book_copy"
         android:gravity="center">
     </item>
 </layer-list>

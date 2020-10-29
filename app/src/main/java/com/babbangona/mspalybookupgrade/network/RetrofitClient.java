@@ -21,7 +21,7 @@ class RetrofitClient {
     static Retrofit getApiClient(){
         if (retrofit == null){
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.level(HttpLoggingInterceptor.Level.NONE);
+            interceptor.level(HttpLoggingInterceptor.Level.BODY);
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(interceptor)

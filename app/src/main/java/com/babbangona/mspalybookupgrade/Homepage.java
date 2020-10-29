@@ -25,11 +25,16 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListAdapter;
+import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.ActivityListDownloadService;
+import com.babbangona.mspalybookupgrade.utils.AutoSync;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
 import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.google.android.material.appbar.AppBarLayout;
@@ -46,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,6 +132,17 @@ public class Homepage extends AppCompatActivity {
         startRepeatingTask();
 
         /*startActivity(new Intent(this, TransporterHomeActivity.class));*/
+        //Start AutoSync
+        autoSyncClass();
+    }
+
+    void autoSyncClass(){
+        WorkManager workManager = WorkManager.getInstance(Homepage.this);
+
+        WorkRequest callDataRequest = new PeriodicWorkRequest.Builder(AutoSync.class,
+                30, TimeUnit.MINUTES, 5, TimeUnit.MINUTES)
+                .build();
+        workManager.enqueue(callDataRequest);
     }
 
     @Override
@@ -157,6 +174,7 @@ public class Homepage extends AppCompatActivity {
 
     void dialogWithSync(){
         syncRecords();
+        sharedPrefs.setKeyAutoSyncFlag(DatabaseStringConstants.SYNC_TYPE_MANUAL);
         runOnUiThread(this::initActivitiesRecycler);
         activityListAdapter.notifyDataSetChanged();
     }
