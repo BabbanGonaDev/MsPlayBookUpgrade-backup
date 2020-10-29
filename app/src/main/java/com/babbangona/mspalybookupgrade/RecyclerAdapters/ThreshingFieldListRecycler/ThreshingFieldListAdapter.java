@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
+import com.babbangona.mspalybookupgrade.ThreshingViews.LogThreshingHG;
 import com.babbangona.mspalybookupgrade.ThreshingViews.RescheduleThreshingDateSelectionActivity;
 import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingActivity;
 import com.babbangona.mspalybookupgrade.ThreshingViews.ThreshingDateSelectionActivity;
@@ -168,13 +169,13 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
 
         if (route.equalsIgnoreCase(DatabaseStringConstants.SCHEDULE_THRESHING)){
 
-           // Toast.makeText(context, status+""+urgent_status, Toast.LENGTH_SHORT).show();
+           //Toast.makeText(context, status+""+urgent_status, Toast.LENGTH_SHORT).show();
             if (confirm_status > 0){
                 //thresh confirmed, do you want to reset confirm?
                 showConfirmSuccess(context.getResources().getString(R.string.error_schedule_after_confirm),context,"crying");
             }else{
                 if (status > 0){
-                   // showDialogForRescheduleThreshing(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
+                    //showDialogForRescheduleThreshing(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
                     showDialogForRescheduleThreshingBodyUrgent(context,threshingFieldListRecyclerModel,fieldListRecyclerModel);
 
                 }else if(urgent_status > 0 ){
@@ -293,7 +294,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     context.startActivity(intent);
                 })
                 .setNeutralButton(context.getResources().getString(R.string.no), (dialog, which) -> {
-                    dialog.dismiss();
+                    dialog.dismiss(); 
                 })
                 .setCancelable(false)
                 .show();
@@ -595,11 +596,20 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                 .setPositiveButton(context.getResources().getString(R.string.yes), (dialog, which) -> {
                     //this is to dismiss the dialog
                     dialog.dismiss();
-                    showDialogForLogHGEnd(context, threshingFieldListRecyclerModel, fieldListRecyclerModel, "Yes");
+                    //showDialogForLogHGEnd(context, threshingFieldListRecyclerModel, fieldListRecyclerModel, "Yes");
+                    Intent intent = new Intent (context, LogThreshingHG.class);
+                    sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
+                    sharedPrefs.setKeyThreshingThreshValue("Yes");
+                    context.startActivity(intent);
                 })
                 .setNeutralButton(context.getResources().getString(R.string.no), (dialog, which) -> {
                     dialog.dismiss();
-                    showDialogForLogHGEnd(context, threshingFieldListRecyclerModel, fieldListRecyclerModel, "No");
+                    //showDialogForLogHGEnd(context, threshingFieldListRecyclerModel, fieldListRecyclerModel, "No");
+
+                    Intent intent = new Intent (context, LogThreshingHG.class);
+                    sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
+                    sharedPrefs.setKeyThreshingThreshValue("No");
+                    context.startActivity(intent);
                 })
                 .setCancelable(false)
                 .show();
@@ -961,8 +971,75 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     dialog.dismiss();
                     sharedPrefs.setKeyThresher("Self");
 
-                    confirmStatus(builder,context,fieldListRecyclerModel);
+                    //confirmStatus(builder,context,fieldListRecyclerModel);
+                    if (sharedPrefs.getStaffRole().equalsIgnoreCase("BGT")){
+                        Intent intent = new Intent (context, ThreshingDateSelectionActivity.class);
+                        sharedPrefs.setKeyThreshingUniqueFieldId(threshingFieldListRecyclerModel.getUnique_field_id());
+                        sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);
+                        sharedPrefs.setKeyThreshingCropType(fieldListRecyclerModel.getCrop_type());
+                        sharedPrefs.setKeyThreshingIkNumber(fieldListRecyclerModel.getIk_number());
+                        sharedPrefs.setKeyThresherId(sharedPrefs.getStaffID());
+                        context.startActivity(intent);
+                    }else{
+                        //launch a dialog that selects member
+                        selectBGT(threshingFieldListRecyclerModel.getUnique_field_id(), fieldListRecyclerModel);
+                    }
+                })
+                .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
+                .show();
+    }
 
+    //this function launches a dialog with a list of all BGTs under an MIK
+    void selectBGT(String unique_field_id, FieldListRecyclerModel fieldListRecyclerModel){
+        MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
+        selectBGTBody(builder, context, unique_field_id,fieldListRecyclerModel);
+    }
+
+    private void selectBGTBody(MaterialAlertDialogBuilder builder, Context context, String unique_field_id,
+                               FieldListRecyclerModel fieldListRecyclerModel) {
+
+        //do list view here
+
+        builder.setTitle(context.getResources().getString(R.string.thresher_title))
+                .setIcon(context.getResources().getDrawable(R.drawable.ic_smiley_face))
+                .setMessage(context.getResources().getString(R.string.thresher_question))
+                .setPositiveButton(context.getResources().getString(R.string.thresher_bg), (dialog, which) -> {
+                    //this is to dismiss the dialog
+                    dialog.dismiss();
+
+                    final CharSequence[] items = appDatabase.bgtCoachesDao().getBGTName(sharedPrefs.getStaffID()).toArray(new CharSequence[0]);
+                    AlertDialog.Builder builders = new AlertDialog.Builder(context);
+                    builders.setTitle("Select BGT who threshed")
+                            .setItems(items, (dialog1, item) -> {
+                                // will toast your selection
+                                dialog1.dismiss();
+                                new AlertDialog.Builder(context)
+                                        .setTitle(context.getResources().getString(R.string.confirm_field_thresher))
+                                        .setMessage(context.getResources().getString(R.string.schedule_for_member)+
+                                                " "+ items[item] + " " +
+                                                context.getResources().getString(R.string.question_mark))
+                                        .setPositiveButton(context.getResources().getString(R.string.yes), (dialog11, id) -> {
+
+                                            Intent intent = new Intent (context, ThreshingDateSelectionActivity.class);
+                                            sharedPrefs.setKeyThresher("Self");
+                                            sharedPrefs.setKeyThreshingUniqueFieldId(unique_field_id);
+                                            sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);
+                                            sharedPrefs.setKeyThreshingCropType(fieldListRecyclerModel.getCrop_type());
+                                            sharedPrefs.setKeyThreshingIkNumber(fieldListRecyclerModel.getIk_number());
+                                            sharedPrefs.setKeyThresherId(items[item].toString().split("__")[1]);
+                                            context.startActivity(intent);
+                                            dialog11.cancel();
+
+                                        })
+                                        .setNegativeButton(context.getResources().getString(R.string.no), (dialog112, id) ->
+                                                dialog112.cancel()
+                                        )
+                                        .show();
+                            })
+                            .show();
 
                 })
                 .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
@@ -988,25 +1065,26 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     List<String> fields  =  new ArrayList<>();
 
                         appDatabase.scheduleThreshingActivitiesFlagDao().insert(new ScheduledThreshingActivitiesFlag(
-                                        fieldListRecyclerModel.getUnique_field_id(),
-                                        "Self",
-                                        "0",
-                                        sharedPrefs.getKeyThreshingTemplate(),
-                                        "0000-00-00",
-                                        "None",
-                                        "None",
-                                        getDeviceID(),
-                                        BuildConfig.VERSION_NAME,
-                                        latitude+"",
-                                        longitude+"",
-                                        sharedPrefs.getStaffID(),
-                                        getDate("spread"),
-                                        "0",
-                                        "XXX",
-                                        sharedPrefs.getKeyThreshingIkNumber(),
-                                        "0",
-                                        "1",
-                                        "0"
+                                fieldListRecyclerModel.getUnique_field_id(),
+                                "Self",
+                                "0",
+                                sharedPrefs.getKeyThreshingTemplate(),
+                                "0000-00-00",
+                                "None",
+                                "None",
+                                getDeviceID(),
+                                BuildConfig.VERSION_NAME,
+                                latitude+"",
+                                longitude+"",
+                                sharedPrefs.getStaffID(),
+                                getDate("spread"),
+                                "0",
+                                "XXX",
+                                sharedPrefs.getKeyThreshingIkNumber(),
+                                "0",
+                                "1",
+                                "0",
+                                sharedPrefs.getStaffID()
                                 )
                         );
 

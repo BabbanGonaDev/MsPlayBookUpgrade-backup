@@ -94,12 +94,68 @@ public class SharedPrefs {
     public static final String KEY_THRESHER                         = "thresher";
     public static final String KEY_SWAP_FIELD_ID                    = "swap_field_id";
     public static final String KEY_RESCHEDULE_STATE_FLAG            = "reschedule_state_flag";
+    public static final String KEY_THRESHING_THRESH_VALUE           = "hg_thresh_value";
+    public static final String KEY_THRESHER_ID                      = "thresher_id";
+
+    public static final String KEY_FERTILIZER_SIGN_UP_IK_NUMBER     = "fertilizer_sign_up_ik_number";
+    public static final String KEY_FERTILIZER_SIGN_UP_MEMBER_ID     = "fertilizer_sign_up_unique_member_id";
+    public static final String KEY_FERTILIZER_RECAPTURE_FLAG        = "fertilizer_recapture_flag";
+    public static final String KEY_FERTILIZER_TEMPLATE              = "fertilizer_template";
+    public static final String KEY_FERTILIZER_PICTURE               = "fertilizer_picture";
+    public static final String KEY_FERTILIZER_MEMBER_PRESENCE       = "member_presence";
+
+    public static final String KEY_AUTO_SYNC_FLAG                   = "auto_sync_flag";
 
     // Constructor
     public SharedPrefs(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setKeyThresherId(String thresher_id){
+        editor.putString(KEY_THRESHER_ID, thresher_id)
+                .commit();
+    }
+
+    public void setKeyAutoSyncFlag(int auto_sync_flag){
+        editor.putInt(KEY_AUTO_SYNC_FLAG, auto_sync_flag)
+                .commit();
+    }
+
+    public void setKeyThreshingThreshValue(String hg_thresh_value){
+        editor.putString(KEY_THRESHING_THRESH_VALUE, hg_thresh_value)
+                .commit();
+    }
+
+    public void setKeyFertilizerMemberPresence(String member_presence){
+        editor.putString(KEY_FERTILIZER_MEMBER_PRESENCE, member_presence)
+                .commit();
+    }
+
+    public void setKeyFertilizerPicture(String fertilizer_picture){
+        editor.putString(KEY_FERTILIZER_PICTURE, fertilizer_picture)
+                .commit();
+    }
+
+    public void setKeyFertilizerTemplate(String fertilizer_template){
+        editor.putString(KEY_FERTILIZER_TEMPLATE, fertilizer_template)
+                .commit();
+    }
+
+    public void setKeyFertilizerRecaptureFlag(String fertilizer_recapture_flag){
+        editor.putString(KEY_FERTILIZER_RECAPTURE_FLAG, fertilizer_recapture_flag)
+                .commit();
+    }
+
+    public void setKeyFertilizerSignUpMemberId(String fertilizer_sign_up_unique_member_id){
+        editor.putString(KEY_FERTILIZER_SIGN_UP_MEMBER_ID, fertilizer_sign_up_unique_member_id)
+                .commit();
+    }
+
+    public void setKeyFertilizerSignUpIkNumber(String fertilizer_sign_up_ik_number){
+        editor.putString(KEY_FERTILIZER_SIGN_UP_IK_NUMBER, fertilizer_sign_up_ik_number)
+                .commit();
     }
 
     public void setKeyRescheduleStateFlag(String reschedule_state_flag){
@@ -646,5 +702,41 @@ public class SharedPrefs {
 
     public String getKeyRescheduleStateFlag() {
         return pref.getString(KEY_RESCHEDULE_STATE_FLAG, "0");
+    }
+
+    public String getKeyFertilizerSignUpIkNumber() {
+        return pref.getString(KEY_FERTILIZER_SIGN_UP_IK_NUMBER, "IKSomething");
+    }
+
+    public String getKeyFertilizerSignUpMemberId() {
+        return pref.getString(KEY_FERTILIZER_SIGN_UP_MEMBER_ID, "");
+    }
+
+    public String getKeyFertilizerRecaptureFlag() {
+        return pref.getString(KEY_FERTILIZER_RECAPTURE_FLAG, "0");
+    }
+
+    public String getKeyFertilizerTemplate() {
+        return pref.getString(KEY_FERTILIZER_TEMPLATE, "XXX");
+    }
+
+    public String getKeyFertilizerPicture() {
+        return pref.getString(KEY_FERTILIZER_PICTURE, "XXX");
+    }
+
+    public String getKeyFertilizerMemberPresence() {
+        return pref.getString(KEY_FERTILIZER_MEMBER_PRESENCE, "0");
+    }
+
+    public String getKeyThreshingThreshValue() {
+        return pref.getString(KEY_THRESHING_THRESH_VALUE, "XX");
+    }
+
+    public int getKeyAutoSyncFlag() {
+        return pref.getInt(KEY_AUTO_SYNC_FLAG, 0);
+    }
+
+    public String getKeyThresherId() {
+        return pref.getString(KEY_THRESHER_ID, "");
     }
 }

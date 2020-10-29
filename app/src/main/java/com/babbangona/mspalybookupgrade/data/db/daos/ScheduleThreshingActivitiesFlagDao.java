@@ -60,10 +60,10 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
                                             String reschedule_reason, String staff_id, String date_logged);
 
     @Query("UPDATE schedule_threshing_activities_flag SET schedule_date = :schedule_date, reschedule_reason = :reschedule_reason," +
-            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged, schedule_flag = '0', urgent_flag = '1' " +
-            "WHERE unique_field_id = :unique_field_id")
+            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged, schedule_flag = '0', urgent_flag = '1', " +
+            "reschedule_reason = :reason WHERE unique_field_id = :unique_field_id")
     public abstract void updateUrgentScheduleDate(String unique_field_id, String schedule_date,
-                                            String reschedule_reason, String staff_id, String date_logged);
+                                            String reschedule_reason, String staff_id, String date_logged, String reason);
 
     @Query(" SELECT COUNT(unique_field_id) FROM schedule_threshing_activities_flag WHERE sync_flag != '1' ")
     public abstract int getUnSyncedScheduleThreshingActivitiesCount();

@@ -77,12 +77,16 @@ public class ScheduledThreshingActivitiesFlag {
     @ColumnInfo(name = DatabaseStringConstants.COL_URGENT_FLAG)
     private String urgent_flag;
 
+    @ColumnInfo(name = DatabaseStringConstants.COL_THRESHER_ID)
+    private String thresher_id;
+
     public ScheduledThreshingActivitiesFlag(@NonNull String unique_field_id, String thresher, String face_scan_flag,
                                             String template, String schedule_date, String collection_center,
                                             String phone_number, String imei, String app_version,
                                             String latitude, String longitude, String staff_id, String date_logged,
                                             String sync_flag, String reschedule_reason, String ik_number,
-                                            String reschedule_flag, String schedule_flag, String urgent_flag) {
+                                            String reschedule_flag, String schedule_flag, String urgent_flag,
+                                            String thresher_id) {
         this.unique_field_id = unique_field_id;
         this.thresher = thresher;
         this.face_scan_flag = face_scan_flag;
@@ -102,6 +106,7 @@ public class ScheduledThreshingActivitiesFlag {
         this.reschedule_flag = reschedule_flag;
         this.schedule_flag = schedule_flag;
         this.urgent_flag = urgent_flag;
+        this.thresher_id = thresher_id;
     }
 
     @NonNull
@@ -255,6 +260,14 @@ public class ScheduledThreshingActivitiesFlag {
 
     public void setUrgent_flag(String urgent_flag) {
         this.urgent_flag = urgent_flag;
+    }
+
+    public String getThresher_id() {
+        return thresher_id;
+    }
+
+    public void setThresher_id(String thresher_id) {
+        this.thresher_id = thresher_id;
     }
 
     public static class ScheduleCalculationModel{
