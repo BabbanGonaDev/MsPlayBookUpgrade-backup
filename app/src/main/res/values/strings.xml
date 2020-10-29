@@ -352,4 +352,7 @@
     <string name="cannot_swap_urgent">You cannot swap an urgent schedule with another field scheduled for threshing.</string>
     <string name="urgent_schedule_reason">Urgent Schedule Reason</string>
     <string name="confirm_urgent_threshing_reason_title">Field scheduled as urgent for the following reason:</string>
+    <string name="confirm_field_thresher">Confirm field thresher</string>
+    <string name="question_mark">\?</string>
+    <string name="schedule_for_member">Are you sure you want to schedule threshing for</string>
 </resources>

@@ -76,7 +76,7 @@ public class ThreshingActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(ThreshingActivity.this));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,ThreshingActivity.this);
-        //removeScheduleAndUpdate();
+        removeScheduleAndUpdate();
     }
 
     @OnClick(R.id.btnScheduleThreshing)
@@ -144,7 +144,7 @@ public class ThreshingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*void removeScheduleAndUpdate(){
+    void removeScheduleAndUpdate(){
         if (sharedPrefs.getStaffRole().equalsIgnoreCase("BGT")){
             btnScheduleThreshing.setVisibility(View.VISIBLE);
             btnUpdateScheduleThreshing.setVisibility(View.VISIBLE);
@@ -155,5 +155,5 @@ public class ThreshingActivity extends AppCompatActivity {
             btnMarkHG.setVisibility(View.GONE);
 
         }
-    }*/
+    }
 }

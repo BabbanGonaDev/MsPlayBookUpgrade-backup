@@ -1119,7 +1119,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 "0",
                 "1",
                 "0",
-                ""
+                sharedPrefs.getKeyThresherId()
                 )
         );
 
@@ -1211,7 +1211,8 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 sharedPrefs.getKeyThreshingIkNumber(),
                 "0",
                 "0",
-                "1",""
+                "1",
+                sharedPrefs.getKeyThresherId()
                 )
         );
 
