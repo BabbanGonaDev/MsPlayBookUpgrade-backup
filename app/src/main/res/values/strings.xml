@@ -339,12 +339,12 @@
     <string name="location_label">Location : </string>
     <string name="no_of_bags_marketed">No.of Bags Marketed : </string>
     <string name="no_of_bags_transported">No.of Bags Transported : </string>
-    <string name="expected_bags">Expected Bags : </string>
+    <string name="expected_bags">Remaining Bags : </string>
     <string name="harvest_complete">Harvest Complete : </string>
     <string name="payment_status">Payment Status : </string>
     <string name="harvest_advance_paid">Harvest Advance Paid : </string>
     <string name="transporter_name">Transporter Name : </string>
     <string name="transporter_phone_number">Transporter Ph Number : </string>
-    <string name="bgt_name">BGT Name : </string>
-    <string name="bgt_staffId">BGT Staff ID : </string>
+    <string name="bgt_name">Thresher Name : </string>
+    <string name="bgt_staffId">Thresher Staff ID : </string>
 </resources>
