@@ -49,8 +49,6 @@
             android:name=".FertilizerSignUpViews.FertilizerSignUpHome"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ThreshingViews.ScheduleThreshingSummary"
-        <activity
             android:name=".donotpay.views.DNPMarkTGActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

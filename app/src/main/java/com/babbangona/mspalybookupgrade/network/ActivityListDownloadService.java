@@ -1375,10 +1375,10 @@ public class ActivityListDownloadService extends IntentService {
                             }
                             sharedPrefs.setKeyCollectionCenterLastSyncTime(new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
 
-                            insetToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE+"_download",
+                            insetToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE + "_download",
                                     "Collection Center Download",
                                     "1",
-                                    returnRemark(collectionCenterEntityList.size()),
+                                    returnRemark(collectionCenterEntityList.size(), "d"),
                                     sharedPrefs.getCollectionCenterLastSyncTime()
                             );
                             Log.d("ourrrnewtimess", sharedPrefs.getCollectionCenterLastSyncTime());
