@@ -549,7 +549,6 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
         int paddingDp = 20;
         float density = context.getResources().getDisplayMetrics().density;
         int paddingPixel = (int)(paddingDp * density);
-
         final EditText editText = new EditText(context);
         editText.setPadding(paddingPixel, 0, 0, 0);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);

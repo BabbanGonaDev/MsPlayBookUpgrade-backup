@@ -18,6 +18,12 @@ import java.util.List;
 @Dao
 public abstract class MembersDao {
 
+    @Query(" SELECT * FROM members WHERE role = 'Leader' ")
+    public abstract List<Members> getAllLeaders();
+
+    @Query("SELECT * FROM members WHERE ik_number = :ikNumber")
+    public abstract List<Members> getAllTgMembers(String ikNumber);
+
     @Query(" SELECT COUNT(unique_field_id) FROM fields WHERE deactivate = '0' " +
             "AND staff_id = :staff_id ")
     public abstract int getTotalFieldsCount(String staff_id);

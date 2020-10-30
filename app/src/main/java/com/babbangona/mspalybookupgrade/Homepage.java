@@ -15,6 +15,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.babbangona.mspalybookupgrade.HarvestSummary.HarvestHomePage;
+import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListAdapter;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
@@ -35,12 +38,14 @@ import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +82,8 @@ public class Homepage extends AppCompatActivity {
     @BindView(R.id.collapsingToolbar)
     CollapsingToolbarLayout collapsingToolbar;
 
+    MaterialButton goToHarvest;
+
     SharedPrefs sharedPrefs;
 
     private static final int PERMISSIONS_REQUEST_CODE = 4043;
@@ -104,11 +111,17 @@ public class Homepage extends AppCompatActivity {
 
     CountDownTimer timer = null;
 
+    List<CollectionCenterEntity> myCollectionCenterList;
+
+    SimpleDateFormat dateFormat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
         ButterKnife.bind(this);
+
+        goToHarvest = findViewById(R.id.btn_goToHarvest);
         sharedPrefs = new SharedPrefs(Homepage.this);
         main2ActivityMethods = new Main2ActivityMethods(Homepage.this);
         appDatabase = AppDatabase.getInstance(Homepage.this);
@@ -125,6 +138,19 @@ public class Homepage extends AppCompatActivity {
         sharedPrefs.setKeyProgressDialogStatus(1);
         startRepeatingTask();
 
+        myCollectionCenterList = new ArrayList<>();
+        myCollectionCenterList = collectionCenterData();
+
+        //appDatabase.getCollectionCenterDao().insert(myCollectionCenterList);
+
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        goToHarvest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Homepage.this, HarvestHomePage.class);
+                startActivity(intent);
+            }
+        });
         /*startActivity(new Intent(this, TransporterHomeActivity.class));*/
     }
 
@@ -159,6 +185,7 @@ public class Homepage extends AppCompatActivity {
         syncRecords();
         runOnUiThread(this::initActivitiesRecycler);
         activityListAdapter.notifyDataSetChanged();
+        sharedPrefs.setKeyLastSyncTime(dateFormat.format(Calendar.getInstance().getTime()));
     }
 
     @Override
@@ -503,5 +530,29 @@ public class Homepage extends AppCompatActivity {
     void cancelTimer() {
         if(timer!=null)
             timer.cancel();
+    }
+
+    public List<CollectionCenterEntity> collectionCenterData(){
+        List<CollectionCenterEntity> collectionCenterEntityList = new ArrayList<>();
+
+        CollectionCenterEntity collectionCenterEntity1 = new CollectionCenterEntity("T000AA_200000_m",
+                "IKAAAAAAAA","18","21","21","No",
+                "Unpaid","3000","Ajiboye","0900090",
+                "Bayo","000111");
+
+        CollectionCenterEntity collectionCenterEntity2 = new CollectionCenterEntity("T000AA_200009_m",
+                "IKCCCCCCCC","12","15","16","Yes",
+                "Paid","1000","Fuad","0800890","Adeniran","1111");
+
+        CollectionCenterEntity collectionCenterEntity3 = new CollectionCenterEntity("T000AA_200001_m",
+                "IKAAAAAAAA","6","18","24","Yes",
+                "Paid","4000","Tobi","0708009",
+                "Kunle","1110");
+
+        collectionCenterEntityList.add(collectionCenterEntity1);
+        collectionCenterEntityList.add(collectionCenterEntity2);
+        collectionCenterEntityList.add(collectionCenterEntity3);
+
+        return collectionCenterEntityList;
     }
 }

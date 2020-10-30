@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
@@ -80,7 +81,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -134,6 +137,7 @@ public class ActivityListDownloadService extends IntentService {
         getConfirmThreshingActivitiesFlagDownload();
         getBGTCoachesDownload();
         getAppVariablesDownload();
+        getDownloadCollectionCenterData();
 
         File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_PICTURE_LOCATION);
 
@@ -493,7 +497,7 @@ public class ActivityListDownloadService extends IntentService {
                         );
                     }
                     getActivityList();
-                    //Toast.makeText(ActivityListDownloadService.this, "Download done", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ActivityListDownloadService.this, "Syncing done", Toast.LENGTH_LONG).show();
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
@@ -1282,6 +1286,101 @@ public class ActivityListDownloadService extends IntentService {
 
             return null;
         }
+    }
+
+    public void getDownloadCollectionCenterData() {
+
+        retrofitInterface = RetrofitClient1.getApiClient().create(RetrofitInterface.class);
+        Call<List<CollectionCenterEntity>> call = retrofitInterface.downloadHarvestSummary(sharedPrefs.getStaffID(), sharedPrefs.getCollectionCenterLastSyncTime());
+        Log.d("ourrrnames", sharedPrefs.getStaffID());
+        Log.d("ourrrtimess", sharedPrefs.getCollectionCenterLastSyncTime());
+
+        call.enqueue(new Callback<List<CollectionCenterEntity>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void onResponse(@NonNull Call<List<CollectionCenterEntity>> call, @NonNull Response<List<CollectionCenterEntity>> response) {
+                if (response.isSuccessful()) {
+
+                    List<CollectionCenterEntity> collectionCenterEntityList = response.body();
+
+                    Log.d("ourrrsizess", String.valueOf(collectionCenterEntityList.size()));
+                    if (collectionCenterEntityList == null){
+                        Log.d("result", "null");
+                        saveToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE+"_download",
+                                "Collection Center Download",
+                                "0",
+                                "Upload null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else if(collectionCenterEntityList.size() == 0){
+                        Log.d("result", "0");
+                        saveToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE+"_download",
+                                "Collection Center Download",
+                                "1",
+                                "Upload empty",
+                                "0000-00-00 00:00:00"
+                        );
+                    } else {
+                        AsyncTask.execute(()->{
+                            CollectionCenterEntity collectionCenterEntity = new CollectionCenterEntity();
+                            for (int i = 0; i < collectionCenterEntityList.size(); i++) {
+                                collectionCenterEntity = collectionCenterEntityList.get(i);
+
+                                appDatabase.getCollectionCenterDao().insert(collectionCenterEntity);
+
+                            }
+                            sharedPrefs.setKeyCollectionCenterLastSyncTime(new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
+
+                            insetToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE+"_download",
+                                    "Collection Center Download",
+                                    "1",
+                                    returnRemark(collectionCenterEntityList.size()),
+                                    sharedPrefs.getCollectionCenterLastSyncTime()
+                            );
+                            Log.d("ourrrnewtimess", sharedPrefs.getCollectionCenterLastSyncTime());
+
+                        });
+
+                    }
+
+
+                } else {
+                    int sc = response.code();
+                    Log.d("scCode_output_record", "" + sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            break;
+                    }
+
+                    saveToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE+"_download",
+                            "Collection Center Download",
+                            "0",
+                            "Upload error: " + response.code(),
+                            "0000-00-00 00:00:00"
+                    );
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<List<CollectionCenterEntity>> call, @NotNull Throwable t) {
+                Log.e("tobi2", "NET_ERROR:" + t.toString());
+
+                saveToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE+"_download",
+                        "Collection Center Download",
+                        "0",
+                        "Upload failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
     }
 
     public void getLogsDownload() {

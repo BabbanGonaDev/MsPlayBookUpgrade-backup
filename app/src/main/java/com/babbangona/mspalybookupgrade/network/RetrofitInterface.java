@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.network;
 
+import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
 import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
 import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
@@ -122,6 +123,9 @@ public interface RetrofitInterface {
 
     @GET("downloadPWSCategoryList")
     Call<PWSCategoryListDownload> getPWSCategoryList(@Query("last_synced_time") String last_synced_time);
+
+    @GET("downloadHarvestSummary")
+    Call<List<CollectionCenterEntity>> downloadHarvestSummary(@Query("staff_id") String staff_id, @Query("last_sync_time") String last_sync_time);
 
     @FormUrlEncoded
     @POST("uploadPWSActivitiesRecord")

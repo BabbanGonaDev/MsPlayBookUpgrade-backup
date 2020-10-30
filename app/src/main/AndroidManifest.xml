@@ -43,6 +43,25 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ThreshingViews.ScheduleThreshingSummary"
+        <activity
+            android:name=".HarvestSummary.MemberDetails"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".HarvestSummary.TrustGroupMembers"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".HarvestSummary.TrustGroupDetails"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".HarvestSummary.HarvestSummaryPage"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".HarvestSummary.HarvestTrustGroupList"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".HarvestSummary.HarvestHomePage" />
+        <activity
+            android:name=".ThreshingViews.ScheduleThreshingSummary"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ThreshingViews.ScheduleDate"
