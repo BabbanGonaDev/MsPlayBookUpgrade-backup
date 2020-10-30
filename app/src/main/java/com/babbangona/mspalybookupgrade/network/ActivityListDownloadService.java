@@ -4,16 +4,23 @@ import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
+import com.babbangona.mspalybookupgrade.LocationTraker.worker.LocationTrackerWorker;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
@@ -21,6 +28,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
 import com.babbangona.mspalybookupgrade.data.db.entities.BGTCoaches;
 import com.babbangona.mspalybookupgrade.data.db.entities.Category;
 import com.babbangona.mspalybookupgrade.data.db.entities.ConfirmThreshingActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerMembers;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
@@ -39,6 +47,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
 import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
+import com.babbangona.mspalybookupgrade.data.db.entities.VillageLocations;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
 import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
@@ -46,6 +55,8 @@ import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersDownload;
+import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
@@ -68,6 +79,7 @@ import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivit
 import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.ServerResponse;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
+import com.babbangona.mspalybookupgrade.network.object.VillageLocationsDownload;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -87,6 +99,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -136,8 +149,10 @@ public class ActivityListDownloadService extends IntentService {
         getScheduledThreshingActivitiesFlagDownload();
         getConfirmThreshingActivitiesFlagDownload();
         getBGTCoachesDownload();
+        getFertilizerMembersDownload();
         getAppVariablesDownload();
         getDownloadCollectionCenterData();
+        getVillageLocationsDownload();
 
         File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_PICTURE_LOCATION);
 
@@ -164,6 +179,9 @@ public class ActivityListDownloadService extends IntentService {
         }
         if (appDatabase.confirmThreshingActivitiesFlagDao().getUnSyncedConfirmThreshingActivitiesCount() > 0){
             syncUpConfirmThreshingActivities();
+        }
+        if (appDatabase.fertilizerMembersDao().getUnSyncedFertilizerMembersCount() > 0){
+            syncUpFertilizerMembersSignUp();
         }
 
         getStaffList();
@@ -208,7 +226,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.ACTIVITY_LIST_TABLE,
                                 "Activity List Download",
                                 "1",
-                                returnRemark(activityLists.size()),
+                                returnRemark(activityLists.size(), "d"),
                                 activityListDownload.getLast_sync_time()
 
                         );
@@ -330,7 +348,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.HG_LIST_TABLE,
                                 "HG List Download",
                                 "1",
-                                returnRemark(hgLists.size()),
+                                returnRemark(hgLists.size(), "d"),
                                 hgListDownload.getLast_sync_time()
 
                         );
@@ -471,14 +489,14 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.FIELDS_TABLE,
                                 "Fields Record Download",
                                 "1",
-                                returnRemark(fieldsList.size()),
+                                returnRemark(fieldsList.size(), "d"),
                                 msPlaybookInputDownload.getLast_sync_time()
 
                         );
                         insetToSyncSummary(DatabaseStringConstants.MEMBERS_TABLE,
                                 "Members Record Download",
                                 "1",
-                                returnRemark(membersList.size()),
+                                returnRemark(membersList.size(), "d"),
                                 msPlaybookInputDownload.getLast_sync_time()
 
                         );
@@ -498,6 +516,7 @@ public class ActivityListDownloadService extends IntentService {
                     }
                     getActivityList();
                     Toast.makeText(ActivityListDownloadService.this, "Syncing done", Toast.LENGTH_LONG).show();
+                    locationTracking();
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
@@ -532,6 +551,31 @@ public class ActivityListDownloadService extends IntentService {
                     );
                 }
                 sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            private void locationTracking() {
+
+                String appVariables = appDatabase.appVariablesDao().getBgtLocationTrackerFlag("1");
+                Log.d("Worker","Flags: " + appVariables);
+                if(appVariables.equals("1")){
+                    TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+                    try {
+                        PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                        //Log.d("IMEI --> ", telephonyManager.getDeviceId() + " ---> "+ pinfo.versionName);
+                        sharedPrefs.setIMEI(telephonyManager.getDeviceId());
+            /*sharedPreference.putValue("IMEI",telephonyManager.getDeviceId());
+            sharedPreference.putValue("versionName",pinfo.versionName);*/
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("Worker","Worker Initialized");
+                    PeriodicWorkRequest.Builder photoCheckBuilder =
+                            new PeriodicWorkRequest.Builder(LocationTrackerWorker.class, 1, TimeUnit.HOURS);
+                    PeriodicWorkRequest request = photoCheckBuilder.build();
+                    WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("LocationTrack", ExistingPeriodicWorkPolicy.KEEP , request);
+                }else {
+                    Log.d("Worker","Location tracker not enabled");
+                }
             }
 
             @Override
@@ -896,7 +940,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.LOGS_TABLE+"_upload",
                                     "Logs Upload",
                                     "1",
-                                    returnRemark(logsUploadList.size()),
+                                    returnRemark(logsUploadList.size(), "u"),
                                     logsUploadList.get(0).getLast_synced()
 
                             );
@@ -1001,7 +1045,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.HG_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "HG Activities Upload",
                                     "1",
-                                    returnRemark(hgActivitiesUploadList.size()),
+                                    returnRemark(hgActivitiesUploadList.size(), "u"),
                                     hgActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -1102,7 +1146,7 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.NORMAL_ACTIVITY_FLAGS_TABLE+"_upload",
                                         "Normal Activities Upload",
                                         "1",
-                                        returnRemark(normalActivitiesUploadList.size()),
+                                        returnRemark(normalActivitiesUploadList.size(), "u"),
                                         normalActivitiesUploadList.get(0).getLast_synced()
 
                                 );
@@ -1199,7 +1243,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.STAFF_TABLE,
                                 "Staff List Download",
                                 "1",
-                                returnRemark(staffLists.size()),
+                                returnRemark(staffLists.size(), "d"),
                                 staffListDownload.getLast_sync_time()
                         );
                     }else{
@@ -1414,7 +1458,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.LOGS_TABLE+"_download",
                                 "Logs Download",
                                 "1",
-                                returnRemark(logsList.size()),
+                                returnRemark(logsList.size(), "d"),
                                 logsDownload.getLast_sync_time()
                         );
                     }else{
@@ -1535,7 +1579,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.HG_ACTIVITY_FLAGS_TABLE+"_download",
                                 "HG Activities Download",
                                 "1",
-                                returnRemark(hgActivitiesFlagList.size()),
+                                returnRemark(hgActivitiesFlagList.size(), "d"),
                                 hgActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -1656,7 +1700,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.NORMAL_ACTIVITY_FLAGS_TABLE+"_download",
                                 "Normal Activities Download",
                                 "1",
-                                returnRemark(normalActivitiesFlagList.size()),
+                                returnRemark(normalActivitiesFlagList.size(), "d"),
                                 normalActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -1777,7 +1821,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.CATEGORY_TABLE,
                                 "Category List Download",
                                 "1",
-                                returnRemark(categoryList.size()),
+                                returnRemark(categoryList.size(), "d"),
                                 categoryDownload.getLast_sync_time()
                         );
                     }else{
@@ -1898,7 +1942,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.HARVEST_LOCATION_TABLE,
                                 "Harvest Collection Centres Download",
                                 "1",
-                                returnRemark(harvestLocationsTableList.size()),
+                                returnRemark(harvestLocationsTableList.size(), "d"),
                                 harvestLocationDownload.getLast_sync_time()
                         );
                     }else{
@@ -2009,7 +2053,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.APP_VARIABLES,
                                 "App Variables Download",
                                 "1",
-                                returnRemark(appVariablesList.size()),
+                                returnRemark(appVariablesList.size(), "d"),
                                 appVariablesDownload.getLast_sync_time()
                         );
                     }else{
@@ -2130,7 +2174,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.RF_LIST_TABLE,
                                 "RF List Download",
                                 "1",
-                                returnRemark(rfLists.size()),
+                                returnRemark(rfLists.size(), "d"),
                                 rfListDownload.getLast_sync_time()
 
                         );
@@ -2251,7 +2295,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_download",
                                 "RF Activities Download",
                                 "1",
-                                returnRemark(rfActivitiesFlagList.size()),
+                                returnRemark(rfActivitiesFlagList.size(), "d"),
                                 rfActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -2382,7 +2426,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.RF_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "RF Activities Upload",
                                     "1",
-                                    returnRemark(rfActivitiesUploadList.size()),
+                                    returnRemark(rfActivitiesUploadList.size(), "u"),
                                     rfActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -2570,7 +2614,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PWS_CATEGORY_LIST_TABLE,
                                 "PWS Category List Download",
                                 "1",
-                                returnRemark(pwsCategoryLists.size()),
+                                returnRemark(pwsCategoryLists.size(), "d"),
                                 pwsCategoryListDownload.getLast_sync_time()
 
                         );
@@ -2701,7 +2745,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "PWS Activities Upload",
                                     "1",
-                                    returnRemark(pwsActivitiesUploadList.size()),
+                                    returnRemark(pwsActivitiesUploadList.size(), "u"),
                                     pwsActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -2807,7 +2851,7 @@ public class ActivityListDownloadService extends IntentService {
                             insetToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_upload",
                                     "PC PWS Activities Upload",
                                     "1",
-                                    returnRemark(pcpwsActivitiesUploadList.size()),
+                                    returnRemark(pcpwsActivitiesUploadList.size(), "u"),
                                     pcpwsActivitiesUploadList.get(0).getLast_synced()
 
                             );
@@ -2903,7 +2947,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_FLAGS_TABLE+"_download",
                                 "PWS Activities Download",
                                 "1",
-                                returnRemark(pwsActivitiesFlagList.size()),
+                                returnRemark(pwsActivitiesFlagList.size(), "d"),
                                 pwsActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -3024,7 +3068,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PC_PWS_ACTIVITY_FLAGS_TABLE+"_download",
                                 "PC PWS Activities Download",
                                 "1",
-                                returnRemark(pcpwsActivitiesFlagList.size()),
+                                returnRemark(pcpwsActivitiesFlagList.size(), "d"),
                                 pcpwsActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -3145,7 +3189,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.PWS_ACTIVITY_CONTROLLER_TABLE,
                                 "PWS Activity Controller List Download",
                                 "1",
-                                returnRemark(pwsActivityControllerList.size()),
+                                returnRemark(pwsActivityControllerList.size(), "d"),
                                 pwsActivityControllerDownload.getLast_sync_time()
                         );
                     }else{
@@ -3266,7 +3310,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
                                 "Scheduled Activities Download",
                                 "1",
-                                returnRemark(scheduledThreshingActivitiesFlagList.size()),
+                                returnRemark(scheduledThreshingActivitiesFlagList.size(), "d"),
                                 scheduledThreshingActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -3388,7 +3432,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_download",
                                 "Confirm Activities Download",
                                 "1",
-                                returnRemark(confirmThreshingActivitiesFlagList.size()),
+                                returnRemark(confirmThreshingActivitiesFlagList.size(), "d"),
                                 confirmThreshingActivitiesFlagDownload.getLast_sync_time()
                         );
                     }else{
@@ -3509,7 +3553,7 @@ public class ActivityListDownloadService extends IntentService {
                         insetToSyncSummary(DatabaseStringConstants.BGT_COACHES_TABLE+"_download",
                                 "BGT Coaches Download",
                                 "1",
-                                returnRemark(bgtCoachesList.size()),
+                                returnRemark(bgtCoachesList.size(),"d"),
                                 bgtCoachesDownload.getLast_sync_time()
                         );
                     }else{
@@ -3636,7 +3680,7 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.SCHEDULE_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
                                         "Scheduled Activities Upload",
                                         "1",
-                                        returnRemark(scheduledThreshingActivitiesUploadList.size()),
+                                        returnRemark(scheduledThreshingActivitiesUploadList.size(),"u"),
                                         scheduledThreshingActivitiesUploadList.get(0).getLast_synced()
 
                                 );
@@ -3739,14 +3783,14 @@ public class ActivityListDownloadService extends IntentService {
                                 insetToSyncSummary(DatabaseStringConstants.CONFIRM_THRESHING_ACTIVITIES_FLAG_TABLE+"_upload",
                                         "Confirm Activities Upload",
                                         "1",
-                                        returnRemark(confirmThreshingActivitiesUploadList.size()),
+                                        returnRemark(confirmThreshingActivitiesUploadList.size(),"u"),
                                         confirmThreshingActivitiesUploadList.get(0).getLast_synced()
 
                                 );
                             }
                         });
                         if (getStaffCountLastSync() > 0){
-                            appDatabase.lastSyncTableDao().updateLastSyncUpScheduleActivitiesFlag(sharedPrefs.getStaffID(),confirmThreshingActivitiesUploadList.get(0).getLast_synced());
+                            appDatabase.lastSyncTableDao().updateLastSyncUpConfirmActivitiesFlag(sharedPrefs.getStaffID(),confirmThreshingActivitiesUploadList.get(0).getLast_synced());
                         }else{
                             LastSyncTable lastSyncTable = new LastSyncTable();
                             lastSyncTable.setLast_sync_up_confirm_activities_flag(confirmThreshingActivitiesUploadList.get(0).getLast_synced());
@@ -3803,6 +3847,326 @@ public class ActivityListDownloadService extends IntentService {
                 );
             }
         });
+    }
+
+    private void syncUpFertilizerMembersSignUp() {
+        List<FertilizerMembers> fertilizerMembersList = appDatabase.fertilizerMembersDao().getUnSyncedFertilizerMembers();
+        String composed_json = new Gson().toJson(fertilizerMembersList);
+        //Log.d("CHECK", "FertilizerMembersSignUp: " + composed_json);
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<List<FertilizerMembersUpload>> call = retrofitInterface.uploadFertilizerMembersRecord(composed_json, sharedPrefs.getStaffID());
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<List<FertilizerMembersUpload>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<FertilizerMembersUpload>> call, @NonNull Response<List<FertilizerMembersUpload>> response) {
+                if (response.isSuccessful()) {
+
+                    List<FertilizerMembersUpload> fertilizerMembersUploadList = response.body();
+                    if (fertilizerMembersUploadList == null){
+                        Log.d("result", "null");
+                        saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
+                                "Fertilizer Members Upload",
+                                "0",
+                                "Upload null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else if(fertilizerMembersUploadList.size() == 0){
+                        Log.d("result", "0");
+                        saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
+                                "Fertilizer Members Upload",
+                                "0",
+                                "Upload empty",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else {
+                        AsyncTask.execute(()->{
+                            for (int i = 0; i < fertilizerMembersUploadList.size(); i++) {
+                                FertilizerMembersUpload fertilizerMembersUpload = fertilizerMembersUploadList.get(i);
+                                appDatabase.fertilizerMembersDao().updateFertilizerMembersSyncFlag(fertilizerMembersUpload.getUnique_member_id());
+                                insetToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
+                                        "Fertilizer Members Upload",
+                                        "1",
+                                        returnRemark(fertilizerMembersUploadList.size(),"u"),
+                                        fertilizerMembersUploadList.get(0).getLast_synced()
+
+                                );
+                            }
+                        });
+                        if (getStaffCountLastSync() > 0){
+                            appDatabase.lastSyncTableDao().updateLastSyncUpFertilizerMembers(sharedPrefs.getStaffID(),fertilizerMembersUploadList.get(0).getLast_synced());
+                        }else{
+                            LastSyncTable lastSyncTable = new LastSyncTable();
+                            lastSyncTable.setLast_sync_up_fertilizer_members(fertilizerMembersUploadList.get(0).getLast_synced());
+                            lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                            appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                        }
+
+                    }
+                } else {
+                    Log.i("tobi_fertilizer_mem_up", "onResponse ERROR: " + response.body());
+                    int sc = response.code();
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            break;
+                        case 401:
+                            Log.e("Error 401", "Bad Request");
+                            break;
+                        case 403:
+                            Log.e("Error 403", "Bad Request");
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            break;
+                        case 500:
+                            Log.e("Error 500", "Bad Request");
+                            break;
+                        case 501:
+                            Log.e("Error 501", "Bad Request");
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error " + response.code());
+                            break;
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
+                            "Fertilizer Members Upload",
+                            "0",
+                            "Upload error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<FertilizerMembersUpload>> call, @NonNull Throwable t) {
+                Log.d("TobiNewFertilizerMembersUpload", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_upload",
+                        "Fertilizer Members Upload",
+                        "0",
+                        "Upload failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+    }
+
+    public void getFertilizerMembersDownload() {
+
+        String last_synced = getLastSyncFertilizerMembers();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Call<FertilizerMembersDownload> call = retrofitInterface.downloadFertilizerMembers(sharedPrefs.getStaffID(),portfolioToGson(sharedPrefs.getKeyPortfolioList()),last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+//        Log.d("CHECK", "download : " + sharedPrefs.getStaffID() + " == " + portfolioToGson(sharedPrefs.getKeyPortfolioList()) + " == " + last_synced);
+        call.enqueue(new Callback<FertilizerMembersDownload>() {
+            @Override
+            public void onResponse(@NonNull Call<FertilizerMembersDownload> call,
+                                   @NonNull Response<FertilizerMembersDownload> response) {
+                //Log.d("tobiRes", ""+ Objects.requireNonNull(response.body()).toString());
+                if (response.isSuccessful()) {
+                    FertilizerMembersDownload fertilizerMembersDownload = response.body();
+
+                    if (fertilizerMembersDownload != null) {
+                        List<FertilizerMembers> fertilizerMembersList = fertilizerMembersDownload.getDownload_list();
+                        if (fertilizerMembersList.size() > 0){
+                            saveToFertilizerMembersTable(fertilizerMembersList);
+                            if (getStaffCountLastSync() > 0){
+                                appDatabase.lastSyncTableDao().updateLastSyncDownFertilizerMembers(sharedPrefs.getStaffID(),fertilizerMembersDownload.getLast_sync_time());
+                            }else{
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_fertilizer_members(fertilizerMembersDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_download",
+                                "Fertilizer Members Download",
+                                "1",
+                                returnRemark(fertilizerMembersList.size(),"d"),
+                                fertilizerMembersDownload.getLast_sync_time()
+                        );
+                    }else{
+                        saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_download",
+                                "Fertilizer Members Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }
+
+                }else {
+                    int sc = response.code();
+                    Log.d("scCode:- ",""+sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_download",
+                            "Fertilizer Members Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00"
+                    );
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<FertilizerMembersDownload> call, @NotNull Throwable t) {
+                Log.d("tobi_fertilizer_mem_down", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.FERTILIZER_MEMBERS_TABLE+"_download",
+                        "Fertilizer Members Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
+
+    }
+
+    void saveToFertilizerMembersTable(List<FertilizerMembers> fertilizerMembersList){
+        SaveFertilizerMembersTable saveFertilizerMembersTable = new SaveFertilizerMembersTable();
+        saveFertilizerMembersTable.execute(fertilizerMembersList);
+    }
+
+    /**
+     * This AsyncTask carries out saving to database the downloaded data by calling a database helper method
+     * This background thread is required as the volume of data is pretty much high
+     */
+    @SuppressLint("StaticFieldLeak")
+    public class SaveFertilizerMembersTable extends AsyncTask<List<FertilizerMembers>, Void, Void> {
+
+
+        private final String TAG = SaveFertilizerMembersTable.class.getSimpleName();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(List<FertilizerMembers>... params) {
+
+            List<FertilizerMembers> fertilizerMembersList = params[0];
+
+            try {
+                appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                appDatabase.fertilizerMembersDao().insert(fertilizerMembersList);
+            } catch (Exception e) {
+                Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            return null;
+        }
+    }
+
+    public void getVillageLocationsDownload() {
+        String last_synced = getLastSyncVillageLocations();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Log.d("CHECK", "just entered village locations download");
+        Call<VillageLocationsDownload> call = retrofitInterface.downloadVillageLocations(sharedPrefs.getStaffID(), last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<VillageLocationsDownload>() {
+            @Override
+            public void onResponse(Call<VillageLocationsDownload> call, Response<VillageLocationsDownload> response) {
+                if (response.isSuccessful()) {
+                    VillageLocationsDownload villageLocationsDownload = response.body();
+                    Log.d("CHECK", "Response is successful for village locations");
+
+                    if (villageLocationsDownload != null) {
+                        List<VillageLocations> villageLocationsList = villageLocationsDownload.getDownload_list();
+                        if (villageLocationsList.size() > 0) {
+                            saveToVillageLocationsTable(villageLocationsList);
+                            if (getStaffCountLastSync() > 0) {
+                                appDatabase.lastSyncTableDao().updateLastSyncDownVillageLocations(sharedPrefs.getStaffID(), villageLocationsDownload.getLast_sync_time());
+                            } else {
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_village_locations(villageLocationsDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.VILLAGE_LOCATIONS_TABLE + "_download",
+                                "Village Locations Download",
+                                "1",
+                                returnRemark(villageLocationsList.size(), "d"),
+                                villageLocationsDownload.getLast_sync_time());
+                    } else {
+                        saveToSyncSummary(DatabaseStringConstants.VILLAGE_LOCATIONS_TABLE + "_download",
+                                "Village Locations Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00");
+                    }
+                } else {
+                    int sc = response.code();
+                    Log.d("scCode:- ", "" + sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.VILLAGE_LOCATIONS_TABLE + "_download",
+                            "Village Locations Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00");
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(Call<VillageLocationsDownload> call, Throwable t) {
+                Log.d("tobi_village_locations_down", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.VILLAGE_LOCATIONS_TABLE + "_download",
+                        "Village Locations Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00");
+            }
+        });
+    }
+
+    void saveToVillageLocationsTable(List<VillageLocations> list) {
+        new AsyncTask<List<VillageLocations>, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(List<VillageLocations>... lists) {
+                try {
+                    Log.d("CHECK", "Inside the saveToVillageLocationsTable");
+                    appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                    appDatabase.villageLocationsDao().insertList(lists[0]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("CHECK VillageLocations Insert", e.getMessage());
+                }
+                return null;
+            }
+        }.execute(list);
     }
 
     String getLastSyncTimeStaffList(){
@@ -4068,6 +4432,34 @@ public class ActivityListDownloadService extends IntentService {
         return last_sync_time;
     }
 
+    String getLastSyncFertilizerMembers(){
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownFertilizerMembers(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("")) {
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncVillageLocations() {
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownVillageLocations(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("")) {
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
     int getTableIDCount(String table_id, String staff_id){
         int result = 0;
         try {
@@ -4101,10 +4493,14 @@ public class ActivityListDownloadService extends IntentService {
         }
     }
 
-    String returnRemark(int size){
+    String returnRemark(int size, String upload_flag){
         String statement;
         if (size > 0){
-            statement = "Download successful";
+            if (upload_flag.equalsIgnoreCase("d")){
+                statement = "Download successful";
+            }else{
+                statement = "Upload successful";
+            }
         }else{
             statement = "Download Empty";
         }

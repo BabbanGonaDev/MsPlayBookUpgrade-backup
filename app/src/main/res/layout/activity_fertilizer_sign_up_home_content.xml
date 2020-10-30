@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ThreshingViews.MemberList"
+    android:background="@color/off_white"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/off_white"
+        android:theme="@style/Theme.Threshing">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/toolbar_linear_layout">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Widget.Threshing.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/displayBar"
+                app:navigationIcon="@drawable/ic_baseline_chevron_left_24"
+                app:title="@string/app_name" />
+
+            <TextView
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/view_looks2"
+                app:drawableEndCompat="@drawable/ic_search_grey_24dp"
+                android:text="@string/search"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/text_color_grey"
+                android:layout_margin="@dimen/dimen_10dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:id="@+id/search_linear_layout"
+            android:layout_margin="@dimen/dimen_5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/back_to_toolbar"
+                android:layout_gravity="center"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/ic_baseline_chevron_left_black_24"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/search_edit_text"
+                android:background="@color/off_white"
+                android:layout_gravity="center"
+                android:inputType="text"
+                android:focusable="true"
+                android:hint="@string/search"
+                android:textColor="@color/text_color_black"
+                android:textColorHint="@color/textColorPrimary"
+                android:padding="@dimen/dimen_10dp"/>
+
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/list_of_tg_title"
+        android:textColor="@color/text_color_black"
+        android:textSize="@dimen/dimen_20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:paddingStart="@dimen/dimen_15dp"
+        android:paddingEnd="@dimen/dimen_15dp"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/dimen_15dp"
+        android:paddingEnd="@dimen/dimen_15dp"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/emptyView"
+        android:src="@drawable/recycler_empty_state"/>
+
+</LinearLayout>

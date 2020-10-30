@@ -953,27 +953,32 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
 
         final String picture_name = unique_member_id +"_threshing";
 
+
+
+
         String result1 = saveToSdCard(threshing_picture, picture_name);
-        if (result1 != null ) {
+    /*    if (result1 != null ) {
             if (result1.equalsIgnoreCase("success") ){
-                updateActivity(
-                        sharedPrefs.getKeyThreshingUniqueFieldId(),
-                        location_flag,
-                        schedule_date,
-                        collection_center,
-                        phone_number,
-                        latitude,
-                        longitude,
-                        sharedPrefs.getKeyThreshingIkNumber(),
-                        sharedPrefs.getKeyThreshingCropType()
-                );
+
                 Toast.makeText(this, "Picture Saved", Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(this, "Picture Not Saved", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "Picture Not Saved", Toast.LENGTH_SHORT).show();
-        }
+        }*/
+
+        updateActivity(
+                sharedPrefs.getKeyThreshingUniqueFieldId(),
+                location_flag,
+                schedule_date,
+                collection_center,
+                phone_number,
+                latitude,
+                longitude,
+                sharedPrefs.getKeyThreshingIkNumber(),
+                sharedPrefs.getKeyThreshingCropType()
+        );
 
     }
 

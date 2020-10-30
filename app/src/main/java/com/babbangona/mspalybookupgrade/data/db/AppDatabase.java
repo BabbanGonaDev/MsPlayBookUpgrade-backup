@@ -2,12 +2,15 @@ package com.babbangona.mspalybookupgrade.data.db;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.babbangona.mspalybookupgrade.LocationTraker.database.dao.StaffDao;
+import com.babbangona.mspalybookupgrade.LocationTraker.database.entity.StaffDetails;
 import com.babbangona.mspalybookupgrade.HarvestSummary.data.dao.CollectionCenterDao;
 import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
@@ -16,6 +19,7 @@ import com.babbangona.mspalybookupgrade.data.db.daos.AppVariablesDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.BGTCoachesDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.CategoryDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.ConfirmThreshingActivitiesFlagDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.FertilizerMembersDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.FieldsDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.HGListDao;
@@ -34,11 +38,13 @@ import com.babbangona.mspalybookupgrade.data.db.daos.RFListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.ScheduleThreshingActivitiesFlagDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.StaffListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.SyncSummaryDao;
+import com.babbangona.mspalybookupgrade.data.db.daos.VillageLocationsDao;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.db.entities.AppVariables;
 import com.babbangona.mspalybookupgrade.data.db.entities.BGTCoaches;
 import com.babbangona.mspalybookupgrade.data.db.entities.Category;
 import com.babbangona.mspalybookupgrade.data.db.entities.ConfirmThreshingActivitiesFlag;
+import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerMembers;
 import com.babbangona.mspalybookupgrade.data.db.entities.Fields;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.HGList;
@@ -57,6 +63,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
 import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
+import com.babbangona.mspalybookupgrade.data.db.entities.VillageLocations;
 
 
 @Database(entities = {ActivityList.class, NormalActivitiesFlag.class, Fields.class, StaffList.class,
@@ -64,6 +71,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
         SyncSummary.class, HarvestLocationsTable.class, AppVariables.class, RFActivitiesFlag.class,
         RFList.class, PictureSync.class, PWSActivitiesFlag.class, PWSCategoryList.class,
         PCPWSActivitiesFlag.class, PWSActivityController.class,
+        FertilizerMembers.class, VillageLocations.class, StaffDetails.class,
         ScheduledThreshingActivitiesFlag.class, BGTCoaches.class, ConfirmThreshingActivitiesFlag.class, CollectionCenterEntity.class},
         version = DatabaseStringConstants.MS_PLAYBOOK_DATABASE_VERSION, exportSchema = false)
 
@@ -95,6 +103,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract BGTCoachesDao bgtCoachesDao();
     public abstract ConfirmThreshingActivitiesFlagDao confirmThreshingActivitiesFlagDao();
     public abstract CollectionCenterDao getCollectionCenterDao();
+    public abstract FertilizerMembersDao fertilizerMembersDao();
+    public abstract StaffDao staffDao();
+    public abstract VillageLocationsDao villageLocationsDao();
 
     /**
      * Return instance of database creation
@@ -434,6 +445,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+
     private static final Migration MIGRATION_13_14 = new Migration(13, 14) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
@@ -441,22 +453,105 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE bgt_coaches ADD COLUMN 'bgt_name' TEXT ");
             database.execSQL("ALTER TABLE confirm_threshing_activities_flag ADD COLUMN 'thresher' TEXT ");
             database.execSQL("ALTER TABLE confirm_threshing_activities_flag ADD COLUMN 'thresher_id' TEXT");
+        }
+    };
+
+    private static final Migration MIGRATION_14_15 = new Migration(14, 15) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'fertilizer_luxand_flag' TEXT DEFAULT '0'");
+
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_up_fertilizer_members' TEXT DEFAULT '2019-01-01 00:00:00'");
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_fertilizer_members' TEXT DEFAULT '2019-01-01 00:00:00'");
+
+            database.execSQL("CREATE TABLE IF NOT EXISTS fertilizer_members (" +
+                    "unique_member_id TEXT  NOT NULL," +
+                    "ik_number TEXT," +
+                    "face_scan_flag TEXT," +
+                    "template TEXT," +
+                    "deactivate TEXT," +
+                    "member_presence TEXT," +
+                    "distribution_centre TEXT," +
+                    "staff_id TEXT," +
+                    "app_version TEXT," +
+                    "imei TEXT," +
+                    "sync_flag TEXT," +
+                    "app_onboarded TEXT," +
+                    "date_created TEXT," +
+                    "PRIMARY KEY(unique_member_id))"
+            );
 
         }
     };
-    
+
+    private static final Migration MIGRATION_15_16 = new Migration(15, 16) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'issues_list' TEXT DEFAULT ''");
+
+        }
+    };
+
+    private static final Migration MIGRATION_16_17 = new Migration(16, 17) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            //Add the village locations table
+            database.execSQL("CREATE TABLE IF NOT EXISTS village_locations (" +
+                    "unique_member_id TEXT NOT NULL," +
+                    "village_name TEXT," +
+                    "village_id TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "staff_id TEXT," +
+                    "PRIMARY KEY(unique_member_id))"
+            );
+
+            //Add village locations to last_sync table.
+            database.execSQL("ALTER TABLE last_sync ADD COLUMN 'last_sync_down_village_locations' TEXT DEFAULT '2019-01-01 00:00:00'");
+
+            //Add bgt_location_tracker variables to the app variables table.
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'bgt_location_tracker_flag' TEXT DEFAULT '1'");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'bgt_location_tracker_days' TEXT DEFAULT 'Monday,Tuesday,Wednesday,Thursday,Friday'");
+            database.execSQL("ALTER TABLE app_variables ADD COLUMN 'bgt_location_tracker_hours' TEXT DEFAULT '09:00:00,18:00:00'");
+        }
+    };
+
+    static final Migration MIGRATION_17_18 = new Migration(17, 18) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS location_tracker (" +
+                    "id INTEGER  NOT NULL," +
+                    "bgtId TEXT," +
+                    "latitude TEXT," +
+                    "longitude TEXT," +
+                    "coach_id TEXT," +
+                    "imei TEXT," +
+                    "appVersion TEXT," +
+                    "outside_field_portfolio_flag INTEGER NOT NULL," +
+                    "outside_village_portfolio_flag INTEGER NOT NULL," +
+                    "dateLogged TEXT," +
+                    "timestamp TEXT," +
+                    "sync_flag INTEGER NOT NULL," +
+                    "PRIMARY KEY(id))"
+            );
+        }
+    };
+
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
                 context, AppDatabase.class, DatabaseStringConstants.MS_PLAYBOOK_DATABASE_NAME)
                 .allowMainThreadQueries()
-                .addMigrations(MIGRATION_1_2,MIGRATION_2_3,MIGRATION_3_4,MIGRATION_4_5,MIGRATION_5_6,
-                        MIGRATION_6_7,MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10,MIGRATION_10_11,
-                        MIGRATION_11_12,MIGRATION_12_13,MIGRATION_13_14)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,
+                        MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11,
+                        MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16,
+                        MIGRATION_16_17, MIGRATION_17_18)
                 //.fallbackToDestructiveMigration()
                 .build();
     }
 
-    public void cleanUp(){
+    public void cleanUp() {
         appDatabase = null;
     }
 }

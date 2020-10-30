@@ -97,6 +97,9 @@ public class ActivityListAdapter extends RecyclerView.Adapter<ActivityListAdapte
             }else if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase(DatabaseStringConstants.SET_PORTFOLIO_ACTIVITY)){
                 progress_bar.setVisibility(View.GONE);
                 btn_act_action.setText(context.getResources().getString(R.string.update_portfolio));
+            }else if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase(DatabaseStringConstants.FERTILIZER_SIGN_UP_ACTIVITY)){
+                progress_bar.setVisibility(View.GONE);
+                btn_act_action.setText(button_name);
             }else if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase(DatabaseStringConstants.LOG_HG_ACTIVITY)){
                 progress_bar.setVisibility(View.VISIBLE);
                 progress_bar.setMax(Integer.parseInt(activityListRecyclerModel.getTotal_field_count()));

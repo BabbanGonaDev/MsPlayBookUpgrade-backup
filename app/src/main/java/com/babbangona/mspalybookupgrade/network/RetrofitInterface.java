@@ -7,6 +7,8 @@ import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
 import com.babbangona.mspalybookupgrade.network.object.CategoryDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.ConfirmThreshingActivitiesUpload;
+import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersDownload;
+import com.babbangona.mspalybookupgrade.network.object.FertilizerMembersUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesFlagDownload;
 import com.babbangona.mspalybookupgrade.network.object.HGActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.HGListDownload;
@@ -29,6 +31,7 @@ import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivit
 import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.ServerResponse;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
+import com.babbangona.mspalybookupgrade.network.object.VillageLocationsDownload;
 
 import java.util.List;
 
@@ -164,6 +167,19 @@ public interface RetrofitInterface {
     @POST("uploadConfirmThreshingActivitiesRecord")
     Call<List<ConfirmThreshingActivitiesUpload>> uploadConfirmThreshingActivitiesRecord(@Field("upload_list") String upload_list,
                                                                                         @Field("staff_id") String staff_id);
+
+    @GET("downloadFertilizerSignup")
+    Call<FertilizerMembersDownload> downloadFertilizerMembers(@Query("staff_id") String staff_id,
+                                                              @Query("portfolio_list") String portfolio_list,
+                                                              @Query("last_synced_time") String last_synced_time);
+
+    @FormUrlEncoded
+    @POST("uploadFertilizerSignup")
+    Call<List<FertilizerMembersUpload>> uploadFertilizerMembersRecord(@Field("upload_list") String upload_list,
+                                                                      @Field("staff_id") String staff_id);
+
+    @GET("downloadVillageLocations")
+    Call<VillageLocationsDownload> downloadVillageLocations(@Query("staff_id") String staffId, @Query("last_sync_time") String lastSyncTime);
 
     @FormUrlEncoded
     @POST("yourPHPName.php")

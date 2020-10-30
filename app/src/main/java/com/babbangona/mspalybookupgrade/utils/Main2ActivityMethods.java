@@ -9,6 +9,7 @@ import android.widget.AutoCompleteTextView;
 import com.babbangona.mspalybookupgrade.Homepage;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListRecyclerModel;
+import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
@@ -173,6 +174,8 @@ public class Main2ActivityMethods {
                     " " +context.getResources().getString(R.string.out_of)+
                     " "+total_field_count+
                     " "+context.getResources().getString(R.string.sentence_close);
+        }else if (activity_id.equalsIgnoreCase(DatabaseStringConstants.FERTILIZER_SIGN_UP_ACTIVITY)){
+            composed_sentence = context.getResources().getString(R.string.set_fertilizer_sign_up);
         }else{
             composed_sentence = context.getResources().getString(R.string.strange_activity);
         }

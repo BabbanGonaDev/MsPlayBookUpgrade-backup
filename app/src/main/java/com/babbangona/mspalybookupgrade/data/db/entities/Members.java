@@ -149,4 +149,51 @@ public class Members {
     public void setCoach_id(String coach_id) {
         this.coach_id = coach_id;
     }
+
+    public static class MemberDetails{
+
+        private String first_name;
+        private String last_name;
+        private String ik_number;
+        private String village_name;
+
+        public MemberDetails(String first_name, String last_name, String ik_number, String village_name) {
+            this.first_name = first_name;
+            this.last_name = last_name;
+            this.ik_number = ik_number;
+            this.village_name = village_name;
+        }
+
+        public String getFirst_name() {
+            return first_name;
+        }
+
+        public void setFirst_name(String first_name) {
+            this.first_name = first_name;
+        }
+
+        public String getLast_name() {
+            return last_name;
+        }
+
+        public void setLast_name(String last_name) {
+            this.last_name = last_name;
+        }
+
+        public String getIk_number() {
+            return ik_number;
+        }
+
+        public void setIk_number(String ik_number) {
+            this.ik_number = ik_number;
+        }
+
+        public String getVillage_name() {
+            return village_name;
+        }
+
+        public void setVillage_name(String village_name) {
+            this.village_name = village_name;
+        }
+    }
 }

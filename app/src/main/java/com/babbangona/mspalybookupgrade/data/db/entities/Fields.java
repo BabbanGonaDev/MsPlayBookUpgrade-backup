@@ -234,4 +234,43 @@ public class Fields {
 
         return fields;
     }
+
+    public static class locations {
+        private String unique_member_id;
+        private String unique_field_id;
+        private String latitude;
+        private String longitude;
+
+        public String getUnique_member_id() {
+            return unique_member_id;
+        }
+
+        public void setUnique_member_id(String unique_member_id) {
+            this.unique_member_id = unique_member_id;
+        }
+
+        public String getUnique_field_id() {
+            return unique_field_id;
+        }
+
+        public void setUnique_field_id(String unique_field_id) {
+            this.unique_field_id = unique_field_id;
+        }
+
+        public String getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(String latitude) {
+            this.latitude = latitude;
+        }
+
+        public String getLongitude() {
+            return longitude;
+        }
+
+        public void setLongitude(String longitude) {
+            this.longitude = longitude;
+        }
+    }
 }

@@ -9,6 +9,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpHomeRecycler.FertilizerHomeRecyclerModel;
+import com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpMembersRecycler.FertilizerMembersRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.donotpay.data.models.TGList;
@@ -40,15 +42,35 @@ public abstract class MembersDao {
     //String unique_member_id, String member_name, String role, String village, String ik_number, String member_r_id
 
     @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, b.bgt_id as staff_id," +
-            "b.village_name as village, b.ik_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
+            "b.village_name as village, b.phone_number, b.ik_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
             "FROM members b WHERE b.coach_id = :mss ")
     public abstract DataSource.Factory<Integer, MemberListRecyclerModel> getMemberListByCoach(String mss);
 
     @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, b.bgt_id as staff_id," +
-            "b.village_name as village, b.ik_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
+            "b.village_name as village, b.phone_number, b.ik_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
             "FROM members b WHERE b.coach_id = :mss AND LOWER(b.first_name || ' ' || b.last_name || b.phone_number || " +
             "b.village_name || b.ik_number || 'R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:search) ")
     public abstract DataSource.Factory<Integer, MemberListRecyclerModel> getMemberListBySearch(String mss, String search);
+
+    @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, " +
+            "b.village_name as village, b.ik_number, b.phone_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
+            "FROM members b WHERE b.coach_id = :mss AND LOWER(b.role) = LOWER('Leader')")
+    public abstract DataSource.Factory<Integer, FertilizerHomeRecyclerModel> getLeaderMemberList(String mss);
+
+    @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, " +
+            "b.village_name as village, b.ik_number, b.phone_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
+            "FROM members b WHERE b.coach_id = :mss AND LOWER(b.role) = LOWER('Leader') AND LOWER(b.first_name || ' ' || " +
+            "b.last_name || b.phone_number || b.village_name || b.ik_number || 'R20-' || b.ik_number || '-' || b.member_id) LIKE LOWER(:search) ")
+    public abstract DataSource.Factory<Integer, FertilizerHomeRecyclerModel> getLeaderMemberListBySearch(String mss, String search);
+
+    @Query(" SELECT b.unique_member_id, b.first_name || ' ' || b.last_name as member_name, b.role, " +
+            "b.village_name as village, b.ik_number, b.phone_number, 'R20-' || b.ik_number || '-' || b.member_id as member_r_id " +
+            "FROM members b WHERE b.ik_number = :ik_number ")
+    public abstract DataSource.Factory<Integer, FertilizerMembersRecyclerModel> getTrustGroupMemberList(String ik_number);
+
+    @Query("SELECT first_name, last_name, ik_number, village_name FROM members WHERE unique_member_id = :unique_member_id")
+    public abstract Members.MemberDetails getMemberDetails(String unique_member_id);
+
 
     /**
      * Get Trust Group list for Do Not Pay module
@@ -58,7 +80,6 @@ public abstract class MembersDao {
 
     /**
      * Insert the object in database
-     *
      * @param members, object to be inserted
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -80,5 +101,4 @@ public abstract class MembersDao {
      */
     @Delete
     public abstract void delete(Members members);
-
 }
