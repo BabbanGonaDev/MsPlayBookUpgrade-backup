@@ -15,7 +15,6 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +26,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.babbangona.mspalybookupgrade.HarvestSummary.HarvestHomePage;
 import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListAdapter;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -38,7 +36,6 @@ import com.babbangona.mspalybookupgrade.utils.Main2ActivityMethods;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -82,7 +79,7 @@ public class Homepage extends AppCompatActivity {
     @BindView(R.id.collapsingToolbar)
     CollapsingToolbarLayout collapsingToolbar;
 
-    MaterialButton goToHarvest;
+    //MaterialButton goToHarvest;
 
     SharedPrefs sharedPrefs;
 
@@ -121,7 +118,7 @@ public class Homepage extends AppCompatActivity {
         setContentView(R.layout.home_page);
         ButterKnife.bind(this);
 
-        goToHarvest = findViewById(R.id.btn_goToHarvest);
+        //goToHarvest = findViewById(R.id.btn_goToHarvest);
         sharedPrefs = new SharedPrefs(Homepage.this);
         main2ActivityMethods = new Main2ActivityMethods(Homepage.this);
         appDatabase = AppDatabase.getInstance(Homepage.this);
@@ -144,14 +141,13 @@ public class Homepage extends AppCompatActivity {
         //appDatabase.getCollectionCenterDao().insert(myCollectionCenterList);
 
         dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        goToHarvest.setOnClickListener(new View.OnClickListener() {
+        /*goToHarvest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Homepage.this, HarvestHomePage.class);
                 startActivity(intent);
             }
-        });
-        /*startActivity(new Intent(this, TransporterHomeActivity.class));*/
+        });*/
     }
 
     @Override
@@ -347,8 +343,6 @@ public class Homepage extends AppCompatActivity {
             showDialogForSync(getResources().getString(R.string.click_sync_message),Homepage.this);
         }
     }
-
-
 
     private void showDialogForSync(String s, Context context) {
         MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));

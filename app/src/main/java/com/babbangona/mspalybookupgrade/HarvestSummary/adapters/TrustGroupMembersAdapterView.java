@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.babbangona.mspalybookupgrade.HarvestSummary.HarvestSummaryPage;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.babbangona.mspalybookupgrade.HarvestSummary.MemberDetails;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
@@ -20,10 +22,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class TrustGroupMembersAdapterView extends RecyclerView.Adapter<TrustGroupMembersAdapterView.MyViewHolder> {
 
@@ -58,7 +56,7 @@ public class TrustGroupMembersAdapterView extends RecyclerView.Adapter<TrustGrou
         String image_name = File.separator + allMembers.get(position).getUnique_member_id() + "_thumb.jpg";
 
         Picasso
-                .with(context)
+                .get()
                 .load(new File(ImgDirectory.getAbsoluteFile(), image_name))
                 .error(R.drawable.user)
                 .into(holder.tgImage);

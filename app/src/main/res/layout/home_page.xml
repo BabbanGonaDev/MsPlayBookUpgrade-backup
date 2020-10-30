@@ -72,7 +72,7 @@
                             android:text="TextView" />
                     </LinearLayout>
 
-                    <LinearLayout
+                    <!--<LinearLayout
                         android:id="@+id/dummy_layouty"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -89,7 +89,7 @@
                             android:layout_gravity="center_horizontal"
                             app:cornerRadius="12dp"/>
 
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <LinearLayout
                         android:id="@+id/layoutyy"

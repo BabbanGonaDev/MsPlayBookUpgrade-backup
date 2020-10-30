@@ -1,27 +1,21 @@
 package com.babbangona.mspalybookupgrade.HarvestSummary;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.babbangona.mspalybookupgrade.BuildConfig;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.babbangona.mspalybookupgrade.HarvestSummary.adapters.HarvestTrustGroupListAdapterView;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class HarvestTrustGroupList extends AppCompatActivity {
@@ -94,8 +88,7 @@ public class HarvestTrustGroupList extends AppCompatActivity {
         backNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HarvestTrustGroupList.this, HarvestHomePage.class);
-                startActivity(intent);
+                finish();
             }
         });
     }

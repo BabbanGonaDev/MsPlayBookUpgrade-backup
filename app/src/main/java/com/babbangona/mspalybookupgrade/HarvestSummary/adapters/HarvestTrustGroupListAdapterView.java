@@ -2,8 +2,6 @@ package com.babbangona.mspalybookupgrade.HarvestSummary.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +10,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.util.Log;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.babbangona.mspalybookupgrade.HarvestSummary.HarvestSummaryPage;
 import com.babbangona.mspalybookupgrade.R;
@@ -25,11 +25,6 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class HarvestTrustGroupListAdapterView extends RecyclerView.Adapter<HarvestTrustGroupListAdapterView.MyViewHolder> implements Filterable {
 
@@ -65,7 +60,7 @@ public class HarvestTrustGroupListAdapterView extends RecyclerView.Adapter<Harve
         String image_name = File.separator + allMembers.get(position).getUnique_member_id() + "_thumb.jpg";
 
         Picasso
-                .with(context)
+                .get()
                 .load(new File(ImgDirectory.getAbsoluteFile(), image_name))
                 .error(R.drawable.user)
                 .into(holder.tgImage);

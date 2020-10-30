@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
-        versionName "2.2.8"
+        versionName "2.3.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //multiDexEnabled true
     }
@@ -61,7 +61,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.opencsv:opencsv:4.6'
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    //compile 'com.squareup.picasso:picasso:2.5.2'
 
     //the implementation for butter knife
     implementation 'com.jakewharton:butterknife:10.2.0'

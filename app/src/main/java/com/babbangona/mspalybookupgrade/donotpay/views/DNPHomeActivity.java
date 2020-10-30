@@ -18,6 +18,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.babbangona.mspalybookupgrade.BuildConfig;
+import com.babbangona.mspalybookupgrade.HarvestSummary.HarvestTrustGroupList;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.databinding.ActivityDonotpayHomeBinding;
@@ -78,7 +79,7 @@ public class DNPHomeActivity extends AppCompatActivity {
         });
 
         binding.btnHarvestHistory.setOnClickListener(v -> {
-            //Do Something
+            startActivity(new Intent(this, HarvestTrustGroupList.class));
         });
     }
 

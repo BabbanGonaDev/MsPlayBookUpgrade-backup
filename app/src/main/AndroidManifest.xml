@@ -42,8 +42,6 @@
             android:name=".donotpay.views.DNPHomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ThreshingViews.ScheduleThreshingSummary"
-        <activity
             android:name=".HarvestSummary.MemberDetails"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
