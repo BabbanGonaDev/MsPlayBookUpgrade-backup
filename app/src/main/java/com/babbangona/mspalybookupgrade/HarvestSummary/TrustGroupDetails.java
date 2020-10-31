@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -25,7 +26,7 @@ public class TrustGroupDetails extends AppCompatActivity {
     TextView iknumber, no_of_bags_marketed, no_of_bags_transported, expected_bags, harvest_complete, payment_status;
     int noOfBagsMarketed, noOfBagsTransported, expectedBags;
     int i, count;
-    TextView dateContainer, staffIdContainer;
+    TextView dateContainer, staffIdContainer, appVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class TrustGroupDetails extends AppCompatActivity {
         payment_status = findViewById(R.id.payment_status_tv);
         dateContainer = findViewById(R.id.sync_date_notifier);
         staffIdContainer = findViewById(R.id.staff_id_notifier);
+        appVersion = findViewById(R.id.donotpay_app_version);
     }
 
     public void setItemViews(){
@@ -113,6 +115,7 @@ public class TrustGroupDetails extends AppCompatActivity {
 
         staffIdContainer.setText(sharedPrefs.getStaffID());
         dateContainer.setText(sharedPrefs.getKeyLastSyncTime());
+        appVersion.setText(BuildConfig.VERSION_NAME);
     }
 
 

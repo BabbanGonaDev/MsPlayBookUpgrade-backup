@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.google.android.material.button.MaterialButton;
@@ -16,7 +17,7 @@ public class HarvestSummaryPage extends AppCompatActivity {
 
     MaterialButton btn_tgHarvestSummary, btn_memberHarvestSummary;
     ImageView backNav;
-    TextView dateContainer, staffIdContainer;
+    TextView dateContainer, staffIdContainer, appVersion;
     SharedPrefs sharedPrefs;
 
     @Override
@@ -29,6 +30,7 @@ public class HarvestSummaryPage extends AppCompatActivity {
         backNav = findViewById(R.id.back_arrow);
         dateContainer = findViewById(R.id.sync_date_notifier);
         staffIdContainer = findViewById(R.id.staff_id_notifier);
+        appVersion = findViewById(R.id.donotpay_app_version);
         sharedPrefs = new SharedPrefs(this);
 
         displayDetails();
@@ -39,6 +41,7 @@ public class HarvestSummaryPage extends AppCompatActivity {
 
         staffIdContainer.setText(sharedPrefs.getStaffID());
         dateContainer.setText(sharedPrefs.getKeyLastSyncTime());
+        appVersion.setText(BuildConfig.VERSION_NAME);
     }
 
     public void handleAllClicks(){

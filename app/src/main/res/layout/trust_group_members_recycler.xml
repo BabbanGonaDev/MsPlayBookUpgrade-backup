@@ -58,7 +58,7 @@
                         android:id="@+id/tg_leader_label_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/tg_leader_label" />
+                        android:text="@string/tg_name_label" />
 
                     <TextView
                         android:id="@+id/tg_leader_tv"

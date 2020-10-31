@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.HarvestSummary.adapters.HarvestTrustGroupListAdapterView;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -54,6 +55,7 @@ public class HarvestTrustGroupList extends AppCompatActivity {
 
         staffIdContainer.setText(sharedPrefs.getStaffID());
         dateContainer.setText(sharedPrefs.getKeyLastSyncTime());
+        appVersion.setText(BuildConfig.VERSION_NAME);
     }
     public void handleRecyclerView(){
 

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.HarvestSummary.adapters.HarvestTrustGroupListAdapterView;
 import com.babbangona.mspalybookupgrade.HarvestSummary.adapters.TrustGroupMembersAdapterView;
 import com.babbangona.mspalybookupgrade.R;
@@ -27,7 +28,7 @@ public class TrustGroupMembers extends AppCompatActivity {
     List<Members> allTgMembers;
     TrustGroupMembersAdapterView trustGroupMembersAdapterView;
     ImageView backNav;
-    TextView dateContainer, staffIdContainer;
+    TextView dateContainer, staffIdContainer, appVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class TrustGroupMembers extends AppCompatActivity {
         recyclerView = findViewById(R.id.trust_group_members_recycler);
         dateContainer = findViewById(R.id.sync_date_notifier);
         staffIdContainer = findViewById(R.id.staff_id_notifier);
+        appVersion = findViewById(R.id.donotpay_app_version);
         appDatabase = AppDatabase.getInstance(this);
         sharedPrefs = new SharedPrefs(this);
         setBackNav();
@@ -52,6 +54,7 @@ public class TrustGroupMembers extends AppCompatActivity {
 
         staffIdContainer.setText(sharedPrefs.getStaffID());
         dateContainer.setText(sharedPrefs.getKeyLastSyncTime());
+        appVersion.setText(BuildConfig.VERSION_NAME);
     }
 
     public void handleRecyclerView(){

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -27,7 +28,7 @@ public class MemberDetails extends AppCompatActivity {
     TextView transporter_phone_number, bgt_name, bgt_staffId;
     MaterialButton btn_continue;
     ImageView backNav;
-    TextView dateContainer, staffIdContainer;
+    TextView dateContainer, staffIdContainer, appVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class MemberDetails extends AppCompatActivity {
         backNav = findViewById(R.id.back_arrow);
         dateContainer = findViewById(R.id.sync_date_notifier);
         staffIdContainer = findViewById(R.id.staff_id_notifier);
+        appVersion = findViewById(R.id.donotpay_app_version);
     }
 
     public void setItemViews(){
@@ -103,6 +105,7 @@ public class MemberDetails extends AppCompatActivity {
 
         staffIdContainer.setText(sharedPrefs.getStaffID());
         dateContainer.setText(sharedPrefs.getKeyLastSyncTime());
+        appVersion.setText(BuildConfig.VERSION_NAME);
     }
 
     public void buttonClick(){
