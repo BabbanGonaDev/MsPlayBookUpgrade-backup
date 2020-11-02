@@ -58,6 +58,7 @@ public class HarvestTrustGroupList extends AppCompatActivity {
         dateContainer.setText(sharedPrefs.getKeyLastSyncTime());
         appVersion.setText(BuildConfig.VERSION_NAME);
     }
+
     public void handleRecyclerView(){
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());

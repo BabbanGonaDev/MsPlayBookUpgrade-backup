@@ -1,17 +1,15 @@
 package com.babbangona.mspalybookupgrade.HarvestSummary;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.babbangona.mspalybookupgrade.BuildConfig;
-import com.babbangona.mspalybookupgrade.HarvestSummary.adapters.HarvestTrustGroupListAdapterView;
 import com.babbangona.mspalybookupgrade.HarvestSummary.adapters.TrustGroupMembersAdapterView;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -72,8 +70,9 @@ public class TrustGroupMembers extends AppCompatActivity {
         backNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(TrustGroupMembers.this, HarvestSummaryPage.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(TrustGroupMembers.this, HarvestSummaryPage.class);
+                startActivity(intent);*/
+                finish();
             }
         });
     }

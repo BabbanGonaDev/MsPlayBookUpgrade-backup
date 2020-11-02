@@ -1,12 +1,11 @@
 package com.babbangona.mspalybookupgrade.HarvestSummary;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
@@ -113,8 +112,9 @@ public class MemberDetails extends AppCompatActivity {
         btn_continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MemberDetails.this, TrustGroupMembers.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(MemberDetails.this, TrustGroupMembers.class);
+                startActivity(intent);*/
+                finish();
             }
         });
     }
@@ -124,8 +124,9 @@ public class MemberDetails extends AppCompatActivity {
         backNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MemberDetails.this, TrustGroupMembers.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(MemberDetails.this, TrustGroupMembers.class);
+                startActivity(intent);*/
+                finish();
             }
         });
     }
