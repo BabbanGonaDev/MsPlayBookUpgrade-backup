@@ -51,6 +51,7 @@ public class HarvestTrustGroupList extends AppCompatActivity {
         handleRecyclerView();
     }
 
+    // This is use to display the values in the different views
     public void displayDetails(){
 
         staffIdContainer.setText(sharedPrefs.getStaffID());
