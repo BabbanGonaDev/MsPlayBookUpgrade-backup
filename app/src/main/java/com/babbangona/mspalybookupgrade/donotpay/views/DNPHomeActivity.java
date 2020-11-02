@@ -10,12 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.HarvestSummary.HarvestTrustGroupList;
@@ -24,16 +19,12 @@ import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.databinding.ActivityDonotpayHomeBinding;
 import com.babbangona.mspalybookupgrade.donotpay.data.DSessionManager;
 import com.babbangona.mspalybookupgrade.donotpay.data.room.DNPDatabase;
-import com.babbangona.mspalybookupgrade.donotpay.services.RefreshWorker;
-import com.babbangona.mspalybookupgrade.transporter.helpers.AppUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class DNPHomeActivity extends AppCompatActivity {
     ActivityDonotpayHomeBinding binding;
@@ -68,11 +59,11 @@ public class DNPHomeActivity extends AppCompatActivity {
 
         confirmDNPPhoneDate();
 
-        constraints = new Constraints.Builder()
+        /*constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-        refresh_request = new OneTimeWorkRequest.Builder(RefreshWorker.class).build();
+        refresh_request = new OneTimeWorkRequest.Builder(RefreshWorker.class).build();*/
 
         binding.btnDoNotPay.setOnClickListener(v -> {
             startActivity(new Intent(this, DNPTrustGroupActivity.class));
@@ -95,13 +86,6 @@ public class DNPHomeActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             finish();
             return true;
-        } else if (id == R.id.dnp_refresh) {
-            if (AppUtils.isConnectedToNetwork(DNPHomeActivity.this)) {
-                refreshData();
-            } else {
-                Snackbar.make(binding.cl, "No Network Connection", Snackbar.LENGTH_LONG).show();
-            }
-            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -110,7 +94,7 @@ public class DNPHomeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        setupRecurringRefresh();
+        //setupRecurringRefresh();
     }
 
     public Boolean confirmDNPPhoneDate() {
@@ -143,13 +127,13 @@ public class DNPHomeActivity extends AppCompatActivity {
         return false;
     }
 
-    public void refreshData() {
+    /*public void refreshData() {
         WorkManager
                 .getInstance(DNPHomeActivity.this)
                 .enqueueUniqueWork(WORK_MANAGER_SINGLE_REFRESH, ExistingWorkPolicy.REPLACE, refresh_request);
-    }
+    }*/
 
-    public void setupRecurringRefresh() {
+    /*public void setupRecurringRefresh() {
         PeriodicWorkRequest periodic_refresh = new PeriodicWorkRequest.Builder(RefreshWorker.class, 1, TimeUnit.HOURS)
                 .setConstraints(constraints)
                 .build();
@@ -157,5 +141,5 @@ public class DNPHomeActivity extends AppCompatActivity {
         WorkManager
                 .getInstance(DNPHomeActivity.this)
                 .enqueueUniquePeriodicWork(WORK_MANAGER_PERIODIC_REFRESH, ExistingPeriodicWorkPolicy.REPLACE, periodic_refresh);
-    }
+    }*/
 }
