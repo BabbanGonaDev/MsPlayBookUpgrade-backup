@@ -99,18 +99,19 @@ public class DNPHomeActivity extends AppCompatActivity {
 
     public Boolean confirmDNPPhoneDate() {
         String default_date = "2020-10-14 00:00:00";
+        String last_sync_dnp = session.GET_LAST_SYNC_DNP();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
         Date last_sync = null;
         Date def_date = null;
         try {
-            //last_sync = sdf.parse(last_sync_transporter);
+            last_sync = sdf.parse(last_sync_dnp);
             def_date = sdf.parse(default_date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        if (new Date().before(def_date)) {
+        if (new Date().before(def_date) || new Date().before(last_sync)) {
             //Current Date is behind default date or last sync date, redirect
             new MaterialAlertDialogBuilder(DNPHomeActivity.this)
                     .setIcon(getResources().getDrawable(R.drawable.ic_wrong_calendar))
