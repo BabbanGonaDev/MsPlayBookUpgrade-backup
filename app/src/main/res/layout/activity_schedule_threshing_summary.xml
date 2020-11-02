@@ -189,7 +189,7 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.card.MaterialCardView
+                <!--<com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:elevation="5dp"
@@ -234,7 +234,7 @@
 
                     </LinearLayout>
 
-                </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>-->
 
             </LinearLayout>
 
