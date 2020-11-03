@@ -68,7 +68,8 @@ public class TrustGroupAdapter extends RecyclerView.Adapter<TrustGroupAdapter.Vi
                 } else {
                     List<TGList> filtered_list = new ArrayList<>();
                     for (TGList tg : list) {
-                        if (tg.getIk_number().toLowerCase().contains(char_string)) {
+                        if (tg.getIk_number().toLowerCase().contains(char_string) || tg.getFirst_name().toLowerCase().contains(char_string)
+                                || tg.getLast_name().toLowerCase().contains(char_string)) {
                             filtered_list.add(tg);
                         }
                     }
