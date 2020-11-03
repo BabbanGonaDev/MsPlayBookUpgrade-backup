@@ -136,7 +136,6 @@ public class ActivityListDownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        getInputData();
         getHGList();
         getRFList();
         getPWSCategoryList();
@@ -180,16 +179,18 @@ public class ActivityListDownloadService extends IntentService {
         if (appDatabase.scheduleThreshingActivitiesFlagDao().getUnSyncedScheduleThreshingActivitiesCount() > 0){
             syncUpScheduledThreshingActivities();
         }
-        if (appDatabase.confirmThreshingActivitiesFlagDao().getUnSyncedConfirmThreshingActivitiesCount() > 0){
+        if (appDatabase.confirmThreshingActivitiesFlagDao().getUnSyncedConfirmThreshingActivitiesCount() > 0) {
             syncUpConfirmThreshingActivities();
         }
-        if (appDatabase.fertilizerMembersDao().getUnSyncedFertilizerMembersCount() > 0){
+        if (appDatabase.fertilizerMembersDao().getUnSyncedFertilizerMembersCount() > 0) {
             syncUpFertilizerMembersSignUp();
         }
 
         getStaffList();
         getLogsDownload();
         pictureLoop(ImgDirectory);
+        getInputData();
+
     }
 
     /*
@@ -568,31 +569,6 @@ public class ActivityListDownloadService extends IntentService {
                 sharedPrefs.setKeyProgressDialogStatus(1);
             }
 
-            private void locationTracking() {
-
-                String appVariables = appDatabase.appVariablesDao().getBgtLocationTrackerFlag("1");
-                Log.d("Worker","Flags: " + appVariables);
-                if(appVariables.equals("1")){
-                    TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-                    try {
-                        PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                        //Log.d("IMEI --> ", telephonyManager.getDeviceId() + " ---> "+ pinfo.versionName);
-                        sharedPrefs.setIMEI(telephonyManager.getDeviceId());
-            /*sharedPreference.putValue("IMEI",telephonyManager.getDeviceId());
-            sharedPreference.putValue("versionName",pinfo.versionName);*/
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("Worker","Worker Initialized");
-                    PeriodicWorkRequest.Builder photoCheckBuilder =
-                            new PeriodicWorkRequest.Builder(LocationTrackerWorker.class, 1, TimeUnit.HOURS);
-                    PeriodicWorkRequest request = photoCheckBuilder.build();
-                    WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("LocationTrack", ExistingPeriodicWorkPolicy.KEEP , request);
-                }else {
-                    Log.d("Worker","Location tracker not enabled");
-                }
-            }
-
             @Override
             public void onFailure(@NotNull Call<MsPlaybookInputDownload> call, @NotNull Throwable t) {
                 Log.d("tobi_check_list", t.toString());
@@ -616,15 +592,40 @@ public class ActivityListDownloadService extends IntentService {
 
     }
 
-    void downloadPictures(String member){
-        if(ImageStorage.checkIfImageExists(member, DatabaseStringConstants.MS_PLAYBOOK_INPUT_PICTURE_LOCATION,ActivityListDownloadService.this)) {
+    private void locationTracking() {
+
+        String appVariables = appDatabase.appVariablesDao().getBgtLocationTrackerFlag("1");
+        Log.d("Worker", "Flags: " + appVariables);
+        if (appVariables.equals("1")) {
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            try {
+                PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                //Log.d("IMEI --> ", telephonyManager.getDeviceId() + " ---> "+ pinfo.versionName);
+                sharedPrefs.setIMEI(telephonyManager.getDeviceId());
+            /*sharedPreference.putValue("IMEI",telephonyManager.getDeviceId());
+            sharedPreference.putValue("versionName",pinfo.versionName);*/
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            Log.d("Worker", "Worker Initialized");
+            PeriodicWorkRequest.Builder photoCheckBuilder =
+                    new PeriodicWorkRequest.Builder(LocationTrackerWorker.class, 1, TimeUnit.HOURS);
+            PeriodicWorkRequest request = photoCheckBuilder.build();
+            WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("LocationTrack", ExistingPeriodicWorkPolicy.KEEP, request);
+        } else {
+            Log.d("Worker", "Location tracker not enabled");
+        }
+    }
+
+    void downloadPictures(String member) {
+        if (ImageStorage.checkIfImageExists(member, DatabaseStringConstants.MS_PLAYBOOK_INPUT_PICTURE_LOCATION, ActivityListDownloadService.this)) {
             GetImages getImages = new GetImages(RetrofitClient.BASE_URL_FOR_PICTURES + "images/small_tfm_face/" + member + "_thumb.jpg",
                     member, DatabaseStringConstants.MS_PLAYBOOK_INPUT_PICTURE_LOCATION, ActivityListDownloadService.this);
             getImages.execute();
         }
     }
 
-    void saveToFieldsTable(List<Fields> fieldsList){
+    void saveToFieldsTable(List<Fields> fieldsList) {
         SaveFieldsTable saveFieldsTable = new SaveFieldsTable();
         saveFieldsTable.execute(fieldsList);
     }
