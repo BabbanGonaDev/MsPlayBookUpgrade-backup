@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/silver"
+    tools:context=".HarvestSummary.HarvestTrustGroupList">
+
+    <LinearLayout
+        android:id="@+id/title_container"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/displayBar"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:src="@drawable/ic_keyboard_arrow_left_black_24dp">
+
+        </ImageView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="90"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/app_name_container"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="90"
+                    android:padding="@dimen/dimen_10dp"
+                    android:text="DO NOT PAY"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:textStyle="bold">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/donotpay_app_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10"
+                    android:padding="@dimen/dimen_10dp"
+                    android:text="v1.0.1"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:textStyle="bold">
+
+                </TextView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/options"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:src="@drawable/ic_more_vert_black_24dp">
+
+        </ImageView>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/search_page_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_container"
+        android:background="@color/silver"
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingTop="0dp"
+        android:paddingRight="8dp">
+
+        <SearchView
+            android:id="@+id/issue_list_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:background="@drawable/bg_white_rounded"
+            android:iconifiedByDefault="false"
+            android:layoutDirection="rtl"
+            android:queryHint="@string/seach_hint"
+            app:defaultQueryHint="@string/seach_hint"
+            app:iconifiedByDefault="false"
+            app:queryHint="@string/seach_hint" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/trust_group_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/time_staff_container"
+        android:layout_below="@id/search_page_container"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_40dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="6dp"
+                android:text="@string/list_of_trust_group"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold">
+
+            </TextView>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/trust_group_list_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/time_staff_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_marginEnd="@dimen/dimen_15dp"
+        android:layout_weight="30"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_weight="10"
+            android:text="Last Sync Date:">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/sync_date_notifier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="10"
+            android:text="01/01/2020">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/staff_id_notifier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="10"
+            android:text="T-100000000000AA">
+
+        </TextView>
+
+    </LinearLayout>
+
+</RelativeLayout>
