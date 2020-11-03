@@ -108,7 +108,7 @@ public class LocationTrackerWorker extends Worker {
                                 android.location.Location.distanceBetween(latitude, longitude, field_lat, field_long, results);
                                 Log.i("Worker", "Distance Between Two " + latitude + " " + longitude + " " + field_lat + " " + field_long + "results " + results[0]);
                                 float distanceInMeters = results[0];
-                                boolean isWithin10km = distanceInMeters < 200;
+                                boolean isWithin10km = distanceInMeters < 400;
                                 if (isWithin10km) {
                                     Log.d("Worker", "With in Field");
                                     staff.setOutside_field_portfolio_flag(0);
@@ -132,7 +132,7 @@ public class LocationTrackerWorker extends Worker {
                                 android.location.Location.distanceBetween(latitude, longitude, village_lat, village_long, results);
                                 Log.i("Worker", "Distance Between Two " + latitude + " " + longitude + " " + village_lat + " " + village_long + "results " + results[0]);
                                 float distanceInMeters = results[0];
-                                boolean isWithin10km = distanceInMeters < 200;
+                                boolean isWithin10km = distanceInMeters < 400;
                                 if (isWithin10km) {
                                     Log.d("Worker", "With in Village");
                                     staff.setOutside_village_portfolio_flag(0);
