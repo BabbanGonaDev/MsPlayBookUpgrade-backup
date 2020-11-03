@@ -515,7 +515,7 @@ public abstract class AppDatabase extends RoomDatabase {
     };
 
 
-    private static final Migration MIGRATION_16_17 = new Migration(16, 17) {
+    private static final Migration MIGRATION_17_18 = new Migration(17, 18) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             //Add the village locations table
@@ -539,7 +539,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    private static final Migration MIGRATION_17_18 = new Migration(17, 18) {
+    private static final Migration MIGRATION_18_19 = new Migration(18, 19) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE IF NOT EXISTS location_tracker (" +
@@ -560,7 +560,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    private static final Migration MIGRATION_18_19 = new Migration(18, 19) {
+    private static final Migration MIGRATION_19_20 = new Migration(19, 20) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE IF NOT EXISTS collection_center_member_info (" +
@@ -588,7 +588,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,
                         MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11,
                         MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16,
-                        MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19)
+                        MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20)
                 //.fallbackToDestructiveMigration()
                 .build();
     }

@@ -165,13 +165,6 @@ public class ScheduleThreshingSummary extends AppCompatActivity {
         return input_value;
     }
 
-    double revertToZero(double input_value){
-        if (input_value < 0){
-            input_value = input_value * (-1);
-        }
-        return input_value;
-    }
-
     private double roundFieldSizeDouble(double result){
         return Math.round(result * 10) / 10.0;
     }
