@@ -9,10 +9,10 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.babbangona.mspalybookupgrade.LocationTraker.database.dao.StaffDao;
-import com.babbangona.mspalybookupgrade.LocationTraker.database.entity.StaffDetails;
 import com.babbangona.mspalybookupgrade.HarvestSummary.data.dao.CollectionCenterDao;
 import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
+import com.babbangona.mspalybookupgrade.LocationTraker.database.dao.StaffDao;
+import com.babbangona.mspalybookupgrade.LocationTraker.database.entity.StaffDetails;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.daos.ActivityListDao;
 import com.babbangona.mspalybookupgrade.data.db.daos.AppVariablesDao;
@@ -518,7 +518,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    static final Migration MIGRATION_17_18 = new Migration(17, 18) {
+    private static final Migration MIGRATION_17_18 = new Migration(17, 18) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE IF NOT EXISTS location_tracker (" +
@@ -539,6 +539,27 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_18_19 = new Migration(18, 19) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS collection_center_member_info (" +
+                    "unique_member_id TEXT NOT NULL," +
+                    "ik_number TEXT NOT NULL," +
+                    "no_of_bags_marketed TEXT," +
+                    "no_of_bags_transported TEXT," +
+                    "expected_bags TEXT," +
+                    "harvest_complete TEXT," +
+                    "payment_status TEXT," +
+                    "harvest_advance_paid TEXT," +
+                    "transporter_name TEXT," +
+                    "transporter_phone_number TEXT," +
+                    "bgt_name TEXT," +
+                    "bgt_staff_id TEXT NOT NULL," +
+                    "PRIMARY KEY (unique_member_id))"
+            );
+        }
+    };
+
     private static AppDatabase buildDatabaseInstance(Context context) {
         return Room.databaseBuilder(
                 context, AppDatabase.class, DatabaseStringConstants.MS_PLAYBOOK_DATABASE_NAME)
@@ -546,7 +567,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,
                         MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11,
                         MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16,
-                        MIGRATION_16_17, MIGRATION_17_18)
+                        MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19)
                 //.fallbackToDestructiveMigration()
                 .build();
     }

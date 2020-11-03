@@ -6,7 +6,7 @@ public class DatabaseStringConstants {
      * database particulars
      */
     public static final String MS_PLAYBOOK_DATABASE_NAME = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION = 18;
+    public static final int MS_PLAYBOOK_DATABASE_VERSION = 19;
 
     /**
      * Names of tables
