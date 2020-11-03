@@ -45,6 +45,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    // location play services
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+
     //the implementation below are for the room database
     implementation 'androidx.room:room-runtime:2.2.5'
     annotationProcessor 'androidx.room:room-compiler:2.2.5'
@@ -89,12 +92,15 @@ dependencies {
     //implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.0'
     implementation 'com.github.GoodieBag:Pinview:1.4'
 
+    /*Picasso dependency*/
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
     //Calender View Library
 
     implementation project(':BGFR')
 
     repositories {
-        maven{
+        maven {
             url 'https://sdk.uxcam.com/android/'
         }
     }

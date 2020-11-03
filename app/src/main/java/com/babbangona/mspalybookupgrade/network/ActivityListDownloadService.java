@@ -4,15 +4,23 @@ import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
+import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
+import com.babbangona.mspalybookupgrade.LocationTraker.worker.LocationTrackerWorker;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.db.entities.ActivityList;
@@ -40,6 +48,7 @@ import com.babbangona.mspalybookupgrade.data.db.entities.RFList;
 import com.babbangona.mspalybookupgrade.data.db.entities.ScheduledThreshingActivitiesFlag;
 import com.babbangona.mspalybookupgrade.data.db.entities.StaffList;
 import com.babbangona.mspalybookupgrade.data.db.entities.SyncSummary;
+import com.babbangona.mspalybookupgrade.data.db.entities.VillageLocations;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
 import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
@@ -72,6 +81,7 @@ import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivit
 import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.ServerResponse;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
+import com.babbangona.mspalybookupgrade.network.object.VillageLocationsDownload;
 import com.babbangona.mspalybookupgrade.utils.SetPortfolioMethods;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -85,10 +95,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -123,6 +136,7 @@ public class ActivityListDownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        getInputData();
         getHGList();
         getRFList();
         getPWSCategoryList();
@@ -140,6 +154,8 @@ public class ActivityListDownloadService extends IntentService {
         getFertilizerMembersDownload();
         getFertilizerLocationDownload();
         getAppVariablesDownload();
+        getDownloadCollectionCenterData();
+        getVillageLocationsDownload();
 
         File ImgDirectory = new File(Environment.getExternalStorageDirectory().getPath(), DatabaseStringConstants.MS_PLAYBOOK_PICTURE_LOCATION);
 
@@ -174,7 +190,6 @@ public class ActivityListDownloadService extends IntentService {
         getStaffList();
         getLogsDownload();
         pictureLoop(ImgDirectory);
-        getInputData();
     }
 
     /*
@@ -514,6 +529,7 @@ public class ActivityListDownloadService extends IntentService {
                         );
                     }
                     getActivityList();
+                    locationTracking();
                 }else {
                     int sc = response.code();
                     Log.d("scCode:- ",""+sc);
@@ -550,6 +566,31 @@ public class ActivityListDownloadService extends IntentService {
                     );
                 }
                 sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            private void locationTracking() {
+
+                String appVariables = appDatabase.appVariablesDao().getBgtLocationTrackerFlag("1");
+                Log.d("Worker","Flags: " + appVariables);
+                if(appVariables.equals("1")){
+                    TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+                    try {
+                        PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                        //Log.d("IMEI --> ", telephonyManager.getDeviceId() + " ---> "+ pinfo.versionName);
+                        sharedPrefs.setIMEI(telephonyManager.getDeviceId());
+            /*sharedPreference.putValue("IMEI",telephonyManager.getDeviceId());
+            sharedPreference.putValue("versionName",pinfo.versionName);*/
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("Worker","Worker Initialized");
+                    PeriodicWorkRequest.Builder photoCheckBuilder =
+                            new PeriodicWorkRequest.Builder(LocationTrackerWorker.class, 1, TimeUnit.HOURS);
+                    PeriodicWorkRequest request = photoCheckBuilder.build();
+                    WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("LocationTrack", ExistingPeriodicWorkPolicy.KEEP , request);
+                }else {
+                    Log.d("Worker","Location tracker not enabled");
+                }
             }
 
             @Override
@@ -1312,6 +1353,101 @@ public class ActivityListDownloadService extends IntentService {
 
             return null;
         }
+    }
+
+    public void getDownloadCollectionCenterData() {
+
+        retrofitInterface = RetrofitClient1.getApiClient().create(RetrofitInterface.class);
+        Call<List<CollectionCenterEntity>> call = retrofitInterface.downloadHarvestSummary(sharedPrefs.getStaffID(), sharedPrefs.getCollectionCenterLastSyncTime());
+        Log.d("ourrrnames", sharedPrefs.getStaffID());
+        Log.d("ourrrtimess", sharedPrefs.getCollectionCenterLastSyncTime());
+
+        call.enqueue(new Callback<List<CollectionCenterEntity>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void onResponse(@NonNull Call<List<CollectionCenterEntity>> call, @NonNull Response<List<CollectionCenterEntity>> response) {
+                if (response.isSuccessful()) {
+
+                    List<CollectionCenterEntity> collectionCenterEntityList = response.body();
+
+                    Log.d("ourrrsizess", String.valueOf(collectionCenterEntityList.size()));
+                    if (collectionCenterEntityList == null){
+                        Log.d("result", "null");
+                        saveToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE+"_download",
+                                "Collection Center Download",
+                                "0",
+                                "Upload null",
+                                "0000-00-00 00:00:00"
+                        );
+                    }else if(collectionCenterEntityList.size() == 0){
+                        Log.d("result", "0");
+                        saveToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE+"_download",
+                                "Collection Center Download",
+                                "1",
+                                "Upload empty",
+                                "0000-00-00 00:00:00"
+                        );
+                    } else {
+                        AsyncTask.execute(()->{
+                            CollectionCenterEntity collectionCenterEntity = new CollectionCenterEntity();
+                            for (int i = 0; i < collectionCenterEntityList.size(); i++) {
+                                collectionCenterEntity = collectionCenterEntityList.get(i);
+
+                                appDatabase.getCollectionCenterDao().insert(collectionCenterEntity);
+
+                            }
+                            sharedPrefs.setKeyCollectionCenterLastSyncTime(new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
+
+                            insetToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE + "_download",
+                                    "Collection Center Download",
+                                    "1",
+                                    returnRemark(collectionCenterEntityList.size(), "d"),
+                                    sharedPrefs.getCollectionCenterLastSyncTime()
+                            );
+                            Log.d("ourrrnewtimess", sharedPrefs.getCollectionCenterLastSyncTime());
+
+                        });
+
+                    }
+
+
+                } else {
+                    int sc = response.code();
+                    Log.d("scCode_output_record", "" + sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            break;
+                    }
+
+                    saveToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE+"_download",
+                            "Collection Center Download",
+                            "0",
+                            "Upload error: " + response.code(),
+                            "0000-00-00 00:00:00"
+                    );
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<List<CollectionCenterEntity>> call, @NotNull Throwable t) {
+                Log.e("tobi2", "NET_ERROR:" + t.toString());
+
+                saveToSyncSummary(DatabaseStringConstants.COLLECTION_CENTER_TABLE+"_download",
+                        "Collection Center Download",
+                        "0",
+                        "Upload failed",
+                        "0000-00-00 00:00:00"
+                );
+            }
+        });
     }
 
     public void getLogsDownload() {
@@ -4128,6 +4264,101 @@ public class ActivityListDownloadService extends IntentService {
         }
     }
 
+    public void getVillageLocationsDownload() {
+        String last_synced = getLastSyncVillageLocations();
+
+        retrofitInterface = RetrofitClient.getApiClient().create(RetrofitInterface.class);
+        Log.d("CHECK", "just entered village locations download");
+        Call<VillageLocationsDownload> call = retrofitInterface.downloadVillageLocations(sharedPrefs.getStaffID(), last_synced);
+        sharedPrefs.setKeyProgressDialogStatus(0);
+        call.enqueue(new Callback<VillageLocationsDownload>() {
+            @Override
+            public void onResponse(Call<VillageLocationsDownload> call, Response<VillageLocationsDownload> response) {
+                if (response.isSuccessful()) {
+                    VillageLocationsDownload villageLocationsDownload = response.body();
+                    Log.d("CHECK", "Response is successful for village locations");
+
+                    if (villageLocationsDownload != null) {
+                        List<VillageLocations> villageLocationsList = villageLocationsDownload.getDownload_list();
+                        if (villageLocationsList.size() > 0) {
+                            saveToVillageLocationsTable(villageLocationsList);
+                            if (getStaffCountLastSync() > 0) {
+                                appDatabase.lastSyncTableDao().updateLastSyncDownVillageLocations(sharedPrefs.getStaffID(), villageLocationsDownload.getLast_sync_time());
+                            } else {
+                                LastSyncTable lastSyncTable = new LastSyncTable();
+                                lastSyncTable.setLast_sync_down_village_locations(villageLocationsDownload.getLast_sync_time());
+                                lastSyncTable.setStaff_id(sharedPrefs.getStaffID());
+                                appDatabase.lastSyncTableDao().insert(lastSyncTable);
+                            }
+                        }
+                        insetToSyncSummary(DatabaseStringConstants.VILLAGE_LOCATIONS_TABLE + "_download",
+                                "Village Locations Download",
+                                "1",
+                                returnRemark(villageLocationsList.size(), "d"),
+                                villageLocationsDownload.getLast_sync_time());
+                    } else {
+                        saveToSyncSummary(DatabaseStringConstants.VILLAGE_LOCATIONS_TABLE + "_download",
+                                "Village Locations Download",
+                                "0",
+                                "Download null",
+                                "0000-00-00 00:00:00");
+                    }
+                } else {
+                    int sc = response.code();
+                    Log.d("scCode:- ", "" + sc);
+                    switch (sc) {
+                        case 400:
+                            Log.e("Error 400", "Bad Request");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 400: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        case 404:
+                            Log.e("Error 404", "Not Found");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error 404: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Log.e("Error", "Generic Error");
+                            //Toasst.makeText(ActivityListDownloadService.this, "Error: Network Error Please Reconnect", Toast.LENGTH_LONG).show();
+                    }
+                    saveToSyncSummary(DatabaseStringConstants.VILLAGE_LOCATIONS_TABLE + "_download",
+                            "Village Locations Download",
+                            "0",
+                            "Download error",
+                            "0000-00-00 00:00:00");
+                }
+                sharedPrefs.setKeyProgressDialogStatus(1);
+            }
+
+            @Override
+            public void onFailure(Call<VillageLocationsDownload> call, Throwable t) {
+                Log.d("tobi_village_locations_down", t.toString());
+                sharedPrefs.setKeyProgressDialogStatus(1);
+                saveToSyncSummary(DatabaseStringConstants.VILLAGE_LOCATIONS_TABLE + "_download",
+                        "Village Locations Download",
+                        "0",
+                        "Download failed",
+                        "0000-00-00 00:00:00");
+            }
+        });
+    }
+
+    void saveToVillageLocationsTable(List<VillageLocations> list) {
+        new AsyncTask<List<VillageLocations>, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(List<VillageLocations>... lists) {
+                try {
+                    Log.d("CHECK", "Inside the saveToVillageLocationsTable");
+                    appDatabase = AppDatabase.getInstance(ActivityListDownloadService.this);
+                    appDatabase.villageLocationsDao().insertList(lists[0]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("CHECK VillageLocations Insert", e.getMessage());
+                }
+                return null;
+            }
+        }.execute(list);
+    }
+
     String getLastSyncTimeStaffList(){
         String last_sync_time;
         try {
@@ -4399,7 +4630,21 @@ public class ActivityListDownloadService extends IntentService {
             e.printStackTrace();
             last_sync_time = "2019-01-01 00:00:00";
         }
-        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("") ){
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("")) {
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        return last_sync_time;
+    }
+
+    String getLastSyncVillageLocations() {
+        String last_sync_time;
+        try {
+            last_sync_time = appDatabase.lastSyncTableDao().getLastSyncDownVillageLocations(sharedPrefs.getStaffID());
+        } catch (Exception e) {
+            e.printStackTrace();
+            last_sync_time = "2019-01-01 00:00:00";
+        }
+        if (last_sync_time == null || last_sync_time.equalsIgnoreCase("")) {
             last_sync_time = "2019-01-01 00:00:00";
         }
         return last_sync_time;

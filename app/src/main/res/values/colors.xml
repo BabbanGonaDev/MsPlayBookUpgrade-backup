@@ -26,4 +26,6 @@
     <color name="fine_grey">        #666666</color>
     <color name="amber">            #FFBF00</color>
     <color name="light_green">      #90EE90</color>
+    <color name="silver">#C0C0C0</color>
+
 </resources>

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.babbangona.mspalybookupgrade.HarvestSummary.HarvestHomePage;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
 
 public class Main2Activity extends AppCompatActivity {
@@ -44,5 +45,6 @@ public class Main2Activity extends AppCompatActivity {
     void startHomepageActivity(){
         finish();
         startActivity(new Intent(Main2Activity.this,Homepage.class));
+        //startActivity(new Intent(Main2Activity.this, HarvestHomePage.class));
     }
 }

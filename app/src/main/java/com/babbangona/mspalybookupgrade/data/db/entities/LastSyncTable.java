@@ -104,6 +104,9 @@ public class LastSyncTable {
     @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_FERTILIZER_MEMBERS)
     private String last_sync_down_fertilizer_members;
 
+    @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_DOWN_VILLAGE_LOCATIONS)
+    private String last_sync_down_village_locations;
+
     @ColumnInfo(name = DatabaseStringConstants.LAST_SYNC_FERTILIZER_LOCATION)
     private String last_sync_fertilizer_location;
 
@@ -123,7 +126,8 @@ public class LastSyncTable {
                          String last_sync_up_scheduled_activities_flag, String last_sync_down_scheduled_activities_flag,
                          String last_sync_up_confirm_activities_flag, String last_sync_down_confirm_activities_flag,
                          String last_sync_bgt_coaches, String last_sync_up_fertilizer_members, String last_sync_down_fertilizer_members,
-                         String last_sync_fertilizer_location) {
+                         String last_sync_fertilizer_location, String last_sync_down_village_locations) {
+
         this.staff_id = staff_id;
         this.last_sync_activity_list = last_sync_activity_list;
         this.last_sync_up_normal_activities_flag = last_sync_up_normal_activities_flag;
@@ -155,6 +159,7 @@ public class LastSyncTable {
         this.last_sync_up_fertilizer_members = last_sync_up_fertilizer_members;
         this.last_sync_down_fertilizer_members = last_sync_down_fertilizer_members;
         this.last_sync_fertilizer_location = last_sync_fertilizer_location;
+        this.last_sync_down_village_locations = last_sync_down_village_locations;
     }
 
     @NonNull
@@ -404,5 +409,13 @@ public class LastSyncTable {
 
     public void setLast_sync_fertilizer_location(String last_sync_fertilizer_location) {
         this.last_sync_fertilizer_location = last_sync_fertilizer_location;
+    }
+
+    public String getLast_sync_down_village_locations() {
+        return last_sync_down_village_locations;
+    }
+
+    public void setLast_sync_down_village_locations(String last_sync_down_village_locations) {
+        this.last_sync_down_village_locations = last_sync_down_village_locations;
     }
 }

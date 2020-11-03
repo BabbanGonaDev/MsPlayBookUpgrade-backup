@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HarvestSummary.TrustGroupDetails">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:background="@color/displayBar"
+        android:id="@+id/title_container">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
+            android:id="@+id/back_arrow">
+
+        </ImageView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="90"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:weightSum="100"
+                android:id="@+id/app_name_container"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="90"
+                    android:text="@string/harvest_header"
+                    android:textColor="@color/colorWhite"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:padding="@dimen/dimen_10dp">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/donotpay_app_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10"
+                    android:text="v1.0.1"
+                    android:textColor="@color/colorWhite"
+                    android:textAlignment="viewStart"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:padding="@dimen/dimen_10dp">
+
+                </TextView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <!--<ImageView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:src="@drawable/ic_more_vert_black_24dp"
+            android:id="@+id/options">
+
+        </ImageView>-->
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/trust_group_details_title_container"
+        android:layout_below="@id/title_container"
+        android:layout_above="@id/time_staff_container"
+        android:layout_margin="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_40dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:id="@+id/trust_group_details_title"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/trust_group_details"
+                android:padding="6dp"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/textColorPrimary">
+
+            </TextView>
+
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="4dp"
+            android:layout_below="@id/trust_group_details_title">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/tg_details_card">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/ik_number_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ik_number_label" />
+
+
+                    <TextView
+                        android:id="@+id/ik_number_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/no_of_bags_marketed_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_of_bags_marketed" />
+
+                    <TextView
+                        android:id="@+id/no_of_bags_marketed_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/no_of_bags_transported_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_of_bags_transported" />
+
+                    <TextView
+                        android:id="@+id/no_of_bags_transported_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/expected_bags_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expected_bags" />
+
+                    <TextView
+                        android:id="@+id/expected_bags_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/harvest_complete_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/harvest_complete" />
+
+
+                    <TextView
+                        android:id="@+id/harvest_complete_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/payment_status_label_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/payment_status" />
+
+                    <TextView
+                        android:id="@+id/payment_status_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_continue_icon"
+            android:layout_width="@dimen/dimen_150dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="@dimen/dimen_15dp"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/displayBar"
+            android:text="Continue"
+            android:textColor="@android:color/white"
+            android:layout_alignParentBottom="true"
+            app:cornerRadius="12dp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_marginEnd="@dimen/dimen_15dp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:orientation="horizontal"
+        android:id="@+id/time_staff_container"
+        android:layout_weight="30">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:text="Last Sync Date:"
+            android:layout_marginTop="20dp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:id="@+id/sync_date_notifier"
+            android:text="01/01/2020"
+            android:layout_marginTop="20dp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:id="@+id/staff_id_notifier"
+            android:text="T-100000000000AA"
+            android:layout_marginTop="25dp">
+
+        </TextView>
+
+    </LinearLayout>
+
+</RelativeLayout>

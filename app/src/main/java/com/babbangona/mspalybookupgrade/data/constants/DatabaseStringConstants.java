@@ -5,8 +5,8 @@ public class DatabaseStringConstants {
     /**
      * database particulars
      */
-    public static final String MS_PLAYBOOK_DATABASE_NAME                = "ms_playbook_upgrade.db";
-    public static final int MS_PLAYBOOK_DATABASE_VERSION                = 17;
+    public static final String MS_PLAYBOOK_DATABASE_NAME = "ms_playbook_upgrade.db";
+    public static final int MS_PLAYBOOK_DATABASE_VERSION = 19;
 
     /**
      * Names of tables
@@ -36,7 +36,9 @@ public class DatabaseStringConstants {
     public static final String LOCATIONS_TABLE                              = "locations_table";
     public static final String THRESHING_LOCATION                           = "threshing_location";
     public static final String BGT_COACHES_TABLE                            = "bgt_coaches";
+    public static final String COLLECTION_CENTER_TABLE                      = "collection_center";
     public static final String FERTILIZER_MEMBERS_TABLE                     = "fertilizer_members";
+    public static final String VILLAGE_LOCATIONS_TABLE                      = "village_locations";
     public static final String FERTILIZER_LOCATION_TABLE                    = "fertilizer_location";
 
     /**
@@ -173,6 +175,7 @@ public class DatabaseStringConstants {
     public static final String LAST_SYNC_BGT_COACHES_TABLE                  = "last_sync_bgt_coaches";
     public static final String LAST_SYNC_UP_FERTILIZER_MEMBERS              = "last_sync_up_fertilizer_members";
     public static final String LAST_SYNC_DOWN_FERTILIZER_MEMBERS            = "last_sync_down_fertilizer_members";
+    public static final String LAST_SYNC_DOWN_VILLAGE_LOCATIONS             = "last_sync_down_village_locations";
     public static final String LAST_SYNC_FERTILIZER_LOCATION                = "last_sync_fertilizer_location";
 
     /**
@@ -214,6 +217,9 @@ public class DatabaseStringConstants {
     public static final String LUXAND_FLAG                                  = "luxand_flag";
     public static final String FERTILIZER_LUXAND_FLAG                       = "fertilizer_luxand_flag";
     public static final String ISSUES_LIST                                  = "issues_list";
+    public static final String LOCATION_TRACKER_FLAG                        = "bgt_location_tracker_flag";
+    public static final String LOCATION_TRACKER_DAYS                        = "bgt_location_tracker_days";
+    public static final String LOCATION_TRACKER_HOURS                       = "bgt_location_tracker_hours";
 
     /**
      * rf_list column names
