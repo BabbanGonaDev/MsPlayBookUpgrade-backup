@@ -59,8 +59,8 @@ public class ScheduleThreshingSummary extends AppCompatActivity {
     @BindView(R.id.tv_total_assigned)
     TextView tv_total_assigned;
 
-    @BindView(R.id.tv_unassigned_threshed)
-    TextView tv_unassigned_threshed;
+    /*@BindView(R.id.tv_unassigned_threshed)
+    TextView tv_unassigned_threshed;*/
 
     AppDatabase appDatabase;
 
@@ -155,7 +155,14 @@ public class ScheduleThreshingSummary extends AppCompatActivity {
         String unassigned_threshed = roundFieldSizeDouble(revertToZero(total_fields_threshed_by_staff-total_assigned_threshed)) + "HA";
         tv_assigned_threshed.setText(assigned_threshed);
         tv_total_assigned.setText(assigned_total);
-        tv_unassigned_threshed.setText(unassigned_threshed);
+        //tv_unassigned_threshed.setText(unassigned_threshed);
+    }
+
+    double revertToZero(double input_value){
+        if (input_value < 0){
+            input_value = input_value * (-1);
+        }
+        return input_value;
     }
 
     double revertToZero(double input_value){

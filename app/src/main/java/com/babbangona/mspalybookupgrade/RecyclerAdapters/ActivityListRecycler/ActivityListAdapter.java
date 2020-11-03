@@ -2,6 +2,7 @@ package com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.babbangona.mspalybookupgrade.ComingSoon;
@@ -97,6 +99,9 @@ public class ActivityListAdapter extends RecyclerView.Adapter<ActivityListAdapte
             }else if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase(DatabaseStringConstants.SET_PORTFOLIO_ACTIVITY)){
                 progress_bar.setVisibility(View.GONE);
                 btn_act_action.setText(context.getResources().getString(R.string.update_portfolio));
+            }else if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase(DatabaseStringConstants.FERTILIZER_SIGN_UP_ACTIVITY)){
+                progress_bar.setVisibility(View.GONE);
+                btn_act_action.setText(button_name);
             }else if (activityListRecyclerModel.getActivity_id().equalsIgnoreCase(DatabaseStringConstants.LOG_HG_ACTIVITY)){
                 progress_bar.setVisibility(View.VISIBLE);
                 progress_bar.setMax(Integer.parseInt(activityListRecyclerModel.getTotal_field_count()));
@@ -107,7 +112,7 @@ public class ActivityListAdapter extends RecyclerView.Adapter<ActivityListAdapte
                 progress_bar.setVisibility(View.VISIBLE);
                 progress_bar.setMax(Integer.parseInt(activityListRecyclerModel.getTotal_field_count()));
                 progress_bar.setProgress(Integer.parseInt(activityListRecyclerModel.getLogged_field_count()));
-                progress_bar.setProgressDrawable(context.getResources().getDrawable(R.drawable.progress_drawable_horizontal));
+                progress_bar.setProgressDrawable(ResourcesCompat.getDrawable(context.getResources(),R.drawable.progress_drawable_horizontal,context.getTheme()));
                 btn_act_action.setText(button_name);
             }
             btn_act_action.setOnClickListener((view)->navigateToActivityPage(activityListRecyclerModel));

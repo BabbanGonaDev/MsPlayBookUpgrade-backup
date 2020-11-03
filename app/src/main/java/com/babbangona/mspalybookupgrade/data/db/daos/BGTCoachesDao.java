@@ -20,6 +20,9 @@ public interface BGTCoachesDao {
     @Query(" SELECT bgt_name ||'__'|| bgt_id FROM bgt_coaches WHERE coach_id = :coach_id ")
     List<String> getBGTName(String coach_id);
 
+    @Query(" SELECT bgt_name ||'  '|| bgt_id FROM bgt_coaches WHERE coach_id = :coach_id ")
+    List<String> getAllBGTs(String coach_id);
+
     /**
      * Insert the object in database
      * @param bgtCoaches, object to be inserted
