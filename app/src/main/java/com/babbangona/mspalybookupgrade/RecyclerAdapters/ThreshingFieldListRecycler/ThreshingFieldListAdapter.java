@@ -401,13 +401,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                 .show();
     }
 
-
-
-
-
-
-
-    private void showDialogForConfirmThreshingBody(AlertDialog.Builder builder, Context context,
+    private void showDialogForConfirmThreshingBody(MaterialAlertDialogBuilder builder, Context context,
                                                    ThreshingFieldListRecyclerModel threshingFieldListRecyclerModel,
                                                    String code_use_flag,
                                                    FieldListRecyclerModel fieldListRecyclerModel, int position, String thresher) {
@@ -477,8 +471,13 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     dialog.dismiss();
                 })
                 .setCancelable(false)
-                .setView(layout)
-                .show();
+                .setView(layout);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        //Hide the Cancel button from previous dialog.
+        if (alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).getVisibility() == View.VISIBLE) {
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setVisibility(View.GONE);
+        }
     }
 
     void saveConfirm(Context context,
