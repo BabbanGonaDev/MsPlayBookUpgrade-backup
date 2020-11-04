@@ -1111,4 +1111,4 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                 .setCancelable(false)
                 .show();
     }
-}
+  }
