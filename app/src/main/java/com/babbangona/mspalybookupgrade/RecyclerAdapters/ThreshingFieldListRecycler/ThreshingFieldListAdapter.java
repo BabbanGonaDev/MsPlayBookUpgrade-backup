@@ -986,7 +986,7 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     sharedPrefs.setKeyThreshingFieldDetails(fieldListRecyclerModel);
                     sharedPrefs.setKeyThreshingCropType(fieldListRecyclerModel.getCrop_type());
                     sharedPrefs.setKeyThreshingIkNumber(fieldListRecyclerModel.getIk_number());
-                    sharedPrefs.setKeyThresherId(sharedPrefs.getStaffID());
+                    sharedPrefs.setKeyThresherId(sharedPrefs.getKeyThreshingUniqueMemberId());
                     context.startActivity(intent);
                 })
                 .setNeutralButton(context.getResources().getString(R.string.cancel), (dialog, which) -> {
