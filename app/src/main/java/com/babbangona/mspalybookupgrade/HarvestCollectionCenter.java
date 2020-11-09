@@ -28,6 +28,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * This activity allows user to select their harvest collection center
+ */
 public class HarvestCollectionCenter extends AppCompatActivity {
 
     @BindView(R.id.actState)
@@ -131,6 +134,7 @@ public class HarvestCollectionCenter extends AppCompatActivity {
         addBehaviourToBottomSheet(sheetBehavior);
     }
 
+    //This method adds behaviour to bottom sheet
     void addBehaviourToBottomSheet(BottomSheetBehavior sheetBehavior){
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -181,6 +185,7 @@ public class HarvestCollectionCenter extends AppCompatActivity {
         }
     }
 
+    //This method checks for empty field
     void checkForEmptyFields(){
         checkIfAutocompleteEmpty(actState,edlState,this.getResources().getString(R.string.error_message_state));
         checkIfAutocompleteEmpty(actLga,edlLga,this.getResources().getString(R.string.error_message_lga));

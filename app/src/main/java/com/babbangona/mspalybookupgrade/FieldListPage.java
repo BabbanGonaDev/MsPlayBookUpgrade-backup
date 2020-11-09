@@ -36,6 +36,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * This activity shows the field list page, it uses recyclers and google paging library
+ * The activity is an adaptable one depending on the values in a shared preference key,
+ * it selects the required paging library constructor.
+ */
 public class FieldListPage extends AppCompatActivity {
 
     @BindView(R.id.et_search)
@@ -111,6 +116,10 @@ public class FieldListPage extends AppCompatActivity {
         removeSearchTray();
     }
 
+    /**
+     * This method is used to load the right adapter depending on the route to this activity.
+     * @param route the shared preference key that switches the paging library constructor
+     */
     void loadAdapter(String route){
         Log.d("hello_there:-",route);
         String min_lat = sharedPrefs.getKeyGridMinLat();
@@ -147,6 +156,9 @@ public class FieldListPage extends AppCompatActivity {
         }
     }
 
+    /**
+     * A model view factory class that returns the right paging library constructor for all fields
+     */
     public static class MyViewModelFactory implements ViewModelProvider.Factory {
         private FieldsDao application;
         private Context context;
@@ -162,6 +174,9 @@ public class FieldListPage extends AppCompatActivity {
         }
     }
 
+    /**
+     * The model view class that returns items to the recycler based on search items
+     */
     public static class MyViewModelFactory1 implements ViewModelProvider.Factory {
         private FieldsDao application;
         private Context context;
@@ -213,6 +228,11 @@ public class FieldListPage extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method sets the adapter
+     * @param offset the argument offset was used to ensure the spacing between recycler card items
+     *               remained the same.
+     */
     private void setAdapter(int offset) {
         fieldListRecyclerAdapter = new FieldListRecyclerAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -251,6 +271,10 @@ public class FieldListPage extends AppCompatActivity {
 
     }
 
+    /**
+     * This method toggles the visibility between the recycler and an error message
+     * @param itemCount the item count argument determines the visibility
+     */
     private void updateView(int itemCount) {
         if (itemCount > 0) {
             // The list is not empty. Show the recycler view.
@@ -264,6 +288,11 @@ public class FieldListPage extends AppCompatActivity {
 
     }
 
+    /**
+     * This method watches the text of the search input
+     * @param editText the edit text to be referenced
+     * @param fieldListPageListModelClass The model class required of the adapter
+     */
     public void textWatcher(EditText editText, FieldListPageListModelClass fieldListPageListModelClass) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -296,11 +325,13 @@ public class FieldListPage extends AppCompatActivity {
         }
     }
 
+    //This method directs the activity to grid details activity
     void startPreviousActivity(){
         finish();
         startActivity(new Intent(FieldListPage.this,GridDetails.class));
     }
 
+    //This method removes the search edit text depending on the click of the toolbar navigation button
     void removeSearchTray(){
         showView(toolbar_linear_layout);
         hideView(search_linear_layout);
@@ -309,10 +340,12 @@ public class FieldListPage extends AppCompatActivity {
         Objects.requireNonNull(imm).hideSoftInputFromWindow(et_search.getWindowToken(), 0);
     }
 
+    //This method toggles visibility by showing the view
     public void showView(View view) {
         view.setVisibility(View.VISIBLE);
     }
 
+    //This method toggles visibility by hiding the view
     public void hideView(View view) {
         view.setVisibility(View.GONE);
     }
@@ -323,6 +356,8 @@ public class FieldListPage extends AppCompatActivity {
         super.onResume();
     }
 
+    //This method is called by the fragment extended by this activity to refresh the recycler before
+    //the user gets back to this actrivity.
     public void myMethod(){
         runOnUiThread(() -> fieldListRecyclerAdapter.notifyDataSetChanged());
     }
