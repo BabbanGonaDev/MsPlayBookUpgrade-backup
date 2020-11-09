@@ -2,13 +2,13 @@
 An upgraded version of MsPlaybook Application
 Version 2.4.3
 ## 1. Dependencies
-Retrofit
-Google paging library
-Room persistence
-Okhttp
-Material UI
-Butter-knife
-Firebase
+Retrofit\n
+Google paging library\n
+Room persistence\n
+Okhttp\n
+Material UI\n
+Butter-knife\n
+Firebase\n
 UX Cam
 
 
