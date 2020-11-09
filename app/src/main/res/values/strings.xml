@@ -377,4 +377,5 @@
     <string name="schedule_for_member">Are you sure you want to schedule threshing for</string>
     <string name="schedule_specific_thresher">Select who is to thresh</string>
     <string name="swap_error_reloaded">you cannot swap a schedule in the past</string>
+    <string name="thresh_staff">Thresher ID:</string>
 </resources>
