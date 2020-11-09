@@ -1,6 +1,6 @@
 package com.babbangona.mspalybookupgrade.network;
 
-import com.babbangona.mspalybookupgrade.data.db.entities.FertilizerMembers;
+import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
 import com.babbangona.mspalybookupgrade.network.object.ActivityListDownload;
 import com.babbangona.mspalybookupgrade.network.object.AppVariablesDownload;
 import com.babbangona.mspalybookupgrade.network.object.BGTCoachesDownload;
@@ -32,6 +32,7 @@ import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivit
 import com.babbangona.mspalybookupgrade.network.object.ScheduledThreshingActivitiesUpload;
 import com.babbangona.mspalybookupgrade.network.object.ServerResponse;
 import com.babbangona.mspalybookupgrade.network.object.StaffListDownload;
+import com.babbangona.mspalybookupgrade.network.object.VillageLocationsDownload;
 
 import java.util.List;
 
@@ -127,6 +128,9 @@ public interface RetrofitInterface {
     @GET("downloadPWSCategoryList")
     Call<PWSCategoryListDownload> getPWSCategoryList(@Query("last_synced_time") String last_synced_time);
 
+    @GET("downloadHarvestSummary")
+    Call<List<CollectionCenterEntity>> downloadHarvestSummary(@Query("staff_id") String staff_id, @Query("last_sync_time") String last_sync_time);
+
     @FormUrlEncoded
     @POST("uploadPWSActivitiesRecord")
     Call<List<PWSActivitiesUpload>> uploadPWSActivitiesRecord(@Field("upload_list") String upload_list, @Field("staff_id") String staff_id);
@@ -167,13 +171,16 @@ public interface RetrofitInterface {
 
     @GET("downloadFertilizerSignup")
     Call<FertilizerMembersDownload> downloadFertilizerMembers(@Query("staff_id") String staff_id,
-                                                                         @Query("portfolio_list") String portfolio_list,
-                                                                         @Query("last_synced_time") String last_synced_time);
+                                                              @Query("portfolio_list") String portfolio_list,
+                                                              @Query("last_synced_time") String last_synced_time);
 
     @FormUrlEncoded
     @POST("uploadFertilizerSignup")
     Call<List<FertilizerMembersUpload>> uploadFertilizerMembersRecord(@Field("upload_list") String upload_list,
-                                                                               @Field("staff_id") String staff_id);
+                                                                      @Field("staff_id") String staff_id);
+
+    @GET("downloadVillageLocations")
+    Call<VillageLocationsDownload> downloadVillageLocations(@Query("staff_id") String staffId, @Query("last_sync_time") String lastSyncTime);
 
     @GET("downloadDistributionCenter")
     Call<FertilizerLocationDownload> downloadFertilizerLocation(@Query("last_synced_time") String last_synced_time);

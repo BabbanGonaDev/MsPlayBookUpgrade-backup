@@ -1,5 +1,6 @@
 package com.babbangona.mspalybookupgrade.data.db.daos;
 
+import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -12,11 +13,18 @@ import com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpHomeRec
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpMembersRecycler.FertilizerMembersRecyclerModel;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.MemberListRecycler.MemberListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.entities.Members;
+import com.babbangona.mspalybookupgrade.donotpay.data.models.TGList;
 
 import java.util.List;
 
 @Dao
 public abstract class MembersDao {
+
+    @Query(" SELECT * FROM members WHERE role = 'Leader' ")
+    public abstract List<Members> getAllLeaders();
+
+    @Query("SELECT * FROM members WHERE ik_number = :ikNumber")
+    public abstract List<Members> getAllTgMembers(String ikNumber);
 
     @Query(" SELECT COUNT(unique_field_id) FROM fields WHERE deactivate = '0' " +
             "AND staff_id = :staff_id ")
@@ -64,6 +72,11 @@ public abstract class MembersDao {
     public abstract Members.MemberDetails getMemberDetails(String unique_member_id);
 
 
+    /**
+     * Get Trust Group list for Do Not Pay module
+     */
+    @Query("SELECT unique_member_id, ik_number, first_name, last_name, village_name FROM members WHERE role = 'Leader' GROUP by ik_number")
+    public abstract LiveData<List<TGList>> getTrustGroupsList();
 
     /**
      * Insert the object in database
@@ -88,7 +101,4 @@ public abstract class MembersDao {
      */
     @Delete
     public abstract void delete(Members members);
-
-
-
 }

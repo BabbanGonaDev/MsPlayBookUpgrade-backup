@@ -156,7 +156,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
             if (count_urgent_threshing > 0){
                 showDateProblemStart(getResources().getString(R.string.cannot_swap_urgent), RescheduleThreshingDateSelectionActivity.this);
             }else if (getDateError(old_thresh_date) == 0){
-                showDateProblemStart(getResources().getString(R.string.swap_dialog_error), RescheduleThreshingDateSelectionActivity.this);
+                showDateProblemStart(getResources().getString(R.string.swap_error_reloaded), RescheduleThreshingDateSelectionActivity.this);
                 resetLayout();
             }else{
                 showSelectSwapField(getResources().getString(R.string.swap_dialog_body),RescheduleThreshingDateSelectionActivity.this);

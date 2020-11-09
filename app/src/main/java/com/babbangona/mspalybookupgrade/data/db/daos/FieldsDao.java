@@ -330,7 +330,15 @@ public abstract class FieldsDao {
     public abstract void deleteRecords(String staff_id);
 
     /**
+     * This function would be used by the BGT Location Tracker app.
+     */
+    @Query("SELECT unique_member_id, unique_field_id, (min_lng + max_lng)/2 AS longitude, (min_lat + max_lat)/2 as latitude FROM fields")
+    public abstract List<Fields.locations> getFieldLocations();
+
+
+    /**
      * Insert the object in database
+     *
      * @param fields, object to be inserted
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -25,14 +25,21 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
+import com.babbangona.mspalybookupgrade.HarvestSummary.data.entities.CollectionCenterEntity;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.ActivityListRecycler.ActivityListAdapter;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
 import com.babbangona.mspalybookupgrade.data.sharedprefs.SharedPrefs;
+import com.babbangona.mspalybookupgrade.donotpay.services.RefreshWorker;
 import com.babbangona.mspalybookupgrade.network.ActivityListDownloadService;
 import com.babbangona.mspalybookupgrade.utils.AutoSync;
 import com.babbangona.mspalybookupgrade.utils.GPSController;
@@ -46,6 +53,7 @@ import com.google.android.material.textview.MaterialTextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +94,8 @@ public class Homepage extends AppCompatActivity {
     SharedPrefs sharedPrefs;
 
     private static final int PERMISSIONS_REQUEST_CODE = 4043;
+    private static String WORK_MANAGER_DNP_SINGLE_REFRESH = "dnp_single_refresh";
+    private static String WORK_MANAGER_DNP_PERIODIC_REFRESH = "dnp_periodic_refresh";
 
     String[] appPermissions = {
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -110,6 +120,10 @@ public class Homepage extends AppCompatActivity {
 
     CountDownTimer timer = null;
 
+    List<CollectionCenterEntity> myCollectionCenterList;
+
+    SimpleDateFormat dateFormat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,8 +144,15 @@ public class Homepage extends AppCompatActivity {
         pd = new ProgressDialog(Homepage.this);
         sharedPrefs.setKeyProgressDialogStatus(1);
         startRepeatingTask();
+        setUpDNPPeriodicSync();
 
-        /*startActivity(new Intent(this, TransporterHomeActivity.class));*/
+        myCollectionCenterList = new ArrayList<>();
+        myCollectionCenterList = collectionCenterData();
+
+        //appDatabase.getCollectionCenterDao().insert(myCollectionCenterList);
+
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
         //Start AutoSync
         autoSyncClass();
     }
@@ -159,6 +180,7 @@ public class Homepage extends AppCompatActivity {
                 if(checkAndRequestPermissions()){
                     if(isNetworkConnectionAvailable()){
                         dialogWithSync();
+                        syncDNPRecords();
                     }else{
                         checkNetworkConnection();
                     }
@@ -177,6 +199,7 @@ public class Homepage extends AppCompatActivity {
         sharedPrefs.setKeyAutoSyncFlag(DatabaseStringConstants.SYNC_TYPE_MANUAL);
         runOnUiThread(this::initActivitiesRecycler);
         activityListAdapter.notifyDataSetChanged();
+        sharedPrefs.setKeyLastSyncTime(dateFormat.format(Calendar.getInstance().getTime()));
     }
 
     @Override
@@ -339,8 +362,6 @@ public class Homepage extends AppCompatActivity {
         }
     }
 
-
-
     private void showDialogForSync(String s, Context context) {
         MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
         showDialogForSync(builder,s,context);
@@ -448,6 +469,7 @@ public class Homepage extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         stopRepeatingTask();
+        setUpDNPPeriodicSync();
     }
 
     void startRepeatingTask() {
@@ -521,5 +543,59 @@ public class Homepage extends AppCompatActivity {
     void cancelTimer() {
         if(timer!=null)
             timer.cancel();
+    }
+
+    public List<CollectionCenterEntity> collectionCenterData(){
+        List<CollectionCenterEntity> collectionCenterEntityList = new ArrayList<>();
+
+        CollectionCenterEntity collectionCenterEntity1 = new CollectionCenterEntity("T000AA_200000_m",
+                "IKAAAAAAAA","18","21","21","No",
+                "Unpaid","3000","Ajiboye","0900090",
+                "Bayo","000111");
+
+        CollectionCenterEntity collectionCenterEntity2 = new CollectionCenterEntity("T000AA_200009_m",
+                "IKCCCCCCCC","12","15","16","Yes",
+                "Paid","1000","Fuad","0800890","Adeniran","1111");
+
+        CollectionCenterEntity collectionCenterEntity3 = new CollectionCenterEntity("T000AA_200001_m",
+                "IKAAAAAAAA", "6", "18", "24", "Yes",
+                "Paid", "4000", "Tobi", "0708009",
+                "Kunle", "1110");
+
+        collectionCenterEntityList.add(collectionCenterEntity1);
+        collectionCenterEntityList.add(collectionCenterEntity2);
+        collectionCenterEntityList.add(collectionCenterEntity3);
+
+        return collectionCenterEntityList;
+    }
+
+    public void syncDNPRecords() {
+        /**
+         * Work manager sync implementation for DNP module
+         */
+
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(RefreshWorker.class).build();
+
+        WorkManager
+                .getInstance(Homepage.this)
+                .enqueueUniqueWork(WORK_MANAGER_DNP_SINGLE_REFRESH, ExistingWorkPolicy.REPLACE, request);
+    }
+
+    public void setUpDNPPeriodicSync() {
+        /**
+         * Work manager auto-sync implementation for DoNotPay module.
+         */
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        PeriodicWorkRequest periodic = new PeriodicWorkRequest.Builder(RefreshWorker.class, 1, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager
+                .getInstance(Homepage.this)
+                .enqueueUniquePeriodicWork(WORK_MANAGER_DNP_PERIODIC_REFRESH, ExistingPeriodicWorkPolicy.REPLACE, periodic);
     }
 }

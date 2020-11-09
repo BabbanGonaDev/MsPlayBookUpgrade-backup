@@ -103,6 +103,15 @@ public class SharedPrefs {
     public static final String KEY_FERTILIZER_TEMPLATE              = "fertilizer_template";
     public static final String KEY_FERTILIZER_PICTURE               = "fertilizer_picture";
     public static final String KEY_FERTILIZER_MEMBER_PRESENCE       = "member_presence";
+    public static final String KEY_IMEI                             = "imei";
+
+    public static final String KEY_HARVEST_SUMMARY_IK_NUMBER                        = "harvest_summary_ik_number";
+    public static final String INDIVIDUAL_KEY_HARVEST_SUMMARY_NAME                  = "individual_harvest_summary_name";
+    public static final String INDIVIDUAL_KEY_HARVEST_SUMMARY_IK_NUMBER             = "individual_harvest_summary_ik_number";
+    public static final String INDIVIDUAL_KEY_HARVEST_SUMMARY_UNIQUE_MEMBER_ID      = "individual_harvest_summary_unique_member_id";
+
+    public static final String KEY_LAST_SYNC_TIME                                     = "last_sync_time";
+    public static final String KEY_COLLECTION_CENTER_LAST_SYNC_TIME                   = "collection_center_last_sync_time";
 
     public static final String KEY_AUTO_SYNC_FLAG                   = "auto_sync_flag";
 
@@ -448,6 +457,37 @@ public class SharedPrefs {
         editor.commit();
     }
 
+    public void setKeyIndividualHarvestSummaryName(String individualHarvestSummaryName){
+        editor.putString(INDIVIDUAL_KEY_HARVEST_SUMMARY_NAME, individualHarvestSummaryName);
+        editor.commit();
+    }
+
+    public void setKeyHarvestSummaryIkNumber(String harvestSummaryIkNumber){
+        editor.putString(KEY_HARVEST_SUMMARY_IK_NUMBER, harvestSummaryIkNumber);
+        editor.commit();
+    }
+
+    public void setKeyIndividualHarvestSummaryIkNumber(String individualHarvestSummaryIkNumber){
+        editor.putString(INDIVIDUAL_KEY_HARVEST_SUMMARY_IK_NUMBER, individualHarvestSummaryIkNumber);
+        editor.commit();
+    }
+
+    public void setKeyIndividualHarvestSummaryUniqueMemberId(String individualHarvestSummaryUniqueMemberId){
+        editor.putString(INDIVIDUAL_KEY_HARVEST_SUMMARY_UNIQUE_MEMBER_ID, individualHarvestSummaryUniqueMemberId);
+        editor.commit();
+    }
+
+    public void setKeyLastSyncTime(String temp) {
+        editor.putString(KEY_LAST_SYNC_TIME, temp);
+        editor.commit();
+    }
+
+    public void setKeyCollectionCenterLastSyncTime(String temp) {
+        editor.putString(KEY_COLLECTION_CENTER_LAST_SYNC_TIME, temp);
+        editor.commit();
+    }
+
+
     /**
      *      Do not edit anything below
      * ____________________________________________________________________________________________
@@ -704,6 +744,30 @@ public class SharedPrefs {
         return pref.getString(KEY_RESCHEDULE_STATE_FLAG, "0");
     }
 
+    public String getKeyIndividualHarvestSummaryName(){
+        return pref.getString(INDIVIDUAL_KEY_HARVEST_SUMMARY_NAME,"");
+    }
+
+    public String getKeyHarvestSummaryIkNumber(){
+        return pref.getString(KEY_HARVEST_SUMMARY_IK_NUMBER,"");
+    }
+
+    public String getKeyIndividualHarvestSummaryIkNumber(){
+        return pref.getString(INDIVIDUAL_KEY_HARVEST_SUMMARY_IK_NUMBER,"");
+    }
+
+    public String getKeyIndividualHarvestSummaryUniqueMemberId(){
+        return pref.getString(INDIVIDUAL_KEY_HARVEST_SUMMARY_UNIQUE_MEMBER_ID,"");
+    }
+
+    public String getKeyLastSyncTime() {
+        return pref.getString(KEY_LAST_SYNC_TIME, "2020-06-28 00:00:00");
+    }
+
+    public String getCollectionCenterLastSyncTime() {
+        return pref.getString(KEY_COLLECTION_CENTER_LAST_SYNC_TIME, "2018-01-01 00:00:00");
+    }
+
     public String getKeyFertilizerSignUpIkNumber() {
         return pref.getString(KEY_FERTILIZER_SIGN_UP_IK_NUMBER, "IKSomething");
     }
@@ -730,6 +794,15 @@ public class SharedPrefs {
 
     public String getKeyThreshingThreshValue() {
         return pref.getString(KEY_THRESHING_THRESH_VALUE, "XX");
+    }
+    public void setIMEI(String deviceId) {
+        editor.putString(KEY_IMEI, deviceId);
+        // commit changes
+        editor.commit();
+    }
+
+    public String getIMEI(){
+        return pref.getString(KEY_IMEI, null);
     }
 
     public int getKeyAutoSyncFlag() {
