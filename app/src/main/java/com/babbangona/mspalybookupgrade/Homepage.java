@@ -316,6 +316,7 @@ public class Homepage extends AppCompatActivity {
         });
     }
 
+    //This method is used to display staff details on the tool bar of the activity.
     public void displayUserDetails(){
         mtv_staff_name.setText(sharedPrefs.getStaffName());
         mtv_staff_id.setText(sharedPrefs.getStaffID());
@@ -324,6 +325,7 @@ public class Homepage extends AppCompatActivity {
         mtv_app_version.setText(app_version_text);
     }
 
+    //This method launches the sync function by calling the sync service activity
     void syncRecords() {
         if (!getCategory().equalsIgnoreCase("subd")){
             if (sharedPrefs.getKeyPortfolioList().isEmpty()){
@@ -340,6 +342,7 @@ public class Homepage extends AppCompatActivity {
         }
     }
 
+    //This method initializes and loads the recycler data to the UI
     public void initActivitiesRecycler(){
 
         appDatabase
@@ -356,12 +359,14 @@ public class Homepage extends AppCompatActivity {
 
     }
 
+    //This method uses a database content to ask for a sync by the user
     void checkActivityListForSyncDialog(){
         if (appDatabase.activityListDao().countActivities() <= 1){
             showDialogForSync(getResources().getString(R.string.click_sync_message),Homepage.this);
         }
     }
 
+    //This method shows dialog for
     private void showDialogForSync(String s, Context context) {
         MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
         showDialogForSync(builder,s,context);
@@ -379,6 +384,8 @@ public class Homepage extends AppCompatActivity {
                 .show();
     }
 
+    //This method checks phone date and forces user to set phone date to today or at least last sync date of control table
+    //Control table here is app list table
     public void confirmPhoneDate(){
         //TODO --- Get the apps list last sync date for now, get a better one later.
         String str_default_date = getLastSyncTimeStaffList();

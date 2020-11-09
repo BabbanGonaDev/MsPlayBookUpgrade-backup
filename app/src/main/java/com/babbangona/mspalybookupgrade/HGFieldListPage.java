@@ -36,6 +36,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * This class works like FieldListPage except this class gets launched when HG is needed to be logged
+ */
 public class HGFieldListPage extends AppCompatActivity {
 
     @BindView(R.id.toolbar_field_list)

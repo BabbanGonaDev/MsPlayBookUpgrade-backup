@@ -193,29 +193,35 @@ public class HarvestCollectionCenter extends AppCompatActivity {
         checkIfAutocompleteEmpty(actVillage,edlVillage,this.getResources().getString(R.string.error_harvest_collection_point_location));
     }
 
+    //This method is used to clear autocomplete text view texts
     public void clearSpinnerText(AutoCompleteTextView autoCompleteTextView) {
         autoCompleteTextView.setText("");
     }
 
+    //This method is used to set the adapter of autocomplete text views
     public void spinnerViewController(AutoCompleteTextView autoCompleteTextView, ArrayAdapter arrayAdapter) {
         autoCompleteTextView.setAdapter(arrayAdapter);
     }
 
+    //This method fills the state autocomplete text view
     public void fillStateSpinner(AutoCompleteTextView autoCompleteTextView, Context context) {
         ArrayAdapter states = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, appDatabase.harvestLocationsDao().getAllStates());
         spinnerViewController(autoCompleteTextView,states);
     }
 
+    //This method fills the LGA autocomplete text view
     public void fillLgaSpinner(AutoCompleteTextView autoCompleteTextView, Context context, String state) {
         ArrayAdapter lga = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, appDatabase.harvestLocationsDao().getAllLgs(state));
         spinnerViewController(autoCompleteTextView,lga);
     }
 
+    //This method fills the Ward autocomplete text view
     public void fillWardSpinner(AutoCompleteTextView autoCompleteTextView, Context context, String state, String lga) {
         ArrayAdapter ward = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, appDatabase.harvestLocationsDao().getAllWards(state,lga));
         spinnerViewController(autoCompleteTextView,ward);
     }
 
+    //This method fills the collection center autocomplete text view and does not depend on other top categories selection
     public void fillVillageSpinner(AutoCompleteTextView autoCompleteTextView, Context context, String state, String lga, String ward) {
         ArrayAdapter village;
         if ((state == null || state.equalsIgnoreCase("")) &&
@@ -228,6 +234,7 @@ public class HarvestCollectionCenter extends AppCompatActivity {
         spinnerViewController(autoCompleteTextView,village);
     }
 
+    //This method helps in printing out an error ehn autocomplete text view is empty during form submission
     public void checkIfAutocompleteEmpty(AutoCompleteTextView autoCompleteTextView, TextInputLayout textInputLayout, String error_message) {
         String textEntered = Objects.requireNonNull(autoCompleteTextView.getText()).toString();
         if (textEntered.equalsIgnoreCase("")){
@@ -237,16 +244,19 @@ public class HarvestCollectionCenter extends AppCompatActivity {
         }
     }
 
+    //This method helps to set the error to the text holder layout
     public void setErrorOfTextView(TextInputLayout textInputLayout, String error_message) {
         textInputLayout.setErrorEnabled(true);
         textInputLayout.setError(error_message);
     }
 
+    // This method helps in removing error from text layouts
     public void removeErrorFromText(TextInputLayout textInputLayout) {
         textInputLayout.setError(null);
         textInputLayout.setErrorEnabled(false);
     }
 
+    //This method sets bottom sheet texts
     void setBottomSheerTexts(){
         bottom_sheet_state.setText(Objects.requireNonNull(actState.getText()).toString());
         bottom_sheet_lga.setText(Objects.requireNonNull(actLga.getText()).toString());
@@ -254,6 +264,7 @@ public class HarvestCollectionCenter extends AppCompatActivity {
         bottom_sheet_village.setText(Objects.requireNonNull(actVillage.getText()).toString());
     }
 
+    //This method shows bottom sheet or hides it depending on it's position
     void showBottomSheet(){
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -262,11 +273,13 @@ public class HarvestCollectionCenter extends AppCompatActivity {
         }
     }
 
+    // This method launches a dialog after successfully selecting a collection center
     public void showDialogForPassedVerification(String s, Context context) {
         MaterialAlertDialogBuilder builder = (new MaterialAlertDialogBuilder(context));
         showDialogForPassedVerification(builder,s,context);
     }
 
+    //This method completes the dialog components
     public void showDialogForPassedVerification(MaterialAlertDialogBuilder builder, String s, Context context) {
         builder.setIcon(context.getResources().getDrawable(R.drawable.ic_check_green_24dp))
                 .setTitle(context.getResources().getString(R.string.dialog_congrats))
@@ -279,6 +292,7 @@ public class HarvestCollectionCenter extends AppCompatActivity {
                 .show();
     }
 
+    //This method handles database update
     String updateNormalActivitiesFlag(String location_id, String unique_field_id){
         String flag;
         int field_existence = appDatabase.normalActivitiesFlagDao().countFieldInNormalActivity(unique_field_id);
@@ -299,6 +313,7 @@ public class HarvestCollectionCenter extends AppCompatActivity {
         return flag;
     }
 
+    // This method gets run when the navigation button gets clicked
     void goBackFromToolBar(){
         if (sheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
