@@ -171,6 +171,9 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
         @BindView(R.id.tvThreshingDate)
         TextView tvThreshingDate;
 
+        @BindView(R.id.tvThresherID)
+        TextView tvThresherID;
+
 
         @BindView(R.id.assignment_flag)
         ImageView imgAssignmentFLag;
@@ -187,6 +190,7 @@ public class ViewSchedulesAdapter extends RecyclerView.Adapter<ViewSchedulesAdap
             tvFieldID.setText(context.getResources().getString(R.string.static_field_id) + ": " + viewSchedule.getField_id());
             tvLocation.setText(context.getResources().getString(R.string.location) + ": " + viewSchedule.getLocation());
             tvFieldSize.setText(context.getResources().getString(R.string.field_size) + ": " + viewSchedule.getField_size() + "Ha ");
+            tvThresherID.setText(context.getResources().getString(R.string.thresh_staff) + " " + viewSchedule.getThresher_id());
             if (viewSchedule.getThreshing_date().equals("0000-00-00")) {
                 tvThreshingDate.setText(context.getResources().getString(R.string.thresh_date) + ": None");
             } else {

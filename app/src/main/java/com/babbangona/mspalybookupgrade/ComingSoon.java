@@ -14,6 +14,10 @@ public class ComingSoon extends AppCompatActivity {
     @BindView(R.id.btn_coming_soon)
     MaterialButton btn_coming_soon;
 
+    /**
+     * This activity is a place holder for activities to be deployed in the future
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

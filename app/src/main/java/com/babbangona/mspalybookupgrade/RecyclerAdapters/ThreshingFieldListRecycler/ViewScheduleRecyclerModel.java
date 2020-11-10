@@ -15,17 +15,21 @@ public class ViewScheduleRecyclerModel {
 
     private String field_size;
 
+    private String thresher_id;
+
 
 
     public ViewScheduleRecyclerModel(String member_name, String phone_number, String location,
-                                     String field_id, String threshing_date, String field_size) {
+                                     String field_id, String threshing_date, String field_size,
+                                     String thresher_id) {
         this.member_name = member_name;
         this.phone_number = phone_number;
         this.location = location;
         this.field_id  = field_id;
 
-        this.threshing_date =  threshing_date;
-        this.field_size  =field_size;
+        this.threshing_date = threshing_date;
+        this.field_size  = field_size;
+        this.thresher_id  = thresher_id;
 
     }
 
@@ -51,5 +55,9 @@ public class ViewScheduleRecyclerModel {
 
     public String getField_size() {
         return field_size;
+    }
+
+    public String getThresher_id() {
+        return thresher_id;
     }
 }

@@ -26,7 +26,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
+/**
+ * This activity shows the grid details, it uses two adapters, one for the horizontal division and
+ * the other for the vertical division.
+ */
 public class GridDetails extends AppCompatActivity {
 
     @BindView(R.id.toolbar_grid_details)

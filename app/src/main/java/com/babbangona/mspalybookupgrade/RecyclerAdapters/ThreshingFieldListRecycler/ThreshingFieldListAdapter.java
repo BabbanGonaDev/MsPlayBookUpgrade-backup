@@ -230,7 +230,9 @@ public class ThreshingFieldListAdapter extends RecyclerView.Adapter<ThreshingFie
                     if (!threshingFieldListRecyclerModel.getStaff_id().equalsIgnoreCase(sharedPrefs.getStaffID())){
                         showDialogForConfirmWithCode(context,threshingFieldListRecyclerModel,fieldListRecyclerModel,position);
                     }else{
-                        showConfirmSuccess(context.getResources().getString(R.string.error_confirm_before_schedule),context,"crying");
+                        //changing this to allow all users to confirm without schedule
+                        //showConfirmSuccess(context.getResources().getString(R.string.error_confirm_before_schedule),context,"crying");
+                        showDialogForConfirmThreshing(context,threshingFieldListRecyclerModel,"0",fieldListRecyclerModel,position);
                     }
 
 
