@@ -47,10 +47,21 @@ public class AppVariables {
     @ColumnInfo(name = DatabaseStringConstants.ISSUES_LIST)
     private String issues_list;
 
+    @ColumnInfo(name = DatabaseStringConstants.LOCATION_TRACKER_FLAG)
+    private String bgt_location_tracker_flag;
+
+    @ColumnInfo(name = DatabaseStringConstants.LOCATION_TRACKER_DAYS)
+    private String bgt_location_tracker_days;
+
+    @ColumnInfo(name = DatabaseStringConstants.LOCATION_TRACKER_HOURS)
+    private String bgt_location_tracker_hours;
+
     public AppVariables(@NonNull String variable_id, String edit_harvest_location_flag,
                         String minimum_log_date, String maximum_log_date, String fields_travel_time,
                         String average_transition_time, String time_per_ha, String maximum_schedule_date,
-                        String luxand_flag, String fertilizer_luxand_flag, String issues_list) {
+                        String luxand_flag, String fertilizer_luxand_flag, String issues_list,
+                        String bgt_location_tracker_flag, String bgt_location_tracker_days, String bgt_location_tracker_hours) {
+
         this.variable_id = variable_id;
         this.edit_harvest_location_flag = edit_harvest_location_flag;
         this.minimum_log_date = minimum_log_date;
@@ -62,6 +73,9 @@ public class AppVariables {
         this.luxand_flag = luxand_flag;
         this.fertilizer_luxand_flag = fertilizer_luxand_flag;
         this.issues_list = issues_list;
+        this.bgt_location_tracker_flag = bgt_location_tracker_flag;
+        this.bgt_location_tracker_days = bgt_location_tracker_days;
+        this.bgt_location_tracker_hours = bgt_location_tracker_hours;
     }
 
     public String getFields_travel_time() {
@@ -151,5 +165,29 @@ public class AppVariables {
 
     public void setIssues_list(String issues_list) {
         this.issues_list = issues_list;
+    }
+
+    public String getBgt_location_tracker_flag() {
+        return bgt_location_tracker_flag;
+    }
+
+    public void setBgt_location_tracker_flag(String bgt_location_tracker_flag) {
+        this.bgt_location_tracker_flag = bgt_location_tracker_flag;
+    }
+
+    public String getBgt_location_tracker_days() {
+        return bgt_location_tracker_days;
+    }
+
+    public void setBgt_location_tracker_days(String bgt_location_tracker_days) {
+        this.bgt_location_tracker_days = bgt_location_tracker_days;
+    }
+
+    public String getBgt_location_tracker_hours() {
+        return bgt_location_tracker_hours;
+    }
+
+    public void setBgt_location_tracker_hours(String bgt_location_tracker_hours) {
+        this.bgt_location_tracker_hours = bgt_location_tracker_hours;
     }
 }

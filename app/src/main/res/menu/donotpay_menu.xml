@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu>
+
+    <!--<item
+        android:id="@+id/dnp_refresh"
+        android:icon="@drawable/ic_baseline_sync_24"
+        android:title="Refresh"
+        app:showAsAction="always|never" />-->
+</menu>

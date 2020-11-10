@@ -3,7 +3,6 @@ package com.babbangona.mspalybookupgrade.RecyclerAdapters.FertilizerSignUpHomeRe
 
 public class FertilizerHomeRecyclerModel {
 
-
     private String unique_member_id;
 
     private String member_name;

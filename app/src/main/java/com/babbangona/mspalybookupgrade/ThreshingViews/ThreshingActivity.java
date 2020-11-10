@@ -76,7 +76,7 @@ public class ThreshingActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle(setPortfolioMethods.getToolbarTitle(ThreshingActivity.this));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         setPortfolioMethods.setFooter(last_sync_date_tv,tv_staff_id,ThreshingActivity.this);
-        removeScheduleAndUpdate();
+        //removeScheduleAndUpdate();
     }
 
     @OnClick(R.id.btnScheduleThreshing)
