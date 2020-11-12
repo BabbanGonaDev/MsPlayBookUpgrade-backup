@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.constants.DatabaseStringConstants;
@@ -792,7 +793,8 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 reschedule_reason,
                 sharedPrefs.getStaffID(),
                 getDate("spread"),
-                sharedPrefs.getKeyThresherId()
+                sharedPrefs.getKeyThresherId(),
+                BuildConfig.VERSION_NAME
         );
 
         appDatabase.logsDao().insert(new Logs(unique_field_id,sharedPrefs.getStaffID(),
@@ -810,7 +812,8 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                         "swapped with "+ unique_field_id,
                         sharedPrefs.getStaffID(),
                         getDate("spread"),
-                        sharedPrefs.getKeyThresherId()
+                        sharedPrefs.getKeyThresherId(),
+                        BuildConfig.VERSION_NAME
                 );
                 appDatabase.logsDao().insert(new Logs(sharedPrefs.getKeySwapFieldId(),sharedPrefs.getStaffID(),
                         "Re Schedule threshing",getDate("normal"),sharedPrefs.getStaffRole(),
@@ -872,7 +875,8 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 "0000-00-00",
                 sharedPrefs.getStaffID(),
                 getDate("spread"),
-                "urgent reschedule"
+                "urgent reschedule",
+                BuildConfig.VERSION_NAME
 
         );
 

@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.TextView;
 
+import com.babbangona.mspalybookupgrade.BuildConfig;
 import com.babbangona.mspalybookupgrade.R;
 import com.babbangona.mspalybookupgrade.RecyclerAdapters.FieldListRecycler.FieldListRecyclerModel;
 import com.babbangona.mspalybookupgrade.data.db.AppDatabase;
@@ -159,7 +160,8 @@ public class UrgentThreshingActivity extends AppCompatActivity {
                 "0000-00-00",
                 sharedPrefs.getStaffID(),
                 getDate("spread"),
-                reason
+                reason,
+                BuildConfig.VERSION_NAME
         );
 
         appDatabase.logsDao().insert(new Logs(unique_field_id,sharedPrefs.getStaffID(),
