@@ -494,7 +494,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
             }
         }
         double result = getFieldsTravelTime() + (count * getAverageTransitionTime()) + (cumulativeFieldSize * getTimePerHa());
-        return result >= DatabaseStringConstants.TOTAL_WORK_HOURS;
+        return result >= DatabaseStringConstants.TOTAL_WORK_HOURS && sharedPrefs.getKeyThresher().equalsIgnoreCase("BG");
     }
 
     private double returnRightDoubleValue(String inputValue){
@@ -791,8 +791,8 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                 schedule_date,
                 reschedule_reason,
                 sharedPrefs.getStaffID(),
-                getDate("spread")
-
+                getDate("spread"),
+                sharedPrefs.getKeyThresherId()
         );
 
         appDatabase.logsDao().insert(new Logs(unique_field_id,sharedPrefs.getStaffID(),
@@ -809,7 +809,8 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
                         raw_old_thresh_date,
                         "swapped with "+ unique_field_id,
                         sharedPrefs.getStaffID(),
-                        getDate("spread")
+                        getDate("spread"),
+                        sharedPrefs.getKeyThresherId()
                 );
                 appDatabase.logsDao().insert(new Logs(sharedPrefs.getKeySwapFieldId(),sharedPrefs.getStaffID(),
                         "Re Schedule threshing",getDate("normal"),sharedPrefs.getStaffRole(),
@@ -869,9 +870,9 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
         appDatabase.scheduleThreshingActivitiesFlagDao().updateUrgentScheduleDate(
                 unique_field_id,
                 "0000-00-00",
-                "urgent reschedule",
                 sharedPrefs.getStaffID(),
-                getDate("spread"),""
+                getDate("spread"),
+                "urgent reschedule"
 
         );
 

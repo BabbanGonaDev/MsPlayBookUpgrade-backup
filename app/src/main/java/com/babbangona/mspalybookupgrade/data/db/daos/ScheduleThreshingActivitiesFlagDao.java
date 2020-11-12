@@ -54,16 +54,16 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
 
     //TODO: HTA-182 Completed
     @Query("UPDATE schedule_threshing_activities_flag SET schedule_date = :schedule_date, reschedule_reason = :reschedule_reason," +
-            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged, reschedule_flag = '1', urgent_flag = '0', schedule_flag = '1' " +
+            "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged, reschedule_flag = '1', urgent_flag = '0', schedule_flag = '1', " +
+            "thresher_id = :thresher_id " +
             "WHERE unique_field_id = :unique_field_id")
     public abstract void updateScheduleDate(String unique_field_id, String schedule_date,
-                                            String reschedule_reason, String staff_id, String date_logged);
+                                            String reschedule_reason, String staff_id, String date_logged, String thresher_id);
 
-    @Query("UPDATE schedule_threshing_activities_flag SET schedule_date = :schedule_date, reschedule_reason = :reschedule_reason," +
+    @Query("UPDATE schedule_threshing_activities_flag SET schedule_date = :schedule_date, " +
             "staff_id = :staff_id, sync_flag = '0', date_logged = :date_logged, schedule_flag = '0', urgent_flag = '1', " +
             "reschedule_reason = :reason WHERE unique_field_id = :unique_field_id")
-    public abstract void updateUrgentScheduleDate(String unique_field_id, String schedule_date,
-                                            String reschedule_reason, String staff_id, String date_logged, String reason);
+    public abstract void updateUrgentScheduleDate(String unique_field_id, String schedule_date, String staff_id, String date_logged, String reason);
 
     @Query(" SELECT COUNT(unique_field_id) FROM schedule_threshing_activities_flag WHERE sync_flag != '1' ")
     public abstract int getUnSyncedScheduleThreshingActivitiesCount();
@@ -82,7 +82,7 @@ public abstract class ScheduleThreshingActivitiesFlagDao {
 
     @Query(" SELECT a.unique_field_id, b.field_size FROM schedule_threshing_activities_flag a " +
             "JOIN fields b ON a.unique_field_id = b.unique_field_id " +
-            "WHERE a.staff_id = :staff_id AND a.schedule_date = :schedule_date AND b.deactivate = '0'")
+            "WHERE a.thresher_id = :staff_id AND a.schedule_date = :schedule_date AND b.deactivate = '0'")
     public abstract List<ScheduledThreshingActivitiesFlag.ScheduleCalculationModel> getAllScheduledFields(String staff_id, String schedule_date);
 
     @Query(" SELECT schedule_date FROM schedule_threshing_activities_flag WHERE unique_field_id = :unique_field_id ")

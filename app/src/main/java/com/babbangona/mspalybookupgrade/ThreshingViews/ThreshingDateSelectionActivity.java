@@ -403,7 +403,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             checkForMismatchedPhoneNumber();
             //Toast.makeText(this, getResources().getString(R.string.error_thresh_date_mismatch), Toast.LENGTH_LONG).show();
             showDateProblemStart(getResources().getString(R.string.error_thresh_date_mismatch),this);
-        }else if (!checkThreshHours(tv_enter_date.getText().toString().trim(), sharedPrefs.getStaffID())){
+        }else if (checkThreshHours(tv_enter_date.getText().toString().trim(), sharedPrefs.getStaffID())){
 //            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
             showDateProblemStart(getResources().getString(R.string.thresh_date_error),this);
             checkForMismatchedPhoneNumber();
@@ -620,7 +620,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             }
         }
         double result = getFieldsTravelTime() + (count * getAverageTransitionTime()) + (cumulativeFieldSize * getTimePerHa());
-        return result < DatabaseStringConstants.TOTAL_WORK_HOURS;
+        return result >= DatabaseStringConstants.TOTAL_WORK_HOURS && sharedPrefs.getKeyThresher().equalsIgnoreCase("BG");
     }
 
     private double returnRightDoubleValue(String inputValue){

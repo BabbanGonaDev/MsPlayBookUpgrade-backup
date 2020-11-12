@@ -157,7 +157,6 @@ public class UrgentThreshingActivity extends AppCompatActivity {
         appDatabase.scheduleThreshingActivitiesFlagDao().updateUrgentScheduleDate(
                 unique_field_id,
                 "0000-00-00",
-                "urgent reschedule",
                 sharedPrefs.getStaffID(),
                 getDate("spread"),
                 reason
