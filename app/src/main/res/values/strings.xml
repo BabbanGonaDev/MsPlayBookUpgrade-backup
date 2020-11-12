@@ -245,8 +245,8 @@
     <string name="error_re_thresh_date_same">New schedule date and Old schedule date cannot be the same</string>
     <string name="error_thresh_date_mismatch">Scheduled thresh dates mismatch</string>
     <string name="error_phone_number_mismatch">Member phone numbers should match</string>
-    <string name="thresh_date_error">The entered threshing date has a scheduled work of 8 hours or more, please select another date.</string>
-    <string name="thresh_date_error_field_split_1">has a threshing date with a scheduled work of 8 hours or more.</string>
+    <string name="thresh_date_error">The entered threshing date has a scheduled work of 10 hours or more, please select another date.</string>
+    <string name="thresh_date_error_field_split_1">has a threshing date with a scheduled work of 10 hours or more.</string>
     <string name="select_collection_center_title">Select Collection Center</string>
     <string name="select_member_phone_number_title">Enter Member\'s Phone Number</string>
     <string name="confirm_harvest_cc_center">Confirm Har. Collection Point</string>
@@ -321,7 +321,7 @@
     <string name="swap_dialog_error">You cannot swap thresh date if former thresh date is today.</string>
     <string name="error_swap_not_scheduled">You cannot swap thresh date if field not scheduled before.</string>
     <string name="error_swap_same_field">You cannot swap thresh date with the same field.</string>
-    <string name="swap_thresh_date_error">The former threshing date has a scheduled work of 8 hours or more, swapping is not possible.</string>
+    <string name="swap_thresh_date_error">The former threshing date has a scheduled work of 10 hours or more, swapping is not possible.</string>
     <string name="view_threshing_schedules">View Threshing Schedules</string>
     <string name="select_threshing_type">Select type of threshing</string>
     <string name="scheduled">Scheduled</string>

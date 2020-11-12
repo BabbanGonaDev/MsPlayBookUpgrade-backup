@@ -268,6 +268,7 @@ public class DatabaseStringConstants {
     public static final String SYNC_MESSAGE_DOWNLOAD_FLAG               = "d";
     public static final int SYNC_TYPE_AUTO                              = 0;
     public static final int SYNC_TYPE_MANUAL                            = 1;
+    public static final int TOTAL_WORK_HOURS                            = 10;
 
     /**
      * picture_sync column names

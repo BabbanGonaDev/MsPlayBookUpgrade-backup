@@ -494,7 +494,7 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
             }
         }
         double result = getFieldsTravelTime() + (count * getAverageTransitionTime()) + (cumulativeFieldSize * getTimePerHa());
-        return result >= 8;
+        return result >= DatabaseStringConstants.TOTAL_WORK_HOURS;
     }
 
     private double returnRightDoubleValue(String inputValue){
