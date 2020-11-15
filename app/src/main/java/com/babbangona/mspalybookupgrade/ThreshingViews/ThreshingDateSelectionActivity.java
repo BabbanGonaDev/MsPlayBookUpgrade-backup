@@ -403,7 +403,9 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             checkForMismatchedPhoneNumber();
             //Toast.makeText(this, getResources().getString(R.string.error_thresh_date_mismatch), Toast.LENGTH_LONG).show();
             showDateProblemStart(getResources().getString(R.string.error_thresh_date_mismatch),this);
-        }else if (checkThreshHours(tv_enter_date.getText().toString().trim(), sharedPrefs.getStaffID())){
+        }else if (checkThreshHours(tv_enter_date.getText().toString().trim(),
+                sharedPrefs.getStaffID(),
+                getFieldSizeOfField(sharedPrefs.getKeyThreshingUniqueFieldId()))){
 //            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
             showDateProblemStart(getResources().getString(R.string.thresh_date_error),this);
             checkForMismatchedPhoneNumber();
@@ -607,12 +609,12 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
         }
     }
 
-    private boolean checkThreshHours(String selected_date, String staff_id){
+    private boolean checkThreshHours(String selected_date, String staff_id, double initial_field_size){
         String converted_date = reverseParseDate(selected_date);
         List<ScheduledThreshingActivitiesFlag.ScheduleCalculationModel> scheduleCalculationModelList;
         scheduleCalculationModelList = appDatabase.scheduleThreshingActivitiesFlagDao().getAllScheduledFields(staff_id,converted_date);
-        int count = 0;
-        double cumulativeFieldSize = 0.00d;
+        int count = 1;
+        double cumulativeFieldSize = initial_field_size;
         if (scheduleCalculationModelList.size() > 0){
             for (ScheduledThreshingActivitiesFlag.ScheduleCalculationModel scheduleCalculationModel : scheduleCalculationModelList){
                 cumulativeFieldSize += returnRightDoubleValue(scheduleCalculationModel.getField_size());
@@ -1223,5 +1225,19 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
                 sharedPrefs.getKeyThreshingCropType()));
 
         showSuccessStart(getResources().getString(R.string.threshing_success),this);
+    }
+
+    double getFieldSizeOfField(String unique_field_id){
+        String field_size;
+        try {
+            field_size = appDatabase.fieldsDao().getFieldSize(unique_field_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            field_size = "0.0";
+        }
+        if (field_size == null || field_size.equalsIgnoreCase("")){
+            field_size = "0.0";
+        }
+        return returnRightDoubleValue(field_size.trim());
     }
 }

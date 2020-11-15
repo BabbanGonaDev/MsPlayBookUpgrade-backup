@@ -326,6 +326,9 @@ public abstract class FieldsDao {
     @Query(" SELECT field_code FROM fields WHERE unique_field_id = :unique_field_id ")
     public abstract String getFieldCode(String unique_field_id);
 
+    @Query(" SELECT field_size FROM fields WHERE unique_field_id = :unique_field_id ")
+    public abstract String getFieldSize(String unique_field_id);
+
     @Query("DELETE FROM fields WHERE staff_id = :staff_id")
     public abstract void deleteRecords(String staff_id);
 
