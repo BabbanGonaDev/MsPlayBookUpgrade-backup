@@ -256,4 +256,12 @@ public class SetPortfolioMethods {
         }
         return str;
     }
+
+    public String getThreshHoursID(SharedPrefs sharedPrefs){
+        if (sharedPrefs.getStaffRole().equalsIgnoreCase("BGT")){
+            return sharedPrefs.getStaffID();
+        }else{
+            return sharedPrefs.getKeyThresherId();
+        }
+    }
 }

@@ -297,12 +297,12 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
 //            Toast.makeText(this, getResources().getString(R.string.error_thresh_date_mismatch), Toast.LENGTH_LONG).show();
                 showDateProblemStart(getResources().getString(R.string.error_thresh_date_mismatch),this);
             }else if (checkThreshHours(tv_enter_date.getText().toString().trim(),
-                    sharedPrefs.getStaffID(),
+                    setPortfolioMethods.getThreshHoursID(sharedPrefs),
                     getFieldSizeOfField(sharedPrefs.getKeyThreshingUniqueFieldId()))){
 //            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
                 showDateProblemStart(getResources().getString(R.string.thresh_date_error),this);
             }else if (actSwap.getText().toString().equalsIgnoreCase("yes") &&
-                    checkThreshHours(tv_enter_date.getText().toString().trim(), sharedPrefs.getStaffID(), getFieldSizeOfField(sharedPrefs.getKeyThreshingUniqueFieldId()))){
+                    checkThreshHours(tv_enter_date.getText().toString().trim(), setPortfolioMethods.getThreshHoursID(sharedPrefs), getFieldSizeOfField(sharedPrefs.getKeyThreshingUniqueFieldId()))){
 //            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
                 showDateProblemStart(getResources().getString(R.string.swap_thresh_date_error),this);
             }else{
@@ -1039,11 +1039,11 @@ public class RescheduleThreshingDateSelectionActivity extends AppCompatActivity{
 
         if (getDateCorrelationFlag(parseDate(first_selected_field_date), getMaximumScheduleDate()) == 0){
             showDateProblemStartSwap(first_selected_field + " "+getResources().getString(R.string.error_re_thresh_date_split_1),this);
-        }else if (checkThreshHours(first_selected_field_date,sharedPrefs.getStaffID(),getFieldSizeOfField(second_selected_field))){
+        }else if (checkThreshHours(first_selected_field_date,setPortfolioMethods.getThreshHoursID(sharedPrefs),getFieldSizeOfField(second_selected_field))){
             showDateProblemStartSwap(first_selected_field + " "+getResources().getString(R.string.thresh_date_error_field_split_1),this);
         }else if (getDateCorrelationFlag(parseDate(second_selected_field_date), getMaximumScheduleDate()) == 0){
             showDateProblemStartSwap(first_selected_field + " "+getResources().getString(R.string.error_re_thresh_date_split_1),this);
-        }else if (checkThreshHours(second_selected_field_date,sharedPrefs.getStaffID(),getFieldSizeOfField(first_selected_field))){
+        }else if (checkThreshHours(second_selected_field_date,setPortfolioMethods.getThreshHoursID(sharedPrefs),getFieldSizeOfField(first_selected_field))){
             showDateProblemStartSwap(second_selected_field + " "+getResources().getString(R.string.thresh_date_error_field_split_1),this);
         }else {
             showDialogForExitSwap(this,

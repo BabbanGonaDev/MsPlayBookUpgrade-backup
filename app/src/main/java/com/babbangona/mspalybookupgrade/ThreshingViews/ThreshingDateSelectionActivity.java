@@ -404,7 +404,7 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
             //Toast.makeText(this, getResources().getString(R.string.error_thresh_date_mismatch), Toast.LENGTH_LONG).show();
             showDateProblemStart(getResources().getString(R.string.error_thresh_date_mismatch),this);
         }else if (checkThreshHours(tv_enter_date.getText().toString().trim(),
-                sharedPrefs.getStaffID(),
+                setPortfolioMethods.getThreshHoursID(sharedPrefs),
                 getFieldSizeOfField(sharedPrefs.getKeyThreshingUniqueFieldId()))){
 //            Toast.makeText(this, getResources().getString(R.string.thresh_date_error), Toast.LENGTH_SHORT).show();
             showDateProblemStart(getResources().getString(R.string.thresh_date_error),this);
