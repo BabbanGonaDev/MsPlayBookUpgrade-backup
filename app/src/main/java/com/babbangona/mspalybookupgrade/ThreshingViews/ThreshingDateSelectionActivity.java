@@ -610,18 +610,38 @@ public class ThreshingDateSelectionActivity extends AppCompatActivity  implement
     }
 
     private boolean checkThreshHours(String selected_date, String staff_id, double initial_field_size){
+        Log.d("CHECK", " ==========SCHEDULE ACTIVITY========= ");
+
         String converted_date = reverseParseDate(selected_date);
         List<ScheduledThreshingActivitiesFlag.ScheduleCalculationModel> scheduleCalculationModelList;
-        scheduleCalculationModelList = appDatabase.scheduleThreshingActivitiesFlagDao().getAllScheduledFields(staff_id,converted_date);
+        scheduleCalculationModelList = appDatabase.scheduleThreshingActivitiesFlagDao().getAllScheduledFields(staff_id, converted_date);
         int count = 1;
         double cumulativeFieldSize = initial_field_size;
-        if (scheduleCalculationModelList.size() > 0){
-            for (ScheduledThreshingActivitiesFlag.ScheduleCalculationModel scheduleCalculationModel : scheduleCalculationModelList){
+
+        Log.d("CHECK", "Field size to be added =========> " + initial_field_size);
+        Log.d("CHECK", "Previous schedules size ===========> " + scheduleCalculationModelList.size());
+        Log.d("CHECK", "Beginning counting and additions");
+        Log.d("CHECK", "----------------------------------------------------------");
+
+        if (scheduleCalculationModelList.size() > 0) {
+            for (ScheduledThreshingActivitiesFlag.ScheduleCalculationModel scheduleCalculationModel : scheduleCalculationModelList) {
                 cumulativeFieldSize += returnRightDoubleValue(scheduleCalculationModel.getField_size());
                 count += 1;
+                Log.d("CHECK", "-----------------------------------");
+                Log.d("CHECK", "Field ID: " + scheduleCalculationModel.getUnique_field_id());
+                Log.d("CHECK", "Field Size: " + scheduleCalculationModel.getField_size());
+                Log.d("CHECK", "Cumulative field size: ==============> " + cumulativeFieldSize);
+                Log.d("CHECK", "Count: =============> " + count);
+                Log.d("CHECK", "------------------------------------");
             }
         }
         double result = getFieldsTravelTime() + (count * getAverageTransitionTime()) + (cumulativeFieldSize * getTimePerHa());
+
+        Log.d("CHECK", "App Variables -> Fields Travel Time: =========> " + getFieldsTravelTime());
+        Log.d("CHECK", "App Variables -> Average Transition Time: =========> " + getAverageTransitionTime());
+        Log.d("CHECK", "App Variables -> Time per hectare: =========> " + getTimePerHa());
+
+        Log.d("CHECK", "Thresh hours result: " + result);
         return result >= DatabaseStringConstants.TOTAL_WORK_HOURS && sharedPrefs.getKeyThresher().equalsIgnoreCase("BG");
     }
 
